@@ -27,7 +27,7 @@ function OnComplete() {
 function animate() {
     context.clearRect(75, 75, 100, 100);
     AtlasCache['at'][xpos].draw(context, 100, 100);
-    xpos = (xpos + 1) % AtlasHolder.length;
+    xpos = (xpos + 1) % AtlasCache['at'].length;
 }
 var srcArray;
 
@@ -158,7 +158,6 @@ var preload;
 *   //do what you need with loaded assets now
 *    }
 */
-var AtlasHolder = [];
 var AtlasCache = [];
 var cache = [];
 
@@ -187,12 +186,13 @@ var preload;
             }
         };
         Manager.prototype.OnJSONLoad = function (response) {
+            var holder = [];
             this.json = JSON.parse(response);
             atlasLoader.Start(this.json);
             for (var i = 0; i < srcArray.frames.length; i++) {
-                AtlasHolder[i] = atlasLoader.NewSprite(srcArray.frames[i].filename);
+                holder[i] = atlasLoader.NewSprite(srcArray.frames[i].filename);
             }
-            AtlasCache[AtlasKey[atlasPos]] = AtlasHolder;
+            AtlasCache[AtlasKey[atlasPos]] = holder;
             atlasPos++;
             OnComplete();
         };

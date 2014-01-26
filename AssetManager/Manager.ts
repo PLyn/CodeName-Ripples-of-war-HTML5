@@ -18,7 +18,6 @@
 *   //do what you need with loaded assets now
 *    }
 */
-var AtlasHolder = [];
 var AtlasCache = [];
 var cache = [];
 
@@ -51,12 +50,13 @@ module preload {
             }
         }
         OnJSONLoad(response) {
+            var holder = [];
             this.json = JSON.parse(response);
             atlasLoader.Start(this.json);
             for (var i = 0; i < srcArray.frames.length; i++) {
-                AtlasHolder[i] = atlasLoader.NewSprite(srcArray.frames[i].filename);
+                holder[i] = atlasLoader.NewSprite(srcArray.frames[i].filename);
             }
-            AtlasCache[AtlasKey[atlasPos]] = AtlasHolder;
+            AtlasCache[AtlasKey[atlasPos]] = holder;
             atlasPos++;
             OnComplete();
         }
