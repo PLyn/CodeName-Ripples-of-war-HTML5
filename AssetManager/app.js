@@ -22,7 +22,7 @@ window.onload = function () {
 function OnComplete() {
     context.drawImage(Imagecache['D'], 0, 0);
     context.drawImage(Imagecache['S'], 50, 50);
-    setInterval(animate, 1000 / 10);
+    setInterval(animate, 1000 / 60);
 }
 function animate() {
     context.clearRect(75, 75, 100, 100);

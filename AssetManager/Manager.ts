@@ -15,7 +15,7 @@
 *    manager.QueueAssets(source, OnComplete);
 *
 *   function OnComplete(){
-*   //do what you need with loaded assets now
+*   //do what you need with loaded assets now which are in global variables seen at below(Imagecache, AtlasCache etc)
 *    }
 */
 var AtlasCache = [];
