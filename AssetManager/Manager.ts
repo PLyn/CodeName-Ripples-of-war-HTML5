@@ -19,10 +19,9 @@
 *    }
 */
 var AtlasCache = [];
-var cache = [];
+var Imagecache = [];
 
 var atlasLoader;
-
 var atlasPos = 0;
 var AtlasKey = [];
 module preload {

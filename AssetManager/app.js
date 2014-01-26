@@ -20,8 +20,8 @@ window.onload = function () {
     manager.QueueAssets(source, OnComplete);
 };
 function OnComplete() {
-    context.drawImage(cache['D'], 0, 0);
-    context.drawImage(cache['S'], 50, 50);
+    context.drawImage(Imagecache['D'], 0, 0);
+    context.drawImage(Imagecache['S'], 50, 50);
     setInterval(animate, 1000 / 10);
 }
 function animate() {
@@ -39,18 +39,9 @@ var preload;
             this.atlasImage = new Image();
         }
         AtlasLoader.prototype.Start = function (JSONArray) {
-            var sprite;
-
             //store JSONarray in variable
             srcArray = JSONArray;
             this.atlasImage.src = 'Assets/' + JSONArray.meta.image;
-            /*for (var i = 0; i < srcArray.length; i++) {
-            //pushes sprite into object
-            sprite[i] = this.NewSprite(srcArray.frames[i].filename);
-            }
-            //push object into array so i can store multiple atlases
-            AtlasHolder[atlasPos] = sprite;
-            atlasPos++;*/
         };
         AtlasLoader.prototype.Sprite = function (sourceAtlas, originX, originY, originW, originH) {
             this.sprite = sourceAtlas;
@@ -66,7 +57,6 @@ var preload;
         };
         AtlasLoader.prototype.NewSprite = function (spriteName) {
             this.isFound = false;
-
             for (var i = 0; i < srcArray.frames.length; i++) {
                 //search for array element to matches the filename of the frame
                 if (srcArray.frames[i].filename == spriteName) {
@@ -117,14 +107,14 @@ var preload;
             }
 
             for (var file in files) {
-                cache[file] = new Image();
-                cache[file].onload = function () {
+                Imagecache[file] = new Image();
+                Imagecache[file].onload = function () {
                     isLoaded++;
                 };
-                cache[file].onerror = function () {
+                Imagecache[file].onerror = function () {
                     error++;
                 };
-                cache[file].src = files[file];
+                Imagecache[file].src = files[file];
             }
         };
 
@@ -159,10 +149,9 @@ var preload;
 *    }
 */
 var AtlasCache = [];
-var cache = [];
+var Imagecache = [];
 
 var atlasLoader;
-
 var atlasPos = 0;
 var AtlasKey = [];
 var preload;

@@ -17,18 +17,9 @@ module preload {
         draw: Function;
 
         Start(JSONArray) {
-            var sprite;
             //store JSONarray in variable
             srcArray = JSONArray;
             this.atlasImage.src = 'Assets/' + JSONArray.meta.image;
-            
-            /*for (var i = 0; i < srcArray.length; i++) {
-                //pushes sprite into object
-                sprite[i] = this.NewSprite(srcArray.frames[i].filename);
-            }
-            //push object into array so i can store multiple atlases
-            AtlasHolder[atlasPos] = sprite;
-            atlasPos++;*/
         }
         Sprite(sourceAtlas, originX, originY, originW, originH) {
             this.sprite = sourceAtlas;
@@ -44,7 +35,6 @@ module preload {
         }
         NewSprite(spriteName) {
             this.isFound = false;
-
             for (var i = 0; i < srcArray.frames.length; i++) {
                 //search for array element to matches the filename of the frame
                 if (srcArray.frames[i].filename == spriteName) {

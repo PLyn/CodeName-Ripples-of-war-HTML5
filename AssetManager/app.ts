@@ -19,8 +19,8 @@ window.onload = function () {
     manager.QueueAssets(source, OnComplete);
     }
 function OnComplete() {
-    context.drawImage(cache['D'], 0, 0);
-    context.drawImage(cache['S'], 50, 50);
+    context.drawImage(Imagecache['D'], 0, 0);
+    context.drawImage(Imagecache['S'], 50, 50);
     setInterval(animate, 1000 / 10);
 }
 function animate() {
