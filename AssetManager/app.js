@@ -26,37 +26,31 @@ function OnComplete() {
 }
 function animate() {
     context.clearRect(75, 75, 100, 100);
-    AtlasHolder[xpos].draw(context, 100, 100);
+    AtlasCache['at'][xpos].draw(context, 100, 100);
     xpos = (xpos + 1) % AtlasHolder.length;
 }
-var namearray = ['walking1.png', 'walking2.png', 'walking3.png', 'walking4.png', 'walking5.png', 'walking6.png', 'walking7.png', 'walking8.png', 'walking9.png'];
-var atlasPos = 0;
 var srcArray;
+
 var preload;
 (function (preload) {
     var AtlasLoader = (function () {
         function AtlasLoader() {
+            //srcArray: any;
+            this.atlasImage = new Image();
         }
         AtlasLoader.prototype.Start = function (JSONArray) {
+            var sprite;
+
             //store JSONarray in variable
             srcArray = JSONArray;
-            this.atlasImagePath = JSONArray.meta.image;
-            this.atlasImage = new Image();
-
-            //set atlas image to png for atlas
-            this.atlasImage.src = 'Assets/' + this.atlasImagePath;
-            var sprite;
-            console.log(namearray[1]);
-            for (var i = 0; i < srcArray.length; i++) {
-                //pushes sprite into object
-                sprite[i] = this.NewSprite(srcArray.frames[i].filename);
-                //create a sprite of each frame in the atlas and store it in atlasholder
-                //AtlasHolder[i] = this.NewSprite(namearray[i]);
+            this.atlasImage.src = 'Assets/' + JSONArray.meta.image;
+            /*for (var i = 0; i < srcArray.length; i++) {
+            //pushes sprite into object
+            sprite[i] = this.NewSprite(srcArray.frames[i].filename);
             }
-
             //push object into array so i can store multiple atlases
             AtlasHolder[atlasPos] = sprite;
-            atlasPos++;
+            atlasPos++;*/
         };
         AtlasLoader.prototype.Sprite = function (sourceAtlas, originX, originY, originW, originH) {
             this.sprite = sourceAtlas;
@@ -84,9 +78,8 @@ var preload;
                     break;
                 }
             }
-
             if (!this.isFound) {
-                alert("Error: Sprite \"" + spriteName + "\" not found in " + this.atlasImagePath);
+                alert("Error: Sprite \"" + spriteName + "\" not found");
             }
         };
         AtlasLoader.prototype.loadJSON = function (url, call) {
@@ -166,11 +159,13 @@ var preload;
 *    }
 */
 var AtlasHolder = [];
+var AtlasCache = [];
 var cache = [];
 
 var atlasLoader;
 
-var atlasnames = ['at'];
+var atlasPos = 0;
+var AtlasKey = [];
 var preload;
 (function (preload) {
     var Manager = (function () {
@@ -184,17 +179,21 @@ var preload;
             }
             if (Assets.Atlas) {
                 atlasLoader = new preload.AtlasLoader();
-                for (var i = 0; i < atlasnames.length; i++) {
-                    atlasLoader.loadJSON(Assets.Atlas[atlasnames[i]], this.OnJSONLoad);
+
+                AtlasKey = Object.keys(Assets.Atlas);
+                for (var i = 0; i < AtlasKey.length; i++) {
+                    atlasLoader.loadJSON(Assets.Atlas[AtlasKey[i]], this.OnJSONLoad);
                 }
             }
         };
         Manager.prototype.OnJSONLoad = function (response) {
             this.json = JSON.parse(response);
             atlasLoader.Start(this.json);
-            for (var i = 0; i < namearray.length; i++) {
-                AtlasHolder[i] = atlasLoader.NewSprite(namearray[i]);
+            for (var i = 0; i < srcArray.frames.length; i++) {
+                AtlasHolder[i] = atlasLoader.NewSprite(srcArray.frames[i].filename);
             }
+            AtlasCache[AtlasKey[atlasPos]] = AtlasHolder;
+            atlasPos++;
             OnComplete();
         };
         return Manager;

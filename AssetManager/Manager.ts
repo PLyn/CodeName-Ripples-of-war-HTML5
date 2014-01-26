@@ -19,11 +19,13 @@
 *    }
 */
 var AtlasHolder = [];
+var AtlasCache = [];
 var cache = [];
 
 var atlasLoader;
 
-var atlasnames = ['at'];
+var atlasPos = 0;
+var AtlasKey = [];
 module preload {
     export class Manager {
         Total_Assets: number;
@@ -32,6 +34,7 @@ module preload {
         imgLoader: preload.ImageLoader;
 
         json: any;
+        AtlasKey: string[];
         QueueAssets(Assets, OnComplete) {
             this.IsLoaded = 0;
             if (Assets.Images) {
@@ -40,17 +43,21 @@ module preload {
             }
             if (Assets.Atlas) {
                 atlasLoader = new preload.AtlasLoader();
-                for (var i = 0; i < atlasnames.length; i++) {
-                    atlasLoader.loadJSON(Assets.Atlas[atlasnames[i]], this.OnJSONLoad);
+                
+                AtlasKey = Object.keys(Assets.Atlas);
+                for (var i = 0; i < AtlasKey.length; i++) {
+                    atlasLoader.loadJSON(Assets.Atlas[AtlasKey[i]], this.OnJSONLoad);
                 }
             }
         }
         OnJSONLoad(response) {
             this.json = JSON.parse(response);
             atlasLoader.Start(this.json);
-            for (var i = 0; i < namearray.length; i++) {
-                AtlasHolder[i] = atlasLoader.NewSprite(namearray[i]);
+            for (var i = 0; i < srcArray.frames.length; i++) {
+                AtlasHolder[i] = atlasLoader.NewSprite(srcArray.frames[i].filename);
             }
+            AtlasCache[AtlasKey[atlasPos]] = AtlasHolder;
+            atlasPos++;
             OnComplete();
         }
     }

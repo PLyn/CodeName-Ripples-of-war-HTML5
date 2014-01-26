@@ -25,6 +25,6 @@ function OnComplete() {
 }
 function animate() {
     context.clearRect(75, 75, 100, 100);
-    AtlasHolder[xpos].draw(context, 100, 100);
+    AtlasCache['at'][xpos].draw(context, 100, 100);
     xpos = (xpos + 1) % AtlasHolder.length;
 }

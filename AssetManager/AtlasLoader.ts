@@ -1,10 +1,9 @@
-var atlasPos = 0;
 var srcArray;
+
 module preload {
     export class AtlasLoader {
         //srcArray: any;
-        atlasImage: HTMLImageElement;
-        atlasImagePath: string;
+        atlasImage: HTMLImageElement = new Image();
 
         key: string;
         sprite: HTMLImageElement;
@@ -18,20 +17,18 @@ module preload {
         draw: Function;
 
         Start(JSONArray) {
+            var sprite;
             //store JSONarray in variable
             srcArray = JSONArray;
-            this.atlasImagePath = JSONArray.meta.image;
-            this.atlasImage = new Image();
-            //set atlas image to png for atlas
-            this.atlasImage.src = 'Assets/' + this.atlasImagePath;
-            var sprite;
-            for (var i = 0; i < srcArray.length; i++) {
+            this.atlasImage.src = 'Assets/' + JSONArray.meta.image;
+            
+            /*for (var i = 0; i < srcArray.length; i++) {
                 //pushes sprite into object
                 sprite[i] = this.NewSprite(srcArray.frames[i].filename);
             }
             //push object into array so i can store multiple atlases
             AtlasHolder[atlasPos] = sprite;
-            atlasPos++;
+            atlasPos++;*/
         }
         Sprite(sourceAtlas, originX, originY, originW, originH) {
             this.sprite = sourceAtlas;
@@ -58,9 +55,8 @@ module preload {
                     break;
                 }
             }
-
             if (!this.isFound) {
-                alert("Error: Sprite \"" + spriteName + "\" not found in " + this.atlasImagePath);
+                alert("Error: Sprite \"" + spriteName + "\" not found");
                 }
         }
         loadJSON(url, call) {
