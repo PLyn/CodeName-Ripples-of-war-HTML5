@@ -6,7 +6,6 @@ window.onload = function () {
     var canvas = document.getElementById('Can');
     context = canvas.getContext('2d');
 
-    //group assets in a array of array
     var source = {
         Images: {
             D: 'Assets/diamond.png',
@@ -35,11 +34,9 @@ var preload;
 (function (preload) {
     var AtlasLoader = (function () {
         function AtlasLoader() {
-            //srcArray: any;
             this.atlasImage = new Image();
         }
         AtlasLoader.prototype.Start = function (JSONArray) {
-            //store JSONarray in variable
             srcArray = JSONArray;
             this.atlasImage.src = 'Assets/' + JSONArray.meta.image;
         };
@@ -58,12 +55,10 @@ var preload;
         AtlasLoader.prototype.NewSprite = function (spriteName) {
             this.isFound = false;
             for (var i = 0; i < srcArray.frames.length; i++) {
-                //search for array element to matches the filename of the frame
                 if (srcArray.frames[i].filename == spriteName) {
                     var spriteWanted = srcArray.frames[i];
                     this.isFound = true;
 
-                    //return new sprite function with all the dimensions and data of the frame
                     return new this.Sprite(this.atlasImage, spriteWanted.frame.x, spriteWanted.frame.y, spriteWanted.frame.w, spriteWanted.frame.h);
                     break;
                 }
@@ -90,8 +85,6 @@ var preload;
     })();
     preload.AtlasLoader = AtlasLoader;
 })(preload || (preload = {}));
-//numbers get corrupted in the onload function when initialized in the constructor for some weird reason so its global until
-//i figure out something better
 var number = 0;
 var isLoaded = 0;
 var error = 0;
@@ -108,12 +101,8 @@ var preload;
 
             for (var file in files) {
                 Imagecache[file] = new Image();
-                Imagecache[file].onload = function () {
-                    isLoaded++;
-                };
-                Imagecache[file].onerror = function () {
-                    error++;
-                };
+                Imagecache[file].onload = isLoaded++;
+                Imagecache[file].onerror = error++;
                 Imagecache[file].src = files[file];
             }
         };
@@ -128,26 +117,6 @@ var preload;
     })();
     preload.ImageLoader = ImageLoader;
 })(preload || (preload = {}));
-/*      HTML5 AssetManager
-*   Currently supports images and Atlases(image and json from texturepacker)
-*   how to use:
-*   store assets in array as shown
-*       var source = {
-*       Images: {
-*            D: 'Assets/diamond.png',
-*            S: 'Assets/star.png'
-*        },
-*        Atlas: {
-*            at: 'Assets/test.json'
-*        }
-*    };
-*    manager = new preload.Manager();
-*    manager.QueueAssets(source, OnComplete);
-*
-*   function OnComplete(){
-*   //do what you need with loaded assets now
-*    }
-*/
 var AtlasCache = [];
 var Imagecache = [];
 
@@ -160,7 +129,6 @@ var preload;
         function Manager() {
         }
         Manager.prototype.QueueAssets = function (Assets, OnComplete) {
-            this.IsLoaded = 0;
             if (Assets.Images) {
                 this.imgLoader = new preload.ImageLoader();
                 this.imgLoader.Start(Assets.Images);

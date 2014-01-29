@@ -27,14 +27,12 @@ var AtlasKey = [];
 module preload {
     export class Manager {
         Total_Assets: number;
-        IsLoaded: number;
 
         imgLoader: preload.ImageLoader;
 
         json: any;
         AtlasKey: string[];
         QueueAssets(Assets, OnComplete) {
-            this.IsLoaded = 0;
             if (Assets.Images) {
                 this.imgLoader = new preload.ImageLoader();
                 this.imgLoader.Start(Assets.Images);

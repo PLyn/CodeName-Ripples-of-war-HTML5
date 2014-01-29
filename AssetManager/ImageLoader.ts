@@ -15,15 +15,9 @@ module preload {
             //store each element in the cache for use in the program later on
             for (var file in files) {
                 Imagecache[file] = new Image();
-                Imagecache[file].onload =
-                function () {
-                    isLoaded++;
-                };
-                Imagecache[file].onerror =
-                function () {
-                    error++;
-                }
-            Imagecache[file].src = files[file];
+                Imagecache[file].onload = isLoaded++;
+                Imagecache[file].onerror = error++;
+                Imagecache[file].src = files[file];
             }
         }
 
