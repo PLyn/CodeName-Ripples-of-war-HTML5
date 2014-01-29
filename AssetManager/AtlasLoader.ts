@@ -1,4 +1,4 @@
-var srcArray;
+/*var srcArray;
 
 module preload {
     export class AtlasLoader {
@@ -64,4 +64,4 @@ module preload {
             return this.isFound;
         }
     }
-} 
+} */

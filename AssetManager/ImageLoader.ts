@@ -1,5 +1,6 @@
 //numbers get corrupted in the onload function when initialized in the constructor for some weird reason so its global until
 //i figure out something better
+/*
 var number = 0;
 var isLoaded = 0;
 var error = 0;
@@ -33,10 +34,11 @@ module preload {
     Progress() {
             return ((isLoaded + error) / this.downloadQueue.length) * 100;
     }
-   /* Get(key) {
+    Get(key) {
             return cache[key];
-        }*/
+        }
     }
 
 }
 
+*/
