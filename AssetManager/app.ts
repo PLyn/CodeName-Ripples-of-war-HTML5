@@ -17,15 +17,15 @@ window.onload = function () {
         }
     };
     manager = new preload.Manager();
-    manager.QueueAssets(source, OnComplete);
+    manager.queueAssets(source, OnComplete);
     }
 function OnComplete() {
-    context.drawImage(Imagecache['D'], 0, 0);
-    context.drawImage(Imagecache['S'], 50, 50);
+    context.drawImage(IMAGECACHE['D'], 0, 0);
+    context.drawImage(IMAGECACHE['S'], 50, 50);
     setInterval(animate, 1000 / 15);
 }
 function animate() {
     context.clearRect(75, 75, 100, 100);
-    AtlasCache['at'][xpos].draw(context, 100, 100);
-    xpos = (xpos + 1) % AtlasCache['at'].length;
+    ATLASCACHE['at'][xpos].draw(context, 100, 100);
+    xpos = (xpos + 1) % ATLASCACHE['at'].length;
 }
