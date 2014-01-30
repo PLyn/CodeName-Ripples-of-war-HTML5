@@ -16,16 +16,16 @@ window.onload = function () {
             gat: 'Assets/test.json'
         }
     };
-    manager = new preload.Manager();
+    manager = new Preloader.Manager();
     manager.queueAssets(source, OnComplete);
     }
 function OnComplete() {
-    context.drawImage(IMAGECACHE['D'], 0, 0);
-    context.drawImage(IMAGECACHE['S'], 50, 50);
+    context.drawImage(IMAGE_CACHE['D'], 0, 0);
+    context.drawImage(IMAGE_CACHE['S'], 50, 50);
     setInterval(animate, 1000 / 15);
 }
 function animate() {
     context.clearRect(75, 75, 100, 100);
-    ATLASCACHE['at'][xpos].draw(context, 100, 100);
-    xpos = (xpos + 1) % ATLASCACHE['at'].length;
+    ATLAS_CACHE['at'][xpos].draw(context, 100, 100);
+    xpos = (xpos + 1) % ATLAS_CACHE['at'].length;
 }

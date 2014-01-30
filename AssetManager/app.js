@@ -17,18 +17,18 @@ window.onload = function () {
             gat: 'Assets/test.json'
         }
     };
-    manager = new preload.Manager();
+    manager = new Preloader.Manager();
     manager.queueAssets(source, OnComplete);
 };
 function OnComplete() {
-    context.drawImage(IMAGECACHE['D'], 0, 0);
-    context.drawImage(IMAGECACHE['S'], 50, 50);
+    context.drawImage(IMAGE_CACHE['D'], 0, 0);
+    context.drawImage(IMAGE_CACHE['S'], 50, 50);
     setInterval(animate, 1000 / 15);
 }
 function animate() {
     context.clearRect(75, 75, 100, 100);
-    ATLASCACHE['at'][xpos].draw(context, 100, 100);
-    xpos = (xpos + 1) % ATLASCACHE['at'].length;
+    ATLAS_CACHE['at'][xpos].draw(context, 100, 100);
+    xpos = (xpos + 1) % ATLAS_CACHE['at'].length;
 }
 /*      HTML5 AssetManager V. 0.9
 *   Currently supports images and Atlases(image and json from texturepacker)
@@ -47,21 +47,14 @@ function animate() {
 *    manager.QueueAssets(source, OnComplete);
 *
 *   function OnComplete(){
-*   //do what you need with loaded assets now which are in global variables seen at below(Imagecache, AtlasCache etc)
+*   //do what you need with loaded assets now which are in global variables seen at below(IMAGE_CACHE, ATLAS_CACHE etc)
 *    }
 */
-var ATLASCACHE = [];
-var atlasPos = 0;
-var atlasKey = [];
-var IMAGECACHE = [];
-var isLoaded = 0;
-var isError = 0;
-var onJSONLoad;
-var srcArray;
-var total_Assets = 0;
+var ATLAS_CACHE = [];
+var IMAGE_CACHE = [];
 
-var preload;
-(function (preload) {
+var Preloader;
+(function (Preloader) {
     var Manager = (function () {
         function Manager() {
             this.atlasImage = new Image();
@@ -72,24 +65,28 @@ var preload;
             this.width = 0;
             this.height = 0;
             this.scale = 0;
+            this.isLoaded = 0;
+            this.isError = 0;
+            this.total_Assets = 0;
+            this.atlasPos = 0;
         }
         Manager.prototype.queueAssets = function (Assets, OnComplete) {
             var _this = this;
-            onJSONLoad = function (response) {
+            this.onJSONLoad = function (response) {
                 _this.json = JSON.parse(response);
-                srcArray = _this.json;
-                _this.atlasImage.src = 'Assets/' + srcArray.meta.image;
+                _this.srcArray = _this.json;
+                _this.atlasImage.src = 'Assets/' + _this.srcArray.meta.image;
                 var holder = [];
-                for (var i = 0; i < srcArray.frames.length; i++) {
-                    holder[i] = _this.newAtlasSprite(srcArray.frames[i].filename);
+                for (var i = 0; i < _this.srcArray.frames.length; i++) {
+                    holder[i] = _this.newAtlasSprite(_this.srcArray.frames[i].filename);
                 }
-                ATLASCACHE[_this.atlasKey[atlasPos]] = holder;
-                atlasPos++;
+                ATLAS_CACHE[_this.atlasKey[_this.atlasPos]] = holder;
+                _this.atlasPos++;
                 OnComplete();
             };
             if (Assets.Images) {
                 for (var file in Assets.Images) {
-                    total_Assets++;
+                    this.total_Assets++;
                 }
                 this.imageLoader(Assets.Images);
             }
@@ -110,10 +107,10 @@ var preload;
             };
         };
         Manager.prototype.newAtlasSprite = function (spriteName) {
-            for (var i = 0; i < srcArray.frames.length; i++) {
+            for (var i = 0; i < this.srcArray.frames.length; i++) {
                 //search for array element to matches the filename of the frame
-                if (srcArray.frames[i].filename == spriteName) {
-                    var spriteWanted = srcArray.frames[i];
+                if (this.srcArray.frames[i].filename == spriteName) {
+                    var spriteWanted = this.srcArray.frames[i];
                     this.isFound = true;
 
                     //return new sprite function with all the dimensions and data of the frame
@@ -138,20 +135,20 @@ var preload;
         };
         Manager.prototype.imageLoader = function (files) {
             for (var file in files) {
-                IMAGECACHE[file] = new Image();
-                IMAGECACHE[file].onload = isLoaded++;
-                IMAGECACHE[file].onerror = isError++;
-                IMAGECACHE[file].src = files[file];
+                IMAGE_CACHE[file] = new Image();
+                IMAGE_CACHE[file].onload = this.isLoaded++;
+                IMAGE_CACHE[file].onerror = this.isError++;
+                IMAGE_CACHE[file].src = files[file];
             }
         };
         Manager.prototype.atlasLoader = function (url) {
             this.atlasKey = Object.keys(url);
             for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadJSON(url[this.atlasKey[i]], onJSONLoad);
+                this.loadJSON(url[this.atlasKey[i]], this.onJSONLoad);
             }
         };
         return Manager;
     })();
-    preload.Manager = Manager;
-})(preload || (preload = {}));
+    Preloader.Manager = Manager;
+})(Preloader || (Preloader = {}));
 //# sourceMappingURL=app.js.map
