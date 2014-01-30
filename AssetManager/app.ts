@@ -12,7 +12,8 @@ window.onload = function () {
             S: 'Assets/star.png'
         },
         Atlas: {
-            at: 'Assets/test.json'
+            at: 'Assets/test.json',
+            gat: 'Assets/test.json'
         }
     };
     manager = new preload.Manager();

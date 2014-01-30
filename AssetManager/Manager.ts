@@ -32,6 +32,8 @@ var isError = 0;
 //atlas loader varaiable
 var srcArray;
 var image = new Image();
+
+var OnJSONLoad;
 module preload {
     export class Manager {
         //Atlas loader private variables
@@ -51,6 +53,21 @@ module preload {
         AtlasKey: string[];
 
         QueueAssets(Assets, OnComplete) {
+            //arrow function for onJSON load to prevent loss of this context
+            OnJSONLoad = (response) => {
+                this.json = JSON.parse(response);
+                srcArray = this.json;
+                this.atlasImage = new Image();
+                this.atlasImage.src = 'Assets/' + srcArray.meta.image;
+                image.src = 'Assets/' + srcArray.meta.image;
+                var holder = [];
+                for (var i = 0; i < srcArray.frames.length; i++) {
+                    holder[i] = this.NewSprite(srcArray.frames[i].filename);
+                }
+                AtlasCache[AtlasKey[atlasPos]] = holder;
+                atlasPos++;
+                OnComplete();
+            };
             if (Assets.Images) {
                 for (var file in Assets.Images) {
                     Total_Assets++;
@@ -58,7 +75,7 @@ module preload {
                 this.ImageLoader(Assets.Images);
             }
             if (Assets.Atlas) {
-                this.AtlasLoader(Assets.Atlas);
+                    this.AtlasLoader(Assets.Atlas);
             }
         }
         loadJSON(url, call) {
@@ -86,21 +103,6 @@ module preload {
             for (var i = 0; i < AtlasKey.length; i++) {
                 this.loadJSON(url[AtlasKey[i]], OnJSONLoad);
             }
-
-            var OnJSONLoad = (response) => {
-                this.json = JSON.parse(response);
-                srcArray = this.json;
-                this.atlasImage = new Image();
-                this.atlasImage.src = 'Assets/' + srcArray.meta.image;
-                image.src = 'Assets/' + srcArray.meta.image;
-                var holder = [];
-                for (var i = 0; i < srcArray.frames.length; i++) {
-                    holder[i] = this.NewSprite(srcArray.frames[i].filename);
-                }
-                AtlasCache[AtlasKey[atlasPos]] = holder;
-                atlasPos++;
-                OnComplete();
-            };
         }
         defineSprite(sourceAtlas, originX, originY, originW, originH) {
             this.sprite = sourceAtlas;

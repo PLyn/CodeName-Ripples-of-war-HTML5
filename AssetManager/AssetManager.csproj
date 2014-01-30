@@ -26,8 +26,6 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="AtlasLoader.ts" />
-    <TypeScriptCompile Include="ImageLoader.ts" />
     <TypeScriptCompile Include="Manager.ts" />
   </ItemGroup>
   <ItemGroup>

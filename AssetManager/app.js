@@ -13,7 +13,8 @@ window.onload = function () {
             S: 'Assets/star.png'
         },
         Atlas: {
-            at: 'Assets/test.json'
+            at: 'Assets/test.json',
+            gat: 'Assets/test.json'
         }
     };
     manager = new preload.Manager();
@@ -62,12 +63,30 @@ var isError = 0;
 //atlas loader varaiable
 var srcArray;
 var image = new Image();
+
+var OnJSONLoad;
 var preload;
 (function (preload) {
     var Manager = (function () {
         function Manager() {
         }
         Manager.prototype.QueueAssets = function (Assets, OnComplete) {
+            var _this = this;
+            //arrow function for onJSON load to prevent loss of this context
+            OnJSONLoad = function (response) {
+                _this.json = JSON.parse(response);
+                srcArray = _this.json;
+                _this.atlasImage = new Image();
+                _this.atlasImage.src = 'Assets/' + srcArray.meta.image;
+                image.src = 'Assets/' + srcArray.meta.image;
+                var holder = [];
+                for (var i = 0; i < srcArray.frames.length; i++) {
+                    holder[i] = _this.NewSprite(srcArray.frames[i].filename);
+                }
+                AtlasCache[AtlasKey[atlasPos]] = holder;
+                atlasPos++;
+                OnComplete();
+            };
             if (Assets.Images) {
                 for (var file in Assets.Images) {
                     Total_Assets++;
@@ -75,7 +94,9 @@ var preload;
                 this.ImageLoader(Assets.Images);
             }
             if (Assets.Atlas) {
-                this.AtlasLoader(Assets.Atlas);
+                for (var url in Assets.Atlas) {
+                    this.AtlasLoader(url);
+                }
             }
         };
         Manager.prototype.loadJSON = function (url, call) {
@@ -98,24 +119,9 @@ var preload;
             }
         };
         Manager.prototype.AtlasLoader = function (url) {
-            var _this = this;
-            var test = function (response) {
-                _this.json = JSON.parse(response);
-                srcArray = _this.json;
-                _this.atlasImage = new Image();
-                _this.atlasImage.src = 'Assets/' + srcArray.meta.image;
-                image.src = 'Assets/' + srcArray.meta.image;
-                var holder = [];
-                for (var i = 0; i < srcArray.frames.length; i++) {
-                    holder[i] = _this.NewSprite(srcArray.frames[i].filename);
-                }
-                AtlasCache[AtlasKey[atlasPos]] = holder;
-                atlasPos++;
-                OnComplete();
-            };
             AtlasKey = Object.keys(url);
             for (var i = 0; i < AtlasKey.length; i++) {
-                this.loadJSON(url[AtlasKey[i]], test);
+                this.loadJSON(url[AtlasKey[i]], OnJSONLoad);
             }
         };
         Manager.prototype.defineSprite = function (sourceAtlas, originX, originY, originW, originH) {
@@ -146,21 +152,6 @@ var preload;
             if (!this.isFound) {
                 alert("Error: Sprite \"" + spriteName + "\" not found");
             }
-        };
-        Manager.prototype.OnJSONLoad = function (response) {
-            //store JSONarray in variable
-            this.json = JSON.parse(response);
-            srcArray = this.json;
-            this.atlasImage = new Image();
-            this.atlasImage.src = 'Assets/' + srcArray.meta.image;
-            image.src = 'Assets/' + srcArray.meta.image;
-            var holder = [];
-            for (var i = 0; i < srcArray.frames.length; i++) {
-                holder[i] = this.NewSprite(srcArray.frames[i].filename);
-            }
-            AtlasCache[AtlasKey[atlasPos]] = holder;
-            atlasPos++;
-            OnComplete();
         };
         return Manager;
     })();

@@ -1,27 +1,16 @@
-/*var srcArray;
+var srcArray;
 
-module preload {
-    export class AtlasLoader {
-        //srcArray: any;
-        atlasImage: HTMLImageElement = new Image();
-
-        key: string;
-        sprite: HTMLImageElement;
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-        scale: number;
-
-        isFound: boolean;
-        draw: Function;
-
-        Start(JSONArray) {
-            //store JSONarray in variable
+var preload;
+(function (preload) {
+    var AtlasLoader = (function () {
+        function AtlasLoader() {
+            this.atlasImage = new Image();
+        }
+        AtlasLoader.prototype.Start = function (JSONArray) {
             srcArray = JSONArray;
             this.atlasImage.src = 'Assets/' + JSONArray.meta.image;
-        }
-        Sprite(sourceAtlas, originX, originY, originW, originH) {
+        };
+        AtlasLoader.prototype.Sprite = function (sourceAtlas, originX, originY, originW, originH) {
             this.sprite = sourceAtlas;
             this.x = originX;
             this.y = originY;
@@ -31,25 +20,24 @@ module preload {
 
             this.draw = function (canvas, x, y) {
                 canvas.drawImage(this.sprite, this.x, this.y, this.width, this.height, x, y, this.width * this.scale, this.height * this.scale);
-            }
-        }
-        NewSprite(spriteName) {
+            };
+        };
+        AtlasLoader.prototype.NewSprite = function (spriteName) {
             this.isFound = false;
             for (var i = 0; i < srcArray.frames.length; i++) {
-                //search for array element to matches the filename of the frame
                 if (srcArray.frames[i].filename == spriteName) {
                     var spriteWanted = srcArray.frames[i];
                     this.isFound = true;
-                    //return new sprite function with all the dimensions and data of the frame
+
                     return new this.Sprite(this.atlasImage, spriteWanted.frame.x, spriteWanted.frame.y, spriteWanted.frame.w, spriteWanted.frame.h);
                     break;
                 }
             }
             if (!this.isFound) {
                 alert("Error: Sprite \"" + spriteName + "\" not found");
-                }
-        }
-        loadJSON(url, call) {
+            }
+        };
+        AtlasLoader.prototype.loadJSON = function (url, call) {
             var xobj = new XMLHttpRequest();
             xobj.overrideMimeType("application/json");
             xobj.open('GET', url, true);
@@ -59,9 +47,12 @@ module preload {
                 }
             };
             xobj.send(null);
-        }
-        IsComplete() {
+        };
+        AtlasLoader.prototype.IsComplete = function () {
             return this.isFound;
-        }
-    }
-} */
+        };
+        return AtlasLoader;
+    })();
+    preload.AtlasLoader = AtlasLoader;
+})(preload || (preload = {}));
+//# sourceMappingURL=AtlasLoader.js.map
