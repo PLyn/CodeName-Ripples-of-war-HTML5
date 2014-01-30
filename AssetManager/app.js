@@ -22,7 +22,7 @@ window.onload = function () {
 function OnComplete() {
     context.drawImage(Imagecache['D'], 0, 0);
     context.drawImage(Imagecache['S'], 50, 50);
-    setInterval(animate, 1000 / 60);
+    setInterval(animate, 1000 / 15);
 }
 function animate() {
     context.clearRect(75, 75, 100, 100);
@@ -66,8 +66,6 @@ var preload;
 (function (preload) {
     var Manager = (function () {
         function Manager() {
-            //Atlas loader private variables
-            this.atlasImage = new Image();
         }
         Manager.prototype.QueueAssets = function (Assets, OnComplete) {
             if (Assets.Images) {
@@ -100,9 +98,24 @@ var preload;
             }
         };
         Manager.prototype.AtlasLoader = function (url) {
+            var _this = this;
+            var test = function (response) {
+                _this.json = JSON.parse(response);
+                srcArray = _this.json;
+                _this.atlasImage = new Image();
+                _this.atlasImage.src = 'Assets/' + srcArray.meta.image;
+                image.src = 'Assets/' + srcArray.meta.image;
+                var holder = [];
+                for (var i = 0; i < srcArray.frames.length; i++) {
+                    holder[i] = _this.NewSprite(srcArray.frames[i].filename);
+                }
+                AtlasCache[AtlasKey[atlasPos]] = holder;
+                atlasPos++;
+                OnComplete();
+            };
             AtlasKey = Object.keys(url);
             for (var i = 0; i < AtlasKey.length; i++) {
-                this.loadJSON(url[AtlasKey[i]], this.OnJSONLoad);
+                this.loadJSON(url[AtlasKey[i]], test);
             }
         };
         Manager.prototype.defineSprite = function (sourceAtlas, originX, originY, originW, originH) {
@@ -138,11 +151,11 @@ var preload;
             //store JSONarray in variable
             this.json = JSON.parse(response);
             srcArray = this.json;
+            this.atlasImage = new Image();
             this.atlasImage.src = 'Assets/' + srcArray.meta.image;
             image.src = 'Assets/' + srcArray.meta.image;
             var holder = [];
             for (var i = 0; i < srcArray.frames.length; i++) {
-                console.log(srcArray.frames[i].filename);
                 holder[i] = this.NewSprite(srcArray.frames[i].filename);
             }
             AtlasCache[AtlasKey[atlasPos]] = holder;

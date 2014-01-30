@@ -35,7 +35,7 @@ var image = new Image();
 module preload {
     export class Manager {
         //Atlas loader private variables
-        atlasImage: HTMLImageElement = new Image();
+        atlasImage: HTMLImageElement;
         sprite: HTMLImageElement;
         x: number;
         y: number;
@@ -84,8 +84,23 @@ module preload {
         AtlasLoader(url) {
             AtlasKey = Object.keys(url);
             for (var i = 0; i < AtlasKey.length; i++) {
-                this.loadJSON(url[AtlasKey[i]], this.OnJSONLoad);
+                this.loadJSON(url[AtlasKey[i]], OnJSONLoad);
             }
+
+            var OnJSONLoad = (response) => {
+                this.json = JSON.parse(response);
+                srcArray = this.json;
+                this.atlasImage = new Image();
+                this.atlasImage.src = 'Assets/' + srcArray.meta.image;
+                image.src = 'Assets/' + srcArray.meta.image;
+                var holder = [];
+                for (var i = 0; i < srcArray.frames.length; i++) {
+                    holder[i] = this.NewSprite(srcArray.frames[i].filename);
+                }
+                AtlasCache[AtlasKey[atlasPos]] = holder;
+                atlasPos++;
+                OnComplete();
+            };
         }
         defineSprite(sourceAtlas, originX, originY, originW, originH) {
             this.sprite = sourceAtlas;
@@ -114,21 +129,6 @@ module preload {
             if (!this.isFound) {
                 alert("Error: Sprite \"" + spriteName + "\" not found");
             }
-        }
-        OnJSONLoad(response) {
-            //store JSONarray in variable
-            this.json = JSON.parse(response);
-            srcArray = this.json;
-            this.atlasImage.src = 'Assets/' + srcArray.meta.image;
-            image.src = 'Assets/' + srcArray.meta.image;
-            var holder = [];
-            for (var i = 0; i < srcArray.frames.length; i++) {
-                console.log(srcArray.frames[i].filename);
-                holder[i] = this.NewSprite(srcArray.frames[i].filename);
-            }
-            AtlasCache[AtlasKey[atlasPos]] = holder;
-            atlasPos++;
-            OnComplete();
         }
     }
 }
