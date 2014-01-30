@@ -55,19 +55,20 @@ module Preloader {
             this.y = 0;
         }
         queueAssets(Assets, OnComplete) {
-            this.onJSONLoad = (response) => { //arrow function for onJSON load to prevent loss of this context
-                this.json = JSON.parse(response);
+            this.onJSONLoad = (response) => { //Arrow function for onJSON load to prevent loss of this context
+                var holder = []; //Temp array for storing each sprite in the atlas
+                this.json = JSON.parse(response); 
                 this.srcArray = this.json;
-                this.atlasImage.src = 'Assets/' + this.srcArray.meta.image;
-                var holder = [];
+                this.atlasImage.src = 'Assets/' + this.srcArray.meta.image;              
                 for (var i = 0; i < this.srcArray.frames.length; i++) {
                     holder[i] = this.newAtlasSprite(this.srcArray.frames[i].filename);
                 }
-                ATLAS_CACHE[this.atlasKey[this.atlasPos]] = holder;
+                ATLAS_CACHE[this.atlasKey[this.atlasPos]] = holder; //Store the entire holder array into one key of the ATLAS_CACHE
                 this.atlasPos++;
-                OnComplete();
+                OnComplete(); //Callback function when the function is done
             };
-            if (Assets.Images) {
+
+            if (Assets.Images) { 
                 for (var file in Assets.Images) {
                     this.total_Assets++;
                 }
@@ -90,10 +91,11 @@ module Preloader {
             }
         }
         newAtlasSprite(spriteName) {
+            var spriteWanted;
             for (var i = 0; i < this.srcArray.frames.length; i++) {
                 //search for array element to matches the filename of the frame
                 if (this.srcArray.frames[i].filename == spriteName) {
-                    var spriteWanted = this.srcArray.frames[i];
+                    spriteWanted = this.srcArray.frames[i];
                     this.isFound = true;
                     //return new sprite function with all the dimensions and data of the frame
                     return new this.defineAtlasSprite(this.atlasImage, spriteWanted.frame.x, spriteWanted.frame.y, spriteWanted.frame.w, spriteWanted.frame.h);
