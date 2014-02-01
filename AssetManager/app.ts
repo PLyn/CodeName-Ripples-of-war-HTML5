@@ -14,18 +14,23 @@ window.onload = function () {
         Atlas: {
             at: 'Assets/test.json',
             gat: 'Assets/test.json'
+        },
+        Tileset: {
+            rpg: 'Assets/map.json'
         }
     };
     manager = new Preloader.Manager();
     manager.queueAssets(source, OnComplete);
     }
 function OnComplete() {
-    context.drawImage(IMAGE_CACHE['D'], 0, 0);
-    context.drawImage(IMAGE_CACHE['S'], 50, 50);
+    manager.drawTiles(context);
+    context.drawImage(IMAGE_CACHE['D'], 0, 100);
+    context.drawImage(IMAGE_CACHE['S'],  100, 0);
     setInterval(animate, 1000 / 15);
 }
 function animate() {
-    context.clearRect(75, 75, 100, 100);
-    ATLAS_CACHE['at'][xpos].draw(context, 100, 100);
+    //context.clearRect(25, 25, 25, 25);
+    ATLAS_CACHE['at'][xpos].draw(context, 150, 150);
     xpos = (xpos + 1) % ATLAS_CACHE['at'].length;
+    
 }

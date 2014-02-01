@@ -1,4 +1,4 @@
-/*      HTML5 AssetManager V. 0.9
+/*      HTML5 AssetManager V. 0.7
 *   Currently supports images and Atlases(image and json from texturepacker)
 *   how to use:
 *   store assets in array as shown
@@ -20,26 +20,41 @@
 */
 var ATLAS_CACHE = []; //Global atlas cache to get specific atlases
 var IMAGE_CACHE = []; //Global image cache to get specific atlases
+var TILESET_CACHE = [];
 
+var num = 0;
+var tmxdata;
 module Preloader {
     export class Manager {
+        atlasData: any; //Holds the parsed JSON for the atlases
         atlasImage: HTMLImageElement; //Holds source atlas image
         atlasKey: string[];//holds the key for each atlas. Each key is a reference to the actual atlas
         atlasPos: number; //current position in atlasKey array
         draw: Function; // Inner Function of the defineAtlasSprite to draw sprite onto screen
         height: number; //Height of Sprite
+        holder: any; //Temp array for storing each sprite in the atlas
         isError: number; //Keeps track of each file loaded with error
         isFound: boolean; //Boolean to check if newAtlasSprite() finds the sprite given the key
         isLoaded: number; //Keeps track of each file loadded successfully
-        json: any; //Holds the parsed JSON array from the atlasLoader
-        onJSONLoad: Function; //Variable that holds the OnJSONLoad arrow function to solve the closure issue with the this context
+        map: any; //Holds the this context so that the closure issue doesnt occur
+        onAtlasJSONLoad: Function; //Variable that holds the OnAtlasJSONLoad arrow function
+        pixelSizeX: number; //Width in pixels of entire Tilemap
+        pixelSizeY: number; //Height in pixels of entire Tilemap
         scale: number; //Scaling size of sprite
         sprite: HTMLImageElement; // Holds the source atlas image for the specfic sprite
         srcArray: any; //Holds copy of JSON array 
-        total_Assets: number; //Number of all assets, used to check if all files have loaded
+        tileKey: any; //Holds the key for each tileset loaded
+        isTilesLoaded: boolean; //check if all tiles are loaded
+        tileSizeX: number; //Width of each Tile
+        tileSizeY: number; //Height of each Tile
+        tiledData: any; //Holds the parsed JSON for the tilemap
+        totalAssets: number; //Number of all assets, used to check if all files have loaded
         width: number; //Width of sprite
         x: number; //x Coordinate of sprite
+        numTilesX: number; //Number of Tiles in each row
+        numTilesY: number; //Number of Tiles in each column
         y: number; //y Coordinate of sprite
+
         constructor() {
             this.atlasImage = new Image();
             this.atlasKey = [];
@@ -48,34 +63,46 @@ module Preloader {
             this.isError = 0;
             this.isFound = false;
             this.isLoaded = 0;
+            this.map = null;
+            this.numTilesX = 0;
+            this.numTilesY = 0;
+            this.pixelSizeX = 0;
+            this.pixelSizeY = 0;
             this.scale = 0;
-            this.total_Assets = 0;
+            this.tiledData = null;
+            this.isTilesLoaded = false;
+            this.tileSizeX = 0;
+            this.tileSizeY = 0;
+            this.totalAssets = 0;
             this.width = 0;
             this.x = 0;
             this.y = 0;
         }
         queueAssets(Assets, OnComplete) {
-            this.onJSONLoad = (response) => { //Arrow function for onJSON load to prevent loss of this context
-                var holder = []; //Temp array for storing each sprite in the atlas
-                this.json = JSON.parse(response); 
-                this.srcArray = this.json;
+            this.onAtlasJSONLoad = (response) => { //Arrow function for onJSON load to prevent loss of this context
+                this.holder = [];
+                this.atlasData = JSON.parse(response); 
+                this.srcArray = this.atlasData;
                 this.atlasImage.src = 'Assets/' + this.srcArray.meta.image;              
                 for (var i = 0; i < this.srcArray.frames.length; i++) {
-                    holder[i] = this.newAtlasSprite(this.srcArray.frames[i].filename);
+                    this.holder[i] = this.newAtlasSprite(this.srcArray.frames[i].filename);
                 }
-                ATLAS_CACHE[this.atlasKey[this.atlasPos]] = holder; //Store the entire holder array into one key of the ATLAS_CACHE
-                this.atlasPos++;
-                OnComplete(); //Callback function when the function is done
+                ATLAS_CACHE[this.atlasKey[this.atlasPos]] = this.holder; //Store the holder array into the key of the ATLAS_CACHE
+                this.atlasPos++; //Move to the next key of the array
             };
 
             if (Assets.Images) { 
-                for (var file in Assets.Images) {
-                    this.total_Assets++;
-                }
                 this.imageLoader(Assets.Images);
             }
             if (Assets.Atlas) {
-                    this.atlasLoader(Assets.Atlas);
+                this.atlasLoader(Assets.Atlas);
+            }
+            if (Assets.Tileset) {
+                this.tilesetLoader(Assets.Tileset);
+            }
+            if (this.isTilesLoaded) {
+                console.log("completed");
+               
             }
         }
         defineAtlasSprite(sourceAtlas, originX, originY, originW, originH) {
@@ -129,7 +156,100 @@ module Preloader {
         atlasLoader(url) {
             this.atlasKey = Object.keys(url);
             for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadJSON(url[this.atlasKey[i]], this.onJSONLoad);
+                this.loadJSON(url[this.atlasKey[i]], this.onAtlasJSONLoad);
+            }
+        }
+        tilesetLoader(url) {
+            this.tileKey = Object.keys(url);
+            for (var i = 0; i < this.atlasKey.length; i++) {
+                this.loadJSON(url[this.tileKey[i]], this.onTileJSONLoad);
+            }
+        }
+        onTileJSONLoad(response){
+            this.tiledData = JSON.parse(response);
+            this.numTilesX = this.tiledData.width;
+            this.numTilesY = this.tiledData.height;
+            this.tileSizeX = this.tiledData.tilewidth
+            this.tileSizeY = this.tiledData.tileheight
+            this.pixelSizeX = this.numTilesX * this.tileSizeX;
+            this.pixelSizeY = this.numTilesY * this.tileSizeY;
+            
+            //console.log(tmxdata.tilewidth);
+            //console.log(this.tiledData.width);
+            tmxdata = this.tiledData;
+             //this.isTilesLoaded = true;
+            //this.map = this;
+            
+
+            var tiledata = this.tiledData.tilesets;
+            for (var i = 0; i < tiledata.length; i++){
+                var tilesetimage = new Image();
+                tilesetimage.onload = function () {
+                    num++;
+                    if (num === tiledata.length) {
+                        this.isTilesLoaded = true;
+                        OnComplete(); //Callback function when the function is done
+                    }
+                    
+                };
+                tilesetimage.src = "../Assets/" + this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
+                var tileData = {
+                    "firstgid": tiledata[i].firstgid,
+                    "image": tilesetimage,
+                    "imageheight": tiledata[i].imageheight,
+                    "imagewidth": tiledata[i].imagewidth,
+                    "name": tiledata[i].name,
+                    "numXTiles": Math.floor(tiledata[i].imagewidth / this.tileSizeX),
+                    "numYTiles": Math.floor(tiledata[i].imageheight / this.tileSizeY)
+                    
+                };
+                TILESET_CACHE[i] = tileData;
+            }
+        }
+        //onTilesetLoad() {
+        //}
+        getTile(tileIndex) {
+            var tile = {
+                "img": null,
+                "px": 0,
+                "py" : 0
+            };
+
+            var index = 0;
+            for (index = TILESET_CACHE.length - 1; index >= 0; index--) {
+                if (TILESET_CACHE[index].firstgid <= tileIndex) break;
+            }
+            tile.img = TILESET_CACHE[index].image;
+            var localIndex = tileIndex - TILESET_CACHE[index].firstgid;
+            var localtileX = Math.floor(localIndex % TILESET_CACHE[index].numXTiles);
+            var localtileY = Math.floor(localIndex / TILESET_CACHE[index].numXTiles);
+            tile.px = localtileX * tmxdata.tilewidth;
+            tile.py = localtileY * tmxdata.tileheight;
+
+            return tile;
+        }
+        drawTiles(context) {
+            /*if (!this.isTilesLoaded) {
+                console.log("not loaded");
+                return;
+            }*/
+            
+            for (var layeridX = 0; layeridX < tmxdata.layers.length; layeridX++) {
+                if (tmxdata.layers[layeridX].type !== "tilelayer") continue;
+                
+                var data = tmxdata.layers[layeridX].data;
+                for (var tileidX = 0; tileidX < data.length; tileidX++) {
+                    var ID = data[tileidX];
+                    if (ID === 0) { //If ID is 0, no tiles is at the current tile so skip ahead
+                        continue;
+                    }
+                    var tileloc = this.getTile(ID);
+
+                    var worldX = Math.floor(tileidX % tmxdata.width) * tmxdata.tilewidth;
+                    var worldY = Math.floor(tileidX / tmxdata.width) * tmxdata.tileheight;
+
+                    context.drawImage(tileloc.img, tileloc.px, tileloc.py, tmxdata.tilewidth, tmxdata.tileheight, worldX, worldY, tmxdata.tilewidth, tmxdata.tileheight);
+                }
             }
         }
     }
