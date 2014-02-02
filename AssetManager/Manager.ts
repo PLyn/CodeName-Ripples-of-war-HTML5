@@ -21,6 +21,7 @@
 var ATLAS_CACHE = []; //Global atlas cache to get specific atlases
 var IMAGE_CACHE = []; //Global image cache to get specific atlases
 var TILESET_CACHE = [];
+var XML_CACHE = [];
 
 module Preloader {
     export class Manager {
