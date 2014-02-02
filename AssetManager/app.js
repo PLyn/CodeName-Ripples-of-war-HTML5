@@ -1,4 +1,4 @@
-var manager;
+var asset;
 var context;
 var xpos = 0;
 
@@ -13,18 +13,20 @@ window.onload = function () {
             S: 'Assets/star.png'
         },
         Atlas: {
-            at: 'Assets/test.json',
-            gat: 'Assets/test.json'
+            at: 'Assets/test.json'
         },
         Tileset: {
             rpg: 'Assets/map.json'
         }
     };
-    manager = new Preloader.Manager();
-    manager.queueAssets(source, OnComplete);
+    asset = new Preloader.Manager();
+    asset.queueAssets(source, OnComplete);
+    if (!loaded) {
+        setTimeout(asset.progress, 1000 / 1);
+    }
 };
 function OnComplete() {
-    manager.drawTiles(context);
+    asset.drawTiles(context);
     context.drawImage(IMAGE_CACHE['D'], 0, 100);
     context.drawImage(IMAGE_CACHE['S'], 100, 0);
     setInterval(animate, 1000 / 15);
@@ -59,11 +61,86 @@ var IMAGE_CACHE = [];
 var TILESET_CACHE = [];
 
 var num = 0;
-var tmxdata;
+var mapData;
+var loaded = false;
 var Preloader;
 (function (Preloader) {
     var Manager = (function () {
         function Manager() {
+            var _this = this;
+            this.progress = function () {
+                if (_this.isLoaded === _this.totalAssets) {
+                    _this.isFilesLoaded = true;
+                    OnComplete();
+                }
+            };
+            this.onAtlasJSONLoad = function (response) {
+                _this.holder = [];
+                _this.atlasData = JSON.parse(response);
+                _this.srcArray = _this.atlasData;
+                _this.atlasImage.onload = function () {
+                    _this.isLoaded++;
+                };
+                _this.atlasImage.src = 'Assets/' + _this.srcArray.meta.image;
+                for (var i = 0; i < _this.srcArray.frames.length; i++) {
+                    _this.holder[i] = _this.newAtlasSprite(_this.srcArray.frames[i].filename);
+                }
+                ATLAS_CACHE[_this.atlasKey[_this.atlasPos]] = _this.holder; //Store the holder array into the key of the ATLAS_CACHE
+                _this.atlasPos++; //Move to the next key of the array
+            };
+            this.onTileJSONLoad = function (response) {
+                _this.tiledData = JSON.parse(response);
+                _this.numTilesX = _this.tiledData.width;
+                _this.numTilesY = _this.tiledData.height;
+                _this.tileSizeX = _this.tiledData.tilewidth;
+                _this.tileSizeY = _this.tiledData.tileheight;
+                _this.pixelSizeX = _this.numTilesX * _this.tileSizeX;
+                _this.pixelSizeY = _this.numTilesY * _this.tileSizeY;
+                mapData = _this.tiledData;
+                var tiledata = _this.tiledData.tilesets;
+                for (var i = 0; i < tiledata.length; i++) {
+                    var tilesetimage = new Image();
+                    tilesetimage.onload = function () {
+                        _this.isLoaded++;
+                    };
+                    tilesetimage.src = "../Assets/" + _this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
+                    var tileData = {
+                        "firstgid": tiledata[i].firstgid,
+                        "image": tilesetimage,
+                        "imageheight": tiledata[i].imageheight,
+                        "imagewidth": tiledata[i].imagewidth,
+                        "name": tiledata[i].name,
+                        "numXTiles": Math.floor(tiledata[i].imagewidth / _this.tileSizeX),
+                        "numYTiles": Math.floor(tiledata[i].imageheight / _this.tileSizeY)
+                    };
+                    TILESET_CACHE[i] = tileData;
+                }
+            };
+            this.drawTiles = function (context) {
+                if (!_this.isFilesLoaded) {
+                    console.log("not loaded");
+                    return;
+                }
+
+                for (var layeridX = 0; layeridX < mapData.layers.length; layeridX++) {
+                    if (mapData.layers[layeridX].type !== "tilelayer")
+                        continue;
+
+                    var data = mapData.layers[layeridX].data;
+                    for (var tileidX = 0; tileidX < data.length; tileidX++) {
+                        var ID = data[tileidX];
+                        if (ID === 0) {
+                            continue;
+                        }
+                        var tileloc = _this.getTile(ID);
+
+                        var worldX = Math.floor(tileidX % mapData.width) * mapData.tilewidth;
+                        var worldY = Math.floor(tileidX / mapData.width) * mapData.tileheight;
+
+                        context.drawImage(tileloc.img, tileloc.px, tileloc.py, mapData.tilewidth, mapData.tileheight, worldX, worldY, mapData.tilewidth, mapData.tileheight);
+                    }
+                }
+            };
             this.atlasImage = new Image();
             this.atlasKey = [];
             this.atlasPos = 0;
@@ -78,7 +155,7 @@ var Preloader;
             this.pixelSizeY = 0;
             this.scale = 0;
             this.tiledData = null;
-            this.isTilesLoaded = false;
+            this.isFilesLoaded = false;
             this.tileSizeX = 0;
             this.tileSizeY = 0;
             this.totalAssets = 0;
@@ -87,32 +164,82 @@ var Preloader;
             this.y = 0;
         }
         Manager.prototype.queueAssets = function (Assets, OnComplete) {
-            var _this = this;
-            this.onAtlasJSONLoad = function (response) {
-                _this.holder = [];
-                _this.atlasData = JSON.parse(response);
-                _this.srcArray = _this.atlasData;
-                _this.atlasImage.src = 'Assets/' + _this.srcArray.meta.image;
-                for (var i = 0; i < _this.srcArray.frames.length; i++) {
-                    _this.holder[i] = _this.newAtlasSprite(_this.srcArray.frames[i].filename);
-                }
-                ATLAS_CACHE[_this.atlasKey[_this.atlasPos]] = _this.holder; //Store the holder array into the key of the ATLAS_CACHE
-                _this.atlasPos++; //Move to the next key of the array
-            };
-
             if (Assets.Images) {
+                for (var image in Assets.Images) {
+                    this.totalAssets++;
+                }
                 this.imageLoader(Assets.Images);
             }
             if (Assets.Atlas) {
+                for (var atlas in Assets.Atlas) {
+                    this.totalAssets++;
+                }
                 this.atlasLoader(Assets.Atlas);
             }
             if (Assets.Tileset) {
+                for (var tileset in Assets.Tileset) {
+                    this.totalAssets++;
+                }
                 this.tilesetLoader(Assets.Tileset);
             }
-            if (this.isTilesLoaded) {
-                console.log("completed");
+        };
+
+        Manager.prototype.loadJSON = function (url, call) {
+            var xobj = new XMLHttpRequest();
+            xobj.overrideMimeType("application/json");
+            xobj.open('GET', url, true);
+            xobj.onreadystatechange = function () {
+                if (xobj.readyState == 4 && xobj.status == 200) {
+                    call(xobj.responseText);
+                }
+            };
+            xobj.send(null);
+        };
+        Manager.prototype.imageLoader = function (files) {
+            for (var file in files) {
+                IMAGE_CACHE[file] = new Image();
+                IMAGE_CACHE[file].onload = this.isLoaded++;
+                IMAGE_CACHE[file].onerror = this.isError++;
+                IMAGE_CACHE[file].src = files[file];
             }
         };
+        Manager.prototype.atlasLoader = function (url) {
+            this.atlasKey = Object.keys(url);
+            for (var i = 0; i < this.atlasKey.length; i++) {
+                this.loadJSON(url[this.atlasKey[i]], this.onAtlasJSONLoad);
+            }
+        };
+
+        Manager.prototype.tilesetLoader = function (url) {
+            this.tileKey = Object.keys(url);
+            for (var i = 0; i < this.atlasKey.length; i++) {
+                this.loadJSON(url[this.tileKey[i]], this.onTileJSONLoad);
+            }
+        };
+
+        //Functions to test if file are loaded and can be rendered properly
+        Manager.prototype.getTile = function (tileIndex) {
+            var tile = {
+                "img": null,
+                "px": 0,
+                "py": 0
+            };
+
+            var index = 0;
+            for (index = TILESET_CACHE.length - 1; index >= 0; index--) {
+                if (TILESET_CACHE[index].firstgid <= tileIndex)
+                    break;
+            }
+            tile.img = TILESET_CACHE[index].image;
+            var localIndex = tileIndex - TILESET_CACHE[index].firstgid;
+            var localtileX = Math.floor(localIndex % TILESET_CACHE[index].numXTiles);
+            var localtileY = Math.floor(localIndex / TILESET_CACHE[index].numXTiles);
+            tile.px = localtileX * mapData.tilewidth;
+            tile.py = localtileY * mapData.tileheight;
+
+            return tile;
+        };
+
         Manager.prototype.defineAtlasSprite = function (sourceAtlas, originX, originY, originW, originH) {
             this.sprite = sourceAtlas;
             this.x = originX;
@@ -140,119 +267,6 @@ var Preloader;
             }
             if (!this.isFound) {
                 alert("Error: Sprite \"" + spriteName + "\" not found");
-            }
-        };
-        Manager.prototype.loadJSON = function (url, call) {
-            var xobj = new XMLHttpRequest();
-            xobj.overrideMimeType("application/json");
-            xobj.open('GET', url, true);
-            xobj.onreadystatechange = function () {
-                if (xobj.readyState == 4 && xobj.status == 200) {
-                    call(xobj.responseText);
-                }
-            };
-            xobj.send(null);
-        };
-        Manager.prototype.imageLoader = function (files) {
-            for (var file in files) {
-                IMAGE_CACHE[file] = new Image();
-                IMAGE_CACHE[file].onload = this.isLoaded++;
-                IMAGE_CACHE[file].onerror = this.isError++;
-                IMAGE_CACHE[file].src = files[file];
-            }
-        };
-        Manager.prototype.atlasLoader = function (url) {
-            this.atlasKey = Object.keys(url);
-            for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadJSON(url[this.atlasKey[i]], this.onAtlasJSONLoad);
-            }
-        };
-        Manager.prototype.tilesetLoader = function (url) {
-            this.tileKey = Object.keys(url);
-            for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadJSON(url[this.tileKey[i]], this.onTileJSONLoad);
-            }
-        };
-        Manager.prototype.onTileJSONLoad = function (response) {
-            this.tiledData = JSON.parse(response);
-            this.numTilesX = this.tiledData.width;
-            this.numTilesY = this.tiledData.height;
-            this.tileSizeX = this.tiledData.tilewidth;
-            this.tileSizeY = this.tiledData.tileheight;
-            this.pixelSizeX = this.numTilesX * this.tileSizeX;
-            this.pixelSizeY = this.numTilesY * this.tileSizeY;
-
-            //console.log(tmxdata.tilewidth);
-            //console.log(this.tiledData.width);
-            tmxdata = this.tiledData;
-
-            //this.isTilesLoaded = true;
-            //this.map = this;
-            var tiledata = this.tiledData.tilesets;
-            for (var i = 0; i < tiledata.length; i++) {
-                var tilesetimage = new Image();
-                tilesetimage.onload = function () {
-                    num++;
-                    if (num === tiledata.length) {
-                        this.isTilesLoaded = true;
-                        OnComplete(); //Callback function when the function is done
-                    }
-                };
-                tilesetimage.src = "../Assets/" + this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
-                var tileData = {
-                    "firstgid": tiledata[i].firstgid,
-                    "image": tilesetimage,
-                    "imageheight": tiledata[i].imageheight,
-                    "imagewidth": tiledata[i].imagewidth,
-                    "name": tiledata[i].name,
-                    "numXTiles": Math.floor(tiledata[i].imagewidth / this.tileSizeX),
-                    "numYTiles": Math.floor(tiledata[i].imageheight / this.tileSizeY)
-                };
-                TILESET_CACHE[i] = tileData;
-            }
-        };
-
-        //onTilesetLoad() {
-        //}
-        Manager.prototype.getTile = function (tileIndex) {
-            var tile = {
-                "img": null,
-                "px": 0,
-                "py": 0
-            };
-
-            var index = 0;
-            for (index = TILESET_CACHE.length - 1; index >= 0; index--) {
-                if (TILESET_CACHE[index].firstgid <= tileIndex)
-                    break;
-            }
-            tile.img = TILESET_CACHE[index].image;
-            var localIndex = tileIndex - TILESET_CACHE[index].firstgid;
-            var localtileX = Math.floor(localIndex % TILESET_CACHE[index].numXTiles);
-            var localtileY = Math.floor(localIndex / TILESET_CACHE[index].numXTiles);
-            tile.px = localtileX * tmxdata.tilewidth;
-            tile.py = localtileY * tmxdata.tileheight;
-
-            return tile;
-        };
-        Manager.prototype.drawTiles = function (context) {
-            for (var layeridX = 0; layeridX < tmxdata.layers.length; layeridX++) {
-                if (tmxdata.layers[layeridX].type !== "tilelayer")
-                    continue;
-
-                var data = tmxdata.layers[layeridX].data;
-                for (var tileidX = 0; tileidX < data.length; tileidX++) {
-                    var ID = data[tileidX];
-                    if (ID === 0) {
-                        continue;
-                    }
-                    var tileloc = this.getTile(ID);
-
-                    var worldX = Math.floor(tileidX % tmxdata.width) * tmxdata.tilewidth;
-                    var worldY = Math.floor(tileidX / tmxdata.width) * tmxdata.tileheight;
-
-                    context.drawImage(tileloc.img, tileloc.px, tileloc.py, tmxdata.tilewidth, tmxdata.tileheight, worldX, worldY, tmxdata.tilewidth, tmxdata.tileheight);
-                }
             }
         };
         return Manager;

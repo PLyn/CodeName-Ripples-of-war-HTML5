@@ -1,4 +1,4 @@
-var manager;
+var asset;
 var context;
 var xpos = 0;
 
@@ -12,18 +12,21 @@ window.onload = function () {
             S: 'Assets/star.png'
         },
         Atlas: {
-            at: 'Assets/test.json',
-            gat: 'Assets/test.json'
+            at: 'Assets/test.json'
         },
         Tileset: {
             rpg: 'Assets/map.json'
         }
     };
-    manager = new Preloader.Manager();
-    manager.queueAssets(source, OnComplete);
+    asset = new Preloader.Manager();
+    asset.queueAssets(source, OnComplete);
+    if (!loaded) {
+        setTimeout(asset.progress, 1000 / 1);
     }
+
+}
 function OnComplete() {
-    manager.drawTiles(context);
+    asset.drawTiles(context);
     context.drawImage(IMAGE_CACHE['D'], 0, 100);
     context.drawImage(IMAGE_CACHE['S'],  100, 0);
     setInterval(animate, 1000 / 15);
