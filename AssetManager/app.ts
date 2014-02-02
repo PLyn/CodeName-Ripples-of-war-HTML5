@@ -31,8 +31,8 @@ function OnComplete() {
     context.drawImage(IMAGE_CACHE['S'],  100, 0);
     setInterval(animate, 1000 / 15);
 }
-function animate() {
 
+function animate() {
     //context.clearRect(25, 25, 25, 25);
     ATLAS_CACHE['at'][x].draw(context, 150, 150);
     x = (x + 1) % ATLAS_CACHE['at'].length;

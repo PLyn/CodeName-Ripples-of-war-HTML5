@@ -32,12 +32,13 @@ function OnComplete() {
     context.drawImage(IMAGE_CACHE['S'], 100, 0);
     setInterval(animate, 1000 / 15);
 }
+
 function animate() {
     //context.clearRect(25, 25, 25, 25);
     ATLAS_CACHE['at'][x].draw(context, 150, 150);
     x = (x + 1) % ATLAS_CACHE['at'].length;
 }
-/*      HTML5 AssetManager V. 0.8
+/*      HTML5 AssetManager V. 0.9
 *   Currently supports images and Atlases(image and json from texturepacker)
 *   how to use:
 *   store assets in array as shown
@@ -60,22 +61,14 @@ function animate() {
 var ATLAS_CACHE = [];
 var IMAGE_CACHE = [];
 var TILESET_CACHE = [];
+var XML_CACHE = [];
 
 var Preloader;
 (function (Preloader) {
     var Manager = (function () {
         function Manager() {
             var _this = this;
-            this.progress = function () {
-                _this.timerid = setInterval(function () {
-                    if (_this.isLoaded === _this.totalAssets) {
-                        clearInterval(_this.timerid);
-                        _this.isFilesLoaded = true;
-                        OnComplete();
-                    }
-                }, 1000 / 1);
-            };
-            this.onAtlasJSONLoad = function (response) {
+            this.onAtlasJSONLoad = function (key, response) {
                 _this.holder = [];
                 _this.atlasData = JSON.parse(response);
                 _this.srcArray = _this.atlasData;
@@ -86,10 +79,10 @@ var Preloader;
                 for (var i = 0; i < _this.srcArray.frames.length; i++) {
                     _this.holder[i] = _this.newAtlasSprite(_this.srcArray.frames[i].filename);
                 }
-                ATLAS_CACHE[_this.atlasKey[_this.atlasPos]] = _this.holder; //Store the holder array into the key of the ATLAS_CACHE
+                ATLAS_CACHE[key[_this.atlasPos]] = _this.holder; //Store the holder array into the key of the ATLAS_CACHE
                 _this.atlasPos++; //Move to the next key of the array
             };
-            this.onTileJSONLoad = function (response) {
+            this.onTileJSONLoad = function (key, response) {
                 _this.tiledData = JSON.parse(response);
                 _this.numTilesX = _this.tiledData.width;
                 _this.numTilesY = _this.tiledData.height;
@@ -114,15 +107,25 @@ var Preloader;
                         "numXTiles": Math.floor(tiledata[i].imagewidth / _this.tileSizeX),
                         "numYTiles": Math.floor(tiledata[i].imageheight / _this.tileSizeY)
                     };
-                    TILESET_CACHE[_this.tileKey[_this.tilesetPos]] = tileData;
+                    TILESET_CACHE[key[_this.tilesetPos]] = tileData;
                     _this.tilesetPos++;
+                    _this.tileKey = key; //needed for getTile ()
                 }
             };
-            this.onXMLLoad = function (response) {
+            this.onXMLLoad = function (key, response) {
                 _this.isLoaded++;
                 var test = response;
                 var xmltest = test.getElementsByTagName("Shadow");
-                console.log(xmltest);
+                //rest to be implemented. not sure how to extract the info how i want yet...will do soon
+            };
+            this.progress = function () {
+                _this.timerid = setInterval(function () {
+                    if (_this.isLoaded === _this.totalAssets) {
+                        clearInterval(_this.timerid);
+                        _this.isFilesLoaded = true;
+                        OnComplete();
+                    }
+                }, 1000 / 1);
             };
             //Functions to test if file are loaded and can be rendered properly
             this.getTile = function (tileIndex) {
@@ -202,60 +205,46 @@ var Preloader;
                 }
             }
             if (Assets.Images) {
-                this.imageLoader(Assets.Images);
+                this.genericLoader(Assets.Images, true);
             }
             if (Assets.Atlas) {
-                this.atlasLoader(Assets.Atlas);
+                this.genericLoader(Assets.Atlas, false, this.atlasKey, this.onAtlasJSONLoad, 'json');
             }
             if (Assets.Tileset) {
-                this.tilesetLoader(Assets.Tileset);
+                this.genericLoader(Assets.Tileset, false, this.tileKey, this.onTileJSONLoad, 'json');
             }
             if (Assets.XML) {
-                this.xmlLoader(Assets.XML);
+                this.genericLoader(Assets.XML, false, this.xmlKey, this.onXMLLoad, 'xml');
             }
         };
-
-        Manager.prototype.loadfile = function (url, call, type) {
+        Manager.prototype.genericLoader = function (url, isImage, key, onLoad, typeOfFile) {
+            if (isImage) {
+                for (var file in url) {
+                    IMAGE_CACHE[file] = new Image();
+                    IMAGE_CACHE[file].onload = this.isLoaded++;
+                    IMAGE_CACHE[file].onerror = this.isError++;
+                    IMAGE_CACHE[file].src = url[file];
+                }
+            } else {
+                key = Object.keys(url);
+                for (var i = 0; i < key.length; i++) {
+                    this.loadfile(key, url[key[i]], onLoad, typeOfFile);
+                }
+            }
+        };
+        Manager.prototype.loadfile = function (key, url, onLoad, type) {
             var xobj = new XMLHttpRequest();
             xobj.open('GET', url, true);
             xobj.onreadystatechange = function () {
                 if (xobj.readyState == 4 && xobj.status == 200) {
                     if (type === 'json') {
-                        call(xobj.responseText);
+                        onLoad(key, xobj.responseText);
                     } else if (type === 'xml') {
-                        call(xobj.responseXML);
+                        onLoad(key, xobj.responseXML);
                     }
                 }
             };
             xobj.send(null);
-        };
-        Manager.prototype.imageLoader = function (files) {
-            for (var file in files) {
-                IMAGE_CACHE[file] = new Image();
-                IMAGE_CACHE[file].onload = this.isLoaded++;
-                IMAGE_CACHE[file].onerror = this.isError++;
-                IMAGE_CACHE[file].src = files[file];
-            }
-        };
-        Manager.prototype.atlasLoader = function (url) {
-            this.atlasKey = Object.keys(url);
-            for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadfile(url[this.atlasKey[i]], this.onAtlasJSONLoad, 'json');
-            }
-        };
-
-        Manager.prototype.tilesetLoader = function (url) {
-            this.tileKey = Object.keys(url);
-            for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadfile(url[this.tileKey[i]], this.onTileJSONLoad, 'json');
-            }
-        };
-
-        Manager.prototype.xmlLoader = function (url) {
-            this.xmlKey = Object.keys(url);
-            for (var x = 0; x < this.xmlKey.length; x++) {
-                this.loadfile(url[this.xmlKey[x]], this.onXMLLoad, 'xml');
-            }
         };
 
         Manager.prototype.defineAtlasSprite = function (sourceAtlas, originX, originY, originW, originH) {
