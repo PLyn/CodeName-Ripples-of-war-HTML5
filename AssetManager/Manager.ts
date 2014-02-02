@@ -42,6 +42,7 @@ module Preloader {
         srcArray: any; //Holds copy of JSON array 
         tileKey: any; //Holds the key for each tileset loaded
         isFilesLoaded; //check if all tiles are loaded
+        tilesetPos; //Next key in the global tileset cache
         tileSizeX: number; //Width of each Tile
         tileSizeY: number; //Height of each Tile
         tiledData: any; //Holds the parsed JSON for the tilemap
@@ -68,6 +69,7 @@ module Preloader {
             this.scale = 0;
             this.tiledData = null;
             this.isFilesLoaded = false;
+            this.tilesetPos = 0;
             this.tileSizeX = 0;
             this.tileSizeY = 0;
             this.totalAssets = 0;
@@ -174,11 +176,12 @@ module Preloader {
                     "numYTiles": Math.floor(tiledata[i].imageheight / this.tileSizeY)
                     
                 };
-                TILESET_CACHE[i] = tileData;
+                TILESET_CACHE[this.tileKey[this.tilesetPos]] = tileData;
+                this.tilesetPos++;
             }
         }
         //Functions to test if file are loaded and can be rendered properly 
-        getTile(tileIndex) {
+        getTile = (tileIndex) => {
             var tile = {
                 "img": null,
                 "px": 0,
@@ -186,13 +189,13 @@ module Preloader {
             };
 
             var index = 0;
-            for (index = TILESET_CACHE.length - 1; index >= 0; index--) {
-                if (TILESET_CACHE[index].firstgid <= tileIndex) break;
+            for (index = 0; index < this.tileKey.length; index--) {
+                if (TILESET_CACHE[this.tileKey[index]].firstgid <= tileIndex) break;
             }
-            tile.img = TILESET_CACHE[index].image;
-            var localIndex = tileIndex - TILESET_CACHE[index].firstgid;
-            var localtileX = Math.floor(localIndex % TILESET_CACHE[index].numXTiles);
-            var localtileY = Math.floor(localIndex / TILESET_CACHE[index].numXTiles);
+            tile.img = TILESET_CACHE[this.tileKey[index]].image;
+            var localIndex = tileIndex - TILESET_CACHE[this.tileKey[index]].firstgid;
+            var localtileX = Math.floor(localIndex % TILESET_CACHE[this.tileKey[index]].numXTiles);
+            var localtileY = Math.floor(localIndex / TILESET_CACHE[this.tileKey[index]].numXTiles);
             tile.px = localtileX * this.tiledData.tilewidth;
             tile.py = localtileY * this.tiledData.tileheight;
 

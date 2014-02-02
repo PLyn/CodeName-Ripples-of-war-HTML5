@@ -1,6 +1,7 @@
 var asset;
 var context;
 var timer;
+var x = 0;
 window.onload = function () {
     var canvas = document.getElementById('Can');
     context = canvas.getContext('2d');
@@ -30,8 +31,6 @@ function OnComplete() {
     setInterval(animate, 1000 / 15);
 }
 function animate() {
-    var x = 0;
-
     //context.clearRect(25, 25, 25, 25);
     ATLAS_CACHE['at'][x].draw(context, 150, 150);
     x = (x + 1) % ATLAS_CACHE['at'].length;
@@ -113,8 +112,31 @@ var Preloader;
                         "numXTiles": Math.floor(tiledata[i].imagewidth / _this.tileSizeX),
                         "numYTiles": Math.floor(tiledata[i].imageheight / _this.tileSizeY)
                     };
-                    TILESET_CACHE[i] = tileData;
+                    TILESET_CACHE[_this.tileKey[_this.tilesetPos]] = tileData;
+                    _this.tilesetPos++;
                 }
+            };
+            //Functions to test if file are loaded and can be rendered properly
+            this.getTile = function (tileIndex) {
+                var tile = {
+                    "img": null,
+                    "px": 0,
+                    "py": 0
+                };
+
+                var index = 0;
+                for (index = 0; index < _this.tileKey.length; index--) {
+                    if (TILESET_CACHE[_this.tileKey[index]].firstgid <= tileIndex)
+                        break;
+                }
+                tile.img = TILESET_CACHE[_this.tileKey[index]].image;
+                var localIndex = tileIndex - TILESET_CACHE[_this.tileKey[index]].firstgid;
+                var localtileX = Math.floor(localIndex % TILESET_CACHE[_this.tileKey[index]].numXTiles);
+                var localtileY = Math.floor(localIndex / TILESET_CACHE[_this.tileKey[index]].numXTiles);
+                tile.px = localtileX * _this.tiledData.tilewidth;
+                tile.py = localtileY * _this.tiledData.tileheight;
+
+                return tile;
             };
             this.drawTiles = function (context) {
                 if (!_this.isFilesLoaded) {
@@ -156,6 +178,7 @@ var Preloader;
             this.scale = 0;
             this.tiledData = null;
             this.isFilesLoaded = false;
+            this.tilesetPos = 0;
             this.tileSizeX = 0;
             this.tileSizeY = 0;
             this.totalAssets = 0;
@@ -215,29 +238,6 @@ var Preloader;
             for (var i = 0; i < this.atlasKey.length; i++) {
                 this.loadJSON(url[this.tileKey[i]], this.onTileJSONLoad);
             }
-        };
-
-        //Functions to test if file are loaded and can be rendered properly
-        Manager.prototype.getTile = function (tileIndex) {
-            var tile = {
-                "img": null,
-                "px": 0,
-                "py": 0
-            };
-
-            var index = 0;
-            for (index = TILESET_CACHE.length - 1; index >= 0; index--) {
-                if (TILESET_CACHE[index].firstgid <= tileIndex)
-                    break;
-            }
-            tile.img = TILESET_CACHE[index].image;
-            var localIndex = tileIndex - TILESET_CACHE[index].firstgid;
-            var localtileX = Math.floor(localIndex % TILESET_CACHE[index].numXTiles);
-            var localtileY = Math.floor(localIndex / TILESET_CACHE[index].numXTiles);
-            tile.px = localtileX * this.tiledData.tilewidth;
-            tile.py = localtileY * this.tiledData.tileheight;
-
-            return tile;
         };
 
         Manager.prototype.defineAtlasSprite = function (sourceAtlas, originX, originY, originW, originH) {
