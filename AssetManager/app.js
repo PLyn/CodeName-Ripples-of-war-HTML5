@@ -1,7 +1,6 @@
 var asset;
 var context;
-var xpos = 0;
-
+var timer;
 window.onload = function () {
     var canvas = document.getElementById('Can');
     context = canvas.getContext('2d');
@@ -21,22 +20,23 @@ window.onload = function () {
     };
     asset = new Preloader.Manager();
     asset.queueAssets(source, OnComplete);
-    if (!loaded) {
-        setTimeout(asset.progress, 1000 / 1);
-    }
+    timer = setTimeout(asset.progress, 1000 / 1);
 };
 function OnComplete() {
+    clearTimeout(timer);
     asset.drawTiles(context);
     context.drawImage(IMAGE_CACHE['D'], 0, 100);
     context.drawImage(IMAGE_CACHE['S'], 100, 0);
     setInterval(animate, 1000 / 15);
 }
 function animate() {
+    var x = 0;
+
     //context.clearRect(25, 25, 25, 25);
-    ATLAS_CACHE['at'][xpos].draw(context, 150, 150);
-    xpos = (xpos + 1) % ATLAS_CACHE['at'].length;
+    ATLAS_CACHE['at'][x].draw(context, 150, 150);
+    x = (x + 1) % ATLAS_CACHE['at'].length;
 }
-/*      HTML5 AssetManager V. 0.7
+/*      HTML5 AssetManager V. 0.8
 *   Currently supports images and Atlases(image and json from texturepacker)
 *   how to use:
 *   store assets in array as shown
@@ -60,9 +60,6 @@ var ATLAS_CACHE = [];
 var IMAGE_CACHE = [];
 var TILESET_CACHE = [];
 
-var num = 0;
-var mapData;
-var loaded = false;
 var Preloader;
 (function (Preloader) {
     var Manager = (function () {
@@ -72,6 +69,9 @@ var Preloader;
                 if (_this.isLoaded === _this.totalAssets) {
                     _this.isFilesLoaded = true;
                     OnComplete();
+                    return true;
+                } else {
+                    return false;
                 }
             };
             this.onAtlasJSONLoad = function (response) {
@@ -96,7 +96,7 @@ var Preloader;
                 _this.tileSizeY = _this.tiledData.tileheight;
                 _this.pixelSizeX = _this.numTilesX * _this.tileSizeX;
                 _this.pixelSizeY = _this.numTilesY * _this.tileSizeY;
-                mapData = _this.tiledData;
+
                 var tiledata = _this.tiledData.tilesets;
                 for (var i = 0; i < tiledata.length; i++) {
                     var tilesetimage = new Image();
@@ -118,15 +118,15 @@ var Preloader;
             };
             this.drawTiles = function (context) {
                 if (!_this.isFilesLoaded) {
-                    console.log("not loaded");
+                    console.log("tileset not loaded");
                     return;
                 }
 
-                for (var layeridX = 0; layeridX < mapData.layers.length; layeridX++) {
-                    if (mapData.layers[layeridX].type !== "tilelayer")
+                for (var layeridX = 0; layeridX < _this.tiledData.layers.length; layeridX++) {
+                    if (_this.tiledData.layers[layeridX].type !== "tilelayer")
                         continue;
 
-                    var data = mapData.layers[layeridX].data;
+                    var data = _this.tiledData.layers[layeridX].data;
                     for (var tileidX = 0; tileidX < data.length; tileidX++) {
                         var ID = data[tileidX];
                         if (ID === 0) {
@@ -134,10 +134,10 @@ var Preloader;
                         }
                         var tileloc = _this.getTile(ID);
 
-                        var worldX = Math.floor(tileidX % mapData.width) * mapData.tilewidth;
-                        var worldY = Math.floor(tileidX / mapData.width) * mapData.tileheight;
+                        var worldX = Math.floor(tileidX % _this.tiledData.width) * _this.tiledData.tilewidth;
+                        var worldY = Math.floor(tileidX / _this.tiledData.width) * _this.tiledData.tileheight;
 
-                        context.drawImage(tileloc.img, tileloc.px, tileloc.py, mapData.tilewidth, mapData.tileheight, worldX, worldY, mapData.tilewidth, mapData.tileheight);
+                        context.drawImage(tileloc.img, tileloc.px, tileloc.py, _this.tiledData.tilewidth, _this.tiledData.tileheight, worldX, worldY, _this.tiledData.tilewidth, _this.tiledData.tileheight);
                     }
                 }
             };
@@ -234,8 +234,8 @@ var Preloader;
             var localIndex = tileIndex - TILESET_CACHE[index].firstgid;
             var localtileX = Math.floor(localIndex % TILESET_CACHE[index].numXTiles);
             var localtileY = Math.floor(localIndex / TILESET_CACHE[index].numXTiles);
-            tile.px = localtileX * mapData.tilewidth;
-            tile.py = localtileY * mapData.tileheight;
+            tile.px = localtileX * this.tiledData.tilewidth;
+            tile.py = localtileY * this.tiledData.tileheight;
 
             return tile;
         };

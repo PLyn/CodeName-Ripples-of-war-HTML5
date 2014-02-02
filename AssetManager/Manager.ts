@@ -22,9 +22,6 @@ var ATLAS_CACHE = []; //Global atlas cache to get specific atlases
 var IMAGE_CACHE = []; //Global image cache to get specific atlases
 var TILESET_CACHE = [];
 
-var num = 0;
-var mapData;
-var loaded = false;
 module Preloader {
     export class Manager {
         atlasData: any; //Holds the parsed JSON for the atlases
@@ -54,7 +51,6 @@ module Preloader {
         numTilesX: number; //Number of Tiles in each row
         numTilesY: number; //Number of Tiles in each column
         y: number; //y Coordinate of sprite
-
 
         constructor() {
             this.atlasImage = new Image();
@@ -103,7 +99,12 @@ module Preloader {
             if (this.isLoaded === this.totalAssets) {
                 this.isFilesLoaded = true;
                 OnComplete();
+                return true;
             }
+            else{
+                return false;
+            }
+            
         }
         loadJSON(url, call) {
             var xobj = new XMLHttpRequest();
@@ -157,7 +158,6 @@ module Preloader {
             this.tileSizeY = this.tiledData.tileheight
             this.pixelSizeX = this.numTilesX * this.tileSizeX;
             this.pixelSizeY = this.numTilesY * this.tileSizeY;
-            mapData = this.tiledData;
 
             var tiledata = this.tiledData.tilesets;
             for (var i = 0; i < tiledata.length; i++){
@@ -193,8 +193,8 @@ module Preloader {
             var localIndex = tileIndex - TILESET_CACHE[index].firstgid;
             var localtileX = Math.floor(localIndex % TILESET_CACHE[index].numXTiles);
             var localtileY = Math.floor(localIndex / TILESET_CACHE[index].numXTiles);
-            tile.px = localtileX * mapData.tilewidth;
-            tile.py = localtileY * mapData.tileheight;
+            tile.px = localtileX * this.tiledData.tilewidth;
+            tile.py = localtileY * this.tiledData.tileheight;
 
             return tile;
         }
@@ -204,10 +204,10 @@ module Preloader {
                 return;
             }
             
-            for (var layeridX = 0; layeridX < mapData.layers.length; layeridX++) {
-                if (mapData.layers[layeridX].type !== "tilelayer") continue;
+            for (var layeridX = 0; layeridX < this.tiledData.layers.length; layeridX++) {
+                if (this.tiledData.layers[layeridX].type !== "tilelayer") continue;
                 
-                var data = mapData.layers[layeridX].data;
+                var data = this.tiledData.layers[layeridX].data;
                 for (var tileidX = 0; tileidX < data.length; tileidX++) {
                     var ID = data[tileidX];
                     if (ID === 0) { //If ID is 0, no tiles is at the current tile so skip ahead
@@ -215,10 +215,10 @@ module Preloader {
                     }
                     var tileloc = this.getTile(ID);
 
-                    var worldX = Math.floor(tileidX % mapData.width) * mapData.tilewidth;
-                    var worldY = Math.floor(tileidX / mapData.width) * mapData.tileheight;
+                    var worldX = Math.floor(tileidX % this.tiledData.width) * this.tiledData.tilewidth;
+                    var worldY = Math.floor(tileidX / this.tiledData.width) * this.tiledData.tileheight;
 
-                    context.drawImage(tileloc.img, tileloc.px, tileloc.py, mapData.tilewidth, mapData.tileheight, worldX, worldY, mapData.tilewidth, mapData.tileheight);
+                    context.drawImage(tileloc.img, tileloc.px, tileloc.py, this.tiledData.tilewidth, this.tiledData.tileheight, worldX, worldY, this.tiledData.tilewidth, this.tiledData.tileheight);
                 }
             }
         }
