@@ -17,14 +17,16 @@ window.onload = function () {
         },
         Tileset: {
             rpg: 'Assets/map.json'
+        },
+        XML: {
+            chapter: 'Assets/test.xml'
         }
     };
     asset = new Preloader.Manager();
     asset.queueAssets(source, OnComplete);
-    timer = setTimeout(asset.progress, 1000 / 1);
+    asset.progress();
 };
 function OnComplete() {
-    clearTimeout(timer);
     asset.drawTiles(context);
     context.drawImage(IMAGE_CACHE['D'], 0, 100);
     context.drawImage(IMAGE_CACHE['S'], 100, 0);
@@ -65,13 +67,13 @@ var Preloader;
         function Manager() {
             var _this = this;
             this.progress = function () {
-                if (_this.isLoaded === _this.totalAssets) {
-                    _this.isFilesLoaded = true;
-                    OnComplete();
-                    return true;
-                } else {
-                    return false;
-                }
+                _this.timerid = setInterval(function () {
+                    if (_this.isLoaded === _this.totalAssets) {
+                        clearInterval(_this.timerid);
+                        _this.isFilesLoaded = true;
+                        OnComplete();
+                    }
+                }, 1000 / 1);
             };
             this.onAtlasJSONLoad = function (response) {
                 _this.holder = [];
@@ -115,6 +117,12 @@ var Preloader;
                     TILESET_CACHE[_this.tileKey[_this.tilesetPos]] = tileData;
                     _this.tilesetPos++;
                 }
+            };
+            this.onXMLLoad = function (response) {
+                _this.isLoaded++;
+                var test = response;
+                var xmltest = test.getElementsByTagName("Shadow");
+                console.log(xmltest);
             };
             //Functions to test if file are loaded and can be rendered properly
             this.getTile = function (tileIndex) {
@@ -170,7 +178,6 @@ var Preloader;
             this.isError = 0;
             this.isFound = false;
             this.isLoaded = 0;
-            this.map = null;
             this.numTilesX = 0;
             this.numTilesY = 0;
             this.pixelSizeX = 0;
@@ -187,33 +194,37 @@ var Preloader;
             this.y = 0;
         }
         Manager.prototype.queueAssets = function (Assets, OnComplete) {
-            if (Assets.Images) {
-                for (var image in Assets.Images) {
+            var Assetkeys = Object.keys(Assets);
+            for (var x = 0; x < Assetkeys.length; x++) {
+                var itemkeys = Object.keys(Assets[Assetkeys[x]]);
+                for (var y = 0; y < itemkeys.length; y++) {
                     this.totalAssets++;
                 }
+            }
+            if (Assets.Images) {
                 this.imageLoader(Assets.Images);
             }
             if (Assets.Atlas) {
-                for (var atlas in Assets.Atlas) {
-                    this.totalAssets++;
-                }
                 this.atlasLoader(Assets.Atlas);
             }
             if (Assets.Tileset) {
-                for (var tileset in Assets.Tileset) {
-                    this.totalAssets++;
-                }
                 this.tilesetLoader(Assets.Tileset);
+            }
+            if (Assets.XML) {
+                this.xmlLoader(Assets.XML);
             }
         };
 
-        Manager.prototype.loadJSON = function (url, call) {
+        Manager.prototype.loadfile = function (url, call, type) {
             var xobj = new XMLHttpRequest();
-            xobj.overrideMimeType("application/json");
             xobj.open('GET', url, true);
             xobj.onreadystatechange = function () {
                 if (xobj.readyState == 4 && xobj.status == 200) {
-                    call(xobj.responseText);
+                    if (type === 'json') {
+                        call(xobj.responseText);
+                    } else if (type === 'xml') {
+                        call(xobj.responseXML);
+                    }
                 }
             };
             xobj.send(null);
@@ -229,14 +240,21 @@ var Preloader;
         Manager.prototype.atlasLoader = function (url) {
             this.atlasKey = Object.keys(url);
             for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadJSON(url[this.atlasKey[i]], this.onAtlasJSONLoad);
+                this.loadfile(url[this.atlasKey[i]], this.onAtlasJSONLoad, 'json');
             }
         };
 
         Manager.prototype.tilesetLoader = function (url) {
             this.tileKey = Object.keys(url);
             for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadJSON(url[this.tileKey[i]], this.onTileJSONLoad);
+                this.loadfile(url[this.tileKey[i]], this.onTileJSONLoad, 'json');
+            }
+        };
+
+        Manager.prototype.xmlLoader = function (url) {
+            this.xmlKey = Object.keys(url);
+            for (var x = 0; x < this.xmlKey.length; x++) {
+                this.loadfile(url[this.xmlKey[x]], this.onXMLLoad, 'xml');
             }
         };
 

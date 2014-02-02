@@ -1,4 +1,4 @@
-/*      HTML5 AssetManager V. 0.8
+/*      HTML5 AssetManager V. 0.9
 *   Currently supports images and Atlases(image and json from texturepacker)
 *   how to use:
 *   store assets in array as shown
@@ -34,7 +34,8 @@ module Preloader {
         isError: number; //Keeps track of each file loaded with error
         isFound: boolean; //Boolean to check if newAtlasSprite() finds the sprite given the key
         isLoaded: number; //Keeps track of each file loadded successfully
-        map: any; //Holds the this context so that the closure issue doesnt occur
+        numTilesX: number; //Number of Tiles in each row
+        numTilesY: number; //Number of Tiles in each column
         pixelSizeX: number; //Width in pixels of entire Tilemap
         pixelSizeY: number; //Height in pixels of entire Tilemap
         scale: number; //Scaling size of sprite
@@ -46,11 +47,11 @@ module Preloader {
         tileSizeX: number; //Width of each Tile
         tileSizeY: number; //Height of each Tile
         tiledData: any; //Holds the parsed JSON for the tilemap
+        timerid;
         totalAssets: number; //Number of all assets, used to check if all files have loaded
         width: number; //Width of sprite
         x: number; //x Coordinate of sprite
-        numTilesX: number; //Number of Tiles in each row
-        numTilesY: number; //Number of Tiles in each column
+        xmlKey;
         y: number; //y Coordinate of sprite
 
         constructor() {
@@ -61,7 +62,6 @@ module Preloader {
             this.isError = 0;
             this.isFound = false;
             this.isLoaded = 0;
-            this.map = null;
             this.numTilesX = 0;
             this.numTilesY = 0;
             this.pixelSizeX = 0;
@@ -78,49 +78,51 @@ module Preloader {
             this.y = 0;
         }
         queueAssets(Assets, OnComplete) {
-            if (Assets.Images) { 
-                for (var image in Assets.Images) {
+            var Assetkeys = Object.keys(Assets);
+            for (var x = 0; x < Assetkeys.length; x++) {
+                var itemkeys = Object.keys(Assets[Assetkeys[x]]);
+                for (var y = 0; y < itemkeys.length; y++) {
                     this.totalAssets++;
                 }
+            }
+            if (Assets.Images) { 
                 this.imageLoader(Assets.Images);
             }
             if (Assets.Atlas) {
-                for (var atlas in Assets.Atlas) {
-                    this.totalAssets++;
-                }
                 this.atlasLoader(Assets.Atlas);
             }
             if (Assets.Tileset) {
-                for (var tileset in Assets.Tileset) {
-                    this.totalAssets++;
-                }
                 this.tilesetLoader(Assets.Tileset);
+            }
+            if (Assets.XML) {
+                this.xmlLoader(Assets.XML);
             }
         }
         progress = () => {
-            if (this.isLoaded === this.totalAssets) {
-                this.isFilesLoaded = true;
-                OnComplete();
-                return true;
-            }
-            else{
-                return false;
-            }
-            
+            this.timerid = setInterval( () => {
+                if (this.isLoaded === this.totalAssets) {
+                    clearInterval(this.timerid); 
+                    this.isFilesLoaded = true;
+                    OnComplete();
+                }
+            }, 1000 / 1);    
         }
-        loadJSON(url, call) {
+        loadfile(url, call, type) {
             var xobj = new XMLHttpRequest();
-            xobj.overrideMimeType("application/json");
             xobj.open('GET', url, true);
             xobj.onreadystatechange = function () {
                 if (xobj.readyState == 4 && xobj.status == 200) {
-                    call(xobj.responseText);
-                }
+                    if (type === 'json') {
+                        call(xobj.responseText);
+                    }
+                    else if (type === 'xml') {
+                        call(xobj.responseXML);
+                    }
+               }
             };
             xobj.send(null);
         }
         imageLoader(files) {
-            //store each element in the cache for use in the program later on
             for (var file in files) {
                 IMAGE_CACHE[file] = new Image();
                 IMAGE_CACHE[file].onload = this.isLoaded++;
@@ -131,7 +133,7 @@ module Preloader {
         atlasLoader(url) {
             this.atlasKey = Object.keys(url);
             for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadJSON(url[this.atlasKey[i]], this.onAtlasJSONLoad);
+                this.loadfile(url[this.atlasKey[i]], this.onAtlasJSONLoad, 'json');
             }
         }
         onAtlasJSONLoad = (response) => { //Arrow function for onJSON load to prevent loss of this context
@@ -149,7 +151,7 @@ module Preloader {
         tilesetLoader(url) {
             this.tileKey = Object.keys(url);
             for (var i = 0; i < this.atlasKey.length; i++) {
-                this.loadJSON(url[this.tileKey[i]], this.onTileJSONLoad);
+                this.loadfile(url[this.tileKey[i]], this.onTileJSONLoad, 'json');
             }
         }
         onTileJSONLoad = (response) => {
@@ -179,6 +181,18 @@ module Preloader {
                 TILESET_CACHE[this.tileKey[this.tilesetPos]] = tileData;
                 this.tilesetPos++;
             }
+        }
+        xmlLoader(url) {
+            this.xmlKey = Object.keys(url);
+            for (var x = 0; x < this.xmlKey.length; x++) {
+                this.loadfile(url[this.xmlKey[x]], this.onXMLLoad, 'xml');
+            }
+        }
+        onXMLLoad = (response) => {
+            this.isLoaded++;
+            var test = response;
+            var xmltest = test.getElementsByTagName("Shadow");
+            //rest to be implemented. not sure how to extract the info how i want yet...will do soon
         }
         //Functions to test if file are loaded and can be rendered properly 
         getTile = (tileIndex) => {

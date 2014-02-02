@@ -22,6 +22,7 @@
     <Content Include="Assets\rpgtileset.png" />
     <Content Include="Assets\star.png" />
     <Content Include="Assets\test.png" />
+    <Content Include="Assets\test.xml" />
     <Content Include="default.htm" />
     <Content Include="web.config" />
   </ItemGroup>

@@ -16,15 +16,16 @@ window.onload = function () {
         },
         Tileset: {
             rpg: 'Assets/map.json'
+        },
+        XML: {
+            chapter: 'Assets/test.xml'
         }
     };
     asset = new Preloader.Manager();
     asset.queueAssets(source, OnComplete);
-    timer = setTimeout(asset.progress, 1000 / 1);
-
+    asset.progress();
 }
 function OnComplete() {
-    clearTimeout(timer);
     asset.drawTiles(context);
     context.drawImage(IMAGE_CACHE['D'], 0, 100);
     context.drawImage(IMAGE_CACHE['S'],  100, 0);
