@@ -28,7 +28,10 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="gameobject.ts" />
+    <TypeScriptCompile Include="input.ts" />
     <TypeScriptCompile Include="Manager.ts" />
+    <TypeScriptCompile Include="Sprite.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\test.json" />

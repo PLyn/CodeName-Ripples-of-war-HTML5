@@ -15,69 +15,49 @@
 *    manager.QueueAssets(source, OnComplete);
 *
 *   function OnComplete(){
-*   //do what you need with loaded assets now which are in global variables seen at below(IMAGE_CACHE, ATLAS_CACHE etc)
+*   //do what you need with loaded assets now which are in global variables seen at below(IMAGE_CACHE, ANIM_CACHE etc)
 *    }
 */
-var ATLAS_CACHE = []; //Global atlas cache to get specific atlases
+var ANIM_CACHE = []; //Global atlas cache to get specific atlases
 var IMAGE_CACHE = []; //Global image cache to get specific images
+var SPRITE_CACHE = []; //Global sprite cache to get specific sprite
 var TILESET_CACHE = []; //Global Tileset cache to get specific tilesets
 var XML_CACHE = []; //Global xml cache to get specific xml files
 
 module Preloader {
     export class Manager {
-        atlasData: any; //Holds the parsed JSON for the atlases
-        atlasImage: HTMLImageElement; //Holds source atlas image
-        atlasKey: string[];//holds the key for each atlas. Each key is a reference to the actual atlas
-        atlasPos: number; //current position in atlasKey array
-        draw: Function; // Inner Function of the defineAtlasSprite to draw sprite onto screen
-        height: number; //Height of Sprite
-        holder: any; //Temp array for storing each sprite in the atlas
-        isError: number; //Keeps track of each file loaded with error
-        isFound: boolean; //Boolean to check if newAtlasSprite() finds the sprite given the key
-        isLoaded: number; //Keeps track of each file loadded successfully
-        numTilesX: number; //Number of Tiles in each row
-        numTilesY: number; //Number of Tiles in each column
-        pixelSizeX: number; //Width in pixels of entire Tilemap
-        pixelSizeY: number; //Height in pixels of entire Tilemap
-        scale: number; //Scaling size of sprite
-        sprite: HTMLImageElement; // Holds the source atlas image for the specfic sprite
-        srcArray: any; //Holds copy of JSON array 
-        tileKey: any; //Holds the key for each tileset loaded
-        isFilesLoaded; //check if all tiles are loaded
-        tilesetPos; //Next key in the global tileset cache
-        tileSizeX: number; //Width of each Tile
-        tileSizeY: number; //Height of each Tile
-        tiledData: any; //Holds the parsed JSON for the tilemap
+        animData; //Holds the parsed JSON for the atlases
+        animSource = new Image(); //Holds source atlas image
+        animkey = [];//holds the key for each atlas. Each key is a reference to the actual atlas
+        animPos = 0; //current position in animkey array
+        draw = {}; // Inner Function of the defineAtlasSprite to draw sprite onto screen
+        height = 0; //Height of Sprite
+        isError = 0; //Keeps track of each file loaded with error
+        isFound = false; //Boolean to check if newAtlasSprite() finds the sprite given the key
+        isLoaded = 0; //Keeps track of each file loadded successfully
+        numTilesX = 0; //Number of Tiles in each row
+        numTilesY = 0; //Number of Tiles in each column
+        pixelSizeX = 0; //Width in pixels of entire Tilemap
+        pixelSizeY = 0; //Height in pixels of entire Tilemap
+        scale = 0; //Scaling size of sprite
+        sprite = new Image(); // Holds the source atlas image for the specfic sprite
+        spriteData;
+        spritekey = [];
+        spritePos = 0;
+        spriteSource = new Image();
+        tileKey; //Holds the key for each tileset loaded
+        isFilesLoaded = false; //check if all tiles are loaded
+        tilesetPos = 0; //Next key in the global tileset cache
+        tileSizeX = 0; //Width of each Tile
+        tileSizeY = 0; //Height of each Tile
+        tiledData; //Holds the parsed JSON for the tilemap
         timerid;
-        totalAssets: number; //Number of all assets, used to check if all files have loaded
-        width: number; //Width of sprite
-        x: number; //x Coordinate of sprite
+        totalAssets = 0; //Number of all assets, used to check if all files have loaded
+        width = 0; //Width of sprite
+        x = 0; //x Coordinate of sprite
         xmlKey;
-        y: number; //y Coordinate of sprite
+        y = 0; //y Coordinate of sprite
 
-        constructor() {
-            this.atlasImage = new Image();
-            this.atlasKey = [];
-            this.atlasPos = 0;
-            this.height = 0;
-            this.isError = 0;
-            this.isFound = false;
-            this.isLoaded = 0;
-            this.numTilesX = 0;
-            this.numTilesY = 0;
-            this.pixelSizeX = 0;
-            this.pixelSizeY = 0;
-            this.scale = 0;
-            this.tiledData = null;
-            this.isFilesLoaded = false;
-            this.tilesetPos = 0;
-            this.tileSizeX = 0;
-            this.tileSizeY = 0;
-            this.totalAssets = 0;
-            this.width = 0;
-            this.x = 0;
-            this.y = 0;
-        }
         queueAssets(Assets, OnComplete) {
             var Assetkeys = Object.keys(Assets);
             for (var x = 0; x < Assetkeys.length; x++) {
@@ -89,8 +69,11 @@ module Preloader {
             if (Assets.Images) { 
                 this.genericLoader(Assets.Images, true);
             }
-            if (Assets.Atlas) {
-                this.genericLoader(Assets.Atlas, false, this.atlasKey, this.onAtlasJSONLoad, 'json');
+            if (Assets.Anim) {
+                this.genericLoader(Assets.Anim, false, this.animkey, this.onAnimJSONLoad, 'json');
+            }
+            if (Assets.Sprite) {
+                this.genericLoader(Assets.Sprite, false, this.spritekey, this.onSpriteJSONLoad, 'json');
             }
             if (Assets.Tileset) {
                 this.genericLoader(Assets.Tileset, false, this.tileKey, this.onTileJSONLoad, 'json');
@@ -130,17 +113,30 @@ module Preloader {
             };
             xobj.send(null);
         }
-        onAtlasJSONLoad = (key, response) => { //Arrow function for onJSON load to prevent loss of this context
-            this.holder = [];
-            this.atlasData = JSON.parse(response);
-            this.srcArray = this.atlasData;
-            this.atlasImage.onload = () => { this.isLoaded++; };
-            this.atlasImage.src = 'Assets/' + this.srcArray.meta.image;
-            for (var i = 0; i < this.srcArray.frames.length; i++) {
-                this.holder[i] = this.newAtlasSprite(this.srcArray.frames[i].filename);
+        onAnimJSONLoad = (key, response) => { //Arrow function for onJSON load to prevent loss of this context
+            var holder = [];
+            this.animData = JSON.parse(response);
+            this.animSource.onload = () => { this.isLoaded++; };
+            this.animSource.src = 'Assets/' + this.animData.meta.image;
+            for (var i = 0; i < this.animData.frames.length; i++) {
+                holder[i] = new game.GameObject(this.animSource, this.animData.frames[i].frame.x, this.animData.frames[i].frame.y, this.animData.frames[i].frame.w, this.animData.frames[i].frame.h);
             }
-            ATLAS_CACHE[key[this.atlasPos]] = this.holder; //Store the holder array into the key of the ATLAS_CACHE
-            this.atlasPos++; //Move to the next key of the array
+            ANIM_CACHE[key[this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
+            this.animPos++; //Move to the next key of the array
+        }
+        onSpriteJSONLoad = (key, response) => {
+            var holder = [];
+            
+            this.spriteData = JSON.parse(response);
+            this.spriteSource.onload = () => {
+                this.isLoaded++;
+            }
+            this.spriteSource.src = 'Assets/' + this.spriteData.meta.image;
+            for (var i = 0; i < this.spriteData.frames.length; i++) {
+                holder[i] = new game.GameObject(this.spriteSource, this.spriteData.frames[i].frame.x, this.spriteData.frames[i].frame.y, this.spriteData.frames[i].frame.w, this.spriteData.frames[i].frame.h);
+                SPRITE_CACHE[i] = holder[i];
+            }           
+            this.spritePos++;
         }
         onTileJSONLoad = (key, response) => {
             this.tiledData = JSON.parse(response);
@@ -229,34 +225,6 @@ module Preloader {
 
                     context.drawImage(tileloc.img, tileloc.px, tileloc.py, this.tiledData.tilewidth, this.tiledData.tileheight, worldX, worldY, this.tiledData.tilewidth, this.tiledData.tileheight);
                 }
-            }
-        }
-        defineAtlasSprite(sourceAtlas, originX, originY, originW, originH) {
-            this.sprite = sourceAtlas;
-            this.x = originX;
-            this.y = originY;
-            this.width = originW;
-            this.height = originH;
-            this.scale = 1.0;
-
-            this.draw = function (canvas, x, y) {
-                canvas.drawImage(this.sprite, this.x, this.y, this.width, this.height, x, y, this.width * this.scale, this.height * this.scale);
-            }
-        }
-        newAtlasSprite(spriteName) {
-            var spriteWanted;
-            for (var i = 0; i < this.srcArray.frames.length; i++) {
-                //search for array element to matches the filename of the frame
-                if (this.srcArray.frames[i].filename == spriteName) {
-                    spriteWanted = this.srcArray.frames[i];
-                    this.isFound = true;
-                    //return new sprite function with all the dimensions and data of the frame
-                    return new this.defineAtlasSprite(this.atlasImage, spriteWanted.frame.x, spriteWanted.frame.y, spriteWanted.frame.w, spriteWanted.frame.h);
-                    break;
-                }
-            }
-            if (!this.isFound) {
-                alert("Error: Sprite \"" + spriteName + "\" not found");
             }
         }
     }
