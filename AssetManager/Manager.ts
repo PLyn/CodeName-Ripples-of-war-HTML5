@@ -1,18 +1,27 @@
 /*      HTML5 AssetManager V. 0.9
-*   Currently supports images and Atlases(image and json from texturepacker)
+*   Currently supports images, Atlases(from texturepacker) for sprites or animation, tilesets and loading of xml for now
 *   how to use:
-*   store assets in array as shown
 *       var source = {
-*       Images: {
+*        Images: {
 *            D: 'Assets/diamond.png',
 *            S: 'Assets/star.png'
 *        },
-*        Atlas: {
+*        Anim: {
 *            at: 'Assets/test.json'
+*        },
+*        Sprite: {
+*            spr: 'Assets/test.json'
+*        },
+*        Tileset: {
+*            rpg: 'Assets/map.json'
+*        },
+*        XML: {
+*            chapter: 'Assets/test.xml'
 *        }
 *    };
-*    manager = new preload.Manager();
-*    manager.QueueAssets(source, OnComplete);
+*    asset = new Preloader.Manager();
+*    asset.queueAssets(source, OnComplete);
+*    asset.progress();
 *
 *   function OnComplete(){
 *   //do what you need with loaded assets now which are in global variables seen at below(IMAGE_CACHE, ANIM_CACHE etc)
@@ -30,10 +39,8 @@ module Preloader {
         animSource = new Image(); //Holds source atlas image
         animkey = [];//holds the key for each atlas. Each key is a reference to the actual atlas
         animPos = 0; //current position in animkey array
-        draw = {}; // Inner Function of the defineAtlasSprite to draw sprite onto screen
         height = 0; //Height of Sprite
         isError = 0; //Keeps track of each file loaded with error
-        isFound = false; //Boolean to check if newAtlasSprite() finds the sprite given the key
         isLoaded = 0; //Keeps track of each file loadded successfully
         numTilesX = 0; //Number of Tiles in each row
         numTilesY = 0; //Number of Tiles in each column
@@ -41,21 +48,21 @@ module Preloader {
         pixelSizeY = 0; //Height in pixels of entire Tilemap
         scale = 0; //Scaling size of sprite
         sprite = new Image(); // Holds the source atlas image for the specfic sprite
-        spriteData;
-        spritekey = [];
-        spritePos = 0;
-        spriteSource = new Image();
+        spriteData; //Holds Parsed JSON data for sprite atlas
+        spritekey = []; //Holds the keys of the SPRITE_CACHE array
+        spritePos = 0; //Current position of the loop in the SPRITECACHE array
+        spriteSource = new Image(); //Holds atlas image for sprite atlas
         tileKey; //Holds the key for each tileset loaded
         isFilesLoaded = false; //check if all tiles are loaded
         tilesetPos = 0; //Next key in the global tileset cache
         tileSizeX = 0; //Width of each Tile
         tileSizeY = 0; //Height of each Tile
         tiledData; //Holds the parsed JSON for the tilemap
-        timerid;
+        timerid; //keep track of progress til its done loading
         totalAssets = 0; //Number of all assets, used to check if all files have loaded
         width = 0; //Width of sprite
         x = 0; //x Coordinate of sprite
-        xmlKey;
+        xmlKey; //The keys for the XML_CACHE array when it is being used
         y = 0; //y Coordinate of sprite
 
         queueAssets(Assets, OnComplete) {
@@ -115,11 +122,14 @@ module Preloader {
         }
         onAnimJSONLoad = (key, response) => { //Arrow function for onJSON load to prevent loss of this context
             var holder = [];
+            var frame;
             this.animData = JSON.parse(response);
+            
             this.animSource.onload = () => { this.isLoaded++; };
             this.animSource.src = 'Assets/' + this.animData.meta.image;
             for (var i = 0; i < this.animData.frames.length; i++) {
-                holder[i] = new game.GameObject(this.animSource, this.animData.frames[i].frame.x, this.animData.frames[i].frame.y, this.animData.frames[i].frame.w, this.animData.frames[i].frame.h);
+                frame = this.animData.frames[i].frame;
+                holder[i] = new Objects.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
             }
             ANIM_CACHE[key[this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
             this.animPos++; //Move to the next key of the array
@@ -133,7 +143,10 @@ module Preloader {
             }
             this.spriteSource.src = 'Assets/' + this.spriteData.meta.image;
             for (var i = 0; i < this.spriteData.frames.length; i++) {
-                holder[i] = new game.GameObject(this.spriteSource, this.spriteData.frames[i].frame.x, this.spriteData.frames[i].frame.y, this.spriteData.frames[i].frame.w, this.spriteData.frames[i].frame.h);
+                var frame = this.spriteData.frames[i].frame;
+                //figure out whats wrong with the associative array
+                var indexes = this.spriteData.frames[i].filename.substring(0, this.spriteData.frames[i].filename.length - 4);
+                holder[i] = new Objects.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                 SPRITE_CACHE[i] = holder[i];
             }           
             this.spritePos++;
@@ -168,9 +181,9 @@ module Preloader {
             }
         }
         onXMLLoad = (key, response) => {
-            this.isLoaded++;
             var test = response;
             var xmltest = test.getElementsByTagName("Shadow");
+            this.isLoaded++;
             //rest to be implemented. not sure how to extract the info how i want yet...will do soon
         }
         progress = () => {

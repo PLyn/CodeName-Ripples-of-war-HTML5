@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="game.ts" />
     <TypeScriptCompile Include="gameobject.ts" />
     <TypeScriptCompile Include="input.ts" />
     <TypeScriptCompile Include="Manager.ts" />

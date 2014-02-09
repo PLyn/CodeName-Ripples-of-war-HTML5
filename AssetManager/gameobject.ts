@@ -1,5 +1,5 @@
 ﻿var GAME_OBJECTS = [];
-module game {
+module Objects {
     export class GameObject {
         x = 0;
         y = 0;
@@ -10,8 +10,8 @@ module game {
 
         constructor(img, x, y, w, h, scale?) {
             this.img = img;
-            this.x = x;
-            this.y = y;
+            this.x = x || 0;
+            this.y = y || 0;
             this.W = w;
             this.H = h;
             this.scale = scale || 1;

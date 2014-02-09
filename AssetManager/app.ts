@@ -42,12 +42,12 @@ function mousedown(e) {
 function OnComplete() {
     for (var x = 0; x < SPRITE_CACHE.length; x++) {
         GAME_OBJECTS[x] = SPRITE_CACHE[x];
-        GAME_OBJECTS[x].render(context, imagex, imagey);
+        GAME_OBJECTS[x].render(this.context, imagex, imagey);
         imagex += 50;
     }
-    asset.drawTiles(context);
-    context.drawImage(IMAGE_CACHE['D'], imagex, 100);
-    context.drawImage(IMAGE_CACHE['S'], 100, 0);
+    asset.drawTiles(this.context);
+    this.context.drawImage(IMAGE_CACHE['D'], imagex, 100);
+    this.context.drawImage(IMAGE_CACHE['S'], 100, 0);
     setInterval(animate, 1000 / 30);
 }
 function animate() {

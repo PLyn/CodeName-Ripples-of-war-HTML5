@@ -43,12 +43,12 @@ function mousedown(e) {
 function OnComplete() {
     for (var x = 0; x < SPRITE_CACHE.length; x++) {
         GAME_OBJECTS[x] = SPRITE_CACHE[x];
-        GAME_OBJECTS[x].render(context, imagex, imagey);
+        GAME_OBJECTS[x].render(this.context, imagex, imagey);
         imagex += 50;
     }
-    asset.drawTiles(context);
-    context.drawImage(IMAGE_CACHE['D'], imagex, 100);
-    context.drawImage(IMAGE_CACHE['S'], 100, 0);
+    asset.drawTiles(this.context);
+    this.context.drawImage(IMAGE_CACHE['D'], imagex, 100);
+    this.context.drawImage(IMAGE_CACHE['S'], 100, 0);
     setInterval(animate, 1000 / 30);
 }
 function animate() {
@@ -75,9 +75,28 @@ function relMouseCoords(event) {
 
     return { x: canvasX, y: canvasY };
 }
+var Base;
+(function (Base) {
+    var Engine = (function () {
+        function Engine(width, height, canvasid) {
+            this.ingame = false;
+            this.canvas = document.createElement(canvasid);
+            this.canvas.width = width;
+            this.canvas.height = height;
+            document.body.appendChild(this.canvas);
+            this.context = this.canvas.getContext('2d');
+        }
+        Engine.prototype.update = function () {
+        };
+        Engine.prototype.render = function () {
+        };
+        return Engine;
+    })();
+    Base.Engine = Engine;
+})(Base || (Base = {}));
 var GAME_OBJECTS = [];
-var game;
-(function (game) {
+var Objects;
+(function (Objects) {
     var GameObject = (function () {
         function GameObject(img, x, y, w, h, scale) {
             this.x = 0;
@@ -87,8 +106,8 @@ var game;
             this.img = new Image();
             this.scale = 0;
             this.img = img;
-            this.x = x;
-            this.y = y;
+            this.x = x || 0;
+            this.y = y || 0;
             this.W = w;
             this.H = h;
             this.scale = scale || 1;
@@ -100,8 +119,8 @@ var game;
         };
         return GameObject;
     })();
-    game.GameObject = GameObject;
-})(game || (game = {}));
+    Objects.GameObject = GameObject;
+})(Objects || (Objects = {}));
 var input;
 (function (_input) {
     var input = (function () {
@@ -181,13 +200,16 @@ var Preloader;
             this.y = 0;
             this.onAnimJSONLoad = function (key, response) {
                 var holder = [];
+                var frame;
                 _this.animData = JSON.parse(response);
+
                 _this.animSource.onload = function () {
                     _this.isLoaded++;
                 };
                 _this.animSource.src = 'Assets/' + _this.animData.meta.image;
                 for (var i = 0; i < _this.animData.frames.length; i++) {
-                    holder[i] = new game.GameObject(_this.animSource, _this.animData.frames[i].frame.x, _this.animData.frames[i].frame.y, _this.animData.frames[i].frame.w, _this.animData.frames[i].frame.h);
+                    frame = _this.animData.frames[i].frame;
+                    holder[i] = new Objects.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                 }
                 ANIM_CACHE[key[_this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
                 _this.animPos++; //Move to the next key of the array
@@ -201,13 +223,13 @@ var Preloader;
                 };
                 _this.spriteSource.src = 'Assets/' + _this.spriteData.meta.image;
                 for (var i = 0; i < _this.spriteData.frames.length; i++) {
-                    holder[i] = new game.GameObject(_this.spriteSource, _this.spriteData.frames[i].frame.x, _this.spriteData.frames[i].frame.y, _this.spriteData.frames[i].frame.w, _this.spriteData.frames[i].frame.h);
+                    var frame = _this.spriteData.frames[i].frame;
 
-                    //this.newAnimFrame(this.spriteData.frames[i].filename);
+                    //figure out whats wrong with the associative array
+                    var indexes = _this.spriteData.frames[i].filename.substring(0, _this.spriteData.frames[i].filename.length - 4);
+                    holder[i] = new Objects.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                     SPRITE_CACHE[i] = holder[i];
                 }
-
-                //SPRITE_CACHE[key[this.spritePos]] = holder;
                 _this.spritePos++;
             };
             this.onTileJSONLoad = function (key, response) {
@@ -355,37 +377,6 @@ var Preloader;
                 }
             };
             xobj.send(null);
-        };
-
-        Manager.prototype.defineAtlasSprite = function (sourceAtlas, originX, originY, originW, originH) {
-            this.sprite = sourceAtlas;
-            this.x = originX;
-            this.y = originY;
-            this.width = originW;
-            this.height = originH;
-            this.scale = 1.0;
-
-            this.draw = function (canvas, x, y) {
-                canvas.drawImage(this.sprite, this.x, this.y, this.width, this.height, x, y, this.width * this.scale, this.height * this.scale);
-            };
-        };
-        Manager.prototype.newAnimFrame = function (spriteName) {
-            var spriteWanted;
-            for (var i = 0; i < this.animData.frames.length; i++) {
-                //search for array element to matches the filename of the frame
-                if (this.animData.frames[i].filename === spriteName) {
-                    spriteWanted = this.animData.frames[i];
-                    this.isFound = true;
-
-                    //return new Sprite.sprite(this.spriteSource, spriteWanted.frame.x, spriteWanted.frame.y, spriteWanted.frame.w, spriteWanted.frame.h);
-                    //return new sprite function with all the dimensions and data of the frame
-                    return new this.defineAtlasSprite(this.animSource, spriteWanted.frame.x, spriteWanted.frame.y, spriteWanted.frame.w, spriteWanted.frame.h);
-                    break;
-                }
-            }
-            if (!this.isFound) {
-                alert("Error: Sprite \"" + spriteName + "\" not found");
-            }
         };
         return Manager;
     })();
