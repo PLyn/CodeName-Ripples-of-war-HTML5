@@ -1,10 +1,6 @@
-var asset;
-var context;
-var timer;
-var x = 0;
 var imagex = 0;
-var imagey = 0;
-var en;
+var imagey = 250;
+
 window.onload = function () {
     var game = new Game.Game();
 }

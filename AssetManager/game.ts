@@ -32,6 +32,7 @@ module Game {
             setInterval(this.GameLoop, 1000 / 10);
         }
         GameLoop = () => {
+            this.loop.update();
             this.loop.render();
         }
     }

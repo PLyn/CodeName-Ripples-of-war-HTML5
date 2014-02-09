@@ -15,18 +15,21 @@
             
         }
         update() {
-
+            imagex += 50;
+            if (pos === 0) {
+                this.context.clearRect(0, 0, 800, 600);
+                imagex = 0;
+            }
         }
         render = () => {
             this.asset.drawTiles(this.context);
-            for (var x = 0; x < SPRITE_CACHE.length; x++) {
-                GAME_OBJECTS[x] = SPRITE_CACHE[x];
-                GAME_OBJECTS[x].render(this.context, imagex, imagey);
-                imagex += 50;
-            }
-            ANIM_CACHE['at'][pos].render(this.context, 200, 200);
+            GAME_OBJECTS[pos] = SPRITE_CACHE[pos];
+            GAME_OBJECTS[pos].render(this.context, imagex, imagey);
+
+            ANIM_CACHE['at'][pos].render(this.context, 200, 150);
 
             pos = (pos + 1) % ANIM_CACHE['at'].length;
+
         }
 
     }

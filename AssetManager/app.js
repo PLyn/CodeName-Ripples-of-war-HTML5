@@ -1,10 +1,6 @@
-﻿var asset;
-var context;
-var timer;
-var x = 0;
-var imagex = 0;
-var imagey = 0;
-var en;
+﻿var imagex = 0;
+var imagey = 250;
+
 window.onload = function () {
     var game = new Game.Game();
 };
@@ -15,12 +11,10 @@ var Engine;
             var _this = this;
             this.render = function () {
                 _this.asset.drawTiles(_this.context);
-                for (var x = 0; x < SPRITE_CACHE.length; x++) {
-                    GAME_OBJECTS[x] = SPRITE_CACHE[x];
-                    GAME_OBJECTS[x].render(_this.context, imagex, imagey);
-                    imagex += 50;
-                }
-                ANIM_CACHE['at'][pos].render(_this.context, 200, 200);
+                GAME_OBJECTS[pos] = SPRITE_CACHE[pos];
+                GAME_OBJECTS[pos].render(_this.context, imagex, imagey);
+
+                ANIM_CACHE['at'][pos].render(_this.context, 200, 150);
 
                 pos = (pos + 1) % ANIM_CACHE['at'].length;
             };
@@ -34,6 +28,11 @@ var Engine;
             this.context = this.canvas.getContext('2d');
         }
         Loop.prototype.update = function () {
+            imagex += 50;
+            if (pos === 0) {
+                this.context.clearRect(0, 0, 800, 600);
+                imagex = 0;
+            }
         };
         return Loop;
     })();
@@ -76,6 +75,7 @@ var Game;
                 setInterval(_this.GameLoop, 1000 / 10);
             };
             this.GameLoop = function () {
+                _this.loop.update();
                 _this.loop.render();
             };
             var source = {
