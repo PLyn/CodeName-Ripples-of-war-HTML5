@@ -28,10 +28,11 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="Engine\Engine.ts" />
+    <TypeScriptCompile Include="Engine\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />
-    <TypeScriptCompile Include="gameobject.ts" />
     <TypeScriptCompile Include="input.ts" />
-    <TypeScriptCompile Include="Manager.ts" />
+    <TypeScriptCompile Include="Engine\Manager.ts" />
     <TypeScriptCompile Include="Sprite.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -73,7 +74,7 @@
   </ProjectExtensions>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>none</TypeScriptModuleKind>
     <TypeScriptOutFile>app.js</TypeScriptOutFile>

@@ -4,99 +4,44 @@ var timer;
 var x = 0;
 var imagex = 0;
 var imagey = 0;
+var en;
 window.onload = function () {
-    var canvas = document.getElementById('Can');
-    window.addEventListener('mousedown', mousedown);
-    context = canvas.getContext('2d');
-
-    //group assets in a array of array
-    var source = {
-        Images: {
-            D: 'Assets/diamond.png',
-            S: 'Assets/star.png'
-        },
-        Anim: {
-            at: 'Assets/test.json'
-        },
-        Sprite: {
-            spr: 'Assets/test.json'
-        },
-        Tileset: {
-            rpg: 'Assets/map.json'
-        },
-        XML: {
-            chapter: 'Assets/test.xml'
-        }
-    };
-
-    asset = new Preloader.Manager();
-    asset.queueAssets(source, OnComplete);
-    asset.progress();
+    var game = new Game.Game();
 };
-function mousedown(e) {
-    var test = relMouseCoords(e);
-    var cx = e.pageX;
-    var cy = e.pageY;
-    console.log(cx);
-    console.log(cy);
-}
-function OnComplete() {
-    for (var x = 0; x < SPRITE_CACHE.length; x++) {
-        GAME_OBJECTS[x] = SPRITE_CACHE[x];
-        GAME_OBJECTS[x].render(this.context, imagex, imagey);
-        imagex += 50;
-    }
-    asset.drawTiles(this.context);
-    this.context.drawImage(IMAGE_CACHE['D'], imagex, 100);
-    this.context.drawImage(IMAGE_CACHE['S'], 100, 0);
-    setInterval(animate, 1000 / 30);
-}
-function animate() {
-    //context.clearRect(imagex - 10, 100, imagex + 25, 100);
-    ANIM_CACHE['at'][x].render(context, 200, 200);
-    x = (x + 1) % ANIM_CACHE['at'].length;
-}
+var Engine;
+(function (Engine) {
+    var Loop = (function () {
+        function Loop(canvasid, width, height, preloader) {
+            var _this = this;
+            this.render = function () {
+                _this.asset.drawTiles(_this.context);
+                for (var x = 0; x < SPRITE_CACHE.length; x++) {
+                    GAME_OBJECTS[x] = SPRITE_CACHE[x];
+                    GAME_OBJECTS[x].render(_this.context, imagex, imagey);
+                    imagex += 50;
+                }
+                ANIM_CACHE['at'][pos].render(_this.context, 200, 200);
 
-//deal with this function later to do proper coordinates for mouse position in canvas
-function relMouseCoords(event) {
-    var totalOffsetX = 0;
-    var totalOffsetY = 0;
-    var canvasX = 0;
-    var canvasY = 0;
-    var currentElement = this;
-
-    do {
-        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-    } while(currentElement === currentElement.offsetParent);
-
-    canvasX = event.pageX - totalOffsetX;
-    canvasY = event.pageY - totalOffsetY;
-
-    return { x: canvasX, y: canvasY };
-}
-var Base;
-(function (Base) {
-    var Engine = (function () {
-        function Engine(width, height, canvasid) {
-            this.ingame = false;
-            this.canvas = document.createElement(canvasid);
+                pos = (pos + 1) % ANIM_CACHE['at'].length;
+            };
+            this.canvas = document.createElement('canvas');
+            this.canvas.id = canvasid;
             this.canvas.width = width;
             this.canvas.height = height;
             document.body.appendChild(this.canvas);
+            this.asset = preloader;
+            this.canvas = document.getElementById(canvasid);
             this.context = this.canvas.getContext('2d');
         }
-        Engine.prototype.update = function () {
+        Loop.prototype.update = function () {
         };
-        Engine.prototype.render = function () {
-        };
-        return Engine;
+        return Loop;
     })();
-    Base.Engine = Engine;
-})(Base || (Base = {}));
+    Engine.Loop = Loop;
+})(Engine || (Engine = {}));
 var GAME_OBJECTS = [];
-var Objects;
-(function (Objects) {
+var Engine;
+(function (Engine) {
     var GameObject = (function () {
         function GameObject(img, x, y, w, h, scale) {
             this.x = 0;
@@ -119,8 +64,46 @@ var Objects;
         };
         return GameObject;
     })();
-    Objects.GameObject = GameObject;
-})(Objects || (Objects = {}));
+    Engine.GameObject = GameObject;
+})(Engine || (Engine = {}));
+var pos = 0;
+var Game;
+(function (_Game) {
+    var Game = (function () {
+        function Game() {
+            var _this = this;
+            this.onComplete = function () {
+                setInterval(_this.GameLoop, 1000 / 10);
+            };
+            this.GameLoop = function () {
+                _this.loop.render();
+            };
+            var source = {
+                Images: {
+                    D: 'Assets/diamond.png',
+                    S: 'Assets/star.png'
+                },
+                Anim: {
+                    at: 'Assets/test.json'
+                },
+                Sprite: {
+                    spr: 'Assets/test.json'
+                },
+                Tileset: {
+                    rpg: 'Assets/map.json'
+                },
+                XML: {
+                    chapter: 'Assets/test.xml'
+                }
+            };
+            this.preloader = new Engine.Preloader();
+            this.preloader.queueAssets(source, this.onComplete);
+            this.loop = new Engine.Loop('canvas', 800, 600, this.preloader);
+        }
+        return Game;
+    })();
+    _Game.Game = Game;
+})(Game || (Game = {}));
 var input;
 (function (_input) {
     var input = (function () {
@@ -142,44 +125,22 @@ var input;
     })();
     _input.input = input;
 })(input || (input = {}));
-/*      HTML5 AssetManager V. 0.9
-*   Currently supports images and Atlases(image and json from texturepacker)
-*   how to use:
-*   store assets in array as shown
-*       var source = {
-*       Images: {
-*            D: 'Assets/diamond.png',
-*            S: 'Assets/star.png'
-*        },
-*        Atlas: {
-*            at: 'Assets/test.json'
-*        }
-*    };
-*    manager = new preload.Manager();
-*    manager.QueueAssets(source, OnComplete);
-*
-*   function OnComplete(){
-*   //do what you need with loaded assets now which are in global variables seen at below(IMAGE_CACHE, ANIM_CACHE etc)
-*    }
-*/
 var ANIM_CACHE = [];
 var IMAGE_CACHE = [];
 var SPRITE_CACHE = [];
 var TILESET_CACHE = [];
 var XML_CACHE = [];
 
-var Preloader;
-(function (Preloader) {
-    var Manager = (function () {
-        function Manager() {
+var Engine;
+(function (Engine) {
+    var Preloader = (function () {
+        function Preloader() {
             var _this = this;
             this.animSource = new Image();
             this.animkey = [];
             this.animPos = 0;
-            this.draw = {};
             this.height = 0;
             this.isError = 0;
-            this.isFound = false;
             this.isLoaded = 0;
             this.numTilesX = 0;
             this.numTilesY = 0;
@@ -209,10 +170,10 @@ var Preloader;
                 _this.animSource.src = 'Assets/' + _this.animData.meta.image;
                 for (var i = 0; i < _this.animData.frames.length; i++) {
                     frame = _this.animData.frames[i].frame;
-                    holder[i] = new Objects.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
+                    holder[i] = new Engine.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                 }
-                ANIM_CACHE[key[_this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
-                _this.animPos++; //Move to the next key of the array
+                ANIM_CACHE[key[_this.animPos]] = holder;
+                _this.animPos++;
             };
             this.onSpriteJSONLoad = function (key, response) {
                 var holder = [];
@@ -225,9 +186,8 @@ var Preloader;
                 for (var i = 0; i < _this.spriteData.frames.length; i++) {
                     var frame = _this.spriteData.frames[i].frame;
 
-                    //figure out whats wrong with the associative array
                     var indexes = _this.spriteData.frames[i].filename.substring(0, _this.spriteData.frames[i].filename.length - 4);
-                    holder[i] = new Objects.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
+                    holder[i] = new Engine.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                     SPRITE_CACHE[i] = holder[i];
                 }
                 _this.spritePos++;
@@ -259,25 +219,16 @@ var Preloader;
                     };
                     TILESET_CACHE[key[_this.tilesetPos]] = tileData;
                     _this.tilesetPos++;
-                    _this.tileKey = key; //needed for getTile ()
+                    _this.tileKey = key;
                 }
             };
             this.onXMLLoad = function (key, response) {
-                _this.isLoaded++;
                 var test = response;
                 var xmltest = test.getElementsByTagName("Shadow");
-                //rest to be implemented. not sure how to extract the info how i want yet...will do soon
+                _this.isLoaded++;
             };
             this.progress = function () {
-                _this.timerid = setInterval(function () {
-                    if (_this.isLoaded === _this.totalAssets) {
-                        clearInterval(_this.timerid);
-                        _this.isFilesLoaded = true;
-                        OnComplete();
-                    }
-                }, 1000 / 1);
             };
-            //Functions to test if file are loaded and can be rendered properly
             this.getTile = function (tileIndex) {
                 var tile = {
                     "img": null,
@@ -325,7 +276,8 @@ var Preloader;
                 }
             };
         }
-        Manager.prototype.queueAssets = function (Assets, OnComplete) {
+        Preloader.prototype.queueAssets = function (Assets, load) {
+            var _this = this;
             var Assetkeys = Object.keys(Assets);
             for (var x = 0; x < Assetkeys.length; x++) {
                 var itemkeys = Object.keys(Assets[Assetkeys[x]]);
@@ -348,8 +300,15 @@ var Preloader;
             if (Assets.XML) {
                 this.genericLoader(Assets.XML, false, this.xmlKey, this.onXMLLoad, 'xml');
             }
+            this.timerid = setInterval(function () {
+                if (_this.isLoaded === _this.totalAssets) {
+                    clearInterval(_this.timerid);
+                    _this.isFilesLoaded = true;
+                    load();
+                }
+            }, 1000 / 1);
         };
-        Manager.prototype.genericLoader = function (url, isImage, key, onLoad, typeOfFile) {
+        Preloader.prototype.genericLoader = function (url, isImage, key, onLoad, typeOfFile) {
             if (isImage) {
                 for (var file in url) {
                     IMAGE_CACHE[file] = new Image();
@@ -364,7 +323,7 @@ var Preloader;
                 }
             }
         };
-        Manager.prototype.loadfile = function (key, url, onLoad, type) {
+        Preloader.prototype.loadfile = function (key, url, onLoad, type) {
             var xobj = new XMLHttpRequest();
             xobj.open('GET', url, true);
             xobj.onreadystatechange = function () {
@@ -378,8 +337,8 @@ var Preloader;
             };
             xobj.send(null);
         };
-        return Manager;
+        return Preloader;
     })();
-    Preloader.Manager = Manager;
-})(Preloader || (Preloader = {}));
+    Engine.Preloader = Preloader;
+})(Engine || (Engine = {}));
 //# sourceMappingURL=app.js.map

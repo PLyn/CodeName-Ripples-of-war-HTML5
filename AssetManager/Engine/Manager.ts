@@ -33,8 +33,8 @@ var SPRITE_CACHE = []; //Global sprite cache to get specific sprite
 var TILESET_CACHE = []; //Global Tileset cache to get specific tilesets
 var XML_CACHE = []; //Global xml cache to get specific xml files
 
-module Preloader {
-    export class Manager {
+module Engine {
+    export class Preloader {
         animData; //Holds the parsed JSON for the atlases
         animSource = new Image(); //Holds source atlas image
         animkey = [];//holds the key for each atlas. Each key is a reference to the actual atlas
@@ -65,7 +65,7 @@ module Preloader {
         xmlKey; //The keys for the XML_CACHE array when it is being used
         y = 0; //y Coordinate of sprite
 
-        queueAssets(Assets, OnComplete) {
+        queueAssets(Assets, load) {
             var Assetkeys = Object.keys(Assets);
             for (var x = 0; x < Assetkeys.length; x++) {
                 var itemkeys = Object.keys(Assets[Assetkeys[x]]);
@@ -88,6 +88,13 @@ module Preloader {
             if (Assets.XML) {
                 this.genericLoader(Assets.XML, false, this.xmlKey, this.onXMLLoad, 'xml');
             }
+            this.timerid = setInterval(() => {
+                if (this.isLoaded === this.totalAssets) {
+                    clearInterval(this.timerid);
+                    this.isFilesLoaded = true;
+                    load();
+                }
+            }, 1000 / 1);
         }
         genericLoader(url, isImage, key?, onLoad?, typeOfFile?) {
             if (isImage) {
@@ -129,7 +136,7 @@ module Preloader {
             this.animSource.src = 'Assets/' + this.animData.meta.image;
             for (var i = 0; i < this.animData.frames.length; i++) {
                 frame = this.animData.frames[i].frame;
-                holder[i] = new Objects.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Engine.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
             }
             ANIM_CACHE[key[this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
             this.animPos++; //Move to the next key of the array
@@ -146,7 +153,7 @@ module Preloader {
                 var frame = this.spriteData.frames[i].frame;
                 //figure out whats wrong with the associative array
                 var indexes = this.spriteData.frames[i].filename.substring(0, this.spriteData.frames[i].filename.length - 4);
-                holder[i] = new Objects.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Engine.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                 SPRITE_CACHE[i] = holder[i];
             }           
             this.spritePos++;
@@ -187,13 +194,7 @@ module Preloader {
             //rest to be implemented. not sure how to extract the info how i want yet...will do soon
         }
         progress = () => {
-            this.timerid = setInterval(() => {
-                if (this.isLoaded === this.totalAssets) {
-                    clearInterval(this.timerid);
-                    this.isFilesLoaded = true;
-                    OnComplete();
-                }
-            }, 1000 / 1);
+
         }
         //Functions to test if file are loaded and can be rendered properly 
         getTile = (tileIndex) => {

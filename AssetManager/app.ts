@@ -4,10 +4,14 @@ var timer;
 var x = 0;
 var imagex = 0;
 var imagey = 0;
+var en;
 window.onload = function () {
-    var canvas = <HTMLCanvasElement> document.getElementById('Can');
+    var game = new Game.Game();
+}
+    /*var canvas = <HTMLCanvasElement> document.getElementById('Can');
     window.addEventListener('mousedown', mousedown);
     context = canvas.getContext('2d');
+    en = new Base.Engine(800, 600, 'can');
     //group assets in a array of array
     var source = {
         Images: {
@@ -40,15 +44,15 @@ function mousedown(e) {
     console.log(cy);
 }
 function OnComplete() {
-    for (var x = 0; x < SPRITE_CACHE.length; x++) {
+    /*for (var x = 0; x < SPRITE_CACHE.length; x++) {
         GAME_OBJECTS[x] = SPRITE_CACHE[x];
         GAME_OBJECTS[x].render(this.context, imagex, imagey);
         imagex += 50;
     }
     asset.drawTiles(this.context);
     this.context.drawImage(IMAGE_CACHE['D'], imagex, 100);
-    this.context.drawImage(IMAGE_CACHE['S'], 100, 0);
-    setInterval(animate, 1000 / 30);
+    this.context.drawImage(IMAGE_CACHE['S'], 100, 0);*/
+    /*setInterval(en.render, 1000 / 30);
 }
 function animate() {
     //context.clearRect(imagex - 10, 100, imagex + 25, 100);
@@ -73,4 +77,4 @@ function relMouseCoords(event) {
     canvasY = event.pageY - totalOffsetY;
 
     return { x: canvasX, y: canvasY }
-}
+}*/
