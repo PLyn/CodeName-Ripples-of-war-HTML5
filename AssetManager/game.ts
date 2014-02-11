@@ -3,6 +3,7 @@ module Game {
     export class Game {
         preloader;
         loop;
+
         constructor() {
             var source = {
                 Images: {

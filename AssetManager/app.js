@@ -22,12 +22,17 @@ var Engine;
             this.canvas.id = canvasid;
             this.canvas.width = width;
             this.canvas.height = height;
+            this.canvas.tabindex = '1';
             document.body.appendChild(this.canvas);
             this.asset = preloader;
             this.canvas = document.getElementById(canvasid);
             this.context = this.canvas.getContext('2d');
+            this.control = new input.input(this.canvas);
         }
         Loop.prototype.update = function () {
+            if (this.control.keydown(38)) {
+                console.log("pressed");
+            }
             imagex += 50;
             if (pos === 0) {
                 this.context.clearRect(0, 0, 800, 600);
@@ -104,16 +109,21 @@ var Game;
     })();
     _Game.Game = Game;
 })(Game || (Game = {}));
+var lastDownTarget;
 var input;
 (function (_input) {
     var input = (function () {
-        function input(context) {
-            context.onkeydown = function (e) {
-                this.keys[e.keycode] = true;
-            };
-            context.onkeyup = function (e) {
-                this.keys[e.keycode] = false;
-            };
+        function input(canvas) {
+            this.keys = [];
+            var that = this;
+            document.addEventListener('keydown', function (e) {
+                console.log(e.keyCode);
+                that.keys[e.keyCode] = true;
+            });
+            document.addEventListener('keyup', function (e) {
+                console.log(e.keyCode + " up");
+                that.keys[e.keyCode] = false;
+            });
         }
         input.prototype.keydown = function (key) {
             return this.keys[key];
