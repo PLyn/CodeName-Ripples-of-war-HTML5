@@ -19,7 +19,11 @@
   <ItemGroup>
     <Content Include="app.css" />
     <Content Include="Assets\diamond.png" />
+    <Content Include="Assets\Music\theme.mp3" />
     <Content Include="Assets\rpgtileset.png" />
+    <Content Include="Assets\Sounds\car.mp3" />
+    <Content Include="Assets\Sounds\punch.mp3" />
+    <Content Include="Assets\Sounds\wood.mp3" />
     <Content Include="Assets\star.png" />
     <Content Include="Assets\test.png" />
     <Content Include="Assets\test.xml" />
@@ -31,13 +35,18 @@
     <TypeScriptCompile Include="Engine\Engine.ts" />
     <TypeScriptCompile Include="Engine\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />
-    <TypeScriptCompile Include="input.ts" />
+    <TypeScriptCompile Include="Engine\input.ts" />
     <TypeScriptCompile Include="Engine\Manager.ts" />
     <TypeScriptCompile Include="Sprite.ts" />
+    <TypeScriptCompile Include="Engine\tilemap.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\test.json" />
     <Content Include="Assets\map.json" />
+    <Content Include="Assets\Music\theme.ogg" />
+    <Content Include="Assets\Sounds\car.ogg" />
+    <Content Include="Assets\Sounds\punch.ogg" />
+    <Content Include="Assets\Sounds\wood.ogg" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -45,6 +54,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -2,7 +2,7 @@ var imagex = 0;
 var imagey = 250;
 
 window.onload = function () {
-    var game = new Game.Game();
+    var game = new Game.Init();
 }
     /*var canvas = <HTMLCanvasElement> document.getElementById('Can');
     window.addEventListener('mousedown', mousedown);

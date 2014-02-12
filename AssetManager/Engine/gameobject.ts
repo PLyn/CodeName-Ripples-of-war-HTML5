@@ -1,5 +1,5 @@
 ﻿var GAME_OBJECTS = [];
-module Engine {
+module Game {
     export class GameObject {
         x = 0;
         y = 0;

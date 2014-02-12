@@ -1,39 +1,17 @@
-/*      HTML5 AssetManager V. 0.9
-*   Currently supports images, Atlases(from texturepacker) for sprites or animation, tilesets and loading of xml for now
+/*      HTML5 AssetManager V. 0.95
+*   Currently supports images, Atlases(from texturepacker) for sprites or animation, tilesets, xmls and sounds for now
 *   how to use:
-*       var source = {
-*        Images: {
-*            D: 'Assets/diamond.png',
-*            S: 'Assets/star.png'
-*        },
-*        Anim: {
-*            at: 'Assets/test.json'
-*        },
-*        Sprite: {
-*            spr: 'Assets/test.json'
-*        },
-*        Tileset: {
-*            rpg: 'Assets/map.json'
-*        },
-*        XML: {
-*            chapter: 'Assets/test.xml'
-*        }
-*    };
-*    asset = new Preloader.Manager();
-*    asset.queueAssets(source, OnComplete);
-*    asset.progress();
-*
-*   function OnComplete(){
-*   //do what you need with loaded assets now which are in global variables seen at below(IMAGE_CACHE, ANIM_CACHE etc)
-*    }
 */
 var ANIM_CACHE = []; //Global atlas cache to get specific atlases
 var IMAGE_CACHE = []; //Global image cache to get specific images
 var SPRITE_CACHE = []; //Global sprite cache to get specific sprite
 var TILESET_CACHE = []; //Global Tileset cache to get specific tilesets
+var TILEDATA_CACHE = []; //global tile data to draw tilemaps
 var XML_CACHE = []; //Global xml cache to get specific xml files
+var SOUND_CACHE = []; //Global sounds cache
+var MUSIC_CACHE = []; //Global Music cache
 
-module Engine {
+module Game {
     export class Preloader {
         animData; //Holds the parsed JSON for the atlases
         animSource = new Image(); //Holds source atlas image
@@ -88,6 +66,12 @@ module Engine {
             if (Assets.XML) {
                 this.genericLoader(Assets.XML, false, this.xmlKey, this.onXMLLoad, 'xml');
             }
+            if (Assets.Sounds) {
+                this.soundloader(Assets.Sounds, 'Sound');
+            }
+            if (Assets.Music) {
+                this.soundloader(Assets.Music, 'Music');
+            }
             this.timerid = setInterval(() => {
                 if (this.isLoaded === this.totalAssets) {
                     clearInterval(this.timerid);
@@ -112,6 +96,43 @@ module Engine {
                 }
             }
         }
+        soundloader(sounds, type) {
+            var pos;
+            var key = Object.keys(sounds);
+            var audioType = '';
+            for (pos = 0; pos < key.length; pos++) {
+                if (type === 'Sound') {
+                    SOUND_CACHE[key[pos]] = document.createElement("audio");  
+                    document.body.appendChild(SOUND_CACHE[key[pos]]);
+                    audioType = this.fileFormat(SOUND_CACHE[key[pos]]);
+                    SOUND_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
+                    SOUND_CACHE[key[pos]].load();
+                    SOUND_CACHE[key[pos]].addEventListener('canplaythrough', () => {
+                        this.isLoaded++;
+                    });
+                }
+                else if (type === 'Music') {
+                    MUSIC_CACHE[key[pos]] = document.createElement("audio");
+                    document.body.appendChild(MUSIC_CACHE[key[pos]]);
+                    audioType = this.fileFormat(MUSIC_CACHE[key[pos]]);
+                    MUSIC_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
+                    MUSIC_CACHE[key[pos]].load();
+                    MUSIC_CACHE[key[pos]].addEventListener('canplaythrough', () => {
+                        this.isLoaded++;
+                    });
+                }
+            }
+        }
+        fileFormat(audioElement) {
+            var ext = '';
+            if (audioElement.canPlayType("audio/ogg") === "probably" || audioElement.canPlayType("audio/ogg") === "maybe") {
+                ext = '.ogg';
+            }
+            else if (audioElement.canPlayType("audio/mp3") === "probably" || audioElement.canPlayType("audio/mp3") === "maybe") {
+                ext = '.mp3';
+            }
+            return ext;
+        }
         loadfile(key, url, onLoad, type) {
             var xobj = new XMLHttpRequest();
             xobj.open('GET', url, true);
@@ -122,6 +143,9 @@ module Engine {
                     }
                     else if (type === 'xml') {
                         onLoad(key, xobj.responseXML);
+                    }
+                    else if (type === 'mp3') {
+                        onLoad(key, xobj.response);
                     }
                }
             };
@@ -136,7 +160,7 @@ module Engine {
             this.animSource.src = 'Assets/' + this.animData.meta.image;
             for (var i = 0; i < this.animData.frames.length; i++) {
                 frame = this.animData.frames[i].frame;
-                holder[i] = new Engine.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Game.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
             }
             ANIM_CACHE[key[this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
             this.animPos++; //Move to the next key of the array
@@ -153,7 +177,7 @@ module Engine {
                 var frame = this.spriteData.frames[i].frame;
                 //figure out whats wrong with the associative array
                 var indexes = this.spriteData.frames[i].filename.substring(0, this.spriteData.frames[i].filename.length - 4);
-                holder[i] = new Engine.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Game.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                 SPRITE_CACHE[i] = holder[i];
             }           
             this.spritePos++;
@@ -183,6 +207,7 @@ module Engine {
                     
                 };
                 TILESET_CACHE[key[this.tilesetPos]] = tileData;
+                TILEDATA_CACHE[key[this.tilesetPos]] = this.tiledData;
                 this.tilesetPos++;
                 this.tileKey = key;//needed for getTile ()
             }
@@ -192,54 +217,6 @@ module Engine {
             var xmltest = test.getElementsByTagName("Shadow");
             this.isLoaded++;
             //rest to be implemented. not sure how to extract the info how i want yet...will do soon
-        }
-        progress = () => {
-
-        }
-        //Functions to test if file are loaded and can be rendered properly 
-        getTile = (tileIndex) => {
-            var tile = {
-                "img": null,
-                "px": 0,
-                "py" : 0
-            };
-
-            var index = 0;
-            for (index = 0; index < this.tileKey.length; index--) {
-                if (TILESET_CACHE[this.tileKey[index]].firstgid <= tileIndex) break;
-            }
-            tile.img = TILESET_CACHE[this.tileKey[index]].image;
-            var localIndex = tileIndex - TILESET_CACHE[this.tileKey[index]].firstgid;
-            var localtileX = Math.floor(localIndex % TILESET_CACHE[this.tileKey[index]].numXTiles);
-            var localtileY = Math.floor(localIndex / TILESET_CACHE[this.tileKey[index]].numXTiles);
-            tile.px = localtileX * this.tiledData.tilewidth;
-            tile.py = localtileY * this.tiledData.tileheight;
-
-            return tile;
-        }
-        drawTiles = (context) => {
-            if (!this.isFilesLoaded) {
-                console.log("tileset not loaded");
-                return;
-            }
-            
-            for (var layeridX = 0; layeridX < this.tiledData.layers.length; layeridX++) {
-                if (this.tiledData.layers[layeridX].type !== "tilelayer") continue;
-                
-                var data = this.tiledData.layers[layeridX].data;
-                for (var tileidX = 0; tileidX < data.length; tileidX++) {
-                    var ID = data[tileidX];
-                    if (ID === 0) { //If ID is 0, no tiles is at the current tile so skip ahead
-                        continue;
-                    }
-                    var tileloc = this.getTile(ID);
-
-                    var worldX = Math.floor(tileidX % this.tiledData.width) * this.tiledData.tilewidth;
-                    var worldY = Math.floor(tileidX / this.tiledData.width) * this.tiledData.tileheight;
-
-                    context.drawImage(tileloc.img, tileloc.px, tileloc.py, this.tiledData.tilewidth, this.tiledData.tileheight, worldX, worldY, this.tiledData.tilewidth, this.tiledData.tileheight);
-                }
-            }
         }
     }
 }

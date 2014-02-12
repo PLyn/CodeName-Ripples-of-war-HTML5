@@ -1,6 +1,8 @@
 ﻿var pos = 0;
+var audioElement = new Audio();
+
 module Game {
-    export class Game {
+    export class Init {
         preloader;
         loop;
 
@@ -21,18 +23,35 @@ module Game {
                 },
                 XML: {
                     chapter: 'Assets/test.xml'
+                },
+                Sounds: {
+                    car: 'Assets/Sounds/car',
+                    punch: 'Assets/Sounds/punch',
+                    wood: 'Assets/Sounds/wood'
+                },
+                Music: {
+                    theme: 'Assets/Music/theme'
                 }
             };
-            this.preloader = new Engine.Preloader();
+            this.preloader = new Game.Preloader();
             this.preloader.queueAssets(source, this.onComplete);
-            this.loop = new Engine.Loop('canvas', 800, 600, this.preloader);
-
-
+            
+            
         }
+
         onComplete = () => {
+            MUSIC_CACHE['theme'].play();
+            var song = Object.keys(SOUND_CACHE);
+            var x = 0;
+            setInterval(function () {
+                SOUND_CACHE[song[x]].play();
+                x = (x + 1) % song.length;
+            }, 1);
+            this.loop = new Game.Loop('canvas', 800, 600, this.preloader);
             setInterval(this.GameLoop, 1000 / 10);
+            
         }
-        GameLoop = () => {
+        GameLoop = () => {           
             this.loop.update();
             this.loop.render();
         }
