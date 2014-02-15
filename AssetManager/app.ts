@@ -1,6 +1,3 @@
-var imagex = 0;
-var imagey = 250;
-
 window.onload = function () {
     var game = new Game.Init();
 }

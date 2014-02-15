@@ -1,48 +1,60 @@
-﻿var imagex = 0;
-var imagey = 250;
-
-window.onload = function () {
+﻿window.onload = function () {
     var game = new Game.Init();
 };
 var Game;
 (function (Game) {
-    var Loop = (function () {
-        function Loop(canvasid, width, height, preloader) {
-            var _this = this;
-            this.render = function () {
-                _this.tiles.drawTiles(_this.context, 'rpg');
-                GAME_OBJECTS[pos] = SPRITE_CACHE[pos];
-                GAME_OBJECTS[pos].render(_this.context, imagex, imagey);
-
-                ANIM_CACHE['at'][pos].render(_this.context, 200, 150);
-                pos = (pos + 1) % ANIM_CACHE['at'].length;
+    var GenericArea = (function () {
+        function GenericArea() {
+            this.objectClick = function (x, y, obj) {
+                for (var i = 0; i < obj.length; i++) {
+                    var x1 = obj[i].x;
+                    var x2 = obj[i].x + obj[i].width;
+                    var y1 = obj[i].y;
+                    var y2 = obj[i].y + obj[i].width;
+                    if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
+                        console.log("clicked object");
+                    }
+                }
             };
-            this.canvas = document.createElement('canvas');
-            this.canvas.id = canvasid;
-            this.canvas.width = width;
-            this.canvas.height = height;
-            this.canvas.tabindex = '1';
-            document.body.appendChild(this.canvas);
-            this.asset = preloader;
-            this.canvas = document.getElementById(canvasid);
-            this.context = this.canvas.getContext('2d');
-            this.control = new Game.input(this.canvas);
-            this.tiles = new Game.Tilemap();
-            this.tiles.Init();
+            this.x = 0;
+            this.y = 0;
+            this.mx = 0;
+            this.my = 0;
+            this.velocity = 2.0;
+            GAME_OBJECTS.push(SPRITE_CACHE[0]);
         }
-        Loop.prototype.update = function () {
-            if (this.control.keydown(38)) {
-                imagex += 75;
+        GenericArea.prototype.update = function () {
+            if (control.keydown('W')) {
+                this.y -= this.velocity;
+            } else if (control.keydown('D')) {
+                this.x += this.velocity;
+            } else if (control.keydown('A')) {
+                this.x -= this.velocity;
+            } else if (control.keydown('S')) {
+                this.y += this.velocity;
             }
 
-            if (pos === 0) {
-                this.context.clearRect(0, 0, 800, 600);
-                imagex = 0;
+            if (control.mousedown()) {
+                this.mx = control.mEvent.pageX;
+                this.my = control.mEvent.pageY;
+                this.objectClick(this.mx, this.my, objects);
             }
+            //imagex += 50;
+            /*if (pos === 0) {
+            imagex = 0;
+            }*/
         };
-        return Loop;
+        GenericArea.prototype.render = function (context) {
+            context.clearRect(0, 0, 800, 600);
+            tiles.drawTiles(context, 'rpg');
+            tiles.getObjects(context, 'rpg');
+            GAME_OBJECTS[0].render(context, this.x, this.y);
+            /*ANIM_CACHE['at'][pos].render(context, 200, 150);
+            pos = (pos + 1) % ANIM_CACHE['at'].length;*/
+        };
+        return GenericArea;
     })();
-    Game.Loop = Loop;
+    Game.GenericArea = GenericArea;
 })(Game || (Game = {}));
 var GAME_OBJECTS = [];
 var Game;
@@ -71,6 +83,59 @@ var Game;
     })();
     Game.GameObject = GameObject;
 })(Game || (Game = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
+///<reference path='gameobject.ts' />
+var Game;
+(function (Game) {
+    var Sprite = (function (_super) {
+        __extends(Sprite, _super);
+        function Sprite(img, x, y, w, h, a, scale) {
+            _super.call(this, img, x, y, w, h, scale);
+            this.a = a;
+        }
+        return Sprite;
+    })(Game.GameObject);
+    Game.Sprite = Sprite;
+})(Game || (Game = {}));
+var control;
+var tiles;
+var Game;
+(function (Game) {
+    var Loop = (function () {
+        function Loop(canvasid, width, height, preloader) {
+            var _this = this;
+            this.render = function () {
+                _this.currentArea.render(_this.context);
+            };
+            this.canvas = document.createElement('canvas');
+            this.canvas.id = canvasid;
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.canvas.tabindex = '1';
+            document.body.appendChild(this.canvas);
+            this.asset = preloader;
+            this.canvas = document.getElementById(canvasid);
+            this.context = this.canvas.getContext('2d');
+            control = new Game.input(this.canvas);
+            tiles = new Game.Tilemap();
+            tiles.Init();
+            this.currentArea = new Game.GenericArea();
+        }
+        Loop.prototype.update = function () {
+            this.currentArea.update();
+        };
+
+        Loop.prototype.playerInput = function () {
+        };
+        return Loop;
+    })();
+    Game.Loop = Loop;
+})(Game || (Game = {}));
 var pos = 0;
 var audioElement = new Audio();
 
@@ -80,15 +145,8 @@ var Game;
         function Init() {
             var _this = this;
             this.onComplete = function () {
-                MUSIC_CACHE['theme'].play();
-                var song = Object.keys(SOUND_CACHE);
-                var x = 0;
-                setInterval(function () {
-                    SOUND_CACHE[song[x]].play();
-                    x = (x + 1) % song.length;
-                }, 1);
                 _this.loop = new Game.Loop('canvas', 800, 600, _this.preloader);
-                setInterval(_this.GameLoop, 1000 / 10);
+                setInterval(_this.GameLoop, 1000 / 30);
             };
             this.GameLoop = function () {
                 _this.loop.update();
@@ -96,25 +154,25 @@ var Game;
             };
             var source = {
                 Images: {
-                    D: 'Assets/diamond.png',
-                    S: 'Assets/star.png'
+                    D: 'Assets/Image/diamond.png',
+                    S: 'Assets/Image/star.png'
                 },
                 Anim: {
-                    at: 'Assets/test.json'
+                    at: 'Assets/Atlas/test.json'
                 },
                 Sprite: {
-                    spr: 'Assets/test.json'
+                    spr: 'Assets/Atlas/test.json'
                 },
                 Tileset: {
-                    rpg: 'Assets/map.json'
+                    rpg: 'Assets/Tilemap/map.json'
                 },
                 XML: {
-                    chapter: 'Assets/test.xml'
+                    chapter: 'Assets/XML/test.xml'
                 },
                 Sounds: {
-                    car: 'Assets/Sounds/car',
-                    punch: 'Assets/Sounds/punch',
-                    wood: 'Assets/Sounds/wood'
+                    car: 'Assets/Sound/car',
+                    punch: 'Assets/Sound/punch',
+                    wood: 'Assets/Sound/wood'
                 },
                 Music: {
                     theme: 'Assets/Music/theme'
@@ -133,21 +191,22 @@ var Game;
         function input(canvas) {
             this.keys = [];
             this.click = false;
+            this.mEvent = null;
             var that = this;
             document.addEventListener('keydown', function (e) {
-                console.log(e.keyCode);
-                that.keys[e.keyCode] = true;
+                var letter = String.fromCharCode(e.keyCode);
+                that.keys[letter] = true;
+                console.log(letter);
             });
             document.addEventListener('keyup', function (e) {
-                console.log(e.keyCode + " up");
-                that.keys[e.keyCode] = false;
+                var letter = String.fromCharCode(e.keyCode);
+                that.keys[letter] = false;
             });
             document.addEventListener('mousedown', function (e) {
-                console.log("clicked");
+                that.mEvent = e;
                 that.click = true;
             });
             document.addEventListener('mouseup', function (e) {
-                console.log("unclicked");
                 that.click = false;
             });
         }
@@ -164,6 +223,10 @@ var Game;
     })();
     Game.input = input;
 })(Game || (Game = {}));
+/*      HTML5 AssetManager V. 0.95
+*   Currently supports images, Atlases(from texturepacker) for sprites or animation, tilesets, xmls and sounds for now
+*   how to use:
+*/
 var ANIM_CACHE = [];
 var IMAGE_CACHE = [];
 var SPRITE_CACHE = [];
@@ -214,8 +277,8 @@ var Game;
                     frame = _this.animData.frames[i].frame;
                     holder[i] = new Game.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                 }
-                ANIM_CACHE[key[_this.animPos]] = holder;
-                _this.animPos++;
+                ANIM_CACHE[key[_this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
+                _this.animPos++; //Move to the next key of the array
             };
             this.onSpriteJSONLoad = function (key, response) {
                 var holder = [];
@@ -228,6 +291,7 @@ var Game;
                 for (var i = 0; i < _this.spriteData.frames.length; i++) {
                     var frame = _this.spriteData.frames[i].frame;
 
+                    //figure out whats wrong with the associative array
                     var indexes = _this.spriteData.frames[i].filename.substring(0, _this.spriteData.frames[i].filename.length - 4);
                     holder[i] = new Game.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
                     SPRITE_CACHE[i] = holder[i];
@@ -262,13 +326,14 @@ var Game;
                     TILESET_CACHE[key[_this.tilesetPos]] = tileData;
                     TILEDATA_CACHE[key[_this.tilesetPos]] = _this.tiledData;
                     _this.tilesetPos++;
-                    _this.tileKey = key;
+                    _this.tileKey = key; //needed for getTile ()
                 }
             };
             this.onXMLLoad = function (key, response) {
                 var test = response;
                 var xmltest = test.getElementsByTagName("Shadow");
                 _this.isLoaded++;
+                //rest to be implemented. not sure how to extract the info how i want yet...will do soon
             };
         }
         Preloader.prototype.queueAssets = function (Assets, load) {
@@ -307,7 +372,7 @@ var Game;
                     _this.isFilesLoaded = true;
                     load();
                 }
-            }, 1000 / 1);
+            }, 1000 / 2);
         };
         Preloader.prototype.genericLoader = function (url, isImage, key, onLoad, typeOfFile) {
             if (isImage) {
@@ -380,11 +445,46 @@ var Game;
     })();
     Game.Preloader = Preloader;
 })(Game || (Game = {}));
+var objects = [];
 var Game;
 (function (Game) {
     var Tilemap = (function () {
         function Tilemap() {
             var _this = this;
+            this.getObjects = function (context, index) {
+                for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
+                    if (TILEDATA_CACHE[index].layers[layeridX].type !== "objectgroup")
+                        continue;
+                    var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
+
+                    var obj = {
+                        "width": 0,
+                        "x": 0,
+                        "y": 0
+                    };
+
+                    for (var x = 0; x < tileObjects.length; x++) {
+                        var tile = _this.getTile(tileObjects[x].gid);
+                        if (tileObjects[x].width !== 0) {
+                            obj.width = tileObjects[x].width;
+                        } else {
+                            obj.width = 32; //TILEDATA_CACHE[index].tilesets.tilewidth;
+                        }
+
+                        obj.x = tileObjects[x].x;
+                        obj.y = tileObjects[x].y;
+                        objects[x] = {
+                            "width": obj.width,
+                            "x": obj.x,
+                            "y": obj.y
+                        };
+
+                        var w = TILEDATA_CACHE[index].tilewidth;
+                        var h = TILEDATA_CACHE[index].tileheight;
+                        context.drawImage(tile.img, tile.px, tile.py, w, h, obj.x, obj.y, w, h);
+                    }
+                }
+            };
             this.drawTiles = function (context, index) {
                 for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
                     if (TILEDATA_CACHE[index].layers[layeridX].type !== "tilelayer")
@@ -411,6 +511,7 @@ var Game;
             this.key = Object.keys(TILESET_CACHE);
         };
 
+        //Functions to test if file are loaded and can be rendered properly
         Tilemap.prototype.getTile = function (tileIndex) {
             var tile = {
                 "img": null,

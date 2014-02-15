@@ -78,7 +78,7 @@ module Game {
                     this.isFilesLoaded = true;
                     load();
                 }
-            }, 1000 / 1);
+            }, 1000 / 2);
         }
         genericLoader(url, isImage, key?, onLoad?, typeOfFile?) {
             if (isImage) {

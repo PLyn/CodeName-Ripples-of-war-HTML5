@@ -9,49 +9,39 @@ module Game {
         constructor() {
             var source = {
                 Images: {
-                    D: 'Assets/diamond.png',
-                    S: 'Assets/star.png'
+                    D: 'Assets/Image/diamond.png',
+                    S: 'Assets/Image/star.png'
                 },
                 Anim: {
-                    at: 'Assets/test.json'
+                    at: 'Assets/Atlas/test.json'
                 },
                 Sprite: {
-                    spr: 'Assets/test.json'
+                    spr: 'Assets/Atlas/test.json'
                 },
                 Tileset: {
-                    rpg: 'Assets/map.json'
+                    rpg: 'Assets/Tilemap/map.json'
                 },
                 XML: {
-                    chapter: 'Assets/test.xml'
+                    chapter: 'Assets/XML/test.xml'
                 },
                 Sounds: {
-                    car: 'Assets/Sounds/car',
-                    punch: 'Assets/Sounds/punch',
-                    wood: 'Assets/Sounds/wood'
+                    car: 'Assets/Sound/car',
+                    punch: 'Assets/Sound/punch',
+                    wood: 'Assets/Sound/wood'
                 },
                 Music: {
                     theme: 'Assets/Music/theme'
                 }
             };
             this.preloader = new Game.Preloader();
-            this.preloader.queueAssets(source, this.onComplete);
-            
-            
+            this.preloader.queueAssets(source, this.onComplete);   
         }
-
         onComplete = () => {
-            MUSIC_CACHE['theme'].play();
-            var song = Object.keys(SOUND_CACHE);
-            var x = 0;
-            setInterval(function () {
-                SOUND_CACHE[song[x]].play();
-                x = (x + 1) % song.length;
-            }, 1);
             this.loop = new Game.Loop('canvas', 800, 600, this.preloader);
-            setInterval(this.GameLoop, 1000 / 10);
+            setInterval(this.GameLoop, 1000 / 30);
             
         }
-        GameLoop = () => {           
+        GameLoop = () => { 
             this.loop.update();
             this.loop.render();
         }

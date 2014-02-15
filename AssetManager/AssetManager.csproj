@@ -18,35 +18,36 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
-    <Content Include="Assets\diamond.png" />
+    <Content Include="Assets\Image\diamond.png" />
     <Content Include="Assets\Music\theme.mp3" />
-    <Content Include="Assets\rpgtileset.png" />
-    <Content Include="Assets\Sounds\car.mp3" />
-    <Content Include="Assets\Sounds\punch.mp3" />
-    <Content Include="Assets\Sounds\wood.mp3" />
-    <Content Include="Assets\star.png" />
-    <Content Include="Assets\test.png" />
-    <Content Include="Assets\test.xml" />
+    <Content Include="Assets\Tilemap\rpgtileset.png" />
+    <Content Include="Assets\Sound\car.mp3" />
+    <Content Include="Assets\Sound\punch.mp3" />
+    <Content Include="Assets\Sound\wood.mp3" />
+    <Content Include="Assets\Image\star.png" />
+    <Content Include="Assets\Atlas\test.png" />
+    <Content Include="Assets\XML\test.xml" />
     <Content Include="default.htm" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="Engine\Engine.ts" />
-    <TypeScriptCompile Include="Engine\gameobject.ts" />
+    <TypeScriptCompile Include="Areas\genericarea.ts" />
+    <TypeScriptCompile Include="Game\GameObjects\sprite.ts" />
+    <TypeScriptCompile Include="Game\world.ts" />
+    <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />
-    <TypeScriptCompile Include="Engine\input.ts" />
-    <TypeScriptCompile Include="Engine\Manager.ts" />
-    <TypeScriptCompile Include="Sprite.ts" />
-    <TypeScriptCompile Include="Engine\tilemap.ts" />
+    <TypeScriptCompile Include="Game\input.ts" />
+    <TypeScriptCompile Include="Game\manager.ts" />
+    <TypeScriptCompile Include="Game\tilemap.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\test.json" />
-    <Content Include="Assets\map.json" />
+    <Content Include="Assets\Atlas\test.json" />
     <Content Include="Assets\Music\theme.ogg" />
-    <Content Include="Assets\Sounds\car.ogg" />
-    <Content Include="Assets\Sounds\punch.ogg" />
-    <Content Include="Assets\Sounds\wood.ogg" />
+    <Content Include="Assets\Sound\car.ogg" />
+    <Content Include="Assets\Sound\punch.ogg" />
+    <Content Include="Assets\Sound\wood.ogg" />
+    <Content Include="Assets\Tilemap\map.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -84,10 +85,11 @@
   </ProjectExtensions>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
-    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
+    <TypeScriptRemoveComments>False</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
     <TypeScriptModuleKind>none</TypeScriptModuleKind>
     <TypeScriptOutFile>app.js</TypeScriptOutFile>
+    <TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
