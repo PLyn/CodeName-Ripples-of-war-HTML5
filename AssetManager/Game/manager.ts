@@ -104,7 +104,7 @@ module Game {
                 if (type === 'Sound') {
                     SOUND_CACHE[key[pos]] = document.createElement("audio");  
                     document.body.appendChild(SOUND_CACHE[key[pos]]);
-                    audioType = this.fileFormat(SOUND_CACHE[key[pos]]);
+                    audioType = this.soundFormat(SOUND_CACHE[key[pos]]);
                     SOUND_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     SOUND_CACHE[key[pos]].load();
                     SOUND_CACHE[key[pos]].addEventListener('canplaythrough', () => {
@@ -114,7 +114,7 @@ module Game {
                 else if (type === 'Music') {
                     MUSIC_CACHE[key[pos]] = document.createElement("audio");
                     document.body.appendChild(MUSIC_CACHE[key[pos]]);
-                    audioType = this.fileFormat(MUSIC_CACHE[key[pos]]);
+                    audioType = this.soundFormat(MUSIC_CACHE[key[pos]]);
                     MUSIC_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     MUSIC_CACHE[key[pos]].load();
                     MUSIC_CACHE[key[pos]].addEventListener('canplaythrough', () => {
@@ -123,7 +123,7 @@ module Game {
                 }
             }
         }
-        fileFormat(audioElement) {
+        soundFormat(audioElement) {
             var ext = '';
             if (audioElement.canPlayType("audio/ogg") === "probably" || audioElement.canPlayType("audio/ogg") === "maybe") {
                 ext = '.ogg';
@@ -157,7 +157,7 @@ module Game {
             this.animData = JSON.parse(response);
             
             this.animSource.onload = () => { this.isLoaded++; };
-            this.animSource.src = 'Assets/' + this.animData.meta.image;
+            this.animSource.src = 'Assets/Atlas/' + this.animData.meta.image;
             for (var i = 0; i < this.animData.frames.length; i++) {
                 frame = this.animData.frames[i].frame;
                 holder[i] = new Game.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
@@ -172,7 +172,7 @@ module Game {
             this.spriteSource.onload = () => {
                 this.isLoaded++;
             }
-            this.spriteSource.src = 'Assets/' + this.spriteData.meta.image;
+            this.spriteSource.src = 'Assets/Atlas/' + this.spriteData.meta.image;
             for (var i = 0; i < this.spriteData.frames.length; i++) {
                 var frame = this.spriteData.frames[i].frame;
                 //figure out whats wrong with the associative array
@@ -195,7 +195,7 @@ module Game {
             for (var i = 0; i < tiledata.length; i++){
                 var tilesetimage = new Image();
                 tilesetimage.onload = () => { this.isLoaded++;  };
-                tilesetimage.src = "../Assets/" + this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
+                tilesetimage.src = "../Assets/Tilemap/" + this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
                 var tileData = {
                     "firstgid": tiledata[i].firstgid,
                     "image": tilesetimage,

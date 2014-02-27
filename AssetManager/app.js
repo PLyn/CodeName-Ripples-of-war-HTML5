@@ -12,7 +12,7 @@ var Game;
                     var y1 = obj[i].y;
                     var y2 = obj[i].y + obj[i].width;
                     if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
-                        console.log("clicked object");
+                        console.log("clicked object" + obj[i].name);
                     }
                 }
             };
@@ -145,12 +145,12 @@ var Game;
         function Init() {
             var _this = this;
             this.onComplete = function () {
-                _this.loop = new Game.Loop('canvas', 800, 600, _this.preloader);
+                _this.world = new Game.Loop('canvas', 800, 600, _this.preloader);
                 setInterval(_this.GameLoop, 1000 / 30);
             };
             this.GameLoop = function () {
-                _this.loop.update();
-                _this.loop.render();
+                _this.world.update();
+                _this.world.render();
             };
             var source = {
                 Images: {
@@ -272,7 +272,7 @@ var Game;
                 _this.animSource.onload = function () {
                     _this.isLoaded++;
                 };
-                _this.animSource.src = 'Assets/' + _this.animData.meta.image;
+                _this.animSource.src = 'Assets/Atlas/' + _this.animData.meta.image;
                 for (var i = 0; i < _this.animData.frames.length; i++) {
                     frame = _this.animData.frames[i].frame;
                     holder[i] = new Game.GameObject(_this.spriteSource, frame.x, frame.y, frame.w, frame.h);
@@ -287,7 +287,7 @@ var Game;
                 _this.spriteSource.onload = function () {
                     _this.isLoaded++;
                 };
-                _this.spriteSource.src = 'Assets/' + _this.spriteData.meta.image;
+                _this.spriteSource.src = 'Assets/Atlas/' + _this.spriteData.meta.image;
                 for (var i = 0; i < _this.spriteData.frames.length; i++) {
                     var frame = _this.spriteData.frames[i].frame;
 
@@ -313,7 +313,7 @@ var Game;
                     tilesetimage.onload = function () {
                         _this.isLoaded++;
                     };
-                    tilesetimage.src = "../Assets/" + _this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
+                    tilesetimage.src = "../Assets/Tilemap/" + _this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
                     var tileData = {
                         "firstgid": tiledata[i].firstgid,
                         "image": tilesetimage,
@@ -398,7 +398,7 @@ var Game;
                 if (type === 'Sound') {
                     SOUND_CACHE[key[pos]] = document.createElement("audio");
                     document.body.appendChild(SOUND_CACHE[key[pos]]);
-                    audioType = this.fileFormat(SOUND_CACHE[key[pos]]);
+                    audioType = this.soundFormat(SOUND_CACHE[key[pos]]);
                     SOUND_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     SOUND_CACHE[key[pos]].load();
                     SOUND_CACHE[key[pos]].addEventListener('canplaythrough', function () {
@@ -407,7 +407,7 @@ var Game;
                 } else if (type === 'Music') {
                     MUSIC_CACHE[key[pos]] = document.createElement("audio");
                     document.body.appendChild(MUSIC_CACHE[key[pos]]);
-                    audioType = this.fileFormat(MUSIC_CACHE[key[pos]]);
+                    audioType = this.soundFormat(MUSIC_CACHE[key[pos]]);
                     MUSIC_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     MUSIC_CACHE[key[pos]].load();
                     MUSIC_CACHE[key[pos]].addEventListener('canplaythrough', function () {
@@ -416,7 +416,7 @@ var Game;
                 }
             }
         };
-        Preloader.prototype.fileFormat = function (audioElement) {
+        Preloader.prototype.soundFormat = function (audioElement) {
             var ext = '';
             if (audioElement.canPlayType("audio/ogg") === "probably" || audioElement.canPlayType("audio/ogg") === "maybe") {
                 ext = '.ogg';
@@ -458,11 +458,11 @@ var Game;
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
 
                     var obj = {
+                        "name": '',
                         "width": 0,
                         "x": 0,
                         "y": 0
                     };
-
                     for (var x = 0; x < tileObjects.length; x++) {
                         var tile = _this.getTile(tileObjects[x].gid);
                         if (tileObjects[x].width !== 0) {
@@ -470,10 +470,12 @@ var Game;
                         } else {
                             obj.width = 32; //TILEDATA_CACHE[index].tilesets.tilewidth;
                         }
-
+                        obj.name = tileObjects[x].name;
+                        console.log(tileObjects[x].gid);
                         obj.x = tileObjects[x].x;
                         obj.y = tileObjects[x].y;
                         objects[x] = {
+                            "name": obj.name,
                             "width": obj.width,
                             "x": obj.x,
                             "y": obj.y
@@ -537,4 +539,12 @@ var Game;
     })();
     Game.Tilemap = Tilemap;
 })(Game || (Game = {}));
+function wrap(canvas, dialogue) {
+    var position;
+
+    /*get length of context then measue length of dailogue to break it up in suitable chunks to display on the screen*/
+    var lineWidth = canvas.width;
+    dialogue.substring(position, lineWidth);
+    //figure out a way to get it to repeat till the dialogue is empty
+}
 //# sourceMappingURL=app.js.map

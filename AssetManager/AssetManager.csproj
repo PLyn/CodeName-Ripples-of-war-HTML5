@@ -40,6 +40,7 @@
     <TypeScriptCompile Include="Game\input.ts" />
     <TypeScriptCompile Include="Game\manager.ts" />
     <TypeScriptCompile Include="Game\tilemap.ts" />
+    <TypeScriptCompile Include="Util\wordwrap.ts" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Atlas\test.json" />

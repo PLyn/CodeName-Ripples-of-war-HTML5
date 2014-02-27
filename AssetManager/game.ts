@@ -4,7 +4,7 @@ var audioElement = new Audio();
 module Game {
     export class Init {
         preloader;
-        loop;
+        world;
 
         constructor() {
             var source = {
@@ -37,13 +37,13 @@ module Game {
             this.preloader.queueAssets(source, this.onComplete);   
         }
         onComplete = () => {
-            this.loop = new Game.Loop('canvas', 800, 600, this.preloader);
+            this.world = new Game.Loop('canvas', 800, 600, this.preloader);
             setInterval(this.GameLoop, 1000 / 30);
             
         }
         GameLoop = () => { 
-            this.loop.update();
-            this.loop.render();
+            this.world.update();
+            this.world.render();
         }
     }
 }
