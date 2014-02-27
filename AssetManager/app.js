@@ -12,7 +12,7 @@ var Game;
                     var y1 = obj[i].y;
                     var y2 = obj[i].y + obj[i].width;
                     if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
-                        console.log("clicked object" + obj[i].name);
+                        console.log(obj[i].x);
                     }
                 }
             };
@@ -458,7 +458,7 @@ var Game;
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
 
                     var obj = {
-                        "name": '',
+                        "name": "",
                         "width": 0,
                         "x": 0,
                         "y": 0
@@ -471,9 +471,9 @@ var Game;
                             obj.width = 32; //TILEDATA_CACHE[index].tilesets.tilewidth;
                         }
                         obj.name = tileObjects[x].name;
-                        console.log(tileObjects[x].gid);
                         obj.x = tileObjects[x].x;
                         obj.y = tileObjects[x].y;
+                        console.log(obj.name);
                         objects[x] = {
                             "name": obj.name,
                             "width": obj.width,
