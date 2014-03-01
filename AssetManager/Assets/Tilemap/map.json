@@ -18,12 +18,12 @@
                 {
                  "gid":21,
                  "height":0,
-                 "name": 1,
+                 "name":"object1",
                  "properties":
                     {
                      "exit":"true"
                     },
-                 "type":"test",
+                 "type":"1",
                  "visible":true,
                  "width":0,
                  "x":63,
@@ -32,12 +32,12 @@
                 {
                  "gid":22,
                  "height":0,
-                 "name": 2,
+                 "name":"object2",
                  "properties":
                     {
 
                     },
-                 "type":"exit",
+                 "type":"2",
                  "visible":true,
                  "width":0,
                  "x":158,
@@ -46,12 +46,12 @@
                 {
                  "gid":16,
                  "height":0,
-                 "name": 3,
+                 "name":"object3",
                  "properties":
                     {
 
                     },
-                 "type":"event2",
+                 "type":"3",
                  "visible":true,
                  "width":0,
                  "x":10,
@@ -60,12 +60,12 @@
                 {
                  "gid":17,
                  "height":0,
-                 "name": 4,
+                 "name":"object4",
                  "properties":
                     {
 
                     },
-                 "type":"event",
+                 "type":"4",
                  "visible":true,
                  "width":0,
                  "x":156,
