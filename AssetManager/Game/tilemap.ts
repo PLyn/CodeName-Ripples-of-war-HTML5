@@ -2,18 +2,34 @@
 module Game {
     export class Tilemap {
         key; 
-
         Init() {
             this.key = [];
             this.key = Object.keys(TILESET_CACHE);
-
         }   
+        /*getObjects() {
+            return this.objects;
+        }
+        addObject(key, object) {
+            this.objects[key] = object;
+        }
+        removeObject(key) {
+            this.objects[key] = null;
+        }
+        editObject(key, name, width, x, y) {
+            var temp_obj = {
+                "name": name,
+                "width": width,
+                "x": x,
+                "y": y
+            }
+            this.objects[key] = temp_obj;
+        }*/
         getObjects = (context, index) => {
             for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
                 if (TILEDATA_CACHE[index].layers[layeridX].type !== "objectgroup") continue;
                 var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
-
                 var obj = {
+                    "img":null,
                     "name": "",
                     "width": 0,
                     "x": 0,
@@ -28,11 +44,13 @@ module Game {
                     else {
                         obj.width = 32;//TILEDATA_CACHE[index].tilesets.tilewidth;
                     }
+                    obj.img = tile;
                     obj.name = tileObjects[x].name; //PROBLEM
                     obj.x = tileObjects[x].x;
                     obj.y = tileObjects[x].y;
-                    console.log(tileObjects[x].type);
+                    console.log(tileObjects[x].name);
                     objects[x] = {
+                        "img" : obj.img,
                         "name" : obj.name,
                         "width": obj.width,
                         "x": obj.x,
