@@ -214,6 +214,7 @@ module Game {
         }
         onXMLLoad = (key, response) => {
             var test = response;
+            XML_CACHE[key] = response;
             var xmltest = test.getElementsByTagName("Shadow");
             this.isLoaded++;
             //rest to be implemented. not sure how to extract the info how i want yet...will do soon

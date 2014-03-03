@@ -20,7 +20,7 @@ module Game {
             control = new Game.input(this.canvas);
             tiles = new Game.Tilemap();
             tiles.Init();
-            this.currentArea = new Game.GenericArea();   
+            this.currentArea = new Game.GenericArea(this.context , width);   
         }
         update() {
             this.currentArea.update();

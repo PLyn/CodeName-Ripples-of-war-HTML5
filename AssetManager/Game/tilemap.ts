@@ -29,7 +29,6 @@ module Game {
                 if (TILEDATA_CACHE[index].layers[layeridX].type !== "objectgroup") continue;
                 var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
                 var obj = {
-                    "img":null,
                     "name": "",
                     "width": 0,
                     "x": 0,
@@ -44,13 +43,10 @@ module Game {
                     else {
                         obj.width = 32;//TILEDATA_CACHE[index].tilesets.tilewidth;
                     }
-                    obj.img = tile;
                     obj.name = tileObjects[x].name; //PROBLEM
                     obj.x = tileObjects[x].x;
                     obj.y = tileObjects[x].y;
-                    console.log(tileObjects[x].name);
                     objects[x] = {
-                        "img" : obj.img,
                         "name" : obj.name,
                         "width": obj.width,
                         "x": obj.x,

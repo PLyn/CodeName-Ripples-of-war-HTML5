@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Cutscenes>
 	<scene id="1">
-			<Shadow id="1" img="star" bg="test">You Miria?</Shadow>
-			<Commander id="2" img="diamond" bg="test">
-				commander speech</Commander>
-			<Shadow id="3" img="star" bg="test2">
-				You are Miria?</Shadow>
-			<Commander id="4" img="diamond" bg="test2">
-				commander sadasd</Commander>
-			<Shadow id="5" img="star" bg="test">
-				testsad</Shadow>
+			<Shadow>You Miria?</Shadow>
+			<Commander>commander speech</Commander>
+			<Shadow>You are Miria?</Shadow>
+			<Commander>commander sadasd</Commander>
+			<Shadow>testsad</Shadow>
 	</scene>
 	<scene id="2">
-		<Shadow id="1" img="star" bg="test">You are Miria?</Shadow>
+    <Shadow>You are Miria?</Shadow>
 	</scene>
 </Cutscenes>

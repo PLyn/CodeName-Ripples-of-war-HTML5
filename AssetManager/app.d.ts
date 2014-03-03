@@ -5,10 +5,20 @@ declare module Game {
         public velocity: any;
         public mx: any;
         public my: any;
-        constructor();
+        public dia: any;
+        constructor(ctx: any, w: any);
         public update(): void;
         public render(context: any): void;
         public objectClick: (x: any, y: any, obj: any) => void;
+    }
+}
+declare module Game {
+    class Dialogue {
+        public dialogueObject: any;
+        public lines: any;
+        public canvasWidth: any;
+        constructor(ctx: any, cwidth: any, xmlKey: any, index: any);
+        public display: (context: any) => void;
     }
 }
 declare var GAME_OBJECTS: any[];
@@ -132,4 +142,4 @@ declare module Game {
         public drawTiles: (context: any, index: any) => void;
     }
 }
-declare function wrap(canvas: any, dialogue: any): void;
+declare function wrap(ctx: any, cwidth: any, text: any): any[];
