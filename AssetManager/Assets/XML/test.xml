@@ -5,7 +5,7 @@
 			<Commander>commander speech</Commander>
 			<Shadow>You are Miria?</Shadow>
 			<Commander>commander sadasd</Commander>
-			<Shadow>testsad</Shadow>
+			<Shadow>testsad I am testing the worwrap feature of this thing, let us see what width  can go to before it will break or die. I suppose that it would be a good idea to have some sort of notation to move to the next line, good idea to have some sort of notation to move to the next line</Shadow>
 	</scene>
 	<scene id="2">
     <Shadow>You are Miria?</Shadow>
