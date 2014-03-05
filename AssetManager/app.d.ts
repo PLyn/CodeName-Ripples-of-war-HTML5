@@ -17,8 +17,15 @@ declare module Game {
         public dialogueObject: any;
         public lines: any;
         public canvasWidth: any;
-        constructor(ctx: any, cwidth: any, xmlKey: any, index: any);
-        public display: (context: any) => void;
+        public ctx: any;
+        public linePos: number;
+        public seconds: any;
+        public time: number;
+        public currentTime: number;
+        constructor(ctx: any, cwidth: any);
+        public startScene: (key: any, tagName: any, index: any) => void;
+        public updateScene: () => void;
+        public setStyle(font: any, size: any, color: any, bold?: any, italic?: any, align?: any): void;
     }
 }
 declare var GAME_OBJECTS: any[];
