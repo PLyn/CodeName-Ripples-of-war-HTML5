@@ -15,13 +15,14 @@ declare module Game {
 declare module Game {
     class Dialogue {
         public dialogueObject: any;
-        public lines: any;
+        public lines: any[];
         public canvasWidth: any;
         public ctx: any;
         public linePos: number;
-        public seconds: any;
         public time: number;
         public currentTime: number;
+        public prevName: any;
+        public canvas: any;
         constructor(ctx: any, cwidth: any);
         public startScene: (key: any, tagName: any, index: any) => void;
         public updateScene: () => void;
@@ -43,7 +44,7 @@ declare module Game {
     }
 }
 declare module Game {
-    class Sprite extends Game.GameObject {
+    class Sprite extends GameObject {
         public a: any;
         constructor(img: any, x: any, y: any, w: any, h: any, a: any, scale?: any);
     }

@@ -3,7 +3,6 @@
     var lines = [];
     var x = 0;
     var child = text.childNodes;
-
     for (var i = 0; i < text.childNodes.length; i++) {
         if (child[i].nodeType === 1) { //gets only the element nodes
             if (ctx.measureText(child[i].textContent).width >= cwidth) {
@@ -11,19 +10,29 @@
                     var letter = child[i].textContent.substring(key, key + 1);
                     templine = templine + letter;
                     if (ctx.measureText(templine).width >= cwidth) {
-                        lines[x] = templine;
+                        lines[x] = {
+                            "name": child[i].nodeName,
+                            "message": templine
+                        }
                         x++;
                         templine = "";
                     } 
                 }
-                lines[x] = templine;
+                lines[x] = {
+                    "name": child[i].nodeName,
+                    "message": templine
+                }
                 x++;
             }
             else {
-                lines[x] = child[i].textContent;
+                lines[x] = {
+                    "name": child[i].nodeName,
+                    "message": child[i].textContent
+                }
                 x++;
             }
         }
     }
+
     return lines; 
 }
