@@ -8,7 +8,7 @@
         time = 0;
         currentTime = 0;
         prevName;
-        canvas;
+        lineHeight = 1;
         constructor(ctx, cwidth) {
             this.ctx = ctx;
             this.canvasWidth = cwidth;
@@ -17,29 +17,26 @@
         startScene = (key, tagName, index) => {
             this.dialogueObject = XML_CACHE[key].getElementsByTagName(tagName)[index];
             this.lines = wrap(this.ctx, this.canvasWidth, this.dialogueObject);
-            this.prevName = this.lines[0].name;
-            for (var i = 0; i < this.lines.length; i++) {
-                console.log(this.lines[i].message);
-            }
+            this.prevName = this.lines[this.linePos].name;
+            this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
+            this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
+            this.linePos++;
         }
         updateScene = () => {
             this.currentTime = Date.now();
             if (this.linePos < this.lines.length && this.currentTime > this.time) {
                 this.time = this.currentTime + 1000;
-                console.log("prev" + this.prevName);
-                console.log("new:" + this.lines[this.linePos].name); 
-                if (this.prevName === this.lines[this.linePos].name) {
-                    this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + ((this.linePos + 1) * 25)));
-                    this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
-                    this.linePos++;
-                }
-                else if (this.prevName !== this.lines[this.linePos].name) {
+                if (this.prevName !== this.lines[this.linePos].name) {
                     this.ctx.clearRect(0, 0, 800, 600);
-                    this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + ((this.linePos + 1) * 25)));
-                    this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
                     this.prevName = this.lines[this.linePos].name;
-                    this.linePos++;
-                }   
+                    this.lineHeight = 1;
+                }
+                else {
+                    this.lineHeight += 25;
+                }
+                this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
+                this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
+                this.linePos++;  
             }
         }
         setStyle(font, size, color, bold?, italic?, align?) {
