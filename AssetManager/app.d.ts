@@ -111,6 +111,15 @@ declare module Game {
         public onXMLLoad: (key: any, response: any) => void;
     }
 }
+declare module Game {
+    class StateManager {
+        public states: any[];
+        public currentState: any;
+        public addState(key: any, state: any): void;
+        public removeState(key: any): void;
+        public setState(key: any): void;
+    }
+}
 declare var objects: any[];
 declare module Game {
     class Tilemap {
@@ -152,15 +161,14 @@ declare module Game {
 }
 declare module Game {
     class State {
+        constructor();
+        public update(): void;
+        public render(): void;
+        public input(): void;
     }
 }
 declare module Game {
-    class StateManager {
-        public states: any[];
-        public currentState: any;
-        public addState(key: any, state: any): void;
-        public removeState(key: any): void;
-        public setState(key: any): void;
+    class Cutscene extends State {
     }
 }
 declare function wrap(ctx: any, cwidth: any, text: any): any[];
