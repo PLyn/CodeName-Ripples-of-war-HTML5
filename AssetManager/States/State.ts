@@ -1,5 +1,5 @@
 ﻿module Game {
-    class State {
+    export class State {
         constructor() {
 
         }
