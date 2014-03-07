@@ -1,11 +1,13 @@
 ﻿var pos = 0;
 var audioElement = new Audio();
+var STATES = new Game.StateManager();
 
+//State system core will most likely be here so read the book and figure out
+//how to get it working and leading to each state as needed
 module Game {
     export class Init {
         preloader;
         world;
-
         constructor() {
             var source = {
                 Images: {
@@ -33,8 +35,10 @@ module Game {
                     theme: 'Assets/Music/theme'
                 }
             };
+            STATES.addState("dialog", 0);
             this.preloader = new Game.Preloader();
-            this.preloader.queueAssets(source, this.onComplete);   
+            this.preloader.queueAssets(source, this.onComplete);  
+            STATES.setState("dialog"); 
         }
         onComplete = () => {
             this.world = new Game.Loop('canvas', 800, 600, this.preloader);

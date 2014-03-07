@@ -49,31 +49,6 @@ declare module Game {
         constructor(img: any, x: any, y: any, w: any, h: any, a: any, scale?: any);
     }
 }
-declare var control: any;
-declare var tiles: any;
-declare module Game {
-    class Loop {
-        public canvas: any;
-        public context: any;
-        public asset: any;
-        public currentArea: any;
-        constructor(canvasid: any, width: any, height: any, preloader: any);
-        public update(): void;
-        public render: () => void;
-        public playerInput(): void;
-    }
-}
-declare var pos: number;
-declare var audioElement: HTMLAudioElement;
-declare module Game {
-    class Init {
-        public preloader: any;
-        public world: any;
-        constructor();
-        public onComplete: () => void;
-        public GameLoop: () => void;
-    }
-}
 declare module Game {
     class input {
         public keys: any;
@@ -136,6 +111,15 @@ declare module Game {
         public onXMLLoad: (key: any, response: any) => void;
     }
 }
+declare module Game {
+    class StateManager {
+        public states: any[];
+        public currentState: any;
+        public addState(key: any, state: any): void;
+        public removeState(key: any): void;
+        public setState(key: any): void;
+    }
+}
 declare var objects: any[];
 declare module Game {
     class Tilemap {
@@ -150,6 +134,32 @@ declare module Game {
         public drawTiles: (context: any, index: any) => void;
     }
 }
+declare var control: any;
+declare var tiles: any;
+declare module Game {
+    class Loop {
+        public canvas: any;
+        public context: any;
+        public asset: any;
+        public currentArea: any;
+        constructor(canvasid: any, width: any, height: any, preloader: any);
+        public update(): void;
+        public render: () => void;
+        public playerInput(): void;
+    }
+}
+declare var pos: number;
+declare var audioElement: HTMLAudioElement;
+declare var STATES: Game.StateManager;
+declare module Game {
+    class Init {
+        public preloader: any;
+        public world: any;
+        constructor();
+        public onComplete: () => void;
+        public GameLoop: () => void;
+    }
+}
 declare module Game {
     class State {
         constructor();
@@ -159,17 +169,11 @@ declare module Game {
     }
 }
 declare module Game {
-    class StateManager {
-        public states: any[];
-        public currentState: any;
-        public addState(key: any, state: any): void;
-        public removeState(key: any): void;
-        public setState(key: any): void;
-    }
-}
-declare module Game {
     class Cutscene extends State {
-        constructor();
+        public dia: any;
+        public canvas: any;
+        public context: any;
+        constructor(id: any, width: any, height: any);
         public update(): void;
         public render(): void;
         public input(): void;

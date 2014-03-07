@@ -7,7 +7,7 @@ module Game {
         H = 0;
         img = new Image();
         scale = 0;
-
+        //pretty much complete imo, other classes such as sprite will extend the variables and functionality
         constructor(img, x, y, w, h, scale?) {
             this.img = img;
             this.x = x || 0;

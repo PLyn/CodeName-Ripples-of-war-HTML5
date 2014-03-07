@@ -24,6 +24,7 @@ module Game {
             }
             this.objects[key] = temp_obj;
         }*/
+        //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
         getObjects = (context, index) => {
             for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
                 if (TILEDATA_CACHE[index].layers[layeridX].type !== "objectgroup") continue;
@@ -81,6 +82,7 @@ module Game {
             return tile;
         }
         drawTiles = (context, index) => {
+            //go back through this to see if its needed later on. might need a revamp or look through
             /*if (!this.isFilesLoaded) {
                 console.log("tileset not loaded");
                 return;

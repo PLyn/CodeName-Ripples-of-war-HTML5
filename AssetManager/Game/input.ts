@@ -5,6 +5,8 @@
         canvas;
         mEvent;
         constructor(canvas) {
+            //fairly complete for the tasks it need to do but might need some refining to the key functions to let it operate 
+            //as accurately as i need. Not a high priority as it works but look at later on.
             this.keys = [];
             this.click = false;
             this.mEvent = null;

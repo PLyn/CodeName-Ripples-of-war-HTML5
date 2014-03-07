@@ -2,7 +2,8 @@
     export class StateManager {
         states = [];
         currentState;
-
+        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
+        //High on the list, will start getting through this ASAP with help from nick and/or the book
         addState(key, state) {
             var obj = {
                 "key": key,
