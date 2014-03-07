@@ -5,10 +5,17 @@
     for (var i = 0; i < text.childNodes.length; i++) {
         if (child[i].nodeType === 1) { //gets only the element nodes
             if (ctx.measureText(child[i].textContent).width >= cwidth) {
-                for (var key = 0; key < child[i].textContent.length; key++) {
-                    var letter = child[i].textContent.substring(key, key + 1);
-                    templine = templine + letter;
-                    if (ctx.measureText(templine).width >= cwidth) {
+                var words = child[i].textContent.split(' ');
+                for (var key = 0; key < words.length; key++) {
+                    var length = templine.length;
+                    var word = words[key];//child[i].textContent.substring(key, key + 1);
+                    templine = templine + word + ' ';
+                    if (ctx.measureText(templine).width >= (cwidth * 0.85)) {
+                        lines.push({ "name": child[i].nodeName, "message": templine.substring(0, length) });
+                        key--;
+                        templine = "";
+                    }
+                    else if (ctx.measureText(templine).width >= (cwidth * 0.70)) {
                         lines.push({ "name": child[i].nodeName, "message": templine });
                         templine = "";
                     }

@@ -49,6 +49,31 @@ declare module Game {
         constructor(img: any, x: any, y: any, w: any, h: any, a: any, scale?: any);
     }
 }
+declare var control: any;
+declare var tiles: any;
+declare module Game {
+    class Loop {
+        public canvas: any;
+        public context: any;
+        public asset: any;
+        public currentArea: any;
+        constructor(canvasid: any, width: any, height: any, preloader: any);
+        public update(): void;
+        public render: () => void;
+        public playerInput(): void;
+    }
+}
+declare var pos: number;
+declare var audioElement: HTMLAudioElement;
+declare module Game {
+    class Init {
+        public preloader: any;
+        public world: any;
+        constructor();
+        public onComplete: () => void;
+        public GameLoop: () => void;
+    }
+}
 declare module Game {
     class input {
         public keys: any;
@@ -123,31 +148,6 @@ declare module Game {
             "py": number;
         };
         public drawTiles: (context: any, index: any) => void;
-    }
-}
-declare var control: any;
-declare var tiles: any;
-declare module Game {
-    class Loop {
-        public canvas: any;
-        public context: any;
-        public asset: any;
-        public currentArea: any;
-        constructor(canvasid: any, width: any, height: any, preloader: any);
-        public update(): void;
-        public render: () => void;
-        public playerInput(): void;
-    }
-}
-declare var pos: number;
-declare var audioElement: HTMLAudioElement;
-declare module Game {
-    class Init {
-        public preloader: any;
-        public world: any;
-        constructor();
-        public onComplete: () => void;
-        public GameLoop: () => void;
     }
 }
 declare function wrap(ctx: any, cwidth: any, text: any): any[];
