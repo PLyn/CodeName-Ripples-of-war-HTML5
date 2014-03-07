@@ -151,6 +151,10 @@ declare module Game {
     }
 }
 declare module Game {
+    class State {
+    }
+}
+declare module Game {
     class StateManager {
         public states: any[];
         public currentState: any;
