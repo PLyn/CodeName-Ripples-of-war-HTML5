@@ -12,6 +12,8 @@
         //only major issue or feature i can think of left for this module is the text appearing as time goes on
         //like i did in the phaser dialogue module, should be relatively easy to implement with the logic from
         //the phaser project
+        //There is also the creation of a new canvas for the dialog to appear on but that will be taken
+        //care of in the state system since the canvas should probably be created there
         constructor(ctx, cwidth) {
             this.ctx = ctx;
             this.canvasWidth = cwidth;

@@ -11,12 +11,16 @@ module Game {
             this.canvas.id = id;
             this.canvas.width = width;
             this.canvas.height = height;
-            this.canvas.tabindex = '10';
+            this.canvas.tabindex = '2';
             document.body.appendChild(this.canvas);
+            this.canvas = <HTMLCanvasElement> document.getElementById(id);
             this.context = this.canvas.getContext('2d');
-            //this.dia = new Dialogue(ctx, w);
-            this.dia.startScene('chapter', 'scene', 0);
+
             control = new Game.input(this.canvas);
+            console.log(this.canvas);
+            console.log(this.canvas.width);
+            this.dia = new Dialogue(this.context, this.canvas.width);
+            this.dia.startScene('chapter', 'scene', 0);
         }
         update() {
             if (control.mousedown()) {
@@ -26,8 +30,6 @@ module Game {
         render() {
 
         }
-        input() {
 
-        }
     }
 }

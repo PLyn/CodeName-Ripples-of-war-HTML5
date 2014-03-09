@@ -1,21 +1,29 @@
 ﻿module Game {
     export class StateManager {
         states = [];
-        currentState;
+        currentState = {
+            "key": '',
+            "function": null
+        };
         //Mostly guesswork here, I am assuming none of this code will make it to the final thing
         //High on the list, will start getting through this ASAP with help from nick and/or the book
         addState(key, state) {
-            var obj = {
+            this.states[key] = {
                 "key": key,
-                "state": state
-            }
-            this.states.push(obj);
+                "": state
+            };
         }
         removeState(key) {
             this.states[key] = null;
         }
         setState(key) {
-            this.currentState = this.states[key].state;
+            this.currentState = {
+                "key": this.states[key].key,
+                "function": this.states[key].func
+            };
+        }
+        getState() {
+            return this.currentState;
         }
     }
 }
