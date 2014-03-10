@@ -1,3 +1,4 @@
+declare var enableScene: boolean;
 declare module Game {
     class GenericArea {
         public x: any;
@@ -5,11 +6,12 @@ declare module Game {
         public velocity: any;
         public mx: any;
         public my: any;
-        public dia: any;
+        public cut: any;
+        public explore: any;
+        public startScene: any;
         constructor(ctx: any, w: any);
-        public update(): void;
+        public update: () => void;
         public render(context: any): void;
-        public objectClick: (x: any, y: any, obj: any) => void;
     }
 }
 declare module Game {
@@ -65,13 +67,13 @@ declare module Game {
 }
 declare var pos: number;
 declare var audioElement: HTMLAudioElement;
-declare var STATES: any;
-declare var dialog: any;
+declare var WORLD: number;
+declare var sManager: any;
 declare module Game {
     class Init {
         public preloader: any;
         public world: any;
-        public DIALOG: number;
+        public dialog: any;
         constructor();
         public onComplete: () => void;
         public GameLoop: () => void;
@@ -162,19 +164,29 @@ declare module Game {
     }
 }
 declare module Game {
+    class Explore extends State {
+        public x: any;
+        public y: any;
+        public velocity: any;
+        public mx: any;
+        public my: any;
+        public ctrl: any;
+        constructor(ctx: any, w: any);
+        public update(): void;
+        public render(): void;
+        public objectClick: (x: any, y: any, obj: any) => void;
+    }
+}
+declare module Game {
     class StateManager {
-        public states: any[];
-        public currentState: {
-            "key": string;
-            "function": any;
-        };
-        public addState(key: any, state: any): void;
-        public removeState(key: any): void;
-        public setState(key: any): void;
-        public getState(): {
-            "key": string;
-            "function": any;
-        };
+        public currentInGameState: number;
+        public currentInGameStateFunction: any;
+        public currentState: number;
+        public currentStateFunction: any;
+        public switchGameState(state: any): void;
+        public getGameState(): number;
+        public switchInGameState(state: any): void;
+        public getInGameState(): number;
     }
 }
 declare module Game {
@@ -182,7 +194,9 @@ declare module Game {
         public dia: any;
         public canvas: any;
         public context: any;
-        constructor(id: any, width: any, height: any);
+        public ctl: any;
+        constructor(id: any, width: any, height: any, ctx: any);
+        public start(): void;
         public update(): void;
         public render(): void;
     }

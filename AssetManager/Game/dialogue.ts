@@ -41,7 +41,11 @@
                 }
                 this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
                 this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
-                this.linePos++;  
+                this.linePos++;
+            }
+            else if (this.linePos >= this.lines.length) {
+                this.ctx.clearRect(0, 0, 800, 600);
+                sManager.switchInGameState(0);
             }
         }
         setStyle(font, size, color, bold?, italic?, align?) {

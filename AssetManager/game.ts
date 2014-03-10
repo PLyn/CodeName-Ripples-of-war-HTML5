@@ -1,14 +1,15 @@
 ﻿var pos = 0;
 var audioElement = new Audio();
-var STATES; 
-var dialog;
+var WORLD = 0;
+var sManager;
 //State system core will most likely be here so read the book and figure out
 //how to get it working and leading to each state as needed
 module Game {
     export class Init {
         preloader;
         world;
-        DIALOG = 0;
+        dialog;
+        
         constructor() {
             var source = {
                 Images: {
@@ -36,29 +37,26 @@ module Game {
                     theme: 'Assets/Music/theme'
                 }
             };
-           // STATES = new Game.StateManager();
-            //STATES.addState("dialog", 0);
             this.preloader = new Game.Preloader();
             this.preloader.queueAssets(source, this.onComplete);  
-            //STATES.setState("dialog"); 
-            
+            sManager = new Game.StateManager();
         }
         onComplete = () => {
-            dialog = new Game.Cutscene("dia", 800, 600);
-            //this.world = new Game.Loop('canvas', 800, 600, this.preloader);
+            //this.dialog = new Game.Cutscene("dia", 800, 600);
+            this.world = new Game.Loop('canvas', 800, 600, this.preloader);
             setInterval(this.GameLoop, 1000 / 30);
             
         }
         GameLoop = () => { 
-            //var state = STATES.getState();
-            //switch (state) {
-                //case this.DIALOG:
-                    dialog.update();
-                    dialog.render();
-                   // break;
-               // default:
-                   // break;
-           // }
+            var state = sManager.getGameState();
+            switch (state) {
+                case WORLD:
+                    this.world.update();
+                    this.world.render();
+                    break;
+                default:
+                    break;
+            }
             //this.world.update();
             //this.world.render();
         }

@@ -1,19 +1,51 @@
 ﻿window.onload = function () {
     var game = new Game.Init();
 };
+//deal with this function later to do proper coordinates for mouse position in canvas, not as important
+//atm due to the fact that the entire game is on a empty page so the coordinates work so far but if there are
+//more headers and divs or spans, the coordinates could become very inaccurate and have weird effects
+//so keep this around for future reference when i need to tackle this issue
+/*
+function relMouseCoords(event) {
+var totalOffsetX = 0;
+var totalOffsetY = 0;
+var canvasX = 0;
+var canvasY = 0;
+var currentElement = this;
+do {
+totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+}
+while(currentElement === currentElement.offsetParent)
+canvasX = event.pageX - totalOffsetX;
+canvasY = event.pageY - totalOffsetY;
+return { x: canvasX, y: canvasY }
+}
+*/
+var enableScene = false;
 var Game;
 (function (Game) {
     var GenericArea = (function () {
-        function GenericArea() {
-            this.objectClick = function (x, y, obj) {
-                for (var i = 0; i < obj.length; i++) {
-                    var x1 = obj[i].x;
-                    var x2 = obj[i].x + obj[i].width;
-                    var y1 = obj[i].y;
-                    var y2 = obj[i].y + obj[i].width;
-                    if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
-                        console.log(obj[i].x);
-                    }
+        //make this as the name suggests, a more generic class for other classes to build on
+        //to create "scenes" physcially such as the palce, music etc for the dialogue scenes and exploration aspects
+        //most of the specific code will be removed and put somewhere else like in the states
+        function GenericArea(ctx, w) {
+            var _this = this;
+            this.update = function () {
+                var state = sManager.getInGameState();
+                switch (state) {
+                    case 0:
+                        _this.explore.update();
+                        break;
+                    case 1:
+                        if (_this.startScene) {
+                            _this.cut.start();
+                            _this.startScene = false;
+                        }
+                        _this.cut.update();
+                        break;
+                    default:
+                        break;
                 }
             };
             this.x = 0;
@@ -22,33 +54,11 @@ var Game;
             this.my = 0;
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
+            this.cut = new Game.Cutscene("scene", 800, 600, ctx);
+            this.explore = new Game.Explore(ctx, w);
+            this.startScene = true;
         }
-        GenericArea.prototype.update = function () {
-            if (control.keydown('W')) {
-                this.y -= this.velocity;
-            } else if (control.keydown('D')) {
-                this.x += this.velocity;
-            } else if (control.keydown('A')) {
-                this.x -= this.velocity;
-            } else if (control.keydown('S')) {
-                this.y += this.velocity;
-            }
-
-            if (control.mousedown()) {
-                this.mx = control.mEvent.pageX;
-                this.my = control.mEvent.pageY;
-                this.objectClick(this.mx, this.my, objects);
-            }
-            //imagex += 50;
-            /*if (pos === 0) {
-            imagex = 0;
-            }*/
-        };
         GenericArea.prototype.render = function (context) {
-            context.clearRect(0, 0, 800, 600);
-            tiles.drawTiles(context, 'rpg');
-            tiles.getObjects(context, 'rpg');
-            GAME_OBJECTS[0].render(context, this.x, this.y);
             /*ANIM_CACHE['at'][pos].render(context, 200, 150);
             pos = (pos + 1) % ANIM_CACHE['at'].length;*/
         };
@@ -56,10 +66,68 @@ var Game;
     })();
     Game.GenericArea = GenericArea;
 })(Game || (Game = {}));
+var Game;
+(function (Game) {
+    var Dialogue = (function () {
+        //only major issue or feature i can think of left for this module is the text appearing as time goes on
+        //like i did in the phaser dialogue module, should be relatively easy to implement with the logic from
+        //the phaser project
+        //There is also the creation of a new canvas for the dialog to appear on but that will be taken
+        //care of in the state system since the canvas should probably be created there
+        function Dialogue(ctx, cwidth) {
+            var _this = this;
+            this.lines = [];
+            this.linePos = 0;
+            this.time = 0;
+            this.currentTime = 0;
+            this.lineHeight = 1;
+            this.startScene = function (key, tagName, index) {
+                _this.dialogueObject = XML_CACHE[key].getElementsByTagName(tagName)[index];
+                _this.lines = wrap(_this.ctx, _this.canvasWidth, _this.dialogueObject);
+                _this.prevName = _this.lines[_this.linePos].name;
+                _this.ctx.fillText(_this.lines[_this.linePos].message, 150, (300 + _this.lineHeight));
+                _this.ctx.fillText(_this.lines[_this.linePos].name, 50, 250);
+                _this.linePos++;
+            };
+            this.updateScene = function () {
+                _this.currentTime = Date.now();
+                if (_this.linePos < _this.lines.length && _this.currentTime > _this.time) {
+                    _this.time = _this.currentTime + 1000;
+                    if (_this.prevName !== _this.lines[_this.linePos].name) {
+                        _this.ctx.clearRect(0, 0, 800, 600);
+                        _this.prevName = _this.lines[_this.linePos].name;
+                        _this.lineHeight = 1;
+                    } else {
+                        _this.lineHeight += 25;
+                    }
+                    _this.ctx.fillText(_this.lines[_this.linePos].message, 150, (300 + _this.lineHeight));
+                    _this.ctx.fillText(_this.lines[_this.linePos].name, 50, 250);
+                    _this.linePos++;
+                } else if (_this.linePos >= _this.lines.length) {
+                    _this.ctx.clearRect(0, 0, 800, 600);
+                    sManager.switchInGameState(0);
+                }
+            };
+            this.ctx = ctx;
+            this.canvasWidth = cwidth;
+            this.setStyle('Calibri', '16pt', 'blue', 'bold', 'italic', 'left');
+        }
+        Dialogue.prototype.setStyle = function (font, size, color, bold, italic, align) {
+            var bolded = bold || '';
+            var ital = italic || '';
+            this.ctx.font = bolded + ' ' + ital + ' ' + size + ' ' + font;
+            this.ctx.fillStyle = color;
+            this.ctx.textAlign = align;
+        };
+        return Dialogue;
+    })();
+    Game.Dialogue = Dialogue;
+})(Game || (Game = {}));
 var GAME_OBJECTS = [];
 var Game;
 (function (Game) {
     var GameObject = (function () {
+        //pretty much complete imo, other classes such as sprite will extend the variables and functionality
         function GameObject(img, x, y, w, h, scale) {
             this.x = 0;
             this.y = 0;
@@ -94,9 +162,12 @@ var Game;
 (function (Game) {
     var Sprite = (function (_super) {
         __extends(Sprite, _super);
+        //all the base attributes and methods are to be added here, this will come when
+        //the battle system is being developed but for now it stays relatively empty i guess
+        //until i sort out more pressing issues such as the state system
         function Sprite(img, x, y, w, h, a, scale) {
             _super.call(this, img, x, y, w, h, scale);
-            this.a = a;
+            this.a = a; //testing, not actually used for anything
         }
         return Sprite;
     })(Game.GameObject);
@@ -107,6 +178,8 @@ var tiles;
 var Game;
 (function (Game) {
     var Loop = (function () {
+        //remove alot of initialization code from here as it will go in the states
+        //need to put the code in here to deal with the states as needed thoughs
         function Loop(canvasid, width, height, preloader) {
             var _this = this;
             this.render = function () {
@@ -124,7 +197,7 @@ var Game;
             control = new Game.input(this.canvas);
             tiles = new Game.Tilemap();
             tiles.Init();
-            this.currentArea = new Game.GenericArea();
+            this.currentArea = new Game.GenericArea(this.context, width);
         }
         Loop.prototype.update = function () {
             this.currentArea.update();
@@ -138,19 +211,33 @@ var Game;
 })(Game || (Game = {}));
 var pos = 0;
 var audioElement = new Audio();
+var WORLD = 0;
+var sManager;
 
+//State system core will most likely be here so read the book and figure out
+//how to get it working and leading to each state as needed
 var Game;
 (function (Game) {
     var Init = (function () {
         function Init() {
             var _this = this;
             this.onComplete = function () {
+                //this.dialog = new Game.Cutscene("dia", 800, 600);
                 _this.world = new Game.Loop('canvas', 800, 600, _this.preloader);
                 setInterval(_this.GameLoop, 1000 / 30);
             };
             this.GameLoop = function () {
-                _this.world.update();
-                _this.world.render();
+                var state = sManager.getGameState();
+                switch (state) {
+                    case WORLD:
+                        _this.world.update();
+                        _this.world.render();
+                        break;
+                    default:
+                        break;
+                }
+                //this.world.update();
+                //this.world.render();
             };
             var source = {
                 Images: {
@@ -180,6 +267,7 @@ var Game;
             };
             this.preloader = new Game.Preloader();
             this.preloader.queueAssets(source, this.onComplete);
+            sManager = new Game.StateManager();
         }
         return Init;
     })();
@@ -189,6 +277,8 @@ var Game;
 (function (Game) {
     var input = (function () {
         function input(canvas) {
+            //fairly complete for the tasks it need to do but might need some refining to the key functions to let it operate
+            //as accurately as i need. Not a high priority as it works but look at later on.
             this.keys = [];
             this.click = false;
             this.mEvent = null;
@@ -330,10 +420,10 @@ var Game;
                 }
             };
             this.onXMLLoad = function (key, response) {
-                var test = response;
-                var xmltest = test.getElementsByTagName("Shadow");
+                XML_CACHE[key] = response;
                 _this.isLoaded++;
                 //rest to be implemented. not sure how to extract the info how i want yet...will do soon
+                //saved xml file iin the global variable to be used later on as needed
             };
         }
         Preloader.prototype.queueAssets = function (Assets, load) {
@@ -451,18 +541,37 @@ var Game;
     var Tilemap = (function () {
         function Tilemap() {
             var _this = this;
+            /*getObjects() {
+            return this.objects;
+            }
+            addObject(key, object) {
+            this.objects[key] = object;
+            }
+            removeObject(key) {
+            this.objects[key] = null;
+            }
+            editObject(key, name, width, x, y) {
+            var temp_obj = {
+            "name": name,
+            "width": width,
+            "x": x,
+            "y": y
+            }
+            this.objects[key] = temp_obj;
+            }*/
+            //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
             this.getObjects = function (context, index) {
                 for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
                     if (TILEDATA_CACHE[index].layers[layeridX].type !== "objectgroup")
                         continue;
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
-
                     var obj = {
                         "name": "",
                         "width": 0,
                         "x": 0,
                         "y": 0
                     };
+
                     for (var x = 0; x < tileObjects.length; x++) {
                         var tile = _this.getTile(tileObjects[x].gid);
                         if (tileObjects[x].width !== 0) {
@@ -470,10 +579,9 @@ var Game;
                         } else {
                             obj.width = 32; //TILEDATA_CACHE[index].tilesets.tilewidth;
                         }
-                        obj.name = tileObjects[x].name;
+                        obj.name = tileObjects[x].name; //PROBLEM
                         obj.x = tileObjects[x].x;
                         obj.y = tileObjects[x].y;
-                        console.log(obj.name);
                         objects[x] = {
                             "name": obj.name,
                             "width": obj.width,
@@ -539,12 +647,157 @@ var Game;
     })();
     Game.Tilemap = Tilemap;
 })(Game || (Game = {}));
-function wrap(canvas, dialogue) {
-    var position;
+var Game;
+(function (Game) {
+    var State = (function () {
+        //used as the base class to be extended for each state
+        //might need some initialization code to remove some clutter
+        //from each state to make stuff look better
+        function State() {
+        }
+        State.prototype.update = function () {
+        };
+        State.prototype.render = function () {
+        };
+        State.prototype.input = function () {
+        };
+        return State;
+    })();
+    Game.State = State;
+})(Game || (Game = {}));
+///<reference path='State.ts' />
+var Game;
+(function (Game) {
+    var Explore = (function (_super) {
+        __extends(Explore, _super);
+        function Explore(ctx, w) {
+            _super.call(this);
+            this.objectClick = function (x, y, obj) {
+                for (var i = 0; i < obj.length; i++) {
+                    var x1 = obj[i].x;
+                    var x2 = obj[i].x + obj[i].width;
+                    var y1 = obj[i].y;
+                    var y2 = obj[i].y + obj[i].width;
+                    if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
+                        console.log(obj[i].x);
+                        sManager.switchInGameState(1);
+                    }
+                }
+            };
+            this.x = 0;
+            this.y = 0;
+            this.mx = 0;
+            this.my = 0;
+            this.velocity = 2.0;
+            GAME_OBJECTS.push(SPRITE_CACHE[0]);
 
-    /*get length of context then measue length of dailogue to break it up in suitable chunks to display on the screen*/
-    var lineWidth = canvas.width;
-    dialogue.substring(position, lineWidth);
-    //figure out a way to get it to repeat till the dialogue is empty
+            ctx.clearRect(0, 0, 800, 600);
+            tiles.drawTiles(ctx, 'rpg');
+            tiles.getObjects(ctx, 'rpg');
+            GAME_OBJECTS[0].render(ctx, this.x, this.y);
+        }
+        Explore.prototype.update = function () {
+            if (control.mousedown()) {
+                this.mx = control.mEvent.pageX;
+                this.my = control.mEvent.pageY;
+                this.objectClick(this.mx, this.my, objects);
+            }
+        };
+        Explore.prototype.render = function () {
+        };
+        return Explore;
+    })(Game.State);
+    Game.Explore = Explore;
+})(Game || (Game = {}));
+var Game;
+(function (Game) {
+    var StateManager = (function () {
+        function StateManager() {
+            this.currentInGameState = 0;
+            this.currentInGameStateFunction = null;
+            this.currentState = 0;
+            this.currentStateFunction = null;
+        }
+        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
+        //High on the list, will start getting through this ASAP with help from nick and/or the book
+        StateManager.prototype.switchGameState = function (state) {
+            this.currentState = state;
+        };
+        StateManager.prototype.getGameState = function () {
+            return this.currentState;
+        };
+        StateManager.prototype.switchInGameState = function (state) {
+            this.currentInGameState = state;
+        };
+        StateManager.prototype.getInGameState = function () {
+            return this.currentInGameState;
+        };
+        return StateManager;
+    })();
+    Game.StateManager = StateManager;
+})(Game || (Game = {}));
+///<reference path='State.ts' />
+var Game;
+(function (Game) {
+    var Cutscene = (function (_super) {
+        __extends(Cutscene, _super);
+        function Cutscene(id, width, height, ctx) {
+            _super.call(this);
+
+            //create new canvas to put dialogue on.
+            /* this.canvas = document.createElement('canvas');
+            this.canvas.id = id;
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.canvas.
+            this.canvas.tabindex = '2';
+            document.body.appendChild(this.canvas);*/
+            //this.canvas = <HTMLCanvasElement> document.getElementById(id);
+            //this.context = this.canvas.getContext('2d');
+            this.dia = new Game.Dialogue(ctx, width);
+        }
+        Cutscene.prototype.start = function () {
+            this.dia.startScene('chapter', 'scene', 0);
+        };
+        Cutscene.prototype.update = function () {
+            if (control.mousedown()) {
+                this.dia.updateScene();
+            }
+        };
+        Cutscene.prototype.render = function () {
+        };
+        return Cutscene;
+    })(Game.State);
+    Game.Cutscene = Cutscene;
+})(Game || (Game = {}));
+function wrap(ctx, cwidth, text) {
+    var templine = "";
+    var lines = [];
+    var child = text.childNodes;
+
+    for (var i = 0; i < text.childNodes.length; i++) {
+        if (child[i].nodeType === 1) {
+            if (ctx.measureText(child[i].textContent).width >= cwidth) {
+                var words = child[i].textContent.split(' ');
+                for (var key = 0; key < words.length; key++) {
+                    var length = templine.length;
+                    var word = words[key];
+                    templine = templine + word + ' ';
+                    if (ctx.measureText(templine).width >= (cwidth * 0.85)) {
+                        lines.push({ "name": child[i].nodeName, "message": templine.substring(0, length) });
+                        key--;
+                        templine = "";
+                    } else if (ctx.measureText(templine).width >= (cwidth * 0.70)) {
+                        lines.push({ "name": child[i].nodeName, "message": templine });
+                        templine = "";
+                    }
+                }
+                lines.push({ "name": child[i].nodeName, "message": templine });
+            } else {
+                lines.push({ "name": child[i].nodeName, "message": child[i].textContent });
+            }
+        }
+    }
+    return lines;
 }
 //# sourceMappingURL=app.js.map
