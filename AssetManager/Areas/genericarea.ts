@@ -10,7 +10,8 @@ module Game {
         my;
         cut;
         explore;
-        
+        prevState = 0;
+        ctx;
         //make this as the name suggests, a more generic class for other classes to build on
         //to create "scenes" physcially such as the palce, music etc for the dialogue scenes and exploration aspects
         //most of the specific code will be removed and put somewhere else like in the states
@@ -23,10 +24,24 @@ module Game {
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
             SCENE = new Cutscene("scene", 800, 600, ctx);
             EX = new Explore(ctx, w);
+            this.ctx = ctx;
             startScene = true;
         }
         update = () => {
             var state = sManager.getInGameState();
+            if (this.prevState !== state) {
+                switch (state) {
+                    case 0:
+                        EX = new Explore(this.ctx, 800);
+                        break;
+                    case 1:
+                        SCENE = new Cutscene("scene", 800, 600, this.ctx);
+                        startScene = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
             switch (state) {
                 case 0:
                     EX.update();
@@ -41,7 +56,7 @@ module Game {
                 default:
                     break;
             }
-                    
+            this.prevState = state;   
         }
         render(context) {
 

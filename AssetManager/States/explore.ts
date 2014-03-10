@@ -44,8 +44,6 @@ module Game {
                 if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
                     console.log(obj[i].x);
                     sManager.switchInGameState(1);
-                    SCENE = new Cutscene("scene", 800, 600, this.ctx);
-                    startScene = true;
                 }
             }
         }

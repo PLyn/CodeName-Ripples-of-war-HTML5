@@ -46,7 +46,6 @@
             else if (this.linePos >= this.lines.length) {
                 this.ctx.clearRect(0, 0, 800, 600);
                 sManager.switchInGameState(0);
-                EX = new Explore(this.ctx, 800);
             }
         }
         setStyle(font, size, color, bold?, italic?, align?) {
