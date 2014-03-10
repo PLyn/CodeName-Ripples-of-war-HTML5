@@ -15,5 +15,11 @@
         input() {
 
         }
+        entered() {
+        
+        }
+        leaved() {
+
+        }
     }
 }

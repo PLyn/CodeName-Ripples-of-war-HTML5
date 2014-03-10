@@ -1,4 +1,6 @@
-declare var enableScene: boolean;
+declare var SCENE: any;
+declare var EX: any;
+declare var startScene: any;
 declare module Game {
     class GenericArea {
         public x: any;
@@ -8,7 +10,6 @@ declare module Game {
         public my: any;
         public cut: any;
         public explore: any;
-        public startScene: any;
         constructor(ctx: any, w: any);
         public update: () => void;
         public render(context: any): void;
@@ -161,6 +162,8 @@ declare module Game {
         public update(): void;
         public render(): void;
         public input(): void;
+        public entered(): void;
+        public leaved(): void;
     }
 }
 declare module Game {
@@ -171,6 +174,7 @@ declare module Game {
         public mx: any;
         public my: any;
         public ctrl: any;
+        public ctx: any;
         constructor(ctx: any, w: any);
         public update(): void;
         public render(): void;

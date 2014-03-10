@@ -1,4 +1,6 @@
-﻿var enableScene = false;
+﻿var SCENE;
+var EX;
+var startScene;
 module Game {
     export class GenericArea {
         x;
@@ -8,7 +10,7 @@ module Game {
         my;
         cut;
         explore;
-        startScene;
+        
         //make this as the name suggests, a more generic class for other classes to build on
         //to create "scenes" physcially such as the palce, music etc for the dialogue scenes and exploration aspects
         //most of the specific code will be removed and put somewhere else like in the states
@@ -19,22 +21,22 @@ module Game {
             this.my = 0;
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
-            this.cut = new Cutscene("scene", 800, 600, ctx);
-            this.explore = new Explore(ctx, w);
-            this.startScene = true;
+            SCENE = new Cutscene("scene", 800, 600, ctx);
+            EX = new Explore(ctx, w);
+            startScene = true;
         }
         update = () => {
             var state = sManager.getInGameState();
             switch (state) {
                 case 0:
-                    this.explore.update();
+                    EX.update();
                     break;
                 case 1:
-                    if (this.startScene) {
-                        this.cut.start();
-                        this.startScene = false;
+                    if (startScene) {
+                        SCENE.start();
+                        startScene = false;
                     }
-                    this.cut.update();
+                    SCENE.update();
                     break;
                 default:
                     break;

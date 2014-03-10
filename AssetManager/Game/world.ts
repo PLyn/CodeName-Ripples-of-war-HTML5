@@ -9,14 +9,14 @@ module Game {
         //remove alot of initialization code from here as it will go in the states
         //need to put the code in here to deal with the states as needed thoughs
         constructor(canvasid, width, height, preloader) {
-            this.canvas = document.createElement('canvas');
+            /*this.canvas = document.createElement('canvas');
             this.canvas.id = canvasid;
             this.canvas.width = width;
             this.canvas.height = height;
             this.canvas.tabindex = '1';
-            document.body.appendChild(this.canvas);
+            document.body.appendChild(this.canvas);*/
             this.asset = preloader;
-            this.canvas = <HTMLCanvasElement> document.getElementById(canvasid);
+            this.canvas = <HTMLCanvasElement> document.getElementById('layer1');
             this.context = this.canvas.getContext('2d');
             control = new Game.input(this.canvas);
             tiles = new Game.Tilemap();

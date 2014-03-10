@@ -22,7 +22,9 @@ canvasY = event.pageY - totalOffsetY;
 return { x: canvasX, y: canvasY }
 }
 */
-var enableScene = false;
+var SCENE;
+var EX;
+var startScene;
 var Game;
 (function (Game) {
     var GenericArea = (function () {
@@ -30,19 +32,18 @@ var Game;
         //to create "scenes" physcially such as the palce, music etc for the dialogue scenes and exploration aspects
         //most of the specific code will be removed and put somewhere else like in the states
         function GenericArea(ctx, w) {
-            var _this = this;
             this.update = function () {
                 var state = sManager.getInGameState();
                 switch (state) {
                     case 0:
-                        _this.explore.update();
+                        EX.update();
                         break;
                     case 1:
-                        if (_this.startScene) {
-                            _this.cut.start();
-                            _this.startScene = false;
+                        if (startScene) {
+                            SCENE.start();
+                            startScene = false;
                         }
-                        _this.cut.update();
+                        SCENE.update();
                         break;
                     default:
                         break;
@@ -54,9 +55,9 @@ var Game;
             this.my = 0;
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
-            this.cut = new Game.Cutscene("scene", 800, 600, ctx);
-            this.explore = new Game.Explore(ctx, w);
-            this.startScene = true;
+            SCENE = new Game.Cutscene("scene", 800, 600, ctx);
+            EX = new Game.Explore(ctx, w);
+            startScene = true;
         }
         GenericArea.prototype.render = function (context) {
             /*ANIM_CACHE['at'][pos].render(context, 200, 150);
@@ -106,6 +107,7 @@ var Game;
                 } else if (_this.linePos >= _this.lines.length) {
                     _this.ctx.clearRect(0, 0, 800, 600);
                     sManager.switchInGameState(0);
+                    EX = new Game.Explore(_this.ctx, 800);
                 }
             };
             this.ctx = ctx;
@@ -185,14 +187,14 @@ var Game;
             this.render = function () {
                 _this.currentArea.render(_this.context);
             };
-            this.canvas = document.createElement('canvas');
+            /*this.canvas = document.createElement('canvas');
             this.canvas.id = canvasid;
             this.canvas.width = width;
             this.canvas.height = height;
             this.canvas.tabindex = '1';
-            document.body.appendChild(this.canvas);
+            document.body.appendChild(this.canvas);*/
             this.asset = preloader;
-            this.canvas = document.getElementById(canvasid);
+            this.canvas = document.getElementById('layer1');
             this.context = this.canvas.getContext('2d');
             control = new Game.input(this.canvas);
             tiles = new Game.Tilemap();
@@ -661,6 +663,10 @@ var Game;
         };
         State.prototype.input = function () {
         };
+        State.prototype.entered = function () {
+        };
+        State.prototype.leaved = function () {
+        };
         return State;
     })();
     Game.State = State;
@@ -671,6 +677,7 @@ var Game;
     var Explore = (function (_super) {
         __extends(Explore, _super);
         function Explore(ctx, w) {
+            var _this = this;
             _super.call(this);
             this.objectClick = function (x, y, obj) {
                 for (var i = 0; i < obj.length; i++) {
@@ -681,6 +688,8 @@ var Game;
                     if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
                         console.log(obj[i].x);
                         sManager.switchInGameState(1);
+                        SCENE = new Game.Cutscene("scene", 800, 600, _this.ctx);
+                        startScene = true;
                     }
                 }
             };
@@ -690,6 +699,9 @@ var Game;
             this.my = 0;
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
+
+            var canvas = document.getElementById('layer2');
+            this.ctx = canvas.getContext('2d');
 
             ctx.clearRect(0, 0, 800, 600);
             tiles.drawTiles(ctx, 'rpg');
@@ -745,16 +757,17 @@ var Game;
             _super.call(this);
 
             //create new canvas to put dialogue on.
-            /* this.canvas = document.createElement('canvas');
+            /*this.canvas = document.createElement('canvas');
             this.canvas.id = id;
             this.canvas.width = width;
             this.canvas.height = height;
             this.canvas.
             this.canvas.tabindex = '2';
             document.body.appendChild(this.canvas);*/
-            //this.canvas = <HTMLCanvasElement> document.getElementById(id);
-            //this.context = this.canvas.getContext('2d');
-            this.dia = new Game.Dialogue(ctx, width);
+            this.canvas = document.getElementById('layer2');
+            this.context = this.canvas.getContext('2d');
+
+            this.dia = new Game.Dialogue(this.context, width);
         }
         Cutscene.prototype.start = function () {
             this.dia.startScene('chapter', 'scene', 0);

@@ -7,6 +7,7 @@ module Game {
         mx;
         my;
         ctrl;
+        ctx;
         constructor(ctx, w) {
             super();
             this.x = 0;
@@ -16,17 +17,20 @@ module Game {
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
 
+            var canvas = <HTMLCanvasElement> document.getElementById('layer2');
+            this.ctx = canvas.getContext('2d');
+
             ctx.clearRect(0, 0, 800, 600);
             tiles.drawTiles(ctx, 'rpg');
             tiles.getObjects(ctx, 'rpg');
             GAME_OBJECTS[0].render(ctx, this.x, this.y);
         }
         update() {
-                if (control.mousedown()) {
-                    this.mx = control.mEvent.pageX;
-                    this.my = control.mEvent.pageY;
-                    this.objectClick(this.mx, this.my, objects);
-                }
+            if (control.mousedown()) {
+                this.mx = control.mEvent.pageX;
+                this.my = control.mEvent.pageY;
+                this.objectClick(this.mx, this.my, objects);
+            }
         }
         render() {
 
@@ -40,8 +44,12 @@ module Game {
                 if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
                     console.log(obj[i].x);
                     sManager.switchInGameState(1);
+                    SCENE = new Cutscene("scene", 800, 600, this.ctx);
+                    startScene = true;
                 }
             }
         }
+
+
     }
 }
