@@ -6,19 +6,22 @@
         constructor() {
 
         }
+        init() {
+
+        }
         update() {
 
         }
         render() {
 
         }
-        input() {
-
-        }
-        entered() {
+        pause() {
         
         }
-        leaved() {
+        resume() {
+
+        }
+        destroy() {
 
         }
     }

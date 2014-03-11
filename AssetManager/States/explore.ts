@@ -7,7 +7,8 @@ module Game {
         mx;
         my;
         ctrl;
-        ctx;
+        layer1ctx;
+        layer2ctx;
         constructor(ctx, w) {
             super();
             this.x = 0;
@@ -18,36 +19,48 @@ module Game {
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
 
             var canvas = <HTMLCanvasElement> document.getElementById('layer2');
-            this.ctx = canvas.getContext('2d');
+            this.layer2ctx = canvas.getContext('2d');
 
-            ctx.clearRect(0, 0, 800, 600);
-            tiles.drawTiles(ctx, 'rpg');
-            tiles.getObjects(ctx, 'rpg');
-            GAME_OBJECTS[0].render(ctx, this.x, this.y);
+            var canvas2 = <HTMLCanvasElement> document.getElementById('layer1');
+            this.layer1ctx = canvas2.getContext('2d');
+        }
+        init() {
+            this.layer1ctx.clearRect(0, 0, 800, 600);
+            this.layer2ctx.clearRect(0, 0, 800, 600);
+            tiles.setTileset('rpg');
+            tiles.drawMap(this.layer1ctx, this.layer2ctx);
+            /*tiles.drawTiles(this.layer1ctx, 'rpg');
+            tiles.getObjects(this.layer2ctx, 'rpg');*/
+            //tiles.getObjects(this.layer1ctx, 'rpg');
+            //GAME_OBJECTS[0].render(this.layer2ctx, this.x, this.y);
         }
         update() {
             if (control.mousedown()) {
                 this.mx = control.mEvent.pageX;
                 this.my = control.mEvent.pageY;
-                this.objectClick(this.mx, this.my, objects);
+                for (var i = 0; i < objects.length; i++) {
+                    var x1 = objects[i].x;
+                    var x2 = objects[i].x + objects[i].width;
+                    var y1 = objects[i].y;
+                    var y2 = objects[i].y + objects[i].width;
+                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                        console.log(objects[i].x);
+                        sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx));
+                    }
+                }
             }
         }
         render() {
 
         }
-        objectClick = (x, y, obj) => {
-            for (var i = 0; i < obj.length; i++) {
-                var x1 = obj[i].x;
-                var x2 = obj[i].x + obj[i].width;
-                var y1 = obj[i].y;
-                var y2 = obj[i].y + obj[i].width;
-                if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
-                    console.log(obj[i].x);
-                    sManager.switchInGameState(1);
-                }
-            }
+        pause() {
+
         }
+        resume() {
 
+        }
+        destroy() {
 
+        }
     }
 }

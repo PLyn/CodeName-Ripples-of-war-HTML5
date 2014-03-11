@@ -22,41 +22,14 @@ module Game {
             this.my = 0;
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
-            SCENE = new Cutscene("scene", 800, 600, ctx);
-            EX = new Explore(ctx, w);
+            /*SCENE = new Cutscene("scene", 800, 600, ctx);
+            EX = new Explore(ctx, w);*/
             this.ctx = ctx;
             startScene = true;
+            sManager.pushState(new Explore(ctx, w));
         }
         update = () => {
-            var state = sManager.getInGameState();
-            if (this.prevState !== state) {
-                switch (state) {
-                    case 0:
-                        EX = new Explore(this.ctx, 800);
-                        break;
-                    case 1:
-                        SCENE = new Cutscene("scene", 800, 600, this.ctx);
-                        startScene = true;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            switch (state) {
-                case 0:
-                    EX.update();
-                    break;
-                case 1:
-                    if (startScene) {
-                        SCENE.start();
-                        startScene = false;
-                    }
-                    SCENE.update();
-                    break;
-                default:
-                    break;
-            }
-            this.prevState = state;   
+            sManager.updateStack();   
         }
         render(context) {
 

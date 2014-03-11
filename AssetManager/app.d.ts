@@ -118,28 +118,41 @@ declare module Game {
 }
 declare module Game {
     class StateManager {
-        public currentInGameState: number;
-        public currentInGameStateFunction: any;
-        public currentState: number;
-        public currentStateFunction: any;
-        public switchGameState(state: any): void;
-        public getGameState(): number;
-        public switchInGameState(state: any): void;
-        public getInGameState(): number;
+        public gameStates: any;
+        public stateStack: State[];
+        constructor();
+        public pushState(state: State): void;
+        public popState(): void;
+        public updateStack(): void;
+        public renderStack(): void;
     }
 }
 declare var objects: any[];
 declare module Game {
     class Tilemap {
+        public tileimg: any;
+        public tilepx: any;
+        public tilepy: any;
+        public tilewidth: any;
+        public tileheight: any;
+        public worldx: any;
+        public worldy: any;
+        public objimg: any;
+        public objpx: any;
+        public objpy: any;
+        public objw: any;
+        public objh: any;
+        public objx: any;
+        public objy: any;
         public key: any;
         public Init(): void;
-        public getObjects: (context: any, index: any) => void;
         public getTile(tileIndex: any): {
             "img": any;
             "px": number;
             "py": number;
         };
-        public drawTiles: (context: any, index: any) => void;
+        public setTileset: (index: any) => void;
+        public drawMap(mapcontext: any, objcontext: any): void;
     }
 }
 declare var control: any;
@@ -173,11 +186,12 @@ declare module Game {
 declare module Game {
     class State {
         constructor();
+        public init(): void;
         public update(): void;
         public render(): void;
-        public input(): void;
-        public entered(): void;
-        public leaved(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
     }
 }
 declare module Game {
@@ -187,9 +201,12 @@ declare module Game {
         public context: any;
         public ctl: any;
         constructor(id: any, width: any, height: any, ctx: any);
-        public start(): void;
+        public init(): void;
         public update(): void;
         public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
     }
 }
 declare module Game {
@@ -200,11 +217,15 @@ declare module Game {
         public mx: any;
         public my: any;
         public ctrl: any;
-        public ctx: any;
+        public layer1ctx: any;
+        public layer2ctx: any;
         constructor(ctx: any, w: any);
+        public init(): void;
         public update(): void;
         public render(): void;
-        public objectClick: (x: any, y: any, obj: any) => void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
     }
 }
 declare function wrap(ctx: any, cwidth: any, text: any): any[];

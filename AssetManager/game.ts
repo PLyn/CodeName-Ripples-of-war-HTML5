@@ -48,15 +48,8 @@ module Game {
             
         }
         GameLoop = () => { 
-            var state = sManager.getGameState();
-            switch (state) {
-                case WORLD:
                     this.world.update();
                     this.world.render();
-                    break;
-                default:
-                    break;
-            }
             //this.world.update();
             //this.world.render();
         }

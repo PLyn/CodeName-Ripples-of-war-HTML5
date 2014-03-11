@@ -32,38 +32,9 @@ var Game;
         //to create "scenes" physcially such as the palce, music etc for the dialogue scenes and exploration aspects
         //most of the specific code will be removed and put somewhere else like in the states
         function GenericArea(ctx, w) {
-            var _this = this;
             this.prevState = 0;
             this.update = function () {
-                var state = sManager.getInGameState();
-                if (_this.prevState !== state) {
-                    switch (state) {
-                        case 0:
-                            EX = new Game.Explore(_this.ctx, 800);
-                            break;
-                        case 1:
-                            SCENE = new Game.Cutscene("scene", 800, 600, _this.ctx);
-                            startScene = true;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                switch (state) {
-                    case 0:
-                        EX.update();
-                        break;
-                    case 1:
-                        if (startScene) {
-                            SCENE.start();
-                            startScene = false;
-                        }
-                        SCENE.update();
-                        break;
-                    default:
-                        break;
-                }
-                _this.prevState = state;
+                sManager.updateStack();
             };
             this.x = 0;
             this.y = 0;
@@ -71,10 +42,12 @@ var Game;
             this.my = 0;
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
-            SCENE = new Game.Cutscene("scene", 800, 600, ctx);
-            EX = new Game.Explore(ctx, w);
+
+            /*SCENE = new Cutscene("scene", 800, 600, ctx);
+            EX = new Explore(ctx, w);*/
             this.ctx = ctx;
             startScene = true;
+            sManager.pushState(new Game.Explore(ctx, w));
         }
         GenericArea.prototype.render = function (context) {
             /*ANIM_CACHE['at'][pos].render(context, 200, 150);
@@ -123,7 +96,7 @@ var Game;
                     _this.linePos++;
                 } else if (_this.linePos >= _this.lines.length) {
                     _this.ctx.clearRect(0, 0, 800, 600);
-                    sManager.switchInGameState(0);
+                    sManager.pop();
                 }
             };
             this.ctx = ctx;
@@ -456,25 +429,40 @@ var Game;
 var Game;
 (function (Game) {
     var StateManager = (function () {
-        function StateManager() {
-            this.currentInGameState = 0;
-            this.currentInGameStateFunction = null;
-            this.currentState = 0;
-            this.currentStateFunction = null;
-        }
+        /*currentInGameState = 0;
+        currentInGameStateFunction = null;
+        currentState = 0;
+        currentStateFunction = null;*/
         //Mostly guesswork here, I am assuming none of this code will make it to the final thing
         //High on the list, will start getting through this ASAP with help from nick and/or the book
-        StateManager.prototype.switchGameState = function (state) {
-            this.currentState = state;
+        function StateManager() {
+            this.gameStates = {
+                "key": '',
+                "state": null
+            };
+            this.stateStack = new Array();
+        }
+        StateManager.prototype.pushState = function (state) {
+            this.stateStack.push(state);
+            state.init();
         };
-        StateManager.prototype.getGameState = function () {
-            return this.currentState;
+        StateManager.prototype.popState = function () {
+            if (this.stateStack.length > 0) {
+                this.stateStack.pop();
+                if (this.stateStack.length > 0) {
+                    var len = this.stateStack.length;
+                    this.stateStack[len - 1].init();
+                }
+            }
         };
-        StateManager.prototype.switchInGameState = function (state) {
-            this.currentInGameState = state;
+        StateManager.prototype.updateStack = function () {
+            var len = this.stateStack.length;
+            this.stateStack[len - 1].update();
         };
-        StateManager.prototype.getInGameState = function () {
-            return this.currentInGameState;
+        StateManager.prototype.renderStack = function () {
+            for (var s in this.stateStack) {
+                s.render();
+            }
         };
         return StateManager;
     })();
@@ -486,77 +474,64 @@ var Game;
     var Tilemap = (function () {
         function Tilemap() {
             var _this = this;
-            /*getObjects() {
-            return this.objects;
-            }
-            addObject(key, object) {
-            this.objects[key] = object;
-            }
-            removeObject(key) {
-            this.objects[key] = null;
-            }
-            editObject(key, name, width, x, y) {
-            var temp_obj = {
-            "name": name,
-            "width": width,
-            "x": x,
-            "y": y
-            }
-            this.objects[key] = temp_obj;
-            }*/
-            //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
-            this.getObjects = function (context, index) {
+            this.setTileset = function (index) {
                 for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
-                    if (TILEDATA_CACHE[index].layers[layeridX].type !== "objectgroup")
-                        continue;
-                    var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
-                    var obj = {
-                        "name": "",
-                        "width": 0,
-                        "x": 0,
-                        "y": 0
-                    };
+                    if (TILEDATA_CACHE[index].layers[layeridX].type === "tilelayer") {
+                        var data = TILEDATA_CACHE[index].layers[layeridX].data;
+                        for (var tileidX = 0; tileidX < data.length; tileidX++) {
+                            var ID = data[tileidX];
+                            if (ID === 0) {
+                                continue;
+                            }
+                            var tileloc = _this.getTile(ID);
 
-                    for (var x = 0; x < tileObjects.length; x++) {
-                        var tile = _this.getTile(tileObjects[x].gid);
-                        if (tileObjects[x].width !== 0) {
-                            obj.width = tileObjects[x].width;
-                        } else {
-                            obj.width = 32; //TILEDATA_CACHE[index].tilesets.tilewidth;
+                            var worldX = Math.floor(tileidX % TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tilewidth;
+                            var worldY = Math.floor(tileidX / TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tileheight;
+
+                            _this.tileimg = tileloc.img;
+                            _this.tilepx = tileloc.px;
+                            _this.tilepy = tileloc.py;
+                            _this.tilewidth = TILEDATA_CACHE[index].tilewidth;
+                            _this.tileheight = TILEDATA_CACHE[index].tileheight;
+                            _this.worldx = worldX;
+                            _this.worldy = worldY;
+                            //context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight, worldX, worldY, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight);
                         }
-                        obj.name = tileObjects[x].name; //PROBLEM
-                        obj.x = tileObjects[x].x;
-                        obj.y = tileObjects[x].y;
-                        objects[x] = {
-                            "name": obj.name,
-                            "width": obj.width,
-                            "x": obj.x,
-                            "y": obj.y
+                    } else if (TILEDATA_CACHE[index].layers[layeridX].type !== "objectgroup") {
+                        var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
+                        var obj = {
+                            "name": "",
+                            "width": 0,
+                            "x": 0,
+                            "y": 0
                         };
 
-                        var w = TILEDATA_CACHE[index].tilewidth;
-                        var h = TILEDATA_CACHE[index].tileheight;
-                        context.drawImage(tile.img, tile.px, tile.py, w, h, obj.x, obj.y, w, h);
-                    }
-                }
-            };
-            this.drawTiles = function (context, index) {
-                for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
-                    if (TILEDATA_CACHE[index].layers[layeridX].type !== "tilelayer")
-                        continue;
+                        for (var x = 0; x < tileObjects.length; x++) {
+                            var tile = _this.getTile(tileObjects[x].gid);
+                            if (tileObjects[x].width !== 0) {
+                                obj.width = tileObjects[x].width;
+                            } else {
+                                obj.width = 32; //TILEDATA_CACHE[index].tilesets.tilewidth;
+                            }
+                            obj.name = tileObjects[x].name;
+                            obj.x = tileObjects[x].x;
+                            obj.y = tileObjects[x].y;
+                            objects[x] = {
+                                "name": obj.name,
+                                "width": obj.width,
+                                "x": obj.x,
+                                "y": obj.y
+                            };
 
-                    var data = TILEDATA_CACHE[index].layers[layeridX].data;
-                    for (var tileidX = 0; tileidX < data.length; tileidX++) {
-                        var ID = data[tileidX];
-                        if (ID === 0) {
-                            continue;
+                            _this.objw = TILEDATA_CACHE[index].tilewidth;
+                            _this.objh = TILEDATA_CACHE[index].tileheight;
+                            _this.objimg = tile.img;
+                            _this.objpx = tile.px;
+                            _this.objpy = tile.py;
+                            _this.objx = obj.x;
+                            _this.objy = obj.y;
+                            //context.drawImage(tile.img, tile.px, tile.py, this.objw, this.objh, obj.x, obj.y, this.objw, this.objh);
                         }
-                        var tileloc = _this.getTile(ID);
-
-                        var worldX = Math.floor(tileidX % TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tilewidth;
-                        var worldY = Math.floor(tileidX / TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tileheight;
-
-                        context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight, worldX, worldY, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight);
                     }
                 }
             };
@@ -566,6 +541,7 @@ var Game;
             this.key = Object.keys(TILESET_CACHE);
         };
 
+        //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
         //Functions to test if file are loaded and can be rendered properly
         Tilemap.prototype.getTile = function (tileIndex) {
             var tile = {
@@ -587,6 +563,11 @@ var Game;
             tile.py = localtileY * TILEDATA_CACHE[this.key[i]].tileheight;
 
             return tile;
+        };
+
+        Tilemap.prototype.drawMap = function (mapcontext, objcontext) {
+            mapcontext.drawImage(this.tileimg, this.tilepx, this.tilepy, this.tilewidth, this.tileheight, this.worldx, this.worldy, this.tilewidth, this.tileheight); //draw map
+            objcontext.drawImage(this.objimg, this.objpx, this.objpy, this.objw, this.objh, this.objx, this.objy, this.objw, this.objh); //draw objects
         };
         return Tilemap;
     })();
@@ -646,15 +627,8 @@ var Game;
                 setInterval(_this.GameLoop, 1000 / 30);
             };
             this.GameLoop = function () {
-                var state = sManager.getGameState();
-                switch (state) {
-                    case WORLD:
-                        _this.world.update();
-                        _this.world.render();
-                        break;
-                    default:
-                        break;
-                }
+                _this.world.update();
+                _this.world.render();
                 //this.world.update();
                 //this.world.render();
             };
@@ -700,15 +674,17 @@ var Game;
         //from each state to make stuff look better
         function State() {
         }
+        State.prototype.init = function () {
+        };
         State.prototype.update = function () {
         };
         State.prototype.render = function () {
         };
-        State.prototype.input = function () {
+        State.prototype.pause = function () {
         };
-        State.prototype.entered = function () {
+        State.prototype.resume = function () {
         };
-        State.prototype.leaved = function () {
+        State.prototype.destroy = function () {
         };
         return State;
     })();
@@ -721,29 +697,27 @@ var Game;
         __extends(Cutscene, _super);
         function Cutscene(id, width, height, ctx) {
             _super.call(this);
-
-            //create new canvas to put dialogue on.
-            /*this.canvas = document.createElement('canvas');
-            this.canvas.id = id;
-            this.canvas.width = width;
-            this.canvas.height = height;
-            this.canvas.
-            this.canvas.tabindex = '2';
-            document.body.appendChild(this.canvas);*/
             this.canvas = document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
 
             this.dia = new Game.Dialogue(this.context, width);
         }
-        Cutscene.prototype.start = function () {
+        Cutscene.prototype.init = function () {
             this.dia.startScene('chapter', 'scene', 0);
         };
+
         Cutscene.prototype.update = function () {
             if (control.mousedown()) {
                 this.dia.updateScene();
             }
         };
         Cutscene.prototype.render = function () {
+        };
+        Cutscene.prototype.pause = function () {
+        };
+        Cutscene.prototype.resume = function () {
+        };
+        Cutscene.prototype.destroy = function () {
         };
         return Cutscene;
     })(Game.State);
@@ -756,18 +730,6 @@ var Game;
         __extends(Explore, _super);
         function Explore(ctx, w) {
             _super.call(this);
-            this.objectClick = function (x, y, obj) {
-                for (var i = 0; i < obj.length; i++) {
-                    var x1 = obj[i].x;
-                    var x2 = obj[i].x + obj[i].width;
-                    var y1 = obj[i].y;
-                    var y2 = obj[i].y + obj[i].width;
-                    if ((x1 <= x && x <= x2) && (y1 <= y && y <= y2)) {
-                        console.log(obj[i].x);
-                        sManager.switchInGameState(1);
-                    }
-                }
-            };
             this.x = 0;
             this.y = 0;
             this.mx = 0;
@@ -776,21 +738,44 @@ var Game;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
 
             var canvas = document.getElementById('layer2');
-            this.ctx = canvas.getContext('2d');
+            this.layer2ctx = canvas.getContext('2d');
 
-            ctx.clearRect(0, 0, 800, 600);
-            tiles.drawTiles(ctx, 'rpg');
-            tiles.getObjects(ctx, 'rpg');
-            GAME_OBJECTS[0].render(ctx, this.x, this.y);
+            var canvas2 = document.getElementById('layer1');
+            this.layer1ctx = canvas2.getContext('2d');
         }
+        Explore.prototype.init = function () {
+            this.layer1ctx.clearRect(0, 0, 800, 600);
+            this.layer2ctx.clearRect(0, 0, 800, 600);
+            tiles.setTileset('rpg');
+            tiles.drawMap(this.layer1ctx, this.layer2ctx);
+            /*tiles.drawTiles(this.layer1ctx, 'rpg');
+            tiles.getObjects(this.layer2ctx, 'rpg');*/
+            //tiles.getObjects(this.layer1ctx, 'rpg');
+            //GAME_OBJECTS[0].render(this.layer2ctx, this.x, this.y);
+        };
         Explore.prototype.update = function () {
             if (control.mousedown()) {
                 this.mx = control.mEvent.pageX;
                 this.my = control.mEvent.pageY;
-                this.objectClick(this.mx, this.my, objects);
+                for (var i = 0; i < objects.length; i++) {
+                    var x1 = objects[i].x;
+                    var x2 = objects[i].x + objects[i].width;
+                    var y1 = objects[i].y;
+                    var y2 = objects[i].y + objects[i].width;
+                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                        console.log(objects[i].x);
+                        sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx));
+                    }
+                }
             }
         };
         Explore.prototype.render = function () {
+        };
+        Explore.prototype.pause = function () {
+        };
+        Explore.prototype.resume = function () {
+        };
+        Explore.prototype.destroy = function () {
         };
         return Explore;
     })(Game.State);

@@ -7,23 +7,16 @@ module Game {
         ctl;
         constructor(id, width, height, ctx) {
             super();
-            //create new canvas to put dialogue on. 
-            /*this.canvas = document.createElement('canvas');
-            this.canvas.id = id;
-            this.canvas.width = width;
-            this.canvas.height = height;
-            this.canvas.
-            this.canvas.tabindex = '2';
-            document.body.appendChild(this.canvas);*/
             this.canvas = <HTMLCanvasElement> document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
 
             this.dia = new Dialogue(this.context, width);
             
         }
-        start() {
+        init() {
             this.dia.startScene('chapter', 'scene', 0);
         }
+
         update() {
             if (control.mousedown()) {
                 this.dia.updateScene();
@@ -32,6 +25,14 @@ module Game {
         render() {
 
         }
+        pause() {
 
+        }
+        resume() {
+
+        }
+        destroy() {
+
+        }
     }
 }
