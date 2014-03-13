@@ -44,7 +44,7 @@ module Game {
 
             return tile;
         }
-        setTileset = (index) => {
+        setTileset = (context, index) => {
             //go back through this to see if its needed later on. might need a revamp or look through
             /*if (!this.isFilesLoaded) {
                 console.log("tileset not loaded");
@@ -74,10 +74,10 @@ module Game {
                         this.worldx = worldX;
                         this.worldy = worldY;
 
-                        //context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight, worldX, worldY, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight);
+                        context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight, worldX, worldY, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight);
                     }
                 }
-                else if (TILEDATA_CACHE[index].layers[layeridX].type !== "objectgroup") {
+                else if (TILEDATA_CACHE[index].layers[layeridX].type === "objectgroup") {
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
                     var obj = {
                         "name": "",
@@ -104,20 +104,20 @@ module Game {
                             "y": obj.y
                         };
 
-                        this.objw = TILEDATA_CACHE[index].tilewidth;
-                        this.objh = TILEDATA_CACHE[index].tileheight;
+                        var w = TILEDATA_CACHE[index].tilewidth;
+                        var h = TILEDATA_CACHE[index].tileheight;
                         this.objimg = tile.img;
                         this.objpx = tile.px;
                         this.objpy = tile.py;
                         this.objx = obj.x;
                         this.objy = obj.y;
-
-                        //context.drawImage(tile.img, tile.px, tile.py, this.objw, this.objh, obj.x, obj.y, this.objw, this.objh);
+ 
+                        context.drawImage(tile.img, tile.px, tile.py, w, h, obj.x, obj.y, w, h);
                     }
                 }
             } //end of function
         }
-        drawMap(mapcontext, objcontext) {
+        drawMap = (mapcontext, objcontext) => {
             mapcontext.drawImage(this.tileimg, this.tilepx, this.tilepy, this.tilewidth, this.tileheight, this.worldx, this.worldy, this.tilewidth, this.tileheight); //draw map
             objcontext.drawImage(this.objimg, this.objpx, this.objpy, this.objw, this.objh, this.objx, this.objy, this.objw, this.objh); //draw objects
         }

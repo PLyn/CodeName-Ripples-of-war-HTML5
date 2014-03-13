@@ -9,15 +9,19 @@
         //Mostly guesswork here, I am assuming none of this code will make it to the final thing
         //High on the list, will start getting through this ASAP with help from nick and/or the book
         constructor() {
-            this.gameStates = {
-                "key": '',
-                "state": null
-            }
+            this.gameStates = []
             this.stateStack = new Array<State>();
         }
-        pushState(state: State) {
+        addState(key, state) {
+            this.gameStates[key] = state;
+            //this.stateStack.push(state);
+            //state.init();
+        }
+        pushState(state) {
             this.stateStack.push(state);
             state.init();
+            //this.stateStack.push(this.gameStates[key]);
+            //this.gameStates[key].init();
         }
         popState() {
             if (this.stateStack.length > 0) {

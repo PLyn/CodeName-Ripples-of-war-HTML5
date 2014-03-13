@@ -26,17 +26,17 @@ module Game {
             EX = new Explore(ctx, w);*/
             this.ctx = ctx;
             startScene = true;
-            sManager.pushState(new Explore(ctx, w));
+            sManager.pushState(new Explore(ctx, w, 'rpg', this));
         }
         update = () => {
             sManager.updateStack();   
         }
         render(context) {
-
-
             /*ANIM_CACHE['at'][pos].render(context, 200, 150);
             pos = (pos + 1) % ANIM_CACHE['at'].length;*/
         }
+        endLevel(ctx?) {
 
+        }
     }
 }

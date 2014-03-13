@@ -4,6 +4,8 @@ module Game {
     export class Loop {
         canvas;
         context;
+        canvas2;
+        context2;
         asset;
         currentArea;
         //remove alot of initialization code from here as it will go in the states
@@ -18,10 +20,12 @@ module Game {
             this.asset = preloader;
             this.canvas = <HTMLCanvasElement> document.getElementById('layer1');
             this.context = this.canvas.getContext('2d');
-            control = new Game.input(this.canvas);
+            this.canvas2 = <HTMLCanvasElement> document.getElementById('layer2');
+            this.context2 = this.canvas.getContext('2d');
+            control = new Game.input(this.canvas2);
             tiles = new Game.Tilemap();
             tiles.Init();
-            this.currentArea = new Game.GenericArea(this.context , width);   
+            this.currentArea = new Game.Area1(this.context , width);   
         }
         update() {
             this.currentArea.update();

@@ -9,7 +9,8 @@ module Game {
         ctrl;
         layer1ctx;
         layer2ctx;
-        constructor(ctx, w) {
+        currentArea;
+        constructor(ctx, w, mapID, area) {
             super();
             this.x = 0;
             this.y = 0;
@@ -18,6 +19,8 @@ module Game {
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
 
+            this.currentArea = area;
+          
             var canvas = <HTMLCanvasElement> document.getElementById('layer2');
             this.layer2ctx = canvas.getContext('2d');
 
@@ -27,8 +30,8 @@ module Game {
         init() {
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
-            tiles.setTileset('rpg');
-            tiles.drawMap(this.layer1ctx, this.layer2ctx);
+            tiles.setTileset(this.layer1ctx, 'rpg');
+            //tiles.drawMap(this.layer1ctx, this.layer2ctx);
             /*tiles.drawTiles(this.layer1ctx, 'rpg');
             tiles.getObjects(this.layer2ctx, 'rpg');*/
             //tiles.getObjects(this.layer1ctx, 'rpg');
@@ -44,8 +47,11 @@ module Game {
                     var y1 = objects[i].y;
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        console.log(objects[i].x);
-                        sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx));
+                        sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, objects[i].name, this));
+                        
+                        console.log(objects[i].name);
+                        //this.currentArea.endLevel(this.layer2ctx);
+                        //sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, '1', this));
                     }
                 }
             }
