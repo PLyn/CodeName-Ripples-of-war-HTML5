@@ -75,12 +75,8 @@ var Game;
             this.update = function () {
                 sManager.updateStack();
             };
-            this.stateManger = new Game.StateManager();
             sManager.pushState(new Game.Explore(ctx, w, 'rpg', this));
         }
-        Area1.prototype.nextState = function (objectID) {
-            sManager.popState();
-        };
         return Area1;
     })(Game.GenericArea);
     Game.Area1 = Area1;
@@ -100,7 +96,7 @@ var Game;
             this.stateManger.pushState(new Game.Explore(ctx, w, 'rpg', this));
         }
         Area2.prototype.endLevel = function (ctx) {
-            this.stateManger.pushState(new Game.Cutscene("id", 800, 600, this.ctx, '2', this));
+            this.stateManger.pushState(new Game.Cutscene("id", 800, 600, this.ctx, '2'));
         };
         return Area2;
     })(Game.GenericArea);
@@ -114,7 +110,7 @@ var Game;
         //the phaser project
         //There is also the creation of a new canvas for the dialog to appear on but that will be taken
         //care of in the state system since the canvas should probably be created there
-        function Dialogue(ctx, cwidth, area) {
+        function Dialogue(ctx, cwidth) {
             var _this = this;
             this.lines = [];
             this.linePos = 0;
@@ -152,7 +148,6 @@ var Game;
             this.ctx = ctx;
             this.canvasWidth = cwidth;
             this.setStyle('Calibri', '16pt', 'blue', 'bold', 'italic', 'left');
-            this.area = area;
         }
         Dialogue.prototype.setStyle = function (font, size, color, bold, italic, align) {
             var bolded = bold || '';
@@ -208,101 +203,6 @@ var Game;
         return Sprite;
     })(Game.GameObject);
     Game.Sprite = Sprite;
-})(Game || (Game = {}));
-var control;
-var tiles;
-var Game;
-(function (Game) {
-    var Loop = (function () {
-        //remove alot of initialization code from here as it will go in the states
-        //need to put the code in here to deal with the states as needed thoughs
-        function Loop(canvasid, width, height, preloader) {
-            var _this = this;
-            this.render = function () {
-                _this.currentArea.render(_this.context);
-            };
-            /*this.canvas = document.createElement('canvas');
-            this.canvas.id = canvasid;
-            this.canvas.width = width;
-            this.canvas.height = height;
-            this.canvas.tabindex = '1';
-            document.body.appendChild(this.canvas);*/
-            this.asset = preloader;
-            this.canvas = document.getElementById('layer1');
-            this.context = this.canvas.getContext('2d');
-            this.canvas2 = document.getElementById('layer2');
-            this.context2 = this.canvas.getContext('2d');
-            control = new Game.input(this.canvas2);
-            tiles = new Game.Tilemap();
-            tiles.Init();
-            this.currentArea = new Game.Area1(this.context, width);
-        }
-        Loop.prototype.update = function () {
-            this.currentArea.update();
-        };
-
-        Loop.prototype.playerInput = function () {
-        };
-        return Loop;
-    })();
-    Game.Loop = Loop;
-})(Game || (Game = {}));
-var pos = 0;
-var audioElement = new Audio();
-var WORLD = 0;
-var sManager;
-
-//State system core will most likely be here so read the book and figure out
-//how to get it working and leading to each state as needed
-var Game;
-(function (Game) {
-    var Init = (function () {
-        function Init() {
-            var _this = this;
-            this.onComplete = function () {
-                //this.dialog = new Game.Cutscene("dia", 800, 600);
-                _this.world = new Game.Loop('canvas', 800, 600, _this.preloader);
-                setInterval(_this.GameLoop, 1000 / 30);
-            };
-            this.GameLoop = function () {
-                _this.world.update();
-                _this.world.render();
-                //this.world.update();
-                //this.world.render();
-            };
-            var source = {
-                Images: {
-                    D: 'Assets/Image/diamond.png',
-                    S: 'Assets/Image/star.png'
-                },
-                Anim: {
-                    at: 'Assets/Atlas/test.json'
-                },
-                Sprite: {
-                    spr: 'Assets/Atlas/test.json'
-                },
-                Tileset: {
-                    rpg: 'Assets/Tilemap/map.json'
-                },
-                XML: {
-                    chapter: 'Assets/XML/test.xml'
-                },
-                Sounds: {
-                    car: 'Assets/Sound/car',
-                    punch: 'Assets/Sound/punch',
-                    wood: 'Assets/Sound/wood'
-                },
-                Music: {
-                    theme: 'Assets/Music/theme'
-                }
-            };
-            this.preloader = new Game.Preloader();
-            this.preloader.queueAssets(source, this.onComplete);
-            sManager = new Game.StateManager();
-        }
-        return Init;
-    })();
-    Game.Init = Init;
 })(Game || (Game = {}));
 var Game;
 (function (Game) {
@@ -566,6 +466,52 @@ var Game;
     })();
     Game.Preloader = Preloader;
 })(Game || (Game = {}));
+var Game;
+(function (Game) {
+    var StateManager = (function () {
+        /*currentInGameState = 0;
+        currentInGameStateFunction = null;
+        currentState = 0;
+        currentStateFunction = null;*/
+        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
+        //High on the list, will start getting through this ASAP with help from nick and/or the book
+        function StateManager() {
+            this.gameStates = [];
+            this.stateStack = new Array();
+        }
+        StateManager.prototype.addState = function (key, state) {
+            this.gameStates[key] = state;
+            //this.stateStack.push(state);
+            //state.init();
+        };
+        StateManager.prototype.pushState = function (state) {
+            this.stateStack.push(state);
+            state.init();
+            //this.stateStack.push(this.gameStates[key]);
+            //this.gameStates[key].init();
+        };
+        StateManager.prototype.popState = function () {
+            if (this.stateStack.length > 0) {
+                this.stateStack.pop();
+                if (this.stateStack.length > 0) {
+                    var len = this.stateStack.length;
+                    this.stateStack[len - 1].init();
+                }
+            }
+        };
+        StateManager.prototype.updateStack = function () {
+            var len = this.stateStack.length;
+            this.stateStack[len - 1].update();
+        };
+        StateManager.prototype.renderStack = function () {
+            for (var s in this.stateStack) {
+                s.render();
+            }
+        };
+        return StateManager;
+    })();
+    Game.StateManager = StateManager;
+})(Game || (Game = {}));
 var objects = [];
 var Game;
 (function (Game) {
@@ -672,6 +618,101 @@ var Game;
     })();
     Game.Tilemap = Tilemap;
 })(Game || (Game = {}));
+var control;
+var tiles;
+var Game;
+(function (Game) {
+    var Loop = (function () {
+        //remove alot of initialization code from here as it will go in the states
+        //need to put the code in here to deal with the states as needed thoughs
+        function Loop(canvasid, width, height, preloader) {
+            var _this = this;
+            this.render = function () {
+                _this.currentArea.render(_this.context);
+            };
+            /*this.canvas = document.createElement('canvas');
+            this.canvas.id = canvasid;
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.canvas.tabindex = '1';
+            document.body.appendChild(this.canvas);*/
+            this.asset = preloader;
+            this.canvas = document.getElementById('layer1');
+            this.context = this.canvas.getContext('2d');
+            this.canvas2 = document.getElementById('layer2');
+            this.context2 = this.canvas.getContext('2d');
+            control = new Game.input(this.canvas2);
+            tiles = new Game.Tilemap();
+            tiles.Init();
+            this.currentArea = new Game.Area1(this.context, width);
+        }
+        Loop.prototype.update = function () {
+            this.currentArea.update();
+        };
+
+        Loop.prototype.playerInput = function () {
+        };
+        return Loop;
+    })();
+    Game.Loop = Loop;
+})(Game || (Game = {}));
+var pos = 0;
+var audioElement = new Audio();
+var WORLD = 0;
+var sManager;
+
+//State system core will most likely be here so read the book and figure out
+//how to get it working and leading to each state as needed
+var Game;
+(function (Game) {
+    var Init = (function () {
+        function Init() {
+            var _this = this;
+            this.onComplete = function () {
+                //this.dialog = new Game.Cutscene("dia", 800, 600);
+                _this.world = new Game.Loop('canvas', 800, 600, _this.preloader);
+                setInterval(_this.GameLoop, 1000 / 30);
+            };
+            this.GameLoop = function () {
+                _this.world.update();
+                _this.world.render();
+                //this.world.update();
+                //this.world.render();
+            };
+            var source = {
+                Images: {
+                    D: 'Assets/Image/diamond.png',
+                    S: 'Assets/Image/star.png'
+                },
+                Anim: {
+                    at: 'Assets/Atlas/test.json'
+                },
+                Sprite: {
+                    spr: 'Assets/Atlas/test.json'
+                },
+                Tileset: {
+                    rpg: 'Assets/Tilemap/map.json'
+                },
+                XML: {
+                    chapter: 'Assets/XML/test.xml'
+                },
+                Sounds: {
+                    car: 'Assets/Sound/car',
+                    punch: 'Assets/Sound/punch',
+                    wood: 'Assets/Sound/wood'
+                },
+                Music: {
+                    theme: 'Assets/Music/theme'
+                }
+            };
+            this.preloader = new Game.Preloader();
+            this.preloader.queueAssets(source, this.onComplete);
+            sManager = new Game.StateManager();
+        }
+        return Init;
+    })();
+    Game.Init = Init;
+})(Game || (Game = {}));
 var Game;
 (function (Game) {
     var State = (function () {
@@ -699,6 +740,39 @@ var Game;
 ///<reference path='State.ts' />
 var Game;
 (function (Game) {
+    var Cutscene = (function (_super) {
+        __extends(Cutscene, _super);
+        function Cutscene(id, width, height, ctx, xmlID) {
+            _super.call(this);
+            this.canvas = document.getElementById('layer2');
+            this.context = this.canvas.getContext('2d');
+            this.xml = xmlID;
+            this.dia = new Game.Dialogue(this.context, width);
+        }
+        Cutscene.prototype.init = function () {
+            this.dia.startScene('chapter', 'scene', this.xml);
+        };
+
+        Cutscene.prototype.update = function () {
+            if (control.mousedown()) {
+                this.dia.updateScene();
+            }
+        };
+        Cutscene.prototype.render = function () {
+        };
+        Cutscene.prototype.pause = function () {
+        };
+        Cutscene.prototype.resume = function () {
+        };
+        Cutscene.prototype.destroy = function () {
+        };
+        return Cutscene;
+    })(Game.State);
+    Game.Cutscene = Cutscene;
+})(Game || (Game = {}));
+///<reference path='State.ts' />
+var Game;
+(function (Game) {
     var Explore = (function (_super) {
         __extends(Explore, _super);
         function Explore(ctx, w, mapID, area) {
@@ -708,10 +782,9 @@ var Game;
             this.mx = 0;
             this.my = 0;
             this.velocity = 2.0;
-            GAME_OBJECTS.push(SPRITE_CACHE[0]);
 
             this.currentArea = area;
-
+            this.mapID = mapID;
             var canvas = document.getElementById('layer2');
             this.layer2ctx = canvas.getContext('2d');
 
@@ -721,7 +794,7 @@ var Game;
         Explore.prototype.init = function () {
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
-            tiles.setTileset(this.layer1ctx, 'rpg');
+            tiles.setTileset(this.layer1ctx, this.mapID);
             //tiles.drawMap(this.layer1ctx, this.layer2ctx);
             /*tiles.drawTiles(this.layer1ctx, 'rpg');
             tiles.getObjects(this.layer2ctx, 'rpg');*/
@@ -738,7 +811,7 @@ var Game;
                     var y1 = objects[i].y;
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, objects[i].name, this));
+                        sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, objects[i].name));
 
                         console.log(objects[i].name);
                         //this.currentArea.endLevel(this.layer2ctx);
@@ -758,85 +831,6 @@ var Game;
         return Explore;
     })(Game.State);
     Game.Explore = Explore;
-})(Game || (Game = {}));
-var Game;
-(function (Game) {
-    var StateManager = (function () {
-        /*currentInGameState = 0;
-        currentInGameStateFunction = null;
-        currentState = 0;
-        currentStateFunction = null;*/
-        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
-        //High on the list, will start getting through this ASAP with help from nick and/or the book
-        function StateManager() {
-            this.gameStates = [];
-            this.stateStack = new Array();
-        }
-        StateManager.prototype.addState = function (key, state) {
-            this.gameStates[key] = state;
-            //this.stateStack.push(state);
-            //state.init();
-        };
-        StateManager.prototype.pushState = function (state) {
-            this.stateStack.push(state);
-            state.init();
-            //this.stateStack.push(this.gameStates[key]);
-            //this.gameStates[key].init();
-        };
-        StateManager.prototype.popState = function () {
-            if (this.stateStack.length > 0) {
-                this.stateStack.pop();
-                if (this.stateStack.length > 0) {
-                    var len = this.stateStack.length;
-                    this.stateStack[len - 1].init();
-                }
-            }
-        };
-        StateManager.prototype.updateStack = function () {
-            var len = this.stateStack.length;
-            this.stateStack[len - 1].update();
-        };
-        StateManager.prototype.renderStack = function () {
-            for (var s in this.stateStack) {
-                s.render();
-            }
-        };
-        return StateManager;
-    })();
-    Game.StateManager = StateManager;
-})(Game || (Game = {}));
-///<reference path='State.ts' />
-var Game;
-(function (Game) {
-    var Cutscene = (function (_super) {
-        __extends(Cutscene, _super);
-        function Cutscene(id, width, height, ctx, xmlID, area) {
-            _super.call(this);
-            this.canvas = document.getElementById('layer2');
-            this.context = this.canvas.getContext('2d');
-
-            this.dia = new Game.Dialogue(this.context, width, area);
-        }
-        Cutscene.prototype.init = function () {
-            this.dia.startScene('chapter', 'scene', 0);
-        };
-
-        Cutscene.prototype.update = function () {
-            if (control.mousedown()) {
-                this.dia.updateScene();
-            }
-        };
-        Cutscene.prototype.render = function () {
-        };
-        Cutscene.prototype.pause = function () {
-        };
-        Cutscene.prototype.resume = function () {
-        };
-        Cutscene.prototype.destroy = function () {
-        };
-        return Cutscene;
-    })(Game.State);
-    Game.Cutscene = Cutscene;
 })(Game || (Game = {}));
 function wrap(ctx, cwidth, text) {
     var templine = "";

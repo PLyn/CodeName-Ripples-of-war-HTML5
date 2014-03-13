@@ -5,16 +5,17 @@ module Game {
         canvas;
         context;
         ctl;
-        constructor(id, width, height, ctx, xmlID, area) {
+        xml;
+        constructor(id, width, height, ctx, xmlID) {
             super();
             this.canvas = <HTMLCanvasElement> document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
-
-            this.dia = new Dialogue(this.context, width, area);
+            this.xml = xmlID;
+            this.dia = new Dialogue(this.context, width);
             
         }
         init() {
-            this.dia.startScene('chapter', 'scene', 0);
+            this.dia.startScene('chapter', 'scene', this.xml);
         }
 
         update() {
