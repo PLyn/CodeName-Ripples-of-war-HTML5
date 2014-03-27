@@ -81,6 +81,10 @@ module Game {
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
                     var obj = {
                         "name": "",
+                        "type": "",
+                        "properties": {
+                            "ID": 0
+                        },
                         "width": 0,
                         "x": 0,
                         "y": 0
@@ -95,10 +99,16 @@ module Game {
                             obj.width = 32;//TILEDATA_CACHE[index].tilesets.tilewidth;
                         }
                         obj.name = tileObjects[x].name;
+                        obj.type = tileObjects[x].type;
+                        obj.properties.ID = tileObjects[x].properties.ID;
                         obj.x = tileObjects[x].x;
                         obj.y = tileObjects[x].y;
                         objects[x] = {
                             "name": obj.name,
+                            "type": obj.type,
+                            "properties": {
+                                "ID": 0
+                            },
                             "width": obj.width,
                             "x": obj.x,
                             "y": obj.y

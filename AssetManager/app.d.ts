@@ -182,10 +182,12 @@ declare module Game {
         public context2: any;
         public asset: any;
         public currentArea: any;
+        public width: any;
         constructor(canvasid: any, width: any, height: any, preloader: any);
         public update(): void;
         public render: () => void;
         public playerInput(): void;
+        public changeArea(area: any): void;
     }
 }
 declare var pos: number;

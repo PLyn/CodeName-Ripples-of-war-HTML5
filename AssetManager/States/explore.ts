@@ -47,9 +47,24 @@ module Game {
                     var y1 = objects[i].y;
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, objects[i].name));
+                        if (objects[i].type === 'exit') {
+                            if (objects[i].properties.ID === 0) {
+                                console.log("EXIT TO WORLD");
+                            }
+                            else if (objects[i].properties.ID === 1) {
+                                console.log("NEXT AREA");
+                            }
+
+                        }
+                        else if (objects[i].type === 'cut') {
+                            console.log("CUTSCENE");
+                            sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, objects[i].properties.ID));
+                        }
+                        else if (objects[i].type === 'battle') {
+                            console.log("BATTLE");
+                        }
                         
-                        console.log(objects[i].name);
+                        
                         //this.currentArea.endLevel(this.layer2ctx);
                         //sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, '1', this));
                     }

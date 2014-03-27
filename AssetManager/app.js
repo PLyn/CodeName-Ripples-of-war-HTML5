@@ -546,6 +546,10 @@ var Game;
                         var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
                         var obj = {
                             "name": "",
+                            "type": "",
+                            "properties": {
+                                "ID": 0
+                            },
                             "width": 0,
                             "x": 0,
                             "y": 0
@@ -559,10 +563,16 @@ var Game;
                                 obj.width = 32; //TILEDATA_CACHE[index].tilesets.tilewidth;
                             }
                             obj.name = tileObjects[x].name;
+                            obj.type = tileObjects[x].type;
+                            obj.properties.ID = tileObjects[x].properties.ID;
                             obj.x = tileObjects[x].x;
                             obj.y = tileObjects[x].y;
                             objects[x] = {
                                 "name": obj.name,
+                                "type": obj.type,
+                                "properties": {
+                                    "ID": 0
+                                },
                                 "width": obj.width,
                                 "x": obj.x,
                                 "y": obj.y
@@ -644,6 +654,7 @@ var Game;
             control = new Game.input(this.canvas2);
             tiles = new Game.Tilemap();
             tiles.Init();
+            this.width = width;
             this.currentArea = new Game.Area1(this.context, width);
         }
         Loop.prototype.update = function () {
@@ -651,6 +662,9 @@ var Game;
         };
 
         Loop.prototype.playerInput = function () {
+        };
+        Loop.prototype.changeArea = function (area) {
+            this.currentArea = new Game.Area2(this.context, this.width);
         };
         return Loop;
     })();
@@ -811,9 +825,18 @@ var Game;
                     var y1 = objects[i].y;
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, objects[i].name));
-
-                        console.log(objects[i].name);
+                        if (objects[i].type === 'exit') {
+                            if (objects[i].properties.ID === 0) {
+                                console.log("EXIT TO WORLD");
+                            } else if (objects[i].properties.ID === 1) {
+                                console.log("NEXT AREA");
+                            }
+                        } else if (objects[i].type === 'cut') {
+                            console.log("CUTSCENE");
+                            sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, objects[i].properties.ID));
+                        } else if (objects[i].type === 'battle') {
+                            console.log("BATTLE");
+                        }
                         //this.currentArea.endLevel(this.layer2ctx);
                         //sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, '1', this));
                     }

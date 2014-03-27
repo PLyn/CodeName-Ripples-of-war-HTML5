@@ -18,12 +18,12 @@
                 {
                  "gid":21,
                  "height":0,
-                 "name":"0",
+                 "name":"object1",
                  "properties":
                     {
-                     "exit":"true"
+                     "ID":"1"
                     },
-                 "type":"1",
+                 "type":"cut",
                  "visible":true,
                  "width":0,
                  "x":63,
@@ -32,12 +32,12 @@
                 {
                  "gid":22,
                  "height":0,
-                 "name":"1",
+                 "name":"object2",
                  "properties":
                     {
-
+                     "ID":"2"
                     },
-                 "type":"2",
+                 "type":"cut",
                  "visible":true,
                  "width":0,
                  "x":158,
@@ -46,12 +46,12 @@
                 {
                  "gid":16,
                  "height":0,
-                 "name":"3",
+                 "name":"object3",
                  "properties":
                     {
-
+                     "ID":"3"
                     },
-                 "type":"3",
+                 "type":"cut",
                  "visible":true,
                  "width":0,
                  "x":10,
@@ -60,16 +60,16 @@
                 {
                  "gid":17,
                  "height":0,
-                 "name":"",
+                 "name":"object4",
                  "properties":
                     {
-
+                     "ID":"2"
                     },
-                 "type":"4",
+                 "type":"exit",
                  "visible":true,
                  "width":0,
-                 "x":156,
-                 "y":227
+                 "x":173,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",

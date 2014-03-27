@@ -8,5 +8,6 @@ module Game {
         update = () => {
             sManager.updateStack();
         }
+
     }
 }

@@ -8,6 +8,7 @@ module Game {
         context2;
         asset;
         currentArea;
+        width;
         //remove alot of initialization code from here as it will go in the states
         //need to put the code in here to deal with the states as needed thoughs
         constructor(canvasid, width, height, preloader) {
@@ -25,6 +26,7 @@ module Game {
             control = new Game.input(this.canvas2);
             tiles = new Game.Tilemap();
             tiles.Init();
+            this.width = width;
             this.currentArea = new Game.Area1(this.context , width);   
         }
         update() {
@@ -35,6 +37,9 @@ module Game {
         }
         playerInput() {
 
+        }
+        changeArea(area) {
+            this.currentArea = new Game.Area2(this.context, this.width);
         }
     }
 }
