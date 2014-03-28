@@ -11,7 +11,8 @@ module Game {
         layer2ctx;
         currentArea;
         mapID;
-        constructor(ctx, w, mapID, area) {
+        game;
+        constructor(ctx, w, mapID, area, game) {
             super();
             this.x = 0;
             this.y = 0;
@@ -26,6 +27,8 @@ module Game {
 
             var canvas2 = <HTMLCanvasElement> document.getElementById('layer1');
             this.layer1ctx = canvas2.getContext('2d');
+
+            this.game = game;
         }
         init() {
             this.layer1ctx.clearRect(0, 0, 800, 600);
@@ -50,9 +53,11 @@ module Game {
                         if (objects[i].type === 'exit') {
                             if (objects[i].properties.ID === 0) {
                                 console.log("EXIT TO WORLD");
+                                this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
                             }
                             else if (objects[i].properties.ID === 1) {
                                 console.log("NEXT AREA");
+                                this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
                             }
 
                         }

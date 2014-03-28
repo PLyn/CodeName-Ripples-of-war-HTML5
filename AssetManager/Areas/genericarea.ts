@@ -15,7 +15,7 @@ module Game {
         //make this as the name suggests, a more generic class for other classes to build on
         //to create "scenes" physcially such as the palce, music etc for the dialogue scenes and exploration aspects
         //most of the specific code will be removed and put somewhere else like in the states
-        constructor(ctx, w) {
+        constructor(ctx, w, loop) {
             this.x = 0;
             this.y = 0;
             this.mx = 0;
@@ -26,7 +26,7 @@ module Game {
             EX = new Explore(ctx, w);*/
             this.ctx = ctx;
             startScene = true;
-            sManager.pushState(new Explore(ctx, w, 'rpg', this));
+            sManager.pushState(new Explore(ctx, w, 'rpg', this, loop));
         }
         update = () => {
             sManager.updateStack();   

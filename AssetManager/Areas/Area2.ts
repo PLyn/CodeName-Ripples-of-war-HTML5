@@ -3,11 +3,12 @@ module Game {
     export class Area2 extends GenericArea {
         stateManger;
         ctx;
-        constructor(ctx, w) {
-            super(ctx, w);
+        constructor(ctx, w, loop) {
+            super(ctx, w, loop);
             this.ctx = ctx;
             this.stateManger = new StateManager();
-            this.stateManger.pushState(new Explore(ctx, w, 'rpg', this));
+            this.stateManger.pushState(new Explore(ctx, w, 'rpg', this, loop));
+            console.log("Entered Area 2");
         }
         update = () => {
             sManager.updateStack();

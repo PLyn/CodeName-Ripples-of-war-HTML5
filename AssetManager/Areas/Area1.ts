@@ -1,9 +1,9 @@
 ﻿///<reference path='genericArea.ts' />
 module Game {
     export class Area1 extends GenericArea {
-        constructor(ctx, w) {
-            super(ctx, w);
-            sManager.pushState(new Explore(ctx, w, 'rpg', this));
+        constructor(ctx, w, loop) {
+            super(ctx, w, loop);
+            sManager.pushState(new Explore(ctx, w, 'rpg', this, loop));
         }
         update = () => {
             sManager.updateStack();

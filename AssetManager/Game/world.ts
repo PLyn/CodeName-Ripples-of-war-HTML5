@@ -27,7 +27,7 @@ module Game {
             tiles = new Game.Tilemap();
             tiles.Init();
             this.width = width;
-            this.currentArea = new Game.Area1(this.context , width);   
+            this.currentArea = new Game.Area1(this.context , width, this);   
         }
         update() {
             this.currentArea.update();
@@ -39,7 +39,7 @@ module Game {
 
         }
         changeArea(area) {
-            this.currentArea = new Game.Area2(this.context, this.width);
+            this.currentArea = new Game.Area2(this.context, this.width, this);
         }
     }
 }
