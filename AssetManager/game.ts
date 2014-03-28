@@ -14,7 +14,14 @@ module Game {
             var source = {
                 Images: {
                     D: 'Assets/Image/diamond.png',
-                    S: 'Assets/Image/star.png'
+                    S: 'Assets/Image/star.png',
+                    menu: 'Assets/Image/menuButton.png',
+                    back: 'Assets/Image/menuBack.png',
+                    LArrow: 'Assets/Image/arrowLeft',
+                    RArrow: 'Assets/Image/arrowRight',
+                    dialog: 'Assets/Image/dialogWindow.png',
+                    hero: 'Assets/Image/hero.png',
+                    status: 'Assets/Image/status.png'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'
@@ -23,7 +30,8 @@ module Game {
                     spr: 'Assets/Atlas/test.json'
                 },
                 Tileset: {
-                    rpg: 'Assets/Tilemap/newmap.json'
+                    rpg: 'Assets/Tilemap/newmap.json',
+                    carpet: 'Assets/Tilemap/nextmap.json'
                 },
                 XML: {
                     chapter: 'Assets/XML/test.xml'

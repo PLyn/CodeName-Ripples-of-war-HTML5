@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Cutscenes>
 	<scene id="1">
-    <Narrator>Some random working tools...I wonder who left them here?</Narrator>
+    <hero>Why is a chair here?</hero>
+    <guide>someone wanted to sit there maybe</guide>
+    <hero>Just great...A talking fish!</hero>
+    <guide>touche</guide>
   </scene>
 	<scene id="2">
-    <Peter>That chair looks rather comfortable to sit on!</Peter>
-	</scene>
+    <hero>Tools...They are not for you obviously.</hero>
+    <guide>I agree</guide>
+    <hero></hero>
+  </scene>
+  <scene id="3">
+    <hero>a wheel?</hero>
+  </scene>
+  <scene id="4">
+    <guide>Welcome to the middle of nowhere!</guide>
+    <hero>*groans*</hero>
+  </scene>
 </Cutscenes>

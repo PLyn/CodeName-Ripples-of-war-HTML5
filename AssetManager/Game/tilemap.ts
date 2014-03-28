@@ -107,7 +107,7 @@ module Game {
                             "name": obj.name,
                             "type": obj.type,
                             "properties": {
-                                "ID": 0
+                                "ID": obj.properties.ID
                             },
                             "width": obj.width,
                             "x": obj.x,
@@ -121,7 +121,8 @@ module Game {
                         this.objpy = tile.py;
                         this.objx = obj.x;
                         this.objy = obj.y;
- 
+                        setStyle(context,'Calibri', '12pt', 'black', 'bold', 'italic', 'center');
+                        context.fillText(obj.name, obj.x + 10, obj.y - 10);
                         context.drawImage(tile.img, tile.px, tile.py, w, h, obj.x, obj.y, w, h);
                     }
                 }

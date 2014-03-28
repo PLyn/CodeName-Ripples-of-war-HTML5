@@ -26,11 +26,8 @@ declare module Game {
 }
 declare module Game {
     class Area2 extends GenericArea {
-        public stateManger: any;
-        public ctx: any;
         constructor(ctx: any, w: any, loop: any);
         public update: () => void;
-        public endLevel(ctx: any): void;
     }
 }
 declare module Game {
@@ -47,7 +44,6 @@ declare module Game {
         constructor(ctx: any, cwidth: any);
         public startScene: (key: any, tagName: any, index: any) => void;
         public updateScene: () => void;
-        public setStyle(font: any, size: any, color: any, bold?: any, italic?: any, align?: any): void;
     }
 }
 declare var GAME_OBJECTS: any[];
@@ -252,4 +248,18 @@ declare module Game {
         public destroy(): void;
     }
 }
+declare module Game {
+    class StatusMenu extends State {
+        public mx: any;
+        public my: any;
+        constructor(ctx: any);
+        public init(): void;
+        public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+    }
+}
+declare function setStyle(ctx: any, font: any, size: any, color: any, bold?: any, italic?: any, align?: any): void;
 declare function wrap(ctx: any, cwidth: any, text: any): any[];

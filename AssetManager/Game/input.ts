@@ -12,19 +12,27 @@
             this.mEvent = null;
             var that = this;
             document.addEventListener('keydown', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
                 var letter = String.fromCharCode(e.keyCode);
                 that.keys[letter] = true;
                 console.log(letter);
             });
             document.addEventListener('keyup', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
                 var letter = String.fromCharCode(e.keyCode);
                 that.keys[letter] = false;
             });
             document.addEventListener('mousedown', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
                 that.mEvent = e;
                 that.click = true;
             });
             document.addEventListener('mouseup', function (e) {
+                e.stopPropagation();
+                e.preventDefault();
                 that.click = false;
             });
         }

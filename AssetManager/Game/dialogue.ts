@@ -17,44 +17,39 @@
         constructor(ctx, cwidth) {
             this.ctx = ctx;
             this.canvasWidth = cwidth;
-            this.setStyle('Calibri', '16pt', 'blue', 'bold', 'italic', 'left');
+            setStyle(this.ctx, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
         }
         startScene = (key, tagName, index) => {
             this.dialogueObject = XML_CACHE[key].getElementsByTagName(tagName)[index];
             this.lines = wrap(this.ctx, this.canvasWidth, this.dialogueObject);
             this.prevName = this.lines[this.linePos].name;
-            this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
+            /*this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
             this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
-            this.linePos++;
+            this.linePos++;*/
         }
         updateScene = () => {
             this.currentTime = Date.now();
             if (this.linePos < this.lines.length && this.currentTime > this.time) {
-                this.time = this.currentTime + 1000;
+                this.time = this.currentTime + 750;
                 if (this.prevName !== this.lines[this.linePos].name) {
                     this.ctx.clearRect(0, 0, 800, 600);
                     this.prevName = this.lines[this.linePos].name;
                     this.lineHeight = 1;
                 }
-                else {
+                else if(this.linePos >= 1) {
                     this.lineHeight += 25;
                 }
-                this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
-                this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
+                this.ctx.drawImage(IMAGE_CACHE['dialog'], 25, 350);
+                this.ctx.fillText(this.lines[this.linePos].message, 50, (425  + this.lineHeight));
+                this.ctx.fillText(this.lines[this.linePos].name, 30, 400);
                 this.linePos++;
             }
-            else if (this.linePos >= this.lines.length) {
+            else if (this.linePos >= this.lines.length && this.currentTime > this.time) {
                 //this.area.endLevel();
                 this.ctx.clearRect(0, 0, 800, 600);
                 sManager.popState();
             }
         }
-        setStyle(font, size, color, bold?, italic?, align?) {
-            var bolded = bold || '';
-            var ital = italic || '';
-            this.ctx.font = bolded + ' ' + ital + ' ' + size + ' ' + font;
-            this.ctx.fillStyle = color;
-            this.ctx.textAlign = align;
-        }
+        
     }
 }

@@ -23,7 +23,7 @@ module Game {
             this.context = this.canvas.getContext('2d');
             this.canvas2 = <HTMLCanvasElement> document.getElementById('layer2');
             this.context2 = this.canvas.getContext('2d');
-            control = new Game.input(this.canvas2);
+            control = new Game.input(this.canvas);
             tiles = new Game.Tilemap();
             tiles.Init();
             this.width = width;

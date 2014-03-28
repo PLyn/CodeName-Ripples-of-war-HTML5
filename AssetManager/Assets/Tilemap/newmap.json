@@ -21,7 +21,7 @@
                  "name":"chair",
                  "properties":
                     {
-                     "ID":"2"
+                     "ID":"0"
                     },
                  "type":"cut",
                  "visible":true,
@@ -49,13 +49,27 @@
                  "name":"eggplant",
                  "properties":
                     {
-                     "ExitID":"1"
+                     "ID":"1"
                     },
                  "type":"exit",
                  "visible":true,
                  "width":0,
-                 "x":575,
-                 "y":350
+                 "x":577,
+                 "y":317
+                }, 
+                {
+                 "gid":648,
+                 "height":0,
+                 "name":"Guide",
+                 "properties":
+                    {
+                     "ID":"3"
+                    },
+                 "type":"cut",
+                 "visible":true,
+                 "width":0,
+                 "x":507,
+                 "y":150
                 }],
          "opacity":1,
          "type":"objectgroup",
