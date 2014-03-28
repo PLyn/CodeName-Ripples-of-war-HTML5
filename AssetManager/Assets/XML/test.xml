@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Cutscenes>
 	<scene id="1">
-			<Shadow>You Miria?</Shadow>
-			<Commander>commander speech</Commander>
-			<Shadow>You are Miria?</Shadow>
-			<Commander>commander sadasd</Commander>
-			<Shadow>testsad I am testing the worwrap feature of this thingamatopiealogical diseasedlifeform, let us see what width  can go to before it will break or die. I suppose that it would be a good idea to have some sort of notation to move to the next line, good idea to have some sort of notation to move to the next line</Shadow>
-	</scene>
+    <Narrator>Some random working tools...I wonder who left them here?</Narrator>
+  </scene>
 	<scene id="2">
-    <Shadow>You are Miria?</Shadow>
+    <Peter>That chair looks rather comfortable to sit on!</Peter>
 	</scene>
 </Cutscenes>

@@ -242,7 +242,7 @@ declare module Game {
         public canvas: any;
         public context: any;
         public ctl: any;
-        public xml: any;
+        public xmlID: any;
         constructor(id: any, width: any, height: any, ctx: any, xmlID: any);
         public init(): void;
         public update(): void;

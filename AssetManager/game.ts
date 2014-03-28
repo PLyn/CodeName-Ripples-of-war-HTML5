@@ -23,7 +23,7 @@ module Game {
                     spr: 'Assets/Atlas/test.json'
                 },
                 Tileset: {
-                    rpg: 'Assets/Tilemap/map.json'
+                    rpg: 'Assets/Tilemap/newmap.json'
                 },
                 XML: {
                     chapter: 'Assets/XML/test.xml'

@@ -24,7 +24,7 @@ module Game {
         }   
         //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
         //Functions to test if file are loaded and can be rendered properly 
-        getTile (tileIndex){
+        getTile(tileIndex) {
             var tile = {
                 "img": null,
                 "px": 0,
