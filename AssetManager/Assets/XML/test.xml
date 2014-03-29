@@ -4,12 +4,12 @@
     <hero>Why is a chair here?</hero>
     <guide>someone wanted to sit there maybe</guide>
     <hero>Just great...A talking fish!</hero>
-    <guide>touche</guide>
+    <guide>Touche</guide>
   </scene>
 	<scene id="2">
     <hero>Tools...They are not for you obviously.</hero>
     <guide>I agree</guide>
-    <hero></hero>
+    <hero>Just who are you...</hero>
   </scene>
   <scene id="3">
     <hero>a wheel?</hero>
