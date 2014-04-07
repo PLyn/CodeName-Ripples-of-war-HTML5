@@ -67,15 +67,16 @@ module Game {
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (objects[i].type === 'exit') {
-                            this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this.game));
+                            console.log(objects[i].properties.ID);
+                            //this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this.game));
                             //console.log(objects[i].properties.ID);
-                            if (objects[i].properties.ID === 0) {
+                            if (objects[i].properties.ID === '0') {
                                 console.log("EXIT TO WORLD");
-                                //this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
+                                this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
                             }
-                            else if (objects[i].properties.ID === 1) {
+                            else if (objects[i].properties.ID === '1') {
                                 console.log("NEXT AREA");
-                                //this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
+                                this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
                             }
 
                         }
@@ -86,6 +87,7 @@ module Game {
                         }
                         else if (objects[i].type === 'battle') {
                             console.log("BATTLE");
+                            sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx));
                         }
                         else if (objects[i].type === 'menu') {
                             sManager.pushState(new StatusMenu(this.layer2ctx));

@@ -43,12 +43,12 @@
                 {
                  "gid":53,
                  "height":0,
-                 "name":"",
+                 "name":"egg2",
                  "properties":
                     {
-
+                     "ID":"0"
                     },
-                 "type":"",
+                 "type":"exit",
                  "visible":true,
                  "width":0,
                  "x":33,
@@ -70,7 +70,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"obj_misk_atlas.png",
+         "image":"..\/Dropbox\/Codename Dark Moon\/resources\/obj_misk_atlas.png",
          "imageheight":1024,
          "imagewidth":1024,
          "margin":0,

@@ -9,6 +9,8 @@ module Game {
         asset;
         currentArea;
         width;
+
+        battle;
         //remove alot of initialization code from here as it will go in the states
         //need to put the code in here to deal with the states as needed thoughs
         constructor(canvasid, width, height, preloader) {

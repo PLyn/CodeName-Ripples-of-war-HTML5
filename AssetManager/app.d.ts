@@ -77,6 +77,7 @@ declare module Game {
         public asset: any;
         public currentArea: any;
         public width: any;
+        public battle: any;
         constructor(canvasid: any, width: any, height: any, preloader: any);
         public update(): void;
         public render: () => void;
@@ -197,6 +198,16 @@ declare module Game {
         public pause(): void;
         public resume(): void;
         public destroy(): void;
+    }
+}
+declare module Game {
+    class Battle extends State {
+        public BattleQ: any;
+        public ctx: any;
+        public ctx2: any;
+        constructor(ctx: any, ctx2: any);
+        public init(): void;
+        public PlayerTurn(): void;
     }
 }
 declare module Game {

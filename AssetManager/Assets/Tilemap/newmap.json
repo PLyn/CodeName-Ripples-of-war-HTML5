@@ -63,13 +63,13 @@
                  "name":"Guide",
                  "properties":
                     {
-                     "ID":"3"
+                     "ID":"1"
                     },
-                 "type":"cut",
+                 "type":"battle",
                  "visible":true,
                  "width":0,
                  "x":507,
-                 "y":150
+                 "y":443
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -87,7 +87,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "image":"Atlas2\/obj_misk_atlas.png",
+         "image":"..\/Dropbox\/Codename Dark Moon\/resources\/obj_misk_atlas.png",
          "imageheight":1024,
          "imagewidth":1024,
          "margin":0,
