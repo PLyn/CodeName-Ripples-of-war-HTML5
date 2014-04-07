@@ -132,5 +132,44 @@ module Game {
             mapcontext.drawImage(this.tileimg, this.tilepx, this.tilepy, this.tilewidth, this.tileheight, this.worldx, this.worldy, this.tilewidth, this.tileheight); //draw map
             objcontext.drawImage(this.objimg, this.objpx, this.objpy, this.objw, this.objh, this.objx, this.objy, this.objw, this.objh); //draw objects
         }
+        //Object manipulation...UNTESTED ATM
+        addObject(obj) {
+            objects.push(
+                {
+                    "height": obj.h,
+                    "name": obj.name,
+                    "properties": obj.prop,
+                    "type": obj.type,
+                    "visible": obj.visible,
+                    "width": obj.w,
+                    "x": obj.x,
+                    "y": obj.y
+                });
+        }
+        updateObject(objName, obj) {
+            for (var i = 0; i < objects.length; i++) {
+                if (objName === objects[i].name) {
+                    objects.push(
+                        {
+                            "height": obj.h,
+                            "name": obj.name,
+                            "properties": obj.prop,
+                            "type": obj.type,
+                            "visible": obj.visible,
+                            "width": obj.w,
+                            "x": obj.x,
+                            "y": obj.y
+                        });
+                    break;
+                }
+            }
+        }
+        removeObject(objName) {
+            for (var i = 0; i < objects.length; i++) {
+                if (objName === objects[i].name) {
+                    delete objects[i];
+                }
+            }
+        }
     }
 }
