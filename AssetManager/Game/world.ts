@@ -35,13 +35,10 @@ module Game {
             this.currentArea.update();
         }
         render = () => {
-            this.currentArea.render(this.context);
+            //this.currentArea.render(this.context);
         }
         playerInput() {
 
-        }
-        changeArea(area) {
-            this.currentArea = new Game.Area2(this.context, this.width, this);
         }
     }
 }

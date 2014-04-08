@@ -26,7 +26,7 @@ module Game {
             EX = new Explore(ctx, w);*/
             this.ctx = ctx;
             startScene = true;
-            sManager.pushState(new Explore(ctx, w, 'rpg', this, loop));
+           // sManager.pushState(new Explore(ctx, w, 'rpg', this, loop));
         }
         update = () => {
             sManager.updateStack();   

@@ -63,10 +63,13 @@ module Game {
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (objects[i].type === 'exit') {
                             if (objects[i].properties.ID === '0') {//EXIT TO WORLD
-                                this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
+                                console.log("exit");
+                                sManager.popState();
+                                this.game.currentArea = new Game.Area1(this.layer1ctx, 800, this);
                             }
                             else if (objects[i].properties.ID === '1') {//EXIT TO NEW AREA
-                                this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
+                                sManager.popState();
+                                this.game.currentArea = new Game.Area2(this.layer1ctx, 800, this);
                             }
 
                         }
