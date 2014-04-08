@@ -24,5 +24,6 @@ module Game {
             this.Luc = luc || 0;
             this.Type = type || 0;
         }
+
     }
 }

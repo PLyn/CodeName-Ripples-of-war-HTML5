@@ -69,8 +69,9 @@ declare module Game {
         public Spd: any;
         public MDef: any;
         public Luc: any;
+        public Type: any;
         constructor(img: any, x: any, y: any, w: any, h: any, scale?: any);
-        public setAttributes(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any): void;
+        public setAttributes(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type?: any): void;
     }
 }
 declare module Game {
@@ -223,6 +224,7 @@ declare module Game {
     }
 }
 declare var BattleQ: any[];
+declare var battleList: any[];
 declare module Game {
     class Battle extends State {
         public ctx: any;
