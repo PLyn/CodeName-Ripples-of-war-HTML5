@@ -62,8 +62,15 @@ declare module Game {
 }
 declare module Game {
     class Sprite extends GameObject {
-        public a: any;
-        constructor(img: any, x: any, y: any, w: any, h: any, a: any, scale?: any);
+        public HP: any;
+        public MP: any;
+        public Atk: any;
+        public Def: any;
+        public Spd: any;
+        public MDef: any;
+        public Luc: any;
+        constructor(img: any, x: any, y: any, w: any, h: any, scale?: any);
+        public setAttributes(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any): void;
     }
 }
 declare module Game {
@@ -215,14 +222,27 @@ declare module Game {
         public destroy(): void;
     }
 }
+declare var BattleQ: any[];
 declare module Game {
     class Battle extends State {
-        public BattleQ: any;
         public ctx: any;
         public ctx2: any;
+        public p1: any;
+        public e1: any;
+        public mx: any;
+        public my: any;
+        public currentPlayer: any;
         constructor(ctx: any, ctx2: any);
         public init(): void;
+        public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+        public newTurn(): void;
         public PlayerTurn(): void;
+        public EnemyTurn(): void;
+        public renderActors(): void;
     }
 }
 declare module Game {

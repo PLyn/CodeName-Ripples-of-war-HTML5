@@ -21,7 +21,9 @@ module Game {
                     RArrow: 'Assets/Image/arrowRight',
                     dialog: 'Assets/Image/dialogWindow.png',
                     hero: 'Assets/Image/hero.png',
-                    status: 'Assets/Image/status.png'
+                    status: 'Assets/Image/status.png',
+                    attack: 'Assets/Image/attack_button.png',
+                    defend: 'Assets/Image/defend_button.png'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'
