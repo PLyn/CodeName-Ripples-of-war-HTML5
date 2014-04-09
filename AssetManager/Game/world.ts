@@ -29,7 +29,7 @@ module Game {
             tiles = new Game.Tilemap();
             tiles.Init();
             this.width = width;
-            this.currentArea = new Game.Area1(this.context , width, this);   
+            this.currentArea = new Game.Area2(this.context , width, this);   
         }
         update() {
             this.currentArea.update();

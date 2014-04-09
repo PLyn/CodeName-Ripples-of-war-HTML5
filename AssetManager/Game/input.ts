@@ -11,39 +11,40 @@
             this.click = false;
             this.mEvent = null;
             var that = this;
-            canvas.addEventListener('keydown', function (e) {
+            document.addEventListener('keydown', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
                 var letter = String.fromCharCode(e.keyCode);
                 that.keys[letter] = true;
                 console.log(letter);
             });
-            canvas.addEventListener('keyup', function (e) {
+            document.addEventListener('keyup', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
                 var letter = String.fromCharCode(e.keyCode);
                 that.keys[letter] = false;
             });
-            canvas.addEventListener('mousedown', function (e) {
+            document.addEventListener('mousedown', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
                 that.mEvent = e;
                 that.click = true;
             });
-            canvas.addEventListener('mouseup', function (e) {
+            document.addEventListener('mouseup', function (e) {
                 e.stopPropagation();
                 e.preventDefault();
                 that.click = false;
             });
         }
         keydown(key) {
+            console.log("clicked");
             return this.keys[key];
         }
         keyup(key) {
             return !this.keys[key];
         }
         mousedown() {
-            console.log("clicked");
+            
             return this.click;
         }
     }
