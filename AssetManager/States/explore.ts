@@ -59,7 +59,7 @@ module Game {
                     var x1 = objects[i].x;
                     var x2 = objects[i].x + objects[i].width;
                     var y1 = objects[i].y;
-                    var y2 = objects[i].y + objects[i].width;
+                    var y2 = objects[i].y + objects[i].height;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (objects[i].type === 'exit') {
                             if (objects[i].properties.ID === '0') {//EXIT TO WORLD
@@ -71,7 +71,6 @@ module Game {
                                 sManager.popState();
                                 this.game.currentArea = new Game.Area2(this.layer1ctx, 800, this);
                             }
-
                         }
                         else if (objects[i].type === 'cut') {
                             this.layer2ctx.clearRect(0, 0, 800, 600);

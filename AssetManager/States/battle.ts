@@ -54,7 +54,7 @@ module Game {
         }
         update() {
             if (BattleQ.length < 1) {
-                this.newTurn();
+                //this.newTurn();
             }
             if (this.currentPlayer.Type === 0 && control.mousedown()) {
                 this.mx = control.mEvent.pageX;
@@ -64,15 +64,25 @@ module Game {
                 var y1 = 400;
                 var y2 = 450;
                 if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                    this.ctx2.clearRect(0, 0, 800, 600);
-                    this.ctx2.fillText("Attack", this.currentPlayer.x + 15, this.currentPlayer.y + 50);
-                    this.ctx2.fillText(this.currentPlayer.Atk, battleList['e1'].x + 15, battleList['e1'].y + 50);
+                    
+                    var timer = setTimeout(() => {
+                        var x = 0;
+                        x++;
+                        this.ctx2.clearRect(0, 0, 800, 600);
+                        this.ctx2.fillText("Attack", this.currentPlayer.x + 15, this.currentPlayer.y + 50);
+                        this.ctx2.fillText(this.currentPlayer.Atk, battleList['e1'].x + 15, battleList['e1'].y + 50);
+                        if (x === 1) {
+                            clearTimeout(timer);
+                        }
+                        
+                    }, 1500);
                 }
             }
             else if (this.currentPlayer.Type === 1) {
-                this.EnemyTurn();
+                //this.EnemyTurn();
             }
             this.currentPlayer = BattleQ.pop();
+            
         }
         render() {
 
