@@ -12,6 +12,8 @@ module Game {
         currentPlayer: Sprite;
         target: Sprite;
         newTime = 0;
+        battleKeys; 
+        currentkey = 0; 
 
         constructor(ctx, ctx2) {
             super();
@@ -19,20 +21,18 @@ module Game {
             this.ctx2 = ctx2;
             this.p1 = new Sprite(IMAGE_CACHE['D'], 600, 250, 35, 35);
             this.e1 = new Sprite(IMAGE_CACHE['S'], 300, 250, 35, 35);
-            this.p1.setAttributes(20, 0, 4, 1, 1, 1, 1, 0);
-            this.e1.setAttributes(20, 0, 0, 0, 1, 1, 1, 1);
+            this.p1.setAttributes(10, 0, 4, 1, 1, 1, 1, 0);
+            this.e1.setAttributes(15, 0, 1, 0, 1, 1, 1, 1);
 
             battleList['p1'] = this.p1;
             battleList['e1'] = this.e1;
 
-            
+            this.battleKeys = Object.keys(battleList);
             BattleQ.push(this.e1);
             BattleQ.push(this.p1);
         }
         newTurn() {
-            
-            BattleQ.push(this.e1);
-            BattleQ.push(this.p1);
+            this.currentkey = 0;
         }
         PlayerTurn() {
             this.ctx.clearRect(0, 0, 800, 600);
@@ -43,13 +43,13 @@ module Game {
         }
         renderActors() {
             for (var i = 0; i < BattleQ.length; i++) {
-                BattleQ[i].render(this.ctx, 100, 100);
+                battleList[this.battleKeys[i]].render(this.ctx, 100, 100);
             }
         }
         init() {
             this.PlayerTurn();
             this.renderActors();
-            this.currentPlayer = BattleQ.pop();
+            this.currentPlayer = battleList['p1'];
 
         }
         update() {
@@ -72,14 +72,14 @@ module Game {
                     if (time > this.newTime) {
                         //display text
                         this.ctx2.clearRect(0, 0, 800, 600);
-                        this.ctx2.fillText("Attack", this.currentPlayer.x + 15, this.currentPlayer.y + 50);
-                        this.ctx2.fillText(this.currentPlayer.Atk, battleList['e1'].x + 15, battleList['e1'].y + 50);
+                        this.ctx2.fillText("Attack", this.p1.x + 15, this.p1.y + 50);
+                        this.ctx2.fillText(this.p1.Atk, this.e1.x + 15, this.e1.y + 50);
 
                         //actual stat calculation
                         console.log("Player Attack:" + this.currentPlayer.Atk);
-                        battleList['e1'].HP = battleList['e1'].HP - this.currentPlayer.Atk;
-                        console.log("Enemy HP:" + battleList['e1'].HP);
-                        this.currentPlayer = BattleQ.pop();
+                        this.e1.HP = this.e1.HP - this.p1.Atk;
+                        console.log("Enemy HP:" + this.e1.HP);
+                        this.currentPlayer = this.e1;
                         this.newTime = Date.now() + 500;
                     }
                 }
@@ -87,14 +87,14 @@ module Game {
             else if (this.currentPlayer.Type === 1) {
                 if (time > this.newTime) {
                     this.ctx2.clearRect(0, 0, 800, 600);
-                    this.ctx2.fillText("Enemy", this.currentPlayer.x + 15, this.currentPlayer.y + 50);
-                    this.ctx2.fillText(this.currentPlayer.Atk, battleList['p1'].x + 15, battleList['p1'].y + 50);
+                    this.ctx2.fillText("Enemy", this.e1.x + 15, this.e1.y + 50);
+                    this.ctx2.fillText(this.e1.Atk, this.p1.x + 15, this.p1.y + 50);
 
                     //actual stat calculation
-                    console.log("Enemy Attack:" + battleList['e1'].Atk);
-                    this.currentPlayer.HP = this.currentPlayer.HP - battleList['e1'].Atk;
-                    console.log("Hero HP: " + this.currentPlayer.HP);
-                    this.currentPlayer = BattleQ.pop();
+                    console.log("Enemy Attack:" + this.e1.Atk);
+                    this.p1.HP = this.p1.HP - this.e1.Atk;
+                    console.log("Hero HP: " + this.p1.HP);
+                    this.currentPlayer = this.p1;
                     this.newTime = Date.now() + 500;
                 }
             }
