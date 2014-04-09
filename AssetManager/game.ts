@@ -53,7 +53,7 @@ module Game {
         }
         onComplete = () => {
             //this.dialog = new Game.Cutscene("dia", 800, 600);
-            this.world = new Game.Loop('canvas', 800, 600, this.preloader);
+            this.world = new Game.Loop();
             setInterval(this.GameLoop, 1000 / 30);
             
         }

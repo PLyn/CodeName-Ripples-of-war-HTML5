@@ -19,7 +19,7 @@ module Game {
         }
 
         update() {
-            if (control.mousedown()) {
+            if (mousedown()) {
                 this.dia.updateScene();
             }
         }

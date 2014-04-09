@@ -13,23 +13,22 @@ module Game {
         battle;
         //remove alot of initialization code from here as it will go in the states
         //need to put the code in here to deal with the states as needed thoughs
-        constructor(canvasid, width, height, preloader) {
+        constructor() {
             /*this.canvas = document.createElement('canvas');
             this.canvas.id = canvasid;
             this.canvas.width = width;
             this.canvas.height = height;
             this.canvas.tabindex = '1';
             document.body.appendChild(this.canvas);*/
-            this.asset = preloader;
             this.canvas = <HTMLCanvasElement> document.getElementById('layer1');
             this.context = this.canvas.getContext('2d');
             this.canvas2 = <HTMLCanvasElement> document.getElementById('layer2');
             this.context2 = this.canvas.getContext('2d');
-            control = new Game.input(this.canvas2);
+            //control = new Game.input();
             tiles = new Game.Tilemap();
             tiles.Init();
-            this.width = width;
-            this.currentArea = new Game.Area2(this.context , width, this);   
+            this.width = 800;
+            this.currentArea = new Game.Area1(this.context, this.width, this);
         }
         update() {
             this.currentArea.update();

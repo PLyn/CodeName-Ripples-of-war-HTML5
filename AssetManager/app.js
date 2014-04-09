@@ -47,7 +47,7 @@ var Game;
             EX = new Explore(ctx, w);*/
             this.ctx = ctx;
             startScene = true;
-            sManager.pushState(new Game.Explore(ctx, w, 'rpg', this, loop));
+            // sManager.pushState(new Explore(ctx, w, 'rpg', this, loop));
         }
         GenericArea.prototype.render = function (context) {
             /*ANIM_CACHE['at'][pos].render(context, 200, 150);
@@ -59,48 +59,34 @@ var Game;
     })();
     Game.GenericArea = GenericArea;
 })(Game || (Game = {}));
-var __extends = this.__extends || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    __.prototype = b.prototype;
-    d.prototype = new __();
-};
 ///<reference path='genericArea.ts' />
 var Game;
 (function (Game) {
-    var Area1 = (function (_super) {
-        __extends(Area1, _super);
+    var Area1 = (function () {
         function Area1(ctx, w, loop) {
-            _super.call(this, ctx, w, loop);
             this.update = function () {
                 sManager.updateStack();
             };
+            //super(ctx, w, loop);
             sManager.pushState(new Game.Explore(ctx, w, 'rpg', this, loop));
         }
         return Area1;
-    })(Game.GenericArea);
+    })();
     Game.Area1 = Area1;
 })(Game || (Game = {}));
 ///<reference path='genericArea.ts' />
 var Game;
 (function (Game) {
-    var Area2 = (function (_super) {
-        __extends(Area2, _super);
+    var Area2 = (function () {
         function Area2(ctx, w, loop) {
-            _super.call(this, ctx, w, loop);
             this.update = function () {
                 sManager.updateStack();
             };
-            this.ctx = ctx;
-            this.stateManger = new Game.StateManager();
-            this.stateManger.pushState(new Game.Explore(ctx, w, 'rpg', this, loop));
-            console.log("Entered Area 2");
+            //super(ctx, w, loop);
+            sManager.pushState(new Game.Explore(ctx, w, 'carpet', this, loop));
         }
-        Area2.prototype.endLevel = function (ctx) {
-            this.stateManger.pushState(new Game.Cutscene("id", 800, 600, this.ctx, '2'));
-        };
         return Area2;
-    })(Game.GenericArea);
+    })();
     Game.Area2 = Area2;
 })(Game || (Game = {}));
 var Game;
@@ -122,25 +108,26 @@ var Game;
                 _this.dialogueObject = XML_CACHE[key].getElementsByTagName(tagName)[index];
                 _this.lines = wrap(_this.ctx, _this.canvasWidth, _this.dialogueObject);
                 _this.prevName = _this.lines[_this.linePos].name;
-                _this.ctx.fillText(_this.lines[_this.linePos].message, 150, (300 + _this.lineHeight));
-                _this.ctx.fillText(_this.lines[_this.linePos].name, 50, 250);
-                _this.linePos++;
+                /*this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
+                this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
+                this.linePos++;*/
             };
             this.updateScene = function () {
                 _this.currentTime = Date.now();
                 if (_this.linePos < _this.lines.length && _this.currentTime > _this.time) {
-                    _this.time = _this.currentTime + 1000;
+                    _this.time = _this.currentTime + 750;
                     if (_this.prevName !== _this.lines[_this.linePos].name) {
                         _this.ctx.clearRect(0, 0, 800, 600);
                         _this.prevName = _this.lines[_this.linePos].name;
                         _this.lineHeight = 1;
-                    } else {
+                    } else if (_this.linePos >= 1) {
                         _this.lineHeight += 25;
                     }
-                    _this.ctx.fillText(_this.lines[_this.linePos].message, 150, (300 + _this.lineHeight));
-                    _this.ctx.fillText(_this.lines[_this.linePos].name, 50, 250);
+                    _this.ctx.drawImage(IMAGE_CACHE['dialog'], 25, 350);
+                    _this.ctx.fillText(_this.lines[_this.linePos].message, 50, (425 + _this.lineHeight));
+                    _this.ctx.fillText(_this.lines[_this.linePos].name, 30, 400);
                     _this.linePos++;
-                } else if (_this.linePos >= _this.lines.length) {
+                } else if (_this.linePos >= _this.lines.length && _this.currentTime > _this.time) {
                     //this.area.endLevel();
                     _this.ctx.clearRect(0, 0, 800, 600);
                     sManager.popState();
@@ -148,15 +135,8 @@ var Game;
             };
             this.ctx = ctx;
             this.canvasWidth = cwidth;
-            this.setStyle('Calibri', '16pt', 'blue', 'bold', 'italic', 'left');
+            setStyle(this.ctx, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
         }
-        Dialogue.prototype.setStyle = function (font, size, color, bold, italic, align) {
-            var bolded = bold || '';
-            var ital = italic || '';
-            this.ctx.font = bolded + ' ' + ital + ' ' + size + ' ' + font;
-            this.ctx.fillStyle = color;
-            this.ctx.textAlign = align;
-        };
         return Dialogue;
     })();
     Game.Dialogue = Dialogue;
@@ -183,12 +163,19 @@ var Game;
         GameObject.prototype.update = function () {
         };
         GameObject.prototype.render = function (context, x, y) {
-            context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
+            //context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
+            context.drawImage(this.img, this.x, this.y);
         };
         return GameObject;
     })();
     Game.GameObject = GameObject;
 })(Game || (Game = {}));
+var __extends = this.__extends || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    __.prototype = b.prototype;
+    d.prototype = new __();
+};
 ///<reference path='gameobject.ts' />
 var Game;
 (function (Game) {
@@ -196,11 +183,19 @@ var Game;
         __extends(Sprite, _super);
         //all the base attributes and methods are to be added here, this will come when
         //the battle system is being developed but for now it stays relatively empty i guess
-        //until i sort out more pressing issues such as the state system
-        function Sprite(img, x, y, w, h, a, scale) {
+        function Sprite(img, x, y, w, h, scale) {
             _super.call(this, img, x, y, w, h, scale);
-            this.a = a; //testing, not actually used for anything
         }
+        Sprite.prototype.setAttributes = function (hp, mp, atk, def, mdef, spd, luc, type) {
+            this.HP = hp || 1;
+            this.MP = mp || 0;
+            this.Atk = atk || 0;
+            this.Def = def || 0;
+            this.Spd = spd || 0;
+            this.MDef = mdef || 0;
+            this.Luc = luc || 0;
+            this.Type = type || 0;
+        };
         return Sprite;
     })(Game.GameObject);
     Game.Sprite = Sprite;
@@ -212,10 +207,9 @@ var Game;
     var Loop = (function () {
         //remove alot of initialization code from here as it will go in the states
         //need to put the code in here to deal with the states as needed thoughs
-        function Loop(canvasid, width, height, preloader) {
-            var _this = this;
+        function Loop() {
             this.render = function () {
-                _this.currentArea.render(_this.context);
+                //this.currentArea.render(this.context);
             };
             /*this.canvas = document.createElement('canvas');
             this.canvas.id = canvasid;
@@ -223,25 +217,22 @@ var Game;
             this.canvas.height = height;
             this.canvas.tabindex = '1';
             document.body.appendChild(this.canvas);*/
-            this.asset = preloader;
             this.canvas = document.getElementById('layer1');
             this.context = this.canvas.getContext('2d');
             this.canvas2 = document.getElementById('layer2');
             this.context2 = this.canvas.getContext('2d');
-            control = new Game.input(this.canvas2);
+
+            //control = new Game.input();
             tiles = new Game.Tilemap();
             tiles.Init();
-            this.width = width;
-            this.currentArea = new Game.Area1(this.context, width, this);
+            this.width = 800;
+            this.currentArea = new Game.Area1(this.context, this.width, this);
         }
         Loop.prototype.update = function () {
             this.currentArea.update();
         };
 
         Loop.prototype.playerInput = function () {
-        };
-        Loop.prototype.changeArea = function (area) {
-            this.currentArea = new Game.Area2(this.context, this.width, this);
         };
         return Loop;
     })();
@@ -261,7 +252,7 @@ var Game;
             var _this = this;
             this.onComplete = function () {
                 //this.dialog = new Game.Cutscene("dia", 800, 600);
-                _this.world = new Game.Loop('canvas', 800, 600, _this.preloader);
+                _this.world = new Game.Loop();
                 setInterval(_this.GameLoop, 1000 / 30);
             };
             this.GameLoop = function () {
@@ -273,7 +264,16 @@ var Game;
             var source = {
                 Images: {
                     D: 'Assets/Image/diamond.png',
-                    S: 'Assets/Image/star.png'
+                    S: 'Assets/Image/star.png',
+                    menu: 'Assets/Image/menuButton.png',
+                    back: 'Assets/Image/menuBack.png',
+                    LArrow: 'Assets/Image/arrowLeft',
+                    RArrow: 'Assets/Image/arrowRight',
+                    dialog: 'Assets/Image/dialogWindow.png',
+                    hero: 'Assets/Image/hero.png',
+                    status: 'Assets/Image/status.png',
+                    attack: 'Assets/Image/attack_button.png',
+                    defend: 'Assets/Image/defend_button.png'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'
@@ -282,7 +282,8 @@ var Game;
                     spr: 'Assets/Atlas/test.json'
                 },
                 Tileset: {
-                    rpg: 'Assets/Tilemap/map.json'
+                    rpg: 'Assets/Tilemap/newmap.json',
+                    carpet: 'Assets/Tilemap/nextmap.json'
                 },
                 XML: {
                     chapter: 'Assets/XML/test.xml'
@@ -304,46 +305,77 @@ var Game;
     })();
     Game.Init = Init;
 })(Game || (Game = {}));
-var Game;
-(function (Game) {
-    var input = (function () {
-        function input(canvas) {
-            //fairly complete for the tasks it need to do but might need some refining to the key functions to let it operate
-            //as accurately as i need. Not a high priority as it works but look at later on.
-            this.keys = [];
-            this.click = false;
-            this.mEvent = null;
-            var that = this;
-            document.addEventListener('keydown', function (e) {
-                var letter = String.fromCharCode(e.keyCode);
-                that.keys[letter] = true;
-                console.log(letter);
-            });
-            document.addEventListener('keyup', function (e) {
-                var letter = String.fromCharCode(e.keyCode);
-                that.keys[letter] = false;
-            });
-            document.addEventListener('mousedown', function (e) {
-                that.mEvent = e;
-                that.click = true;
-            });
-            document.addEventListener('mouseup', function (e) {
-                that.click = false;
-            });
-        }
-        input.prototype.keydown = function (key) {
-            return this.keys[key];
-        };
-        input.prototype.keyup = function (key) {
-            return !this.keys[key];
-        };
-        input.prototype.mousedown = function () {
-            return this.click;
-        };
-        return input;
-    })();
-    Game.input = input;
-})(Game || (Game = {}));
+var that = this;
+var keys = [];
+var click = false;
+var canvas;
+var mEvent = null;
+
+document.addEventListener('mousedown', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    that.mEvent = e;
+    that.click = true;
+});
+document.addEventListener('mouseup', function (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    that.click = false;
+});
+
+function mousedown() {
+    return click;
+}
+/*module Game {
+export class input {
+keys;
+click;
+canvas;
+mEvent;
+constructor() {
+//fairly complete for the tasks it need to do but might need some refining to the key functions to let it operate
+//as accurately as i need. Not a high priority as it works but look at later on.
+this.keys = [];
+this.click = false;
+this.mEvent = null;
+var that = this;
+document.addEventListener('keydown', function (e) {
+e.stopPropagation();
+e.preventDefault();
+var letter = String.fromCharCode(e.keyCode);
+that.keys[letter] = true;
+console.log(letter);
+});
+document.addEventListener('keyup', function (e) {
+e.stopPropagation();
+e.preventDefault();
+var letter = String.fromCharCode(e.keyCode);
+that.keys[letter] = false;
+});
+document.addEventListener('mousedown', function (e) {
+e.stopPropagation();
+e.preventDefault();
+that.mEvent = e;
+that.click = true;
+});
+document.addEventListener('mouseup', function (e) {
+e.stopPropagation();
+e.preventDefault();
+that.click = false;
+});
+}
+keydown(key) {
+return this.keys[key];
+}
+keyup(key) {
+return !this.keys[key];
+}
+mousedown() {
+console.log("clicked");
+return this.click;
+}
+}
+}*/
 /*      HTML5 AssetManager V. 0.95
 *   Currently supports images, Atlases(from texturepacker) for sprites or animation, tilesets, xmls and sounds for now
 *   how to use:
@@ -625,7 +657,7 @@ var Game;
                                 "name": obj.name,
                                 "type": obj.type,
                                 "properties": {
-                                    "ID": 0
+                                    "ID": obj.properties.ID
                                 },
                                 "width": obj.width,
                                 "x": obj.x,
@@ -639,7 +671,8 @@ var Game;
                             _this.objpy = tile.py;
                             _this.objx = obj.x;
                             _this.objy = obj.y;
-
+                            setStyle(context, 'Calibri', '12pt', 'black', 'bold', 'italic', 'center');
+                            context.fillText(obj.name, obj.x + 10, obj.y - 10);
                             context.drawImage(tile.img, tile.px, tile.py, w, h, obj.x, obj.y, w, h);
                         }
                     }
@@ -678,6 +711,44 @@ var Game;
 
             return tile;
         };
+
+        //Object manipulation...UNTESTED ATM
+        Tilemap.prototype.addObject = function (obj) {
+            objects.push({
+                "height": obj.h,
+                "name": obj.name,
+                "properties": obj.prop,
+                "type": obj.type,
+                "visible": obj.visible,
+                "width": obj.w,
+                "x": obj.x,
+                "y": obj.y
+            });
+        };
+        Tilemap.prototype.updateObject = function (objName, obj) {
+            for (var i = 0; i < objects.length; i++) {
+                if (objName === objects[i].name) {
+                    objects.push({
+                        "height": obj.h,
+                        "name": obj.name,
+                        "properties": obj.prop,
+                        "type": obj.type,
+                        "visible": obj.visible,
+                        "width": obj.w,
+                        "x": obj.x,
+                        "y": obj.y
+                    });
+                    break;
+                }
+            }
+        };
+        Tilemap.prototype.removeObject = function (objName) {
+            for (var i = 0; i < objects.length; i++) {
+                if (objName === objects[i].name) {
+                    delete objects[i];
+                }
+            }
+        };
         return Tilemap;
     })();
     Game.Tilemap = Tilemap;
@@ -707,6 +778,107 @@ var Game;
     Game.State = State;
 })(Game || (Game = {}));
 ///<reference path='State.ts' />
+var BattleQ = [];
+var battleList = [];
+var Game;
+(function (Game) {
+    var Battle = (function (_super) {
+        __extends(Battle, _super);
+        function Battle(ctx, ctx2) {
+            _super.call(this);
+            this.newTime = 0;
+            this.ctx = ctx;
+            this.ctx2 = ctx2;
+            this.p1 = new Game.Sprite(IMAGE_CACHE['D'], 600, 250, 35, 35);
+            this.e1 = new Game.Sprite(IMAGE_CACHE['S'], 300, 250, 35, 35);
+            this.p1.setAttributes(20, 0, 4, 1, 1, 1, 1, 0);
+            this.e1.setAttributes(20, 0, 0, 0, 1, 1, 1, 1);
+
+            battleList['p1'] = this.p1;
+            battleList['e1'] = this.e1;
+
+            BattleQ.push(this.e1);
+            BattleQ.push(this.p1);
+        }
+        Battle.prototype.newTurn = function () {
+            BattleQ.push(this.e1);
+            BattleQ.push(this.p1);
+        };
+        Battle.prototype.PlayerTurn = function () {
+            this.ctx.clearRect(0, 0, 800, 600);
+            this.ctx2.clearRect(0, 0, 800, 600);
+            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
+            this.ctx.drawImage(IMAGE_CACHE['attack'], 300, 400);
+            this.ctx.drawImage(IMAGE_CACHE['defend'], 500, 400);
+        };
+        Battle.prototype.renderActors = function () {
+            for (var i = 0; i < BattleQ.length; i++) {
+                BattleQ[i].render(this.ctx, 100, 100);
+            }
+        };
+        Battle.prototype.init = function () {
+            this.PlayerTurn();
+            this.renderActors();
+            this.currentPlayer = BattleQ.pop();
+        };
+        Battle.prototype.update = function () {
+            var time = Date.now();
+            if (BattleQ.length < 1) {
+                this.newTurn();
+            }
+            if (this.currentPlayer.HP < 1) {
+                this.ctx2.clearRect(0, 0, 800, 600);
+                this.ctx2.fillText("GAMEOVER", 400, 400);
+            } else if (this.currentPlayer.Type === 0 && mousedown()) {
+                this.mx = mEvent.pageX;
+                this.my = mEvent.pageY;
+                var x1 = 300;
+                var x2 = 490;
+                var y1 = 400;
+                var y2 = 450;
+                if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                    if (time > this.newTime) {
+                        //display text
+                        this.ctx2.clearRect(0, 0, 800, 600);
+                        this.ctx2.fillText("Attack", this.currentPlayer.x + 15, this.currentPlayer.y + 50);
+                        this.ctx2.fillText(this.currentPlayer.Atk, battleList['e1'].x + 15, battleList['e1'].y + 50);
+
+                        //actual stat calculation
+                        console.log("Player Attack:" + this.currentPlayer.Atk);
+                        battleList['e1'].HP = battleList['e1'].HP - this.currentPlayer.Atk;
+                        console.log("Enemy HP:" + battleList['e1'].HP);
+                        this.currentPlayer = BattleQ.pop();
+                        this.newTime = Date.now() + 500;
+                    }
+                }
+            } else if (this.currentPlayer.Type === 1) {
+                if (time > this.newTime) {
+                    this.ctx2.clearRect(0, 0, 800, 600);
+                    this.ctx2.fillText("Enemy", this.currentPlayer.x + 15, this.currentPlayer.y + 50);
+                    this.ctx2.fillText(this.currentPlayer.Atk, battleList['p1'].x + 15, battleList['p1'].y + 50);
+
+                    //actual stat calculation
+                    console.log("Enemy Attack:" + battleList['e1'].Atk);
+                    this.currentPlayer.HP = this.currentPlayer.HP - battleList['e1'].Atk;
+                    console.log("Hero HP: " + this.currentPlayer.HP);
+                    this.currentPlayer = BattleQ.pop();
+                    this.newTime = Date.now() + 500;
+                }
+            }
+        };
+        Battle.prototype.render = function () {
+        };
+        Battle.prototype.pause = function () {
+        };
+        Battle.prototype.resume = function () {
+        };
+        Battle.prototype.destroy = function () {
+        };
+        return Battle;
+    })(Game.State);
+    Game.Battle = Battle;
+})(Game || (Game = {}));
+///<reference path='State.ts' />
 var Game;
 (function (Game) {
     var Explore = (function (_super) {
@@ -728,21 +900,28 @@ var Game;
             this.layer1ctx = canvas2.getContext('2d');
 
             this.game = game;
+            objects.push({
+                "height": 50,
+                "name": "menu",
+                "properties": {},
+                "type": "menu",
+                "visible": true,
+                "width": 50,
+                "x": 5,
+                "y": 5
+            });
         }
         Explore.prototype.init = function () {
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
             tiles.setTileset(this.layer1ctx, this.mapID);
-            //tiles.drawMap(this.layer1ctx, this.layer2ctx);
-            /*tiles.drawTiles(this.layer1ctx, 'rpg');
-            tiles.getObjects(this.layer2ctx, 'rpg');*/
-            //tiles.getObjects(this.layer1ctx, 'rpg');
-            //GAME_OBJECTS[0].render(this.layer2ctx, this.x, this.y);
+            this.layer2ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
+            this.layer1ctx.drawImage(IMAGE_CACHE['hero'], 200, 250);
         };
         Explore.prototype.update = function () {
-            if (control.mousedown()) {
-                this.mx = control.mEvent.pageX;
-                this.my = control.mEvent.pageY;
+            if (mousedown()) {
+                this.mx = mEvent.pageX;
+                this.my = mEvent.pageY;
                 for (var i = 0; i < objects.length; i++) {
                     var x1 = objects[i].x;
                     var x2 = objects[i].x + objects[i].width;
@@ -750,21 +929,22 @@ var Game;
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (objects[i].type === 'exit') {
-                            if (objects[i].properties.ID === 0) {
-                                console.log("EXIT TO WORLD");
-                                this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
-                            } else if (objects[i].properties.ID === 1) {
-                                console.log("NEXT AREA");
-                                this.game.changeArea(new Game.Area2(this.layer1ctx, 800, this));
+                            if (objects[i].properties.ID === '0') {
+                                console.log("exit");
+                                sManager.popState();
+                                this.game.currentArea = new Game.Area1(this.layer1ctx, 800, this);
+                            } else if (objects[i].properties.ID === '1') {
+                                sManager.popState();
+                                this.game.currentArea = new Game.Area2(this.layer1ctx, 800, this);
                             }
                         } else if (objects[i].type === 'cut') {
-                            console.log("CUTSCENE");
+                            this.layer2ctx.clearRect(0, 0, 800, 600);
                             sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, objects[i].properties.ID));
                         } else if (objects[i].type === 'battle') {
-                            console.log("BATTLE");
+                            sManager.pushState(new Game.Battle(this.layer1ctx, this.layer2ctx));
+                        } else if (objects[i].type === 'menu') {
+                            sManager.pushState(new Game.StatusMenu(this.layer2ctx));
                         }
-                        //this.currentArea.endLevel(this.layer2ctx);
-                        //sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, '1', this));
                     }
                 }
             }
@@ -836,15 +1016,15 @@ var Game;
             _super.call(this);
             this.canvas = document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
-            this.xml = xmlID;
+            this.xmlID = xmlID;
             this.dia = new Game.Dialogue(this.context, width);
         }
         Cutscene.prototype.init = function () {
-            this.dia.startScene('chapter', 'scene', this.xml);
+            this.dia.startScene('chapter', 'scene', this.xmlID);
         };
 
         Cutscene.prototype.update = function () {
-            if (control.mousedown()) {
+            if (mousedown()) {
                 this.dia.updateScene();
             }
         };
@@ -860,6 +1040,55 @@ var Game;
     })(Game.State);
     Game.Cutscene = Cutscene;
 })(Game || (Game = {}));
+///<reference path='State.ts' />
+var Game;
+(function (Game) {
+    var StatusMenu = (function (_super) {
+        __extends(StatusMenu, _super);
+        //used as the base class to be extended for each state
+        //might need some initialization code to remove some clutter
+        //from each state to make stuff look better
+        function StatusMenu(ctx) {
+            _super.call(this);
+            ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
+            ctx.fillRect(0, 0, 650, 600);
+            ctx.drawImage(IMAGE_CACHE['status'], 0, 100);
+            ctx.drawImage(IMAGE_CACHE['back'], 50, 500);
+        }
+        StatusMenu.prototype.init = function () {
+        };
+        StatusMenu.prototype.update = function () {
+            if (control.mousedown()) {
+                this.mx = control.mEvent.pageX;
+                this.my = control.mEvent.pageY;
+                var x1 = 50;
+                var x2 = 109;
+                var y1 = 500;
+                var y2 = 550;
+                if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                    sManager.popState();
+                }
+            }
+        };
+        StatusMenu.prototype.render = function () {
+        };
+        StatusMenu.prototype.pause = function () {
+        };
+        StatusMenu.prototype.resume = function () {
+        };
+        StatusMenu.prototype.destroy = function () {
+        };
+        return StatusMenu;
+    })(Game.State);
+    Game.StatusMenu = StatusMenu;
+})(Game || (Game = {}));
+function setStyle(ctx, font, size, color, bold, italic, align) {
+    var bolded = bold || '';
+    var ital = italic || '';
+    ctx.font = bolded + ' ' + ital + ' ' + size + ' ' + font;
+    ctx.fillStyle = color;
+    ctx.textAlign = align;
+}
 function wrap(ctx, cwidth, text) {
     var templine = "";
     var lines = [];

@@ -18,21 +18,35 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="Assets\Image\arrowLeft.png" />
+    <Content Include="Assets\Image\arrowRight.png" />
+    <Content Include="Assets\Image\attack_button.png" />
+    <Content Include="Assets\Image\defend_button.png" />
+    <Content Include="Assets\Image\dialogWindow.png" />
     <Content Include="Assets\Image\diamond.png" />
+    <Content Include="Assets\Image\hero.png" />
+    <Content Include="Assets\Image\menuBack.png" />
+    <Content Include="Assets\Image\menuButton.png" />
+    <Content Include="Assets\Image\status.png" />
     <Content Include="Assets\Music\theme.mp3" />
-    <Content Include="Assets\Tilemap\rpgtileset.png" />
+    <Content Include="Assets\Tilemap\obj_misk_atlas.png" />
     <Content Include="Assets\Sound\car.mp3" />
     <Content Include="Assets\Sound\punch.mp3" />
     <Content Include="Assets\Sound\wood.mp3" />
     <Content Include="Assets\Image\star.png" />
     <Content Include="Assets\Atlas\test.png" />
-    <Content Include="Assets\XML\test.xml" />
+    <Content Include="Assets\XML\test.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="default.htm" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
+    <TypeScriptCompile Include="Areas\Area1.ts" />
+    <TypeScriptCompile Include="Areas\Area2.ts" />
     <TypeScriptCompile Include="Areas\genericarea.ts" />
+    <TypeScriptCompile Include="Game\dialogue.ts" />
     <TypeScriptCompile Include="Game\GameObjects\sprite.ts" />
     <TypeScriptCompile Include="Game\world.ts" />
     <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />
@@ -40,6 +54,13 @@
     <TypeScriptCompile Include="Game\input.ts" />
     <TypeScriptCompile Include="Game\manager.ts" />
     <TypeScriptCompile Include="Game\tilemap.ts" />
+    <TypeScriptCompile Include="States\battle.ts" />
+    <TypeScriptCompile Include="States\explore.ts" />
+    <TypeScriptCompile Include="States\State.ts" />
+    <TypeScriptCompile Include="Game\StateManager.ts" />
+    <TypeScriptCompile Include="States\cutscene.ts" />
+    <TypeScriptCompile Include="States\StatusMenu.ts" />
+    <TypeScriptCompile Include="Util\TextStyler.ts" />
     <TypeScriptCompile Include="Util\wordwrap.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -48,7 +69,8 @@
     <Content Include="Assets\Sound\car.ogg" />
     <Content Include="Assets\Sound\punch.ogg" />
     <Content Include="Assets\Sound\wood.ogg" />
-    <Content Include="Assets\Tilemap\map.json" />
+    <Content Include="Assets\Tilemap\nextmap.json" />
+    <Content Include="Assets\Tilemap\newmap.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

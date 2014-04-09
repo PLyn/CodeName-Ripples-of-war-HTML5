@@ -86,7 +86,7 @@ declare module Game {
         public currentArea: any;
         public width: any;
         public battle: any;
-        constructor(canvasid: any, width: any, height: any, preloader: any);
+        constructor();
         public update(): void;
         public render: () => void;
         public playerInput(): void;
@@ -106,18 +106,12 @@ declare module Game {
         public GameLoop: () => void;
     }
 }
-declare module Game {
-    class input {
-        public keys: any;
-        public click: any;
-        public canvas: any;
-        public mEvent: any;
-        constructor(canvas: any);
-        public keydown(key: any): any;
-        public keyup(key: any): boolean;
-        public mousedown(): any;
-    }
-}
+declare var that: any;
+declare var keys: any[];
+declare var click: boolean;
+declare var canvas: any;
+declare var mEvent: any;
+declare function mousedown(): boolean;
 declare var ANIM_CACHE: any[];
 declare var IMAGE_CACHE: any[];
 declare var SPRITE_CACHE: any[];
@@ -220,11 +214,12 @@ declare module Game {
         public e1: any;
         public mx: any;
         public my: any;
-        public currentPlayer: any;
+        public currentPlayer: Sprite;
+        public target: Sprite;
+        public newTime: number;
         constructor(ctx: any, ctx2: any);
         public newTurn(): void;
         public PlayerTurn(): void;
-        public EnemyTurn(): void;
         public renderActors(): void;
         public init(): void;
         public update(): void;

@@ -20,10 +20,10 @@ module Game {
             if (control.mousedown()) {
                 this.mx = control.mEvent.pageX;
                 this.my = control.mEvent.pageY;
-                var x1 = 0;
-                var x2 = 200;
-                var y1 = 0;
-                var y2 = 200;
+                var x1 = 50;
+                var x2 = 109;
+                var y1 = 500;
+                var y2 = 550;
                 if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                     sManager.popState();
                 }
