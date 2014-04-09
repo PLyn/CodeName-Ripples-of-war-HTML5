@@ -1,6 +1,7 @@
 ﻿///<reference path='gameobject.ts' />
 module Game {
     export class Sprite extends GameObject {
+        ID;
         HP;
         MP;
         Atk;
@@ -14,7 +15,8 @@ module Game {
         constructor(img, x, y, w, h, scale?) {
             super(img, x, y, w, h, scale);
         }
-        setAttributes(hp, mp, atk, def, mdef, spd, luc, type?) {
+        setAttributes(id, hp, mp, atk, def, mdef, spd, luc, type) {
+            this.ID = id;
             this.HP = hp || 1;
             this.MP = mp || 0;
             this.Atk = atk || 0;

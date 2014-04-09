@@ -21,12 +21,12 @@ module Game {
             this.ctx2 = ctx2;
             this.p1 = new Sprite(IMAGE_CACHE['D'], 600, 250, 35, 35);
             this.e1 = new Sprite(IMAGE_CACHE['S'], 300, 250, 35, 35);
-            this.p1.setAttributes(10, 0, 4, 1, 1, 1, 1, 0);
-            this.e1.setAttributes(15, 0, 1, 0, 1, 1, 1, 1);
+            this.p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+            this.e1.setAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
 
             battleList['p1'] = this.p1;
             battleList['e1'] = this.e1;
-
+            
             this.battleKeys = Object.keys(battleList);
             BattleQ.push(this.e1);
             BattleQ.push(this.p1);
@@ -49,6 +49,7 @@ module Game {
         init() {
             this.PlayerTurn();
             this.renderActors();
+            console.log(battleList.length);
             this.currentPlayer = battleList['p1'];
 
         }

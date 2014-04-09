@@ -186,7 +186,8 @@ var Game;
         function Sprite(img, x, y, w, h, scale) {
             _super.call(this, img, x, y, w, h, scale);
         }
-        Sprite.prototype.setAttributes = function (hp, mp, atk, def, mdef, spd, luc, type) {
+        Sprite.prototype.setAttributes = function (id, hp, mp, atk, def, mdef, spd, luc, type) {
+            this.ID = id;
             this.HP = hp || 1;
             this.MP = mp || 0;
             this.Atk = atk || 0;
@@ -838,8 +839,8 @@ var Game;
             this.ctx2 = ctx2;
             this.p1 = new Game.Sprite(IMAGE_CACHE['D'], 600, 250, 35, 35);
             this.e1 = new Game.Sprite(IMAGE_CACHE['S'], 300, 250, 35, 35);
-            this.p1.setAttributes(10, 0, 4, 1, 1, 1, 1, 0);
-            this.e1.setAttributes(15, 0, 1, 0, 1, 1, 1, 1);
+            this.p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+            this.e1.setAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
 
             battleList['p1'] = this.p1;
             battleList['e1'] = this.e1;
@@ -866,6 +867,7 @@ var Game;
         Battle.prototype.init = function () {
             this.PlayerTurn();
             this.renderActors();
+            console.log(battleList.length);
             this.currentPlayer = battleList['p1'];
         };
         Battle.prototype.update = function () {

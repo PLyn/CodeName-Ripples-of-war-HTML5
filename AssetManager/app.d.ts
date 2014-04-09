@@ -62,6 +62,7 @@ declare module Game {
 }
 declare module Game {
     class Sprite extends GameObject {
+        public ID: any;
         public HP: any;
         public MP: any;
         public Atk: any;
@@ -71,7 +72,7 @@ declare module Game {
         public Luc: any;
         public Type: any;
         constructor(img: any, x: any, y: any, w: any, h: any, scale?: any);
-        public setAttributes(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type?: any): void;
+        public setAttributes(id: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type: any): void;
     }
 }
 declare var that: any;
