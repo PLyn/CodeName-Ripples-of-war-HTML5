@@ -896,6 +896,7 @@ var Game;
             } else if (this.currentPlayer.Type === 0 && mousedown()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
+
                 for (var i = 0; i < menuOptions.length; i++) {
                     var x1 = menuOptions[i].x;
                     var x2 = menuOptions[i].x + 190;
@@ -905,12 +906,32 @@ var Game;
                         if (time > this.newTime) {
                             //display text
                             this.ctx2.clearRect(0, 0, 800, 600);
-                            this.ctx2.fillText("Attack", this.p1.x + 15, this.p1.y + 50);
-                            this.ctx2.fillText(this.p1.Atk, this.e1.x + 15, this.e1.y + 50);
+                            this.ctx2.fillText("Who to Attack?", this.p1.x + 15, this.p1.y + 50);
+                            this.enemySelect = true;
 
-                            //actual stat calculation
+                            //this.ctx2.fillText(this.p1.Atk, this.e1.x + 15, this.e1.y + 50);
+                            if (this.currentPlayer.Type === 0 && mousedown())
+                                while (this.enemySelect === true) {
+                                    this.mx = mEvent.pageX;
+                                    this.my = mEvent.pageY;
+                                    for (var i = 0; i < this.battleKeys.length; i++) {
+                                        var x1 = battleList[this.battleKeys[i]].x;
+                                        var x2 = battleList[this.battleKeys[i]].x + battleList[this.battleKeys[i]].W;
+                                        var y1 = battleList[this.battleKeys[i]].y;
+                                        var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
+                                        if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                                            for (var x = 0; x < this.battleKeys.length; x++) {
+                                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]]) {
+                                                    break;
+                                                }
+                                                this.target = battleList[this.battleKeys[x]];
+                                            }
+                                            this.enemySelect = false;
+                                        }
+                                    }
+                                }
                             console.log("Player Attack:" + this.currentPlayer.Atk);
-                            this.e1.HP = this.e1.HP - this.p1.Atk;
+                            this.target.HP = this.target.HP - this.currentPlayer.Atk;
                             console.log("Enemy HP:" + this.e1.HP);
                             this.currentPlayer = this.e1;
                             this.newTime = Date.now() + 500;
@@ -920,12 +941,12 @@ var Game;
             } else if (this.currentPlayer.Type === 1) {
                 if (time > this.newTime) {
                     this.ctx2.clearRect(0, 0, 800, 600);
-                    this.ctx2.fillText("Enemy", this.e1.x + 15, this.e1.y + 50);
-                    this.ctx2.fillText(this.e1.Atk, this.p1.x + 15, this.p1.y + 50);
+                    this.ctx2.fillText("Enemy", this.currentPlayer.x + 15, this.currentPlayer.y + 50);
+                    this.ctx2.fillText(this.currentPlayer.Atk, this.p1.x + 15, this.p1.y + 50);
 
                     //actual stat calculation
                     console.log("Enemy Attack:" + this.e1.Atk);
-                    this.p1.HP = this.p1.HP - this.e1.Atk;
+                    this.p1.HP = this.p1.HP - this.currentPlayer.Atk;
                     console.log("Hero HP: " + this.p1.HP);
                     this.currentPlayer = this.p1;
                     this.newTime = Date.now() + 500;

@@ -235,6 +235,7 @@ declare module Game {
         public newTime: number;
         public battleKeys: any;
         public currentkey: number;
+        public enemySelect: any;
         constructor(ctx: any, ctx2: any);
         public newTurn(): void;
         public PlayerTurn(): void;
