@@ -846,12 +846,19 @@ var Game;
             this.ctx = ctx;
             this.ctx2 = ctx2;
             this.p1 = new Game.Sprite(IMAGE_CACHE['D'], 600, 250, 35, 35);
+            this.p2 = new Game.Sprite(IMAGE_CACHE['hero'], 600, 300, 35, 35);
             this.e1 = new Game.Sprite(IMAGE_CACHE['S'], 300, 250, 35, 35);
-            this.p1.setAttributes('hero', 10, 0, 2, 1, 1, 1, 1, 0);
-            this.e1.setAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
+            this.e2 = new Game.Sprite(IMAGE_CACHE['back'], 300, 300, 35, 35);
 
-            battleList['p1'] = this.p1;
-            battleList['e1'] = this.e1;
+            this.p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+            this.p2.setAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
+            this.e1.setAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
+            this.e2.setAttributes('foe2', 10, 0, 2, 1, 1, 1, 1, 1);
+
+            battleList[0] = this.p1;
+            battleList[1] = this.p2;
+            battleList[2] = this.e1;
+            battleList[3] = this.e2;
 
             this.battleKeys = Object.keys(battleList);
             menuOptions.push({
@@ -867,6 +874,7 @@ var Game;
         }
         Battle.prototype.newTurn = function () {
             this.currentkey = 0;
+            this.currentPlayer = battleList[this.currentkey];
         };
         Battle.prototype.PlayerTurn = function () {
             this.ctx.clearRect(0, 0, 800, 600);
@@ -883,17 +891,19 @@ var Game;
         Battle.prototype.init = function () {
             this.PlayerTurn();
             this.renderActors();
-            this.currentPlayer = battleList['p1'];
+            this.currentPlayer = battleList[this.currentkey];
         };
         Battle.prototype.update = function () {
             var time = Date.now();
-            if (BattleQ.length < 1) {
+            if (this.currentkey > 3) {
                 this.newTurn();
             }
-            if (this.currentPlayer.HP < 1) {
-                this.ctx2.clearRect(0, 0, 800, 600);
-                this.ctx2.fillText("GAMEOVER", 400, 400);
-            } else if (this.enemySelect === true) {
+
+            /*if (this.currentPlayer.HP < 1) {
+            this.ctx2.clearRect(0, 0, 800, 600);
+            this.ctx2.fillText("GAMEOVER", 400, 400);
+            }*/
+            if (this.currentPlayer.Type === 0 && this.enemySelect === true) {
                 if (this.currentPlayer.Type === 0 && mousedown())
                     console.log("inside target condition");
                 this.mx = mEvent.pageX;
@@ -911,17 +921,20 @@ var Game;
                         for (var x = 0; x < this.battleKeys.length; x++) {
                             console.log("inside deeper for loop");
                             if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]]) {
+                                this.target = battleList[this.battleKeys[x]];
+                                this.enemySelect = false;
                                 break;
                             }
                         }
-                        this.target = battleList[this.battleKeys[x]];
-                        this.enemySelect = false;
                     }
                 }
                 if (!this.enemySelect) {
                     this.target.HP = this.target.HP - this.currentPlayer.Atk;
-                    console.log("Enemy HP:" + this.e1.HP);
-                    this.currentPlayer = this.e1;
+                    console.log(this.target.ID + " " + this.target.HP);
+                    this.currentkey++;
+                    this.currentPlayer = battleList[this.currentkey];
+
+                    console.log(this.currentkey);
                     this.newTime = Date.now() + 500;
                 }
             } else if (this.currentPlayer.Type === 0 && mousedown()) {
@@ -952,9 +965,11 @@ var Game;
                     this.ctx2.fillText(this.currentPlayer.Atk, this.p1.x + 15, this.p1.y + 50);
 
                     //actual stat calculation
-                    this.p1.HP = this.p1.HP - this.currentPlayer.Atk;
-                    console.log("Hero HP: " + this.p1.HP);
-                    this.currentPlayer = this.p1;
+                    var eTarget = getRandomInt(0, 1);
+                    battleList[0].HP = battleList[0].HP - this.currentPlayer.Atk;
+                    console.log(battleList[0].ID + " " + battleList[0].HP);
+                    this.currentkey++;
+                    this.currentPlayer = battleList[this.currentkey];
                     this.newTime = Date.now() + 500;
                 }
             }
@@ -1129,19 +1144,12 @@ var Game;
     })(Game.State);
     Game.StatusMenu = StatusMenu;
 })(Game || (Game = {}));
-function addMenuItems() {
-    var obj;
-    obj.push({
-        "Name": "Attack",
-        "x": 600,
-        "y": 200
-    });
-    obj.push({
-        "Name": "Defend",
-        "x": 600,
-        "y": 275
-    });
-    return obj;
+/*
+* Returns a random integer between min and max
+* Using Math.round() will give you a non - uniform distribution!
+*/
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 function setStyle(ctx, font, size, color, bold, italic, align) {
     var bolded = bold || '';

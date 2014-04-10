@@ -226,7 +226,9 @@ declare module Game {
         public ctx: any;
         public ctx2: any;
         public p1: any;
+        public p2: any;
         public e1: any;
+        public e2: any;
         public mx: any;
         public my: any;
         public menuOptions: Object[];
@@ -298,6 +300,6 @@ declare module Game {
         public destroy(): void;
     }
 }
-declare function addMenuItems(): any;
+declare function getRandomInt(min: any, max: any): any;
 declare function setStyle(ctx: any, font: any, size: any, color: any, bold?: any, italic?: any, align?: any): void;
 declare function wrap(ctx: any, cwidth: any, text: any): any[];
