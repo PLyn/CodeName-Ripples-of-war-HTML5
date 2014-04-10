@@ -71,6 +71,7 @@ declare module Game {
         public MDef: any;
         public Luc: any;
         public Type: any;
+        public Equipment: Object;
         constructor(img: any, x: any, y: any, w: any, h: any, scale?: any);
         public setAttributes(id: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type: any): void;
     }
@@ -219,6 +220,7 @@ declare module Game {
 }
 declare var BattleQ: any[];
 declare var battleList: any[];
+declare var menuOptions: any[];
 declare module Game {
     class Battle extends State {
         public ctx: any;
@@ -227,6 +229,7 @@ declare module Game {
         public e1: any;
         public mx: any;
         public my: any;
+        public menuOptions: Object[];
         public currentPlayer: Sprite;
         public target: Sprite;
         public newTime: number;
@@ -294,5 +297,6 @@ declare module Game {
         public destroy(): void;
     }
 }
+declare function addMenuItems(): any;
 declare function setStyle(ctx: any, font: any, size: any, color: any, bold?: any, italic?: any, align?: any): void;
 declare function wrap(ctx: any, cwidth: any, text: any): any[];
