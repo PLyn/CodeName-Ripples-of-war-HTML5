@@ -53,7 +53,7 @@ module Game {
         }
         statusGUI() {
             for (var i = 0; i < this.battleKeys.length; i++) {
-                this.ctx.fillText(battleList[i].ID + "HP : " + battleList[i].HP, (i + 1) * 200, 200);
+                this.ctx.fillText(battleList[i].ID + "HP : " + battleList[i].HP, (i + 1) * 150, 100);
             }
         }
         newTurn() {
