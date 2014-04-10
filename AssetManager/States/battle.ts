@@ -19,6 +19,7 @@ module Game {
         battleKeys;
         currentkey = 0;
         enemySelect;
+        drawCommands;
 
         constructor(ctx, ctx2) {
             super();
@@ -41,19 +42,20 @@ module Game {
 
             this.battleKeys = Object.keys(battleList);
             menuOptions.push({
-                "Name": "Attack",
+                "Name": "attack",
                 "x": 600,
                 "y": 200
             });
             menuOptions.push({
-                "Name": "Defend",
+                "Name": "defend",
                 "x": 600,
                 "y": 275
             });
         }
         statusGUI() {
-            for (var i = 0; i < this.battleKeys.length; i++) {
-                this.ctx.fillText(battleList[i].ID + "HP : " + battleList[i].HP, (i + 1) * 150, 100);
+            this.ctx.clearRect(0, 0, 800, 200);
+            for (var i = 0; i < this.battleKeys.length; i++) {                
+                    this.ctx.fillText(battleList[i].ID + "HP : " + battleList[i].HP, (i + 1) * 150, 100);
             }
         }
         newTurn() {
@@ -64,12 +66,32 @@ module Game {
             this.ctx.clearRect(0, 0, 800, 600);
             this.ctx2.clearRect(0, 0, 800, 600);
             setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
-            this.ctx.drawImage(IMAGE_CACHE['attack'], 600, 200);
-            this.ctx.drawImage(IMAGE_CACHE['defend'], 600, 275);
+            this.statusGUI();
         }
         renderActors() {
             for (var i = 0; i < this.battleKeys.length; i++) {
                 battleList[this.battleKeys[i]].render(this.ctx, 100, 100);
+            }
+            for (var x = 0; x < menuOptions.length; x++) {
+                this.ctx2.drawImage(IMAGE_CACHE[menuOptions[x].Name], menuOptions[x].x, menuOptions[x].y);
+            }
+        }
+        battleOver() {
+            var aHP = 0;
+            var eHP = 0;
+            for (var i = 0; i < this.battleKeys.length; i++) {
+                if (battleList[i].Type === 0) {
+                    aHP += battleList[i].HP;
+                }
+                else if (battleList[i].Type === 1) {
+                    eHP += battleList[i].HP;
+                }
+            }
+            if (aHP === 0 || eHP === 0) {
+                return true;
+            }
+            else {
+                return false;
             }
         }
         init() {
@@ -83,42 +105,48 @@ module Game {
             if (this.currentkey > 3) {
                 this.newTurn();
             }
-            /*if (this.currentPlayer.HP < 1) {
+            if (this.currentPlayer.Type === 0 && this.drawCommands) {
+                this.renderActors();
+                this.drawCommands = false;
+            }
+            if (this.battleOver()) {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText("GAMEOVER", 400, 400);
-            }*/
+            }
             if (this.currentPlayer.Type === 0 && this.enemySelect === true) {
-                if (this.currentPlayer.Type === 0 && mousedown())
-                this.mx = mEvent.pageX;
-                this.my = mEvent.pageY;
-                for (var i = 0; i < this.battleKeys.length; i++) {
-                    var x1 = battleList[this.battleKeys[i]].x;
-                    var x2 = battleList[this.battleKeys[i]].x + battleList[this.battleKeys[i]].W;
-                    var y1 = battleList[this.battleKeys[i]].y;
-                    var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
-                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        for (var x = 0; x < this.battleKeys.length; x++) {
-                            if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]]) {
-                                this.target = battleList[this.battleKeys[x]];
-                                this.enemySelect = false;
-                                break;
+                if (this.currentPlayer.Type === 0 && mousedown()) {
+                    this.mx = mEvent.pageX;
+                    this.my = mEvent.pageY;
+                    for (var i = 0; i < this.battleKeys.length; i++) {
+                        var x1 = battleList[this.battleKeys[i]].x;
+                        var x2 = battleList[this.battleKeys[i]].x + battleList[this.battleKeys[i]].W;
+                        var y1 = battleList[this.battleKeys[i]].y;
+                        var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
+                        if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                            for (var x = 0; x < this.battleKeys.length; x++) {
+                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]]) {
+                                    this.target = battleList[this.battleKeys[x]];
+                                    this.enemySelect = false;
+                                    break;
+                                }
                             }
                         }
                     }
                 }
                 if (!this.enemySelect) {
+                    this.drawCommands = true;
                     this.target.HP = this.target.HP - this.currentPlayer.Atk;
-                    console.log(this.target.ID + " " + this.target.HP);
+                    this.ctx2.clearRect(300, 400, 600, 500);
+                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + this.target.ID + " for " + this.currentPlayer.Atk + " damage", 350, 450);
+                    this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
-                    this.statusGUI();
-                    this.newTime = Date.now() + 500;
+                    this.newTime = Date.now() + 1000;
                 }
             }
             else if (this.currentPlayer.Type === 0 && mousedown()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
-
                 for (var i = 0; i < menuOptions.length; i++) {
                     var x1 = menuOptions[i].x;
                     var x2 = menuOptions[i].x + 190;
@@ -126,32 +154,25 @@ module Game {
                     var y2 = menuOptions[i].y + 100;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (time > this.newTime) {
-                            console.log("inside time condition");
                             //display text
                             this.ctx2.clearRect(0, 0, 800, 600);
-                            this.ctx2.fillText("Who to Attack?", this.p1.x + 15, this.p1.y + 50);
+                            this.ctx2.fillText("Who to Attack?", 350, 450);
                             this.enemySelect = true;
-                            //this.ctx2.fillText(this.p1.Atk, this.e1.x + 15, this.e1.y + 50);
-
-
                         }
                     }
                 }
             }
             else if (this.currentPlayer.Type === 1) {
                 if (time > this.newTime) {
-                    this.ctx2.clearRect(0, 0, 800, 600);
-                    this.ctx2.fillText("Enemy", this.currentPlayer.x + 15, this.currentPlayer.y + 50);
-                    this.ctx2.fillText(this.currentPlayer.Atk, this.p1.x + 15, this.p1.y + 50);
-
+                    this.ctx2.clearRect(300, 400, 600, 500);
+                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + battleList[0].ID + " for " + this.currentPlayer.Atk + " damage" , 350, 450);
                     //actual stat calculation
                     var eTarget = getRandomInt(0, 1);
                     battleList[0].HP = battleList[0].HP - this.currentPlayer.Atk;
-                    console.log(battleList[0].ID + " " + battleList[0].HP);
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
-                    this.newTime = Date.now() + 500;
+                    this.newTime = Date.now() + 1500;
                 }
             }
         }
