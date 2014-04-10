@@ -4,8 +4,8 @@ var battleList = [];
 var menuOptions = [];
 module Game {
     export class Battle extends State {
-        ctx;
-        ctx2;
+        ctx : CanvasRenderingContext2D;
+        ctx2 : CanvasRenderingContext2D;
         p1;
         p2;
         e1;
@@ -51,11 +51,16 @@ module Game {
                 "y": 275
             });
         }
+        statusGUI() {
+            for (var i = 0; i < this.battleKeys.length; i++) {
+                this.ctx.fillText(battleList[i].ID + "HP : " + battleList[i].HP, (i + 1) * 200, 200);
+            }
+        }
         newTurn() {
             this.currentkey = 0;
             this.currentPlayer = battleList[this.currentkey];
         }
-        PlayerTurn() {
+        PlayerMenuInit() {
             this.ctx.clearRect(0, 0, 800, 600);
             this.ctx2.clearRect(0, 0, 800, 600);
             setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
@@ -68,7 +73,7 @@ module Game {
             }
         }
         init() {
-            this.PlayerTurn();
+            this.PlayerMenuInit();
             this.renderActors();
             this.currentPlayer = battleList[this.currentkey];
 
@@ -84,27 +89,21 @@ module Game {
             }*/
             if (this.currentPlayer.Type === 0 && this.enemySelect === true) {
                 if (this.currentPlayer.Type === 0 && mousedown())
-                    console.log("inside target condition");
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
-                //actual stat calculation
-                console.log("inside boolean condition");
                 for (var i = 0; i < this.battleKeys.length; i++) {
-                    console.log("inside for loop");
                     var x1 = battleList[this.battleKeys[i]].x;
                     var x2 = battleList[this.battleKeys[i]].x + battleList[this.battleKeys[i]].W;
                     var y1 = battleList[this.battleKeys[i]].y;
                     var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         for (var x = 0; x < this.battleKeys.length; x++) {
-                            console.log("inside deeper for loop");
                             if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]]) {
                                 this.target = battleList[this.battleKeys[x]];
                                 this.enemySelect = false;
                                 break;
                             }
                         }
-
                     }
                 }
                 if (!this.enemySelect) {
@@ -112,8 +111,7 @@ module Game {
                     console.log(this.target.ID + " " + this.target.HP);
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
-
-                    console.log(this.currentkey);
+                    this.statusGUI();
                     this.newTime = Date.now() + 500;
                 }
             }
@@ -150,6 +148,7 @@ module Game {
                     var eTarget = getRandomInt(0, 1);
                     battleList[0].HP = battleList[0].HP - this.currentPlayer.Atk;
                     console.log(battleList[0].ID + " " + battleList[0].HP);
+                    this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
                     this.newTime = Date.now() + 500;
