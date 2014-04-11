@@ -33,7 +33,7 @@ module Game {
             this.p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
             this.p2.setAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
             this.e1.setAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
-            this.e2.setAttributes('foe2', 10, 0, 2, 1, 1, 1, 1, 1);
+            this.e2.setAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
             battleList[0] = this.p1;
             battleList[1] = this.p2;
@@ -111,7 +111,8 @@ module Game {
             }
             if (this.battleOver()) {
                 this.ctx2.clearRect(0, 0, 800, 600);
-                this.ctx2.fillText("GAMEOVER", 400, 400);
+                this.ctx2.fillText("THE BATTLE IS OVER", 400, 400);
+
             }
             if (this.currentPlayer.Type === 0 && this.enemySelect === true) {
                 if (this.currentPlayer.Type === 0 && mousedown()) {
@@ -136,6 +137,10 @@ module Game {
                 if (!this.enemySelect) {
                     this.drawCommands = true;
                     this.target.HP = this.target.HP - this.currentPlayer.Atk;
+                    if (this.target.HP < 1) {
+                        this.target.Type = 2;
+                    }
+
                     this.ctx2.clearRect(300, 400, 600, 500);
                     this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + this.target.ID + " for " + this.currentPlayer.Atk + " damage", 350, 450);
                     this.statusGUI();
@@ -165,15 +170,23 @@ module Game {
             else if (this.currentPlayer.Type === 1) {
                 if (time > this.newTime) {
                     this.ctx2.clearRect(300, 400, 600, 500);
-                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + battleList[0].ID + " for " + this.currentPlayer.Atk + " damage" , 350, 450);
+                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + battleList[0].ID + " for " + this.currentPlayer.Atk + " damage", 350, 450);
                     //actual stat calculation
                     var eTarget = getRandomInt(0, 1);
                     battleList[0].HP = battleList[0].HP - this.currentPlayer.Atk;
+                    if (battleList[0].HP < 1) {
+                        battleList[0].Type = 2;
+                    }
+
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
                     this.newTime = Date.now() + 1500;
                 }
+            }
+            else if(this.currentPlayer.Type === 2) {
+                this.currentkey++;
+                this.currentPlayer = battleList[this.currentkey];
             }
         }
         render() {
