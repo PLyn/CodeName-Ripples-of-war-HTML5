@@ -19,10 +19,9 @@ var Game;
         GameObject.prototype.update = function () {
         };
         GameObject.prototype.render = function (context, x, y) {
-            context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
+            context.drawImage(this.img, this.x, this.y);
         };
         return GameObject;
     })();
     Game.GameObject = GameObject;
 })(Game || (Game = {}));
-//# sourceMappingURL=gameobject.js.map

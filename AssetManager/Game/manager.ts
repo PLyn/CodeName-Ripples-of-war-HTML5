@@ -195,7 +195,7 @@ module Game {
             for (var i = 0; i < tiledata.length; i++){
                 var tilesetimage = new Image();
                 tilesetimage.onload = () => { this.isLoaded++;  };
-                tilesetimage.src = "../Assets/Tilemap/" + this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
+                tilesetimage.src = "Assets/Tilemap/" + this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
                 var tileData = {
                     "firstgid": tiledata[i].firstgid,
                     "image": tilesetimage,

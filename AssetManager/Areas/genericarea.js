@@ -1,30 +1,29 @@
-﻿var Game;
+﻿var SCENE;
+var EX;
+var startScene;
+var Game;
 (function (Game) {
     var GenericArea = (function () {
-        function GenericArea() {
+        function GenericArea(ctx, w, loop) {
+            this.prevState = 0;
+            this.update = function () {
+                sManager.updateStack();
+            };
             this.x = 0;
             this.y = 0;
+            this.mx = 0;
+            this.my = 0;
             this.velocity = 2.0;
             GAME_OBJECTS.push(SPRITE_CACHE[0]);
+
+            this.ctx = ctx;
+            startScene = true;
         }
-        GenericArea.prototype.update = function () {
-            if (control.keydown('W')) {
-                this.y -= this.velocity;
-            } else if (control.keydown('D')) {
-                this.x += this.velocity;
-            } else if (control.keydown('A')) {
-                this.x -= this.velocity;
-            } else if (control.keydown('S')) {
-                this.y += this.velocity;
-            }
-        };
         GenericArea.prototype.render = function (context) {
-            context.clearRect(0, 0, 800, 600);
-            tiles.drawTiles(context, 'rpg');
-            GAME_OBJECTS[0].render(context, this.x, this.y);
+        };
+        GenericArea.prototype.endLevel = function (ctx) {
         };
         return GenericArea;
     })();
     Game.GenericArea = GenericArea;
 })(Game || (Game = {}));
-//# sourceMappingURL=genericarea.js.map
