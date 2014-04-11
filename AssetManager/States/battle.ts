@@ -54,7 +54,7 @@ module Game {
         }
         statusGUI() {
             this.ctx.clearRect(0, 0, 800, 200);
-            for (var i = 0; i < this.battleKeys.length; i++) {                
+            for (var i = 0; i < this.battleKeys.length; i++) {        
                     this.ctx.fillText(battleList[i].ID + " HP : " + battleList[i].HP, (i + 1) * 150, 100);
             }
         }
@@ -65,6 +65,7 @@ module Game {
         PlayerMenuInit() {
             this.ctx.clearRect(0, 0, 800, 600);
             this.ctx2.clearRect(0, 0, 800, 600);
+            setStyle(this.ctx, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
             setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
             this.statusGUI();
         }
@@ -119,7 +120,7 @@ module Game {
                 this.ctx2.fillText("THE BATTLE IS OVER", 400, 400);
 
             }
-            if (this.currentPlayer.Type === 0 && this.enemySelect === true) {
+            else if (this.currentPlayer.Type === 0 && this.enemySelect === true) {
                 if (this.currentPlayer.Type === 0 && mousedown()) {
                     this.mx = mEvent.pageX;
                     this.my = mEvent.pageY;
@@ -132,6 +133,7 @@ module Game {
                             for (var x = 0; x < this.battleKeys.length; x++) {
                                 if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].Type === 1) {
                                     this.target = battleList[this.battleKeys[x]];
+                                    this.statusGUI();
                                     this.enemySelect = false;
                                     break;
                                 }
@@ -177,12 +179,11 @@ module Game {
                     this.ctx2.clearRect(300, 400, 600, 500);
                     this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + battleList[0].ID + " for " + this.currentPlayer.Atk + " damage", 350, 450);
                     //actual stat calculation
-                    var eTarget = getRandomInt(0, 1);
-                    battleList[0].HP = battleList[0].HP - this.currentPlayer.Atk;
-                    if (battleList[0].HP < 1) {
-                        battleList[0].Type = 2;
+                    this.target = battleList[getRandomInt(0, 1)];
+                    this.target.HP = this.target.HP - this.currentPlayer.Atk;
+                    if (this.target.HP < 1) {
+                        this.target.Type = 2;
                     }
-
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
