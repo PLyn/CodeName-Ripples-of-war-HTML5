@@ -25,10 +25,10 @@ module Game {
             super();
             this.ctx = ctx;
             this.ctx2 = ctx2;
-            this.p1 = new Sprite(IMAGE_CACHE['D'], 600, 250, 35, 35);
-            this.p2 = new Sprite(IMAGE_CACHE['hero'], 600, 300, 35, 35);
-            this.e1 = new Sprite(IMAGE_CACHE['S'], 300, 250, 35, 35);
-            this.e2 = new Sprite(IMAGE_CACHE['back'], 300, 300, 35, 35);
+            this.p1 = new Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
+            this.p2 = new Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
+            this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
+            this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
 
             this.p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
             this.p2.setAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
@@ -43,19 +43,19 @@ module Game {
             this.battleKeys = Object.keys(battleList);
             menuOptions.push({
                 "Name": "attack",
-                "x": 600,
+                "x": 550,
                 "y": 200
             });
             menuOptions.push({
                 "Name": "defend",
-                "x": 600,
+                "x": 550,
                 "y": 275
             });
         }
         statusGUI() {
             this.ctx.clearRect(0, 0, 800, 200);
             for (var i = 0; i < this.battleKeys.length; i++) {                
-                    this.ctx.fillText(battleList[i].ID + "HP : " + battleList[i].HP, (i + 1) * 150, 100);
+                    this.ctx.fillText(battleList[i].ID + " HP : " + battleList[i].HP, (i + 1) * 150, 100);
             }
         }
         newTurn() {
@@ -69,12 +69,15 @@ module Game {
             this.statusGUI();
         }
         renderActors() {
+            this.ctx.clearRect(0, 0, 800, 600);
             for (var i = 0; i < this.battleKeys.length; i++) {
                 battleList[this.battleKeys[i]].render(this.ctx, 100, 100);
+                this.ctx.fillText(battleList[this.battleKeys[i]].ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
             }
             for (var x = 0; x < menuOptions.length; x++) {
                 this.ctx2.drawImage(IMAGE_CACHE[menuOptions[x].Name], menuOptions[x].x, menuOptions[x].y);
             }
+            this.statusGUI();
         }
         battleOver() {
             var aHP = 0;
@@ -105,7 +108,9 @@ module Game {
             if (this.currentkey > 3) {
                 this.newTurn();
             }
-            if (this.currentPlayer.Type === 0 && this.drawCommands) {
+            if (this.currentPlayer.Type === 0 && this.drawCommands && time > this.newTime) {
+                this.ctx2.clearRect(0, 0, 800, 600);
+                this.ctx2.fillText("Player Turn", 350, 450);
                 this.renderActors();
                 this.drawCommands = false;
             }
@@ -125,7 +130,7 @@ module Game {
                         var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
                         if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                             for (var x = 0; x < this.battleKeys.length; x++) {
-                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]]) {
+                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].Type === 1) {
                                     this.target = battleList[this.battleKeys[x]];
                                     this.enemySelect = false;
                                     break;
@@ -161,7 +166,7 @@ module Game {
                         if (time > this.newTime) {
                             //display text
                             this.ctx2.clearRect(0, 0, 800, 600);
-                            this.ctx2.fillText("Who to Attack?", 350, 450);
+                            this.ctx2.fillText("Click to select Target", 350, 450);
                             this.enemySelect = true;
                         }
                     }
@@ -181,7 +186,7 @@ module Game {
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
-                    this.newTime = Date.now() + 1500;
+                    this.newTime = Date.now() + 1000;
                 }
             }
             else if(this.currentPlayer.Type === 2) {
