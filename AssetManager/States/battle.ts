@@ -179,7 +179,11 @@ module Game {
                     this.ctx2.clearRect(300, 400, 600, 500);
                     this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + battleList[0].ID + " for " + this.currentPlayer.Atk + " damage", 350, 450);
                     //actual stat calculation
-                    this.target = battleList[getRandomInt(0, 1)];
+                    var targetNum = getRandomInt(0, this.battleKeys.length - 1);
+                    while (battleList[targetNum].Type !== 0) {
+                        targetNum = getRandomInt(0, this.battleKeys.length - 1);
+                    }
+                    this.target = battleList[targetNum];
                     this.target.HP = this.target.HP - this.currentPlayer.Atk;
                     if (this.target.HP < 1) {
                         this.target.Type = 2;
