@@ -111,6 +111,8 @@ declare module Game {
         public Equipment: Object;
         constructor(img: any, x: any, y: any, w: any, h: any, scale?: any);
         public setAttributes(id: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type: any): void;
+        public equipItem(equipment: Equipable, type: any): void;
+        public unequipItem(equipment: Equipable, type: any): void;
     }
 }
 declare var that: any;

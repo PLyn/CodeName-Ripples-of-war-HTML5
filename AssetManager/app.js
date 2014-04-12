@@ -264,8 +264,8 @@ var Game;
             this.Equipment = {
                 "Head": null,
                 "Body": null,
-                "Hands": null,
-                "Legs": null,
+                "Weapon": null,
+                "Feet": null,
                 "Accessory": null
             };
         }
@@ -279,6 +279,12 @@ var Game;
             this.MDef = mdef || 0;
             this.Luc = luc || 0;
             this.Type = type || 0;
+        };
+        Sprite.prototype.equipItem = function (equipment, type) {
+            this.setAttributes(this.ID, this.HP + equipment.HP, this.MP + equipment.MP, this.Atk + equipment.Atk, this.Def + equipment.Def, this.MDef + equipment.MDef, this.Spd + equipment.Spd, this.Luc + equipment.Luc, this.Type);
+        };
+        Sprite.prototype.unequipItem = function (equipment, type) {
+            this.setAttributes(this.ID, this.HP - equipment.HP, this.MP - equipment.MP, this.Atk - equipment.Atk, this.Def - equipment.Def, this.MDef - equipment.MDef, this.Spd - equipment.Spd, this.Luc - equipment.Luc, this.Type);
         };
         return Sprite;
     })(Game.GameObject);
