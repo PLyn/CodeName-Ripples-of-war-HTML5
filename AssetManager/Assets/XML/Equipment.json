@@ -1,0 +1,27 @@
+{	"Weapon": [{
+        "Short Sword": {
+            "ID": 1,
+            "Name": "Short Sword",
+            "Description": "Short Sword used by average Military personnel",
+            "HP": 0,
+            "MP": 0,
+            "Atk": 5,
+            "Def": 0,
+            "Spd": 0,
+            "MDef": 0,
+            "Luc": 0
+        },
+        "Rapier": {
+            "ID": 2,
+            "Name": "Rapier",
+            "Description": "Fencing Rapier for standard use",
+            "HP": 5,
+            "MP": 0,
+            "Atk": 2,
+            "Def": 0,
+            "Spd": 0,
+            "MDef": 0,
+            "Luc": 0
+        }
+    }]
+}

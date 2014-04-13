@@ -36,7 +36,11 @@ module Game {
                     carpet: 'Assets/Tilemap/nextmap.json'
                 },
                 XML: {
-                    chapter: 'Assets/XML/test.xml'
+                    chapter: 'Assets/XML/test.xml',
+                    
+                },
+                JSON: {
+                    equip: 'Assets/XML/Equipment.json'
                 },
                 Sounds: {
                     car: 'Assets/Sound/car',

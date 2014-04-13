@@ -6,17 +6,21 @@ module Game {
         ctx2: CanvasRenderingContext2D;
         mx;
         my;
+        time = 0;
+        back = false;
         constructor(ctx, ctx2) {
             super();
             this.ctx = ctx; 
             this.ctx2 = ctx2;
+
         }
         drawEquip() {
+            this.ctx2.clearRect(0, 0, 800, 600);
             this.ctx2.fillText("Head: " + battleList[0].Equipment['Head'], 75, 150);
             this.ctx2.fillText("Body: " + battleList[0].Equipment['Body'], 75, 175);
             this.ctx2.fillText("Weapon: " + battleList[0].Equipment['Weapon'], 75, 200);
             this.ctx2.fillText("Feet: " + battleList[0].Equipment['Feet'], 75, 225);
-
+            console.log(battleList[0].Atk);
             this.ctx2.fillText("HP: " + battleList[0].HP, 400, 150);
             this.ctx2.fillText("MP: " + battleList[0].MP, 400, 175);
             this.ctx2.fillText("Attack: " + battleList[0].Atk, 400, 200);
@@ -70,7 +74,11 @@ module Game {
             equips.push(obj);
         }
         changeEquip() {
-            if (mousedown()) {
+            if (Date.now() > this.time && this.back) {
+                this.ctx2.clearRect(0, 0, 800, 600);
+                sManager.popState();
+            }
+            else if (mousedown() && this.time < Date.now()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < equips.length; i++) {
@@ -80,27 +88,19 @@ module Game {
                     var y2 = equips[i].y + equips[i].h;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (equips[i].type === "Back") {
-                            this.ctx2.clearRect(0, 0, 800, 600);
-                            sManager.popState();
+                            this.back = true;
+                            this.time = Date.now() + 500;
                         }
-                        else if(equips[i].type === "Head") {
-
+                        else {
+                            this.time = Date.now() + 500;
+                            sManager.pushState(new SelectEquip(this.ctx2));
                         }
-                        console.log(equips[i].type + " reached");
                     }
                 }
             }
         }
         init() {
-            var p1 = new Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
-            var p2 = new Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
-            p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
-            p2.setAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
 
-            var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
-            p1.equipItem(sword, sword.Type);
-            battleList[0] = p1;
-            battleList[1] = p2;
 
             this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
             setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
@@ -110,6 +110,7 @@ module Game {
             this.addEquipPos();
         }
         update() {
+            this.drawEquip();
             this.changeEquip();
         }
         render() {

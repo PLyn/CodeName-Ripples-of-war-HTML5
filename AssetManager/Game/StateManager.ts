@@ -2,6 +2,7 @@
     export class StateManager {
         gameStates;
         stateStack: State[];
+        time = 0;
         /*currentInGameState = 0;
         currentInGameStateFunction = null;
         currentState = 0;

@@ -29,6 +29,16 @@ module Game {
             tiles.Init();
             this.width = 800;
             this.currentArea = new Game.Area1(this.context, this.width, this);
+
+            var p1 = new Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
+            var p2 = new Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
+            p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+            p2.setAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
+
+            //var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
+            //p1.equipItem(sword, sword.Type);
+            battleList[0] = p1;
+            battleList[1] = p2;
         }
         update() {
             this.currentArea.update();

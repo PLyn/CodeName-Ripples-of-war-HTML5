@@ -31,14 +31,14 @@ module Game {
             this.game = game;
             objects.push(
                 {
-                    "height": 50,
+                    "height": 75,
                     "name": "menu",
                     "properties":
                     {
                     },
                     "type": "menu",
                     "visible": true,
-                    "width": 50,
+                    "width": 75,
                     "x": 5,
                     "y": 5
                 }
@@ -72,6 +72,9 @@ module Game {
                                 this.game.currentArea = new Game.Area2(this.layer1ctx, 800, this);
                             }
                         }
+                        else if (objects[i].type === 'menu') {
+                            sManager.pushState(new StatusMenu(this.layer2ctx));
+                        }
                         else if (objects[i].type === 'cut') {
                             this.layer2ctx.clearRect(0, 0, 800, 600);
                             sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, objects[i].properties.ID));
@@ -83,9 +86,7 @@ module Game {
                         else if (objects[i].type === 'battle') {
                             sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx));
                         }
-                        else if (objects[i].type === 'menu') {
-                            sManager.pushState(new StatusMenu(this.layer2ctx));
-                        }
+
                     }
                 }
             }

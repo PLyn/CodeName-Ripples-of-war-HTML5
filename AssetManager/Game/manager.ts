@@ -10,6 +10,7 @@ var TILEDATA_CACHE = []; //global tile data to draw tilemaps
 var XML_CACHE = []; //Global xml cache to get specific xml files
 var SOUND_CACHE = []; //Global sounds cache
 var MUSIC_CACHE = []; //Global Music cache
+var JSON_CACHE = [];
 
 module Game {
     export class Preloader {
@@ -20,6 +21,7 @@ module Game {
         height = 0; //Height of Sprite
         isError = 0; //Keeps track of each file loaded with error
         isLoaded = 0; //Keeps track of each file loadded successfully
+        jsonKey;
         numTilesX = 0; //Number of Tiles in each row
         numTilesY = 0; //Number of Tiles in each column
         pixelSizeX = 0; //Width in pixels of entire Tilemap
@@ -65,6 +67,9 @@ module Game {
             }
             if (Assets.XML) {
                 this.genericLoader(Assets.XML, false, this.xmlKey, this.onXMLLoad, 'xml');
+            }
+            if (Assets.JSON) {
+                this.genericLoader(Assets.JSON, false, this.jsonKey, this.onJSONLoad, 'json');
             }
             if (Assets.Sounds) {
                 this.soundloader(Assets.Sounds, 'Sound');
@@ -217,6 +222,10 @@ module Game {
             this.isLoaded++;
             //rest to be implemented. not sure how to extract the info how i want yet...will do soon
             //saved xml file iin the global variable to be used later on as needed
+        }
+        onJSONLoad = (key, response) => {
+            JSON_CACHE[key] = JSON.parse(response);
+            this.isLoaded++;
         }
     }
 }

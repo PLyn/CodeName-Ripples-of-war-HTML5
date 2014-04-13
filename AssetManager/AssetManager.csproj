@@ -80,6 +80,7 @@
     <Content Include="Assets\Sound\wood.ogg" />
     <Content Include="Assets\Tilemap\nextmap.json" />
     <Content Include="Assets\Tilemap\newmap.json" />
+    <Content Include="Assets\XML\Equipment.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

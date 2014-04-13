@@ -17,13 +17,13 @@ module Game {
 
         }
         update() {
-            if (control.mousedown()) {
-                this.mx = control.mEvent.pageX;
-                this.my = control.mEvent.pageY;
-                var x1 = 50;
-                var x2 = 109;
-                var y1 = 500;
-                var y2 = 550;
+            if (mousedown()) {
+                this.mx = mEvent.pageX;
+                this.my = mEvent.pageY;
+                var x1 = 40;
+                var x2 = 120;
+                var y1 = 490;
+                var y2 = 560;
                 if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                     sManager.popState();
                 }
