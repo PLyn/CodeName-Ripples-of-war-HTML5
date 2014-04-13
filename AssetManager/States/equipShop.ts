@@ -96,7 +96,7 @@ module Game {
                             sManager.popState();
                         }
                         else {
-                            sManager.pushState(new SelectEquip(this.ctx2));
+                            sManager.pushState(new SelectEquip(this.ctx2, equips[i].type));
                         }
                     }
                 }
