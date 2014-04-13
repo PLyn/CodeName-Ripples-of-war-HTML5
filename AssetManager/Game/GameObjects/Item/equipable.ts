@@ -1,5 +1,8 @@
 ﻿module Game {
     export class Equipable {
+        Name;
+        Desc;
+        Type;
         HP;
         MP;
         Atk;
@@ -7,7 +10,10 @@
         Spd;
         MDef;
         Luc;
-        constructor(hp, mp, atk, def, mdef, spd, luc) {
+        constructor(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
+            this.Name = name;
+            this.Desc = desc;
+            this.Type = type;
             this.HP = hp || 1;
             this.MP = mp || 0;
             this.Atk = atk || 0;

@@ -34,11 +34,14 @@ module Game {
             this.Luc = luc || 0;
             this.Type = type || 0;
         }
+
         equipItem(equipment: Equipable, type) {
+            this.Equipment[type] = equipment.Name;
             this.setAttributes(this.ID, this.HP + equipment.HP, this.MP + equipment.MP, this.Atk + equipment.Atk, this.Def + equipment.Def
                 , this.MDef + equipment.MDef, this.Spd + equipment.Spd, this.Luc + equipment.Luc, this.Type);
         }
         unequipItem(equipment: Equipable, type) {
+            this.Equipment[type] = null;
             this.setAttributes(this.ID, this.HP - equipment.HP, this.MP - equipment.MP, this.Atk - equipment.Atk, this.Def - equipment.Def
                 , this.MDef - equipment.MDef, this.Spd - equipment.Spd, this.Luc - equipment.Luc, this.Type);
         }
