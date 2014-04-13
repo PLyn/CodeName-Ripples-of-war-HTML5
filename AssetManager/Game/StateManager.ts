@@ -25,8 +25,9 @@
             //this.gameStates[key].init();
         }
         popState() {
-            if (this.stateStack.length > 0) {
+            if (this.stateStack.length > 0 && this.time < Date.now()) {
                 this.stateStack.pop();
+                this.time = Date.now() + 100;
                 if (this.stateStack.length > 0) {
                     var len = this.stateStack.length;
                     this.stateStack[len - 1].init();

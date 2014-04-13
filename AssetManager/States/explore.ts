@@ -48,7 +48,7 @@ module Game {
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
             tiles.setTileset(this.layer1ctx, this.mapID);
-            this.layer2ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
+            this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
             this.layer1ctx.drawImage(IMAGE_CACHE['hero'], 200, 250);
         }
         update() {

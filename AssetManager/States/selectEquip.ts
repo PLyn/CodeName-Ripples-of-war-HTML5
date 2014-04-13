@@ -29,6 +29,7 @@ module Game {
                 }
                 currentEquips.push(obj);
             }
+            this.itemSelected = false;
         }
         update() {
             var time = Date.now();
@@ -38,7 +39,7 @@ module Game {
                 battleList[0].equipItem(this.item, 'Weapon');
                 sManager.popState();
             }
-            if (mousedown() && time > this.time && !this.itemSelected) {
+            if (mousedown() && !this.itemSelected) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < currentEquips.length; i++) {
@@ -51,7 +52,6 @@ module Game {
                             if (currentEquips[i].Name === JSON_CACHE['equip'].Weapon[0][this.keys[x]].Name) {
                                 this.itemSelected = true;
                                 this.item = JSON_CACHE['equip'].Weapon[0][this.keys[x]];
-                                this.time = time + 500;
                                 break;
                             }
                         }

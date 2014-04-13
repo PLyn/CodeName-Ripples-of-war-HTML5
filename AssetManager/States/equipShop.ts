@@ -8,6 +8,7 @@ module Game {
         my;
         time = 0;
         back = false;
+        stats;
         constructor(ctx, ctx2) {
             super();
             this.ctx = ctx; 
@@ -20,14 +21,15 @@ module Game {
             this.ctx2.fillText("Body: " + battleList[0].Equipment['Body'], 75, 175);
             this.ctx2.fillText("Weapon: " + battleList[0].Equipment['Weapon'], 75, 200);
             this.ctx2.fillText("Feet: " + battleList[0].Equipment['Feet'], 75, 225);
-            console.log(battleList[0].Atk);
-            this.ctx2.fillText("HP: " + battleList[0].HP, 400, 150);
-            this.ctx2.fillText("MP: " + battleList[0].MP, 400, 175);
-            this.ctx2.fillText("Attack: " + battleList[0].Atk, 400, 200);
-            this.ctx2.fillText("Defense: " + battleList[0].Def, 400, 225);
-            this.ctx2.fillText("Speed: " + battleList[0].Spd, 400, 250);
-            this.ctx2.fillText("Magic Defense: " + battleList[0].MDef, 400, 275);
-            this.ctx2.fillText("Luck: " + battleList[0].Luc, 400, 300);
+
+            this.stats = battleList[0].getTotalStats();
+            this.ctx2.fillText("HP: " + this.stats.HP, 400, 150);
+            this.ctx2.fillText("MP: " + this.stats.MP, 400, 175);
+            this.ctx2.fillText("Attack: " + this.stats.Atk, 400, 200);
+            this.ctx2.fillText("Defense: " + this.stats.Def, 400, 225);
+            this.ctx2.fillText("Speed: " + this.stats.Spd, 400, 250);
+            this.ctx2.fillText("Magic Defense: " + this.stats.MDef, 400, 275);
+            this.ctx2.fillText("Luck: " + this.stats.Luc, 400, 300);
 
             this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
         }

@@ -141,6 +141,35 @@ var Game;
     })();
     Game.Dialogue = Dialogue;
 })(Game || (Game = {}));
+var GAME_OBJECTS = [];
+var Game;
+(function (Game) {
+    var GameObject = (function () {
+        //pretty much complete imo, other classes such as sprite will extend the variables and functionality
+        function GameObject(img, x, y, w, h, scale) {
+            this.x = 0;
+            this.y = 0;
+            this.W = 0;
+            this.H = 0;
+            this.img = new Image();
+            this.scale = 0;
+            this.img = img;
+            this.x = x || 0;
+            this.y = y || 0;
+            this.W = w;
+            this.H = h;
+            this.scale = scale || 1;
+        }
+        GameObject.prototype.update = function () {
+        };
+        GameObject.prototype.render = function (context, x, y) {
+            //context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
+            context.drawImage(this.img, this.x, this.y);
+        };
+        return GameObject;
+    })();
+    Game.GameObject = GameObject;
+})(Game || (Game = {}));
 var Game;
 (function (Game) {
     var Equipable = (function () {
@@ -226,35 +255,6 @@ var Game;
     })(Game.Equipable);
     Game.Weapon = Weapon;
 })(Game || (Game = {}));
-var GAME_OBJECTS = [];
-var Game;
-(function (Game) {
-    var GameObject = (function () {
-        //pretty much complete imo, other classes such as sprite will extend the variables and functionality
-        function GameObject(img, x, y, w, h, scale) {
-            this.x = 0;
-            this.y = 0;
-            this.W = 0;
-            this.H = 0;
-            this.img = new Image();
-            this.scale = 0;
-            this.img = img;
-            this.x = x || 0;
-            this.y = y || 0;
-            this.W = w;
-            this.H = h;
-            this.scale = scale || 1;
-        }
-        GameObject.prototype.update = function () {
-        };
-        GameObject.prototype.render = function (context, x, y) {
-            //context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
-            context.drawImage(this.img, this.x, this.y);
-        };
-        return GameObject;
-    })();
-    Game.GameObject = GameObject;
-})(Game || (Game = {}));
 ///<reference path='gameobject.ts' />
 var Game;
 (function (Game) {
@@ -271,149 +271,81 @@ var Game;
                 "Feet": null,
                 "Accessory": null
             };
+            this.Base = {
+                "ID": null,
+                "HP": 0,
+                "MP": 0,
+                "Atk": 0,
+                "Def": 0,
+                "Spd": 0,
+                "MDef": 0,
+                "Luc": 0,
+                "Type": null
+            };
+            this.Modified = {
+                "ID": null,
+                "HP": 0,
+                "MP": 0,
+                "Atk": 0,
+                "Def": 0,
+                "Spd": 0,
+                "MDef": 0,
+                "Luc": 0,
+                "Type": null
+            };
         }
-        Sprite.prototype.setAttributes = function (id, hp, mp, atk, def, mdef, spd, luc, type) {
-            this.ID = id;
-            this.HP = hp || 1;
-            this.MP = mp || 0;
-            this.Atk = atk || 0;
-            this.Def = def || 0;
-            this.Spd = spd || 0;
-            this.MDef = mdef || 0;
-            this.Luc = luc || 0;
-            this.Type = type || 0;
+        Sprite.prototype.setBaseAttributes = function (id, hp, mp, atk, def, mdef, spd, luc, type) {
+            this.Base = {
+                "ID": id,
+                "HP": hp || 1,
+                "MP": mp || 0,
+                "Atk": atk || 0,
+                "Def": def || 0,
+                "Spd": spd || 0,
+                "MDef": mdef || 0,
+                "Luc": luc || 0,
+                "Type": type
+            };
+        };
+        Sprite.prototype.setModifiedAttributes = function (id, hp, mp, atk, def, mdef, spd, luc, type) {
+            this.Modified = {
+                "ID": "",
+                "HP": hp || 0,
+                "MP": mp || 0,
+                "Atk": atk || 0,
+                "Def": def || 0,
+                "Spd": spd || 0,
+                "MDef": mdef || 0,
+                "Luc": luc || 0,
+                "Type": type || 0
+            };
         };
 
         Sprite.prototype.equipItem = function (equipment, type) {
             this.Equipment[type] = equipment.Name;
 
-            this.setAttributes(this.ID, this.HP + equipment.HP, this.MP + equipment.MP, this.Atk + equipment.Atk, this.Def + equipment.Def, this.MDef + equipment.MDef, this.Spd + equipment.Spd, this.Luc + equipment.Luc, this.Type);
+            this.setModifiedAttributes(equipment.Name, equipment.HP, equipment.MP, equipment.Atk, equipment.Def, equipment.MDef, equipment.Spd, equipment.Luc, equipment.Type);
         };
-        Sprite.prototype.unequipItem = function (equipment, type) {
+        Sprite.prototype.unequipItem = function (type) {
             this.Equipment[type] = null;
-            this.setAttributes(this.ID, this.HP - equipment.HP, this.MP - equipment.MP, this.Atk - equipment.Atk, this.Def - equipment.Def, this.MDef - equipment.MDef, this.Spd - equipment.Spd, this.Luc - equipment.Luc, this.Type);
+            this.setModifiedAttributes();
+        };
+        Sprite.prototype.getTotalStats = function () {
+            return {
+                "ID": this.Base['ID'],
+                "HP": this.Base['HP'] + this.Modified['HP'],
+                "MP": this.Base['MP'] + this.Modified['MP'],
+                "Atk": this.Base['Atk'] + this.Modified['Atk'],
+                "Def": this.Base['Def'] + this.Modified['Def'],
+                "Spd": this.Base['Spd'] + this.Modified['Spd'],
+                "MDef": this.Base['MDef'] + this.Modified['MDef'],
+                "Luc": this.Base['Luc'] + this.Modified['Luc'],
+                "Type": this.Base['Type']
+            };
         };
         return Sprite;
     })(Game.GameObject);
     Game.Sprite = Sprite;
-})(Game || (Game = {}));
-var control;
-var tiles;
-var Game;
-(function (Game) {
-    var Loop = (function () {
-        //remove alot of initialization code from here as it will go in the states
-        //need to put the code in here to deal with the states as needed thoughs
-        function Loop() {
-            this.render = function () {
-                //this.currentArea.render(this.context);
-            };
-            /*this.canvas = document.createElement('canvas');
-            this.canvas.id = canvasid;
-            this.canvas.width = width;
-            this.canvas.height = height;
-            this.canvas.tabindex = '1';
-            document.body.appendChild(this.canvas);*/
-            this.canvas = document.getElementById('layer1');
-            this.context = this.canvas.getContext('2d');
-            this.canvas2 = document.getElementById('layer2');
-            this.context2 = this.canvas.getContext('2d');
-
-            //control = new Game.input();
-            tiles = new Game.Tilemap();
-            tiles.Init();
-            this.width = 800;
-            this.currentArea = new Game.Area1(this.context, this.width, this);
-
-            var p1 = new Game.Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
-            var p2 = new Game.Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
-            p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
-            p2.setAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
-
-            //var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
-            //p1.equipItem(sword, sword.Type);
-            battleList[0] = p1;
-            battleList[1] = p2;
-        }
-        Loop.prototype.update = function () {
-            this.currentArea.update();
-        };
-
-        Loop.prototype.playerInput = function () {
-        };
-        return Loop;
-    })();
-    Game.Loop = Loop;
-})(Game || (Game = {}));
-var pos = 0;
-var audioElement = new Audio();
-var WORLD = 0;
-var sManager;
-
-//State system core will most likely be here so read the book and figure out
-//how to get it working and leading to each state as needed
-var Game;
-(function (Game) {
-    var Init = (function () {
-        function Init() {
-            var _this = this;
-            this.onComplete = function () {
-                //this.dialog = new Game.Cutscene("dia", 800, 600);
-                _this.world = new Game.Loop();
-                setInterval(_this.GameLoop, 1000 / 30);
-            };
-            this.GameLoop = function () {
-                _this.world.update();
-                _this.world.render();
-                //this.world.update();
-                //this.world.render();
-            };
-            var source = {
-                Images: {
-                    D: 'Assets/Image/diamond.png',
-                    S: 'Assets/Image/star.png',
-                    menu: 'Assets/Image/menuButton.png',
-                    back: 'Assets/Image/menuBack.png',
-                    LArrow: 'Assets/Image/arrowLeft',
-                    RArrow: 'Assets/Image/arrowRight',
-                    dialog: 'Assets/Image/dialogWindow.png',
-                    hero: 'Assets/Image/hero.png',
-                    status: 'Assets/Image/status.png',
-                    attack: 'Assets/Image/attack_button.png',
-                    defend: 'Assets/Image/defend_button.png'
-                },
-                Anim: {
-                    at: 'Assets/Atlas/test.json'
-                },
-                Sprite: {
-                    spr: 'Assets/Atlas/test.json'
-                },
-                Tileset: {
-                    rpg: 'Assets/Tilemap/newmap.json',
-                    carpet: 'Assets/Tilemap/nextmap.json'
-                },
-                XML: {
-                    chapter: 'Assets/XML/test.xml'
-                },
-                JSON: {
-                    equip: 'Assets/XML/Equipment.json'
-                },
-                Sounds: {
-                    car: 'Assets/Sound/car',
-                    punch: 'Assets/Sound/punch',
-                    wood: 'Assets/Sound/wood'
-                },
-                Music: {
-                    theme: 'Assets/Music/theme'
-                }
-            };
-            this.preloader = new Game.Preloader();
-            this.preloader.queueAssets(source, this.onComplete);
-            sManager = new Game.StateManager();
-        }
-        return Init;
-    })();
-    Game.Init = Init;
 })(Game || (Game = {}));
 var that = this;
 var keys = [];
@@ -716,6 +648,54 @@ var Game;
     })();
     Game.Preloader = Preloader;
 })(Game || (Game = {}));
+var Game;
+(function (Game) {
+    var StateManager = (function () {
+        /*currentInGameState = 0;
+        currentInGameStateFunction = null;
+        currentState = 0;
+        currentStateFunction = null;*/
+        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
+        //High on the list, will start getting through this ASAP with help from nick and/or the book
+        function StateManager() {
+            this.time = 0;
+            this.gameStates = [];
+            this.stateStack = new Array();
+        }
+        StateManager.prototype.addState = function (key, state) {
+            this.gameStates[key] = state;
+            //this.stateStack.push(state);
+            //state.init();
+        };
+        StateManager.prototype.pushState = function (state) {
+            this.stateStack.push(state);
+            state.init();
+            //this.stateStack.push(this.gameStates[key]);
+            //this.gameStates[key].init();
+        };
+        StateManager.prototype.popState = function () {
+            if (this.stateStack.length > 0 && this.time < Date.now()) {
+                this.stateStack.pop();
+                this.time = Date.now() + 100;
+                if (this.stateStack.length > 0) {
+                    var len = this.stateStack.length;
+                    this.stateStack[len - 1].init();
+                }
+            }
+        };
+        StateManager.prototype.updateStack = function () {
+            var len = this.stateStack.length;
+            this.stateStack[len - 1].update();
+        };
+        StateManager.prototype.renderStack = function () {
+            for (var s in this.stateStack) {
+                s.render();
+            }
+        };
+        return StateManager;
+    })();
+    Game.StateManager = StateManager;
+})(Game || (Game = {}));
 var objects = [];
 var Game;
 (function (Game) {
@@ -871,6 +851,124 @@ var Game;
     })();
     Game.Tilemap = Tilemap;
 })(Game || (Game = {}));
+var control;
+var tiles;
+var Game;
+(function (Game) {
+    var Loop = (function () {
+        //remove alot of initialization code from here as it will go in the states
+        //need to put the code in here to deal with the states as needed thoughs
+        function Loop() {
+            this.render = function () {
+                //this.currentArea.render(this.context);
+            };
+            /*this.canvas = document.createElement('canvas');
+            this.canvas.id = canvasid;
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.canvas.tabindex = '1';
+            document.body.appendChild(this.canvas);*/
+            this.canvas = document.getElementById('layer1');
+            this.context = this.canvas.getContext('2d');
+            this.canvas2 = document.getElementById('layer2');
+            this.context2 = this.canvas.getContext('2d');
+
+            //control = new Game.input();
+            tiles = new Game.Tilemap();
+            tiles.Init();
+            this.width = 800;
+            this.currentArea = new Game.Area1(this.context, this.width, this);
+
+            var p1 = new Game.Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
+            var p2 = new Game.Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
+            p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+            p2.setBaseAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
+
+            //var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
+            //p1.equipItem(sword, sword.Type);
+            battleList[0] = p1;
+            battleList[1] = p2;
+        }
+        Loop.prototype.update = function () {
+            this.currentArea.update();
+        };
+
+        Loop.prototype.playerInput = function () {
+        };
+        return Loop;
+    })();
+    Game.Loop = Loop;
+})(Game || (Game = {}));
+var pos = 0;
+var audioElement = new Audio();
+var WORLD = 0;
+var sManager;
+
+//State system core will most likely be here so read the book and figure out
+//how to get it working and leading to each state as needed
+var Game;
+(function (Game) {
+    var Init = (function () {
+        function Init() {
+            var _this = this;
+            this.onComplete = function () {
+                //this.dialog = new Game.Cutscene("dia", 800, 600);
+                _this.world = new Game.Loop();
+                setInterval(_this.GameLoop, 1000 / 30);
+            };
+            this.GameLoop = function () {
+                _this.world.update();
+                _this.world.render();
+                //this.world.update();
+                //this.world.render();
+            };
+            var source = {
+                Images: {
+                    D: 'Assets/Image/diamond.png',
+                    S: 'Assets/Image/star.png',
+                    menu: 'Assets/Image/menuButton.png',
+                    back: 'Assets/Image/menuBack.png',
+                    LArrow: 'Assets/Image/arrowLeft',
+                    RArrow: 'Assets/Image/arrowRight',
+                    dialog: 'Assets/Image/dialogWindow.png',
+                    hero: 'Assets/Image/hero.png',
+                    status: 'Assets/Image/status.png',
+                    attack: 'Assets/Image/attack_button.png',
+                    defend: 'Assets/Image/defend_button.png'
+                },
+                Anim: {
+                    at: 'Assets/Atlas/test.json'
+                },
+                Sprite: {
+                    spr: 'Assets/Atlas/test.json'
+                },
+                Tileset: {
+                    rpg: 'Assets/Tilemap/newmap.json',
+                    carpet: 'Assets/Tilemap/nextmap.json'
+                },
+                XML: {
+                    chapter: 'Assets/XML/test.xml'
+                },
+                JSON: {
+                    equip: 'Assets/XML/Equipment.json'
+                },
+                Sounds: {
+                    car: 'Assets/Sound/car',
+                    punch: 'Assets/Sound/punch',
+                    wood: 'Assets/Sound/wood'
+                },
+                Music: {
+                    theme: 'Assets/Music/theme'
+                }
+            };
+            this.preloader = new Game.Preloader();
+            this.preloader.queueAssets(source, this.onComplete);
+            sManager = new Game.StateManager();
+        }
+        return Init;
+    })();
+    Game.Init = Init;
+})(Game || (Game = {}));
 var Game;
 (function (Game) {
     var State = (function () {
@@ -914,13 +1012,13 @@ var Game;
             this.e1 = new Game.Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Game.Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
 
-            this.p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
-            this.p2.setAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
-            this.e1.setAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
-            this.e2.setAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
+            this.p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+            this.p2.setBaseAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
+            this.e1.setBaseAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
+            this.e2.setBaseAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
             var sword = new Game.Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
-            this.p1.equipItem(sword, sword.Type);
+            this.p1.equipItem(sword, 'Weapon');
             battleList[0] = this.p1;
             battleList[1] = this.p2;
             battleList[2] = this.e1;
@@ -992,7 +1090,7 @@ var Game;
             if (this.currentkey > 3) {
                 this.newTurn();
             }
-            if (this.currentPlayer.Type === 0 && this.drawCommands && time > this.newTime) {
+            if (this.currentPlayer.Base.Type === 0 && this.drawCommands && time > this.newTime) {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText("Player Turn", 350, 450);
                 this.renderActors();
@@ -1001,8 +1099,8 @@ var Game;
             if (this.battleOver()) {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText("THE BATTLE IS OVER", 400, 400);
-            } else if (this.currentPlayer.Type === 0 && this.enemySelect === true) {
-                if (this.currentPlayer.Type === 0 && mousedown()) {
+            } else if (this.currentPlayer.Base.Type === 0 && this.enemySelect === true) {
+                if (this.currentPlayer.Base.Type === 0 && mousedown()) {
                     this.mx = mEvent.pageX;
                     this.my = mEvent.pageY;
                     for (var i = 0; i < this.battleKeys.length; i++) {
@@ -1024,19 +1122,19 @@ var Game;
                 }
                 if (!this.enemySelect) {
                     this.drawCommands = true;
-                    this.target.HP = this.target.HP - this.currentPlayer.Atk;
-                    if (this.target.HP < 1) {
-                        this.target.Type = 2;
+                    this.target.getTotalStats().HP = this.target.getTotalStats().HP - this.currentPlayer.getTotalStats().Atk;
+                    if (this.target.getTotalStats().HP < 1) {
+                        this.target.getTotalStats().Type = 2;
                     }
 
                     this.ctx2.clearRect(300, 400, 600, 500);
-                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + this.target.ID + " for " + this.currentPlayer.Atk + " damage", 350, 450);
+                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + this.target.ID + " for " + this.currentPlayer.getTotalStats().Atk + " damage", 350, 450);
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
                     this.newTime = Date.now() + 1000;
                 }
-            } else if (this.currentPlayer.Type === 0 && mousedown()) {
+            } else if (this.currentPlayer.Base.Type === 0 && mousedown()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < menuOptions.length; i++) {
@@ -1053,10 +1151,10 @@ var Game;
                         }
                     }
                 }
-            } else if (this.currentPlayer.Type === 1) {
+            } else if (this.currentPlayer.Base.Type === 1) {
                 if (time > this.newTime) {
                     this.ctx2.clearRect(300, 400, 600, 500);
-                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + battleList[0].ID + " for " + this.currentPlayer.Atk + " damage", 350, 450);
+                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + battleList[0].ID + " for " + this.currentPlayer.getTotalStats().Atk + " damage", 350, 450);
 
                     //actual stat calculation
                     var targetNum = getRandomInt(0, this.battleKeys.length - 1);
@@ -1064,16 +1162,16 @@ var Game;
                         targetNum = getRandomInt(0, this.battleKeys.length - 1);
                     }
                     this.target = battleList[targetNum];
-                    this.target.HP = this.target.HP - this.currentPlayer.Atk;
-                    if (this.target.HP < 1) {
-                        this.target.Type = 2;
+                    this.target.getTotalStats().HP = this.target.getTotalStats().HP - this.currentPlayer.getTotalStats().Atk;
+                    if (this.target.getTotalStats().HP < 1) {
+                        this.target.Base.Type = 2;
                     }
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
                     this.newTime = Date.now() + 1000;
                 }
-            } else if (this.currentPlayer.Type === 2) {
+            } else if (this.currentPlayer.Base.Type === 2) {
                 this.currentkey++;
                 this.currentPlayer = battleList[this.currentkey];
             }
@@ -1089,6 +1187,39 @@ var Game;
         return Battle;
     })(Game.State);
     Game.Battle = Battle;
+})(Game || (Game = {}));
+///<reference path='State.ts' />
+var Game;
+(function (Game) {
+    var Cutscene = (function (_super) {
+        __extends(Cutscene, _super);
+        function Cutscene(id, width, height, ctx, xmlID) {
+            _super.call(this);
+            this.canvas = document.getElementById('layer2');
+            this.context = this.canvas.getContext('2d');
+            this.xmlID = xmlID;
+            this.dia = new Game.Dialogue(this.context, width);
+        }
+        Cutscene.prototype.init = function () {
+            this.dia.startScene('chapter', 'scene', this.xmlID);
+        };
+
+        Cutscene.prototype.update = function () {
+            if (mousedown()) {
+                this.dia.updateScene();
+            }
+        };
+        Cutscene.prototype.render = function () {
+        };
+        Cutscene.prototype.pause = function () {
+        };
+        Cutscene.prototype.resume = function () {
+        };
+        Cutscene.prototype.destroy = function () {
+        };
+        return Cutscene;
+    })(Game.State);
+    Game.Cutscene = Cutscene;
 })(Game || (Game = {}));
 ///<reference path='State.ts' />
 var equips = [];
@@ -1109,14 +1240,15 @@ var Game;
             this.ctx2.fillText("Body: " + battleList[0].Equipment['Body'], 75, 175);
             this.ctx2.fillText("Weapon: " + battleList[0].Equipment['Weapon'], 75, 200);
             this.ctx2.fillText("Feet: " + battleList[0].Equipment['Feet'], 75, 225);
-            console.log(battleList[0].Atk);
-            this.ctx2.fillText("HP: " + battleList[0].HP, 400, 150);
-            this.ctx2.fillText("MP: " + battleList[0].MP, 400, 175);
-            this.ctx2.fillText("Attack: " + battleList[0].Atk, 400, 200);
-            this.ctx2.fillText("Defense: " + battleList[0].Def, 400, 225);
-            this.ctx2.fillText("Speed: " + battleList[0].Spd, 400, 250);
-            this.ctx2.fillText("Magic Defense: " + battleList[0].MDef, 400, 275);
-            this.ctx2.fillText("Luck: " + battleList[0].Luc, 400, 300);
+
+            this.stats = battleList[0].getTotalStats();
+            this.ctx2.fillText("HP: " + this.stats.HP, 400, 150);
+            this.ctx2.fillText("MP: " + this.stats.MP, 400, 175);
+            this.ctx2.fillText("Attack: " + this.stats.Atk, 400, 200);
+            this.ctx2.fillText("Defense: " + this.stats.Def, 400, 225);
+            this.ctx2.fillText("Speed: " + this.stats.Spd, 400, 250);
+            this.ctx2.fillText("Magic Defense: " + this.stats.MDef, 400, 275);
+            this.ctx2.fillText("Luck: " + this.stats.Luc, 400, 300);
 
             this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
         };
@@ -1247,7 +1379,7 @@ var Game;
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
             tiles.setTileset(this.layer1ctx, this.mapID);
-            this.layer2ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
+            this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
             this.layer1ctx.drawImage(IMAGE_CACHE['hero'], 200, 250);
         };
         Explore.prototype.update = function () {
@@ -1323,6 +1455,7 @@ var Game;
                 };
                 currentEquips.push(obj);
             }
+            this.itemSelected = false;
         };
         SelectEquip.prototype.update = function () {
             var time = Date.now();
@@ -1332,7 +1465,7 @@ var Game;
                 battleList[0].equipItem(this.item, 'Weapon');
                 sManager.popState();
             }
-            if (mousedown() && time > this.time && !this.itemSelected) {
+            if (mousedown() && !this.itemSelected) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < currentEquips.length; i++) {
@@ -1345,7 +1478,6 @@ var Game;
                             if (currentEquips[i].Name === JSON_CACHE['equip'].Weapon[0][this.keys[x]].Name) {
                                 this.itemSelected = true;
                                 this.item = JSON_CACHE['equip'].Weapon[0][this.keys[x]];
-                                this.time = time + 500;
                                 break;
                             }
                         }
@@ -1364,86 +1496,6 @@ var Game;
         return SelectEquip;
     })(Game.State);
     Game.SelectEquip = SelectEquip;
-})(Game || (Game = {}));
-var Game;
-(function (Game) {
-    var StateManager = (function () {
-        /*currentInGameState = 0;
-        currentInGameStateFunction = null;
-        currentState = 0;
-        currentStateFunction = null;*/
-        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
-        //High on the list, will start getting through this ASAP with help from nick and/or the book
-        function StateManager() {
-            this.time = 0;
-            this.gameStates = [];
-            this.stateStack = new Array();
-        }
-        StateManager.prototype.addState = function (key, state) {
-            this.gameStates[key] = state;
-            //this.stateStack.push(state);
-            //state.init();
-        };
-        StateManager.prototype.pushState = function (state) {
-            this.stateStack.push(state);
-            state.init();
-            //this.stateStack.push(this.gameStates[key]);
-            //this.gameStates[key].init();
-        };
-        StateManager.prototype.popState = function () {
-            if (this.stateStack.length > 0) {
-                this.stateStack.pop();
-                if (this.stateStack.length > 0) {
-                    var len = this.stateStack.length;
-                    this.stateStack[len - 1].init();
-                }
-            }
-        };
-        StateManager.prototype.updateStack = function () {
-            var len = this.stateStack.length;
-            this.stateStack[len - 1].update();
-        };
-        StateManager.prototype.renderStack = function () {
-            for (var s in this.stateStack) {
-                s.render();
-            }
-        };
-        return StateManager;
-    })();
-    Game.StateManager = StateManager;
-})(Game || (Game = {}));
-///<reference path='State.ts' />
-var Game;
-(function (Game) {
-    var Cutscene = (function (_super) {
-        __extends(Cutscene, _super);
-        function Cutscene(id, width, height, ctx, xmlID) {
-            _super.call(this);
-            this.canvas = document.getElementById('layer2');
-            this.context = this.canvas.getContext('2d');
-            this.xmlID = xmlID;
-            this.dia = new Game.Dialogue(this.context, width);
-        }
-        Cutscene.prototype.init = function () {
-            this.dia.startScene('chapter', 'scene', this.xmlID);
-        };
-
-        Cutscene.prototype.update = function () {
-            if (mousedown()) {
-                this.dia.updateScene();
-            }
-        };
-        Cutscene.prototype.render = function () {
-        };
-        Cutscene.prototype.pause = function () {
-        };
-        Cutscene.prototype.resume = function () {
-        };
-        Cutscene.prototype.destroy = function () {
-        };
-        return Cutscene;
-    })(Game.State);
-    Game.Cutscene = Cutscene;
 })(Game || (Game = {}));
 ///<reference path='State.ts' />
 var Game;
