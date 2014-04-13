@@ -20,6 +20,8 @@ module Game {
         currentkey = 0;
         enemySelect;
         drawCommands;
+        endTime = 0;
+        currentHP;
 
         constructor(ctx, ctx2) {
             super();
@@ -35,14 +37,10 @@ module Game {
             this.e1.setBaseAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
             this.e2.setBaseAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
-            var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
-            this.p1.equipItem(sword.Name, sword, 'Weapon');
-            battleList[0] = this.p1;
-            battleList[1] = this.p2;
             battleList[2] = this.e1;
             battleList[3] = this.e2;
-
             this.battleKeys = Object.keys(battleList);
+           
             menuOptions.push({
                 "Name": "attack",
                 "x": 550,
@@ -56,8 +54,8 @@ module Game {
         }
         statusGUI() {
             this.ctx.clearRect(0, 0, 800, 200);
-            for (var i = 0; i < this.battleKeys.length; i++) {        
-                    this.ctx.fillText(battleList[i].ID + " HP : " + battleList[i].HP, (i + 1) * 150, 100);
+            for (var i = 0; i < this.battleKeys.length; i++) {     
+                this.ctx.fillText(battleList[i].Base.ID + " HP : " + battleList[i].getTotalStats().HP, (i + 1) * 150, 100);
             }
         }
         newTurn() {
@@ -75,7 +73,7 @@ module Game {
             this.ctx.clearRect(0, 0, 800, 600);
             for (var i = 0; i < this.battleKeys.length; i++) {
                 battleList[this.battleKeys[i]].render(this.ctx, 100, 100);
-                this.ctx.fillText(battleList[this.battleKeys[i]].ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
+                this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
             }
             for (var x = 0; x < menuOptions.length; x++) {
                 this.ctx2.drawImage(IMAGE_CACHE[menuOptions[x].Name], menuOptions[x].x, menuOptions[x].y);
@@ -86,11 +84,11 @@ module Game {
             var aHP = 0;
             var eHP = 0;
             for (var i = 0; i < this.battleKeys.length; i++) {
-                if (battleList[i].Type === 0) {
-                    aHP += battleList[i].HP;
+                if (battleList[i].Base.Type === 0) {
+                    aHP += battleList[i].getTotalStats().HP;
                 }
-                else if (battleList[i].Type === 1) {
-                    eHP += battleList[i].HP;
+                else if (battleList[i].Base.Type === 1) {
+                    eHP += battleList[i].getTotalStats().HP;
                 }
             }
             if (aHP === 0 || eHP === 0) {
@@ -120,7 +118,9 @@ module Game {
             if (this.battleOver()) {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText("THE BATTLE IS OVER", 400, 400);
-
+            }
+            else if (this.battleOver() && time > this.endTime) {
+                sManager.popState();
             }
             else if (this.currentPlayer.Base.Type === 0 && this.enemySelect === true) {
                 if (this.currentPlayer.Base.Type === 0 && mousedown()) {
@@ -133,7 +133,7 @@ module Game {
                         var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
                         if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                             for (var x = 0; x < this.battleKeys.length; x++) {
-                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].Type === 1) {
+                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].Base.Type === 1) {
                                     this.target = battleList[this.battleKeys[x]];
                                     this.statusGUI();
                                     this.enemySelect = false;
@@ -147,11 +147,14 @@ module Game {
                     this.drawCommands = true;
                     this.target.getTotalStats().HP = this.target.getTotalStats().HP - this.currentPlayer.getTotalStats().Atk;
                     if (this.target.getTotalStats().HP < 1) {
-                        this.target.getTotalStats().Type = 2;
+                        this.target.Base.Type = 2;
+                        if (this.battleOver()) {
+                            this.endTime = Date.now() + 500;
+                        }
                     }
 
                     this.ctx2.clearRect(300, 400, 600, 500);
-                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + this.target.ID + " for " + this.currentPlayer.getTotalStats().Atk + " damage", 350, 450);
+                    this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + this.target.Base.ID + " for " + this.currentPlayer.getTotalStats().Atk + " damage", 350, 450);
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
@@ -179,16 +182,19 @@ module Game {
             else if (this.currentPlayer.Base.Type === 1) {
                 if (time > this.newTime) {
                     this.ctx2.clearRect(300, 400, 600, 500);
-                    this.ctx2.fillText(this.currentPlayer.ID + " Attacks " + battleList[0].ID + " for " + this.currentPlayer.getTotalStats().Atk + " damage", 350, 450);
                     //actual stat calculation
                     var targetNum = getRandomInt(0, this.battleKeys.length - 1);
-                    while (battleList[targetNum].Type !== 0) {
+                    while (battleList[targetNum].Base.Type !== 0) {
                         targetNum = getRandomInt(0, this.battleKeys.length - 1);
                     }
                     this.target = battleList[targetNum];
+                    this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + battleList[targetNum].Base.ID + " for " + this.currentPlayer.getTotalStats().Atk + " damage", 350, 450);
                     this.target.getTotalStats().HP = this.target.getTotalStats().HP - this.currentPlayer.getTotalStats().Atk;
                     if (this.target.getTotalStats().HP < 1) {
                         this.target.Base.Type = 2;
+                        if (this.battleOver()) {
+                            this.endTime = Date.now() + 500;
+                        }
                     }
                     this.statusGUI();
                     this.currentkey++;

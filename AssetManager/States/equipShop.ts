@@ -79,10 +79,10 @@ module Game {
             equips.push(obj);
         }
         changeEquip() {
-            /*if (Date.now() > this.time && this.back) {
+            if (Date.now() > this.time && this.back) {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 sManager.popState();
-            }*/
+            }
             if (mousedown()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
@@ -93,10 +93,8 @@ module Game {
                     var y2 = equips[i].y + equips[i].h;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (equips[i].type === "Back") {
-                            /*this.back = true;
-                            this.time = Date.now() + 100;*/
-                            this.ctx2.clearRect(0, 0, 800, 600);
-                            sManager.popState();
+                            this.back = true;
+                            this.time = Date.now() + 100;
                         }
                         else {
                             sManager.pushState(new SelectEquip(this.ctx2, equips[i].type));
