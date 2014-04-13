@@ -32,7 +32,7 @@
                 {
                  "gid":423,
                  "height":0,
-                 "name":"tools",
+                 "name":"Change Equipment",
                  "properties":
                     {
                      "ID":"1"
@@ -60,7 +60,7 @@
                 {
                  "gid":648,
                  "height":0,
-                 "name":"Guide",
+                 "name":"Test Battle",
                  "properties":
                     {
                      "ID":"1"
