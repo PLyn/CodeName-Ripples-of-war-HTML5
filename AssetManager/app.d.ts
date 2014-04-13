@@ -62,6 +62,9 @@ declare module Game {
 }
 declare module Game {
     class Equipable {
+        public Name: any;
+        public Desc: any;
+        public Type: any;
         public HP: any;
         public MP: any;
         public Atk: any;
@@ -69,32 +72,32 @@ declare module Game {
         public Spd: any;
         public MDef: any;
         public Luc: any;
-        constructor(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
     }
 }
 declare module Game {
     class Accessory extends Equipable {
-        constructor(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
     }
 }
 declare module Game {
     class Body extends Equipable {
-        constructor(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
     }
 }
 declare module Game {
     class Feet extends Equipable {
-        constructor(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
     }
 }
 declare module Game {
     class Helm extends Equipable {
-        constructor(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
     }
 }
 declare module Game {
     class Weapon extends Equipable {
-        constructor(hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
     }
 }
 declare module Game {
@@ -264,10 +267,10 @@ declare module Game {
     class Battle extends State {
         public ctx: CanvasRenderingContext2D;
         public ctx2: CanvasRenderingContext2D;
-        public p1: any;
-        public p2: any;
-        public e1: any;
-        public e2: any;
+        public p1: Sprite;
+        public p2: Sprite;
+        public e1: Sprite;
+        public e2: Sprite;
         public mx: any;
         public my: any;
         public menuOptions: Object[];
@@ -308,6 +311,25 @@ declare module Game {
         public destroy(): void;
     }
 }
+declare var equips: any[];
+declare module Game {
+    class EquipShop extends State {
+        public ctx: CanvasRenderingContext2D;
+        public ctx2: CanvasRenderingContext2D;
+        public mx: any;
+        public my: any;
+        constructor(ctx: any, ctx2: any);
+        public drawEquip(): void;
+        public addEquipPos(): void;
+        public changeEquip(): void;
+        public init(): void;
+        public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+    }
+}
 declare module Game {
     class Explore extends State {
         public x: any;
@@ -321,6 +343,18 @@ declare module Game {
         public mapID: any;
         public game: any;
         constructor(ctx: any, w: any, mapID: any, area: any, game: any);
+        public init(): void;
+        public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+    }
+}
+declare module Game {
+    class SelectEquip extends State {
+        public ctx2: CanvasRenderingContext2D;
+        constructor(ctx2: any);
         public init(): void;
         public update(): void;
         public render(): void;

@@ -173,7 +173,10 @@ var Game;
 var Game;
 (function (Game) {
     var Equipable = (function () {
-        function Equipable(hp, mp, atk, def, mdef, spd, luc) {
+        function Equipable(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
+            this.Name = name;
+            this.Desc = desc;
+            this.Type = type;
             this.HP = hp || 1;
             this.MP = mp || 0;
             this.Atk = atk || 0;
@@ -197,8 +200,8 @@ var Game;
 (function (Game) {
     var Accessory = (function (_super) {
         __extends(Accessory, _super);
-        function Accessory(hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, hp, mp, atk, def, mdef, spd, luc);
+        function Accessory(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
         }
         return Accessory;
     })(Game.Equipable);
@@ -209,8 +212,8 @@ var Game;
 (function (Game) {
     var Body = (function (_super) {
         __extends(Body, _super);
-        function Body(hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, hp, mp, atk, def, mdef, spd, luc);
+        function Body(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
         }
         return Body;
     })(Game.Equipable);
@@ -221,8 +224,8 @@ var Game;
 (function (Game) {
     var Feet = (function (_super) {
         __extends(Feet, _super);
-        function Feet(hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, hp, mp, atk, def, mdef, spd, luc);
+        function Feet(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
         }
         return Feet;
     })(Game.Equipable);
@@ -233,8 +236,8 @@ var Game;
 (function (Game) {
     var Helm = (function (_super) {
         __extends(Helm, _super);
-        function Helm(hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, hp, mp, atk, def, mdef, spd, luc);
+        function Helm(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
         }
         return Helm;
     })(Game.Equipable);
@@ -245,8 +248,8 @@ var Game;
 (function (Game) {
     var Weapon = (function (_super) {
         __extends(Weapon, _super);
-        function Weapon(hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, hp, mp, atk, def, mdef, spd, luc);
+        function Weapon(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
         }
         return Weapon;
     })(Game.Equipable);
@@ -280,10 +283,13 @@ var Game;
             this.Luc = luc || 0;
             this.Type = type || 0;
         };
+
         Sprite.prototype.equipItem = function (equipment, type) {
+            this.Equipment[type] = equipment.Name;
             this.setAttributes(this.ID, this.HP + equipment.HP, this.MP + equipment.MP, this.Atk + equipment.Atk, this.Def + equipment.Def, this.MDef + equipment.MDef, this.Spd + equipment.Spd, this.Luc + equipment.Luc, this.Type);
         };
         Sprite.prototype.unequipItem = function (equipment, type) {
+            this.Equipment[type] = null;
             this.setAttributes(this.ID, this.HP - equipment.HP, this.MP - equipment.MP, this.Atk - equipment.Atk, this.Def - equipment.Def, this.MDef - equipment.MDef, this.Spd - equipment.Spd, this.Luc - equipment.Luc, this.Type);
         };
         return Sprite;
@@ -937,6 +943,8 @@ var Game;
             this.e1.setAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
             this.e2.setAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
+            var sword = new Game.Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
+            this.p1.equipItem(sword, sword.Type);
             battleList[0] = this.p1;
             battleList[1] = this.p2;
             battleList[2] = this.e1;
@@ -1140,6 +1148,128 @@ var Game;
     Game.Cutscene = Cutscene;
 })(Game || (Game = {}));
 ///<reference path='State.ts' />
+var equips = [];
+var Game;
+(function (Game) {
+    var EquipShop = (function (_super) {
+        __extends(EquipShop, _super);
+        function EquipShop(ctx, ctx2) {
+            _super.call(this);
+            this.ctx = ctx;
+            this.ctx2 = ctx2;
+        }
+        EquipShop.prototype.drawEquip = function () {
+            this.ctx2.fillText("Head: " + battleList[0].Equipment['Head'], 75, 150);
+            this.ctx2.fillText("Body: " + battleList[0].Equipment['Body'], 75, 175);
+            this.ctx2.fillText("Weapon: " + battleList[0].Equipment['Weapon'], 75, 200);
+            this.ctx2.fillText("Feet: " + battleList[0].Equipment['Feet'], 75, 225);
+
+            this.ctx2.fillText("HP: " + battleList[0].HP, 400, 150);
+            this.ctx2.fillText("MP: " + battleList[0].MP, 400, 175);
+            this.ctx2.fillText("Attack: " + battleList[0].Atk, 400, 200);
+            this.ctx2.fillText("Defense: " + battleList[0].Def, 400, 225);
+            this.ctx2.fillText("Speed: " + battleList[0].Spd, 400, 250);
+            this.ctx2.fillText("Magic Defense: " + battleList[0].MDef, 400, 275);
+            this.ctx2.fillText("Luck: " + battleList[0].Luc, 400, 300);
+
+            this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
+        };
+        EquipShop.prototype.addEquipPos = function () {
+            var obj = {
+                "type": "Head",
+                "x": 75,
+                "y": 145,
+                "w": this.ctx2.measureText("Head: " + battleList[0].Equipment['Head']).width,
+                "h": 5
+            };
+            equips.push(obj);
+            obj = {
+                "type": "Body",
+                "x": 75,
+                "y": 175,
+                "w": this.ctx2.measureText("Body: " + battleList[0].Equipment['Body']).width,
+                "h": 5
+            };
+            equips.push(obj);
+            obj = {
+                "type": "Weapon",
+                "x": 75,
+                "y": 200,
+                "w": this.ctx2.measureText("Weapon: " + battleList[0].Equipment['Weapon']).width,
+                "h": 5
+            };
+            equips.push(obj);
+            obj = {
+                "type": "Feet",
+                "x": 75,
+                "y": 225,
+                "w": this.ctx2.measureText("Legs: " + battleList[0].Equipment['Feet']).width,
+                "h": 5
+            };
+            equips.push(obj);
+            obj = {
+                "type": "Back",
+                "x": 25,
+                "y": 500,
+                "w": 50,
+                "h": 50
+            };
+            equips.push(obj);
+        };
+        EquipShop.prototype.changeEquip = function () {
+            if (mousedown()) {
+                this.mx = mEvent.pageX;
+                this.my = mEvent.pageY;
+                for (var i = 0; i < equips.length; i++) {
+                    var x1 = equips[i].x;
+                    var x2 = equips[i].x + equips[i].w;
+                    var y1 = equips[i].y - 15;
+                    var y2 = equips[i].y + equips[i].h;
+                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                        if (equips[i].type === "Back") {
+                            this.ctx2.clearRect(0, 0, 800, 600);
+                            sManager.popState();
+                        } else if (equips[i].type === "Head") {
+                        }
+                        console.log(equips[i].type + " reached");
+                    }
+                }
+            }
+        };
+        EquipShop.prototype.init = function () {
+            var p1 = new Game.Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
+            var p2 = new Game.Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
+            p1.setAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+            p2.setAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
+
+            var sword = new Game.Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
+            p1.equipItem(sword, sword.Type);
+            battleList[0] = p1;
+            battleList[1] = p2;
+
+            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
+            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
+            this.ctx2.fillText(battleList[0].ID + " Equipment Area", 200, 125);
+
+            this.drawEquip();
+            this.addEquipPos();
+        };
+        EquipShop.prototype.update = function () {
+            this.changeEquip();
+        };
+        EquipShop.prototype.render = function () {
+        };
+        EquipShop.prototype.pause = function () {
+        };
+        EquipShop.prototype.resume = function () {
+        };
+        EquipShop.prototype.destroy = function () {
+        };
+        return EquipShop;
+    })(Game.State);
+    Game.EquipShop = EquipShop;
+})(Game || (Game = {}));
+///<reference path='State.ts' />
 var Game;
 (function (Game) {
     var Explore = (function (_super) {
@@ -1201,6 +1331,9 @@ var Game;
                         } else if (objects[i].type === 'cut') {
                             this.layer2ctx.clearRect(0, 0, 800, 600);
                             sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, objects[i].properties.ID));
+                        } else if (objects[i].type === 'shop') {
+                            this.layer2ctx.clearRect(0, 0, 800, 600);
+                            sManager.pushState(new Game.EquipShop(this.layer1ctx, this.layer2ctx));
                         } else if (objects[i].type === 'battle') {
                             sManager.pushState(new Game.Battle(this.layer1ctx, this.layer2ctx));
                         } else if (objects[i].type === 'menu') {
@@ -1221,6 +1354,32 @@ var Game;
         return Explore;
     })(Game.State);
     Game.Explore = Explore;
+})(Game || (Game = {}));
+///<reference path='State.ts' />
+var Game;
+(function (Game) {
+    var SelectEquip = (function (_super) {
+        __extends(SelectEquip, _super);
+        function SelectEquip(ctx2) {
+            _super.call(this);
+            this.ctx2 = ctx2;
+        }
+        SelectEquip.prototype.init = function () {
+            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 200);
+        };
+        SelectEquip.prototype.update = function () {
+        };
+        SelectEquip.prototype.render = function () {
+        };
+        SelectEquip.prototype.pause = function () {
+        };
+        SelectEquip.prototype.resume = function () {
+        };
+        SelectEquip.prototype.destroy = function () {
+        };
+        return SelectEquip;
+    })(Game.State);
+    Game.SelectEquip = SelectEquip;
 })(Game || (Game = {}));
 ///<reference path='State.ts' />
 var Game;

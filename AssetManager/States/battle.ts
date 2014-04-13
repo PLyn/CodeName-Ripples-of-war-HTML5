@@ -6,10 +6,10 @@ module Game {
     export class Battle extends State {
         ctx : CanvasRenderingContext2D;
         ctx2 : CanvasRenderingContext2D;
-        p1;
-        p2;
-        e1;
-        e2;
+        p1 : Sprite;
+        p2 : Sprite;
+        e1 : Sprite;
+        e2 : Sprite;
         mx;
         my;
         menuOptions: Object[];
@@ -35,6 +35,8 @@ module Game {
             this.e1.setAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
             this.e2.setAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
+            var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
+            this.p1.equipItem(sword, sword.Type);
             battleList[0] = this.p1;
             battleList[1] = this.p2;
             battleList[2] = this.e1;
