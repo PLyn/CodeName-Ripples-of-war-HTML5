@@ -36,7 +36,7 @@ module Game {
             this.e2.setBaseAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
             var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
-            this.p1.equipItem(sword, 'Weapon');
+            this.p1.equipItem(sword.Name, sword, 'Weapon');
             battleList[0] = this.p1;
             battleList[1] = this.p2;
             battleList[2] = this.e1;

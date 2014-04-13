@@ -141,35 +141,6 @@ var Game;
     })();
     Game.Dialogue = Dialogue;
 })(Game || (Game = {}));
-var GAME_OBJECTS = [];
-var Game;
-(function (Game) {
-    var GameObject = (function () {
-        //pretty much complete imo, other classes such as sprite will extend the variables and functionality
-        function GameObject(img, x, y, w, h, scale) {
-            this.x = 0;
-            this.y = 0;
-            this.W = 0;
-            this.H = 0;
-            this.img = new Image();
-            this.scale = 0;
-            this.img = img;
-            this.x = x || 0;
-            this.y = y || 0;
-            this.W = w;
-            this.H = h;
-            this.scale = scale || 1;
-        }
-        GameObject.prototype.update = function () {
-        };
-        GameObject.prototype.render = function (context, x, y) {
-            //context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
-            context.drawImage(this.img, this.x, this.y);
-        };
-        return GameObject;
-    })();
-    Game.GameObject = GameObject;
-})(Game || (Game = {}));
 var Game;
 (function (Game) {
     var Equipable = (function () {
@@ -255,6 +226,35 @@ var Game;
     })(Game.Equipable);
     Game.Weapon = Weapon;
 })(Game || (Game = {}));
+var GAME_OBJECTS = [];
+var Game;
+(function (Game) {
+    var GameObject = (function () {
+        //pretty much complete imo, other classes such as sprite will extend the variables and functionality
+        function GameObject(img, x, y, w, h, scale) {
+            this.x = 0;
+            this.y = 0;
+            this.W = 0;
+            this.H = 0;
+            this.img = new Image();
+            this.scale = 0;
+            this.img = img;
+            this.x = x || 0;
+            this.y = y || 0;
+            this.W = w;
+            this.H = h;
+            this.scale = scale || 1;
+        }
+        GameObject.prototype.update = function () {
+        };
+        GameObject.prototype.render = function (context, x, y) {
+            //context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
+            context.drawImage(this.img, this.x, this.y);
+        };
+        return GameObject;
+    })();
+    Game.GameObject = GameObject;
+})(Game || (Game = {}));
 ///<reference path='gameobject.ts' />
 var Game;
 (function (Game) {
@@ -309,26 +309,64 @@ var Game;
         };
         Sprite.prototype.setModifiedAttributes = function (id, hp, mp, atk, def, mdef, spd, luc, type) {
             this.Modified = {
-                "ID": "",
-                "HP": hp || 0,
+                "ID": id,
+                "HP": hp || 1,
                 "MP": mp || 0,
                 "Atk": atk || 0,
                 "Def": def || 0,
                 "Spd": spd || 0,
                 "MDef": mdef || 0,
                 "Luc": luc || 0,
-                "Type": type || 0
+                "Type": type
             };
         };
 
-        Sprite.prototype.equipItem = function (equipment, type) {
-            this.Equipment[type] = equipment.Name;
+        Sprite.prototype.equipItem = function (name, equipment, type) {
+            this.Equipment[type] = name;
 
-            this.setModifiedAttributes(equipment.Name, equipment.HP, equipment.MP, equipment.Atk, equipment.Def, equipment.MDef, equipment.Spd, equipment.Luc, equipment.Type);
+            this.setModifiedAttributes(name, this.Modified['HP'] + equipment.HP, this.Modified['MP'] + equipment.MP, this.Modified['Atk'] + equipment.Atk, this.Modified['Def'] + equipment.Def, this.Modified['MDef'] + equipment.MDef, this.Modified['Spd'] + equipment.Spd, this.Modified['Luc'] + equipment.Luc, type);
         };
         Sprite.prototype.unequipItem = function (type) {
-            this.Equipment[type] = null;
-            this.setModifiedAttributes();
+            if (this.Equipment[type] !== null) {
+                var key;
+                var item;
+                if (type === "Head") {
+                    key = Object.keys(JSON_CACHE['equip'].Head);
+                    for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Head); x++) {
+                        if (this.Equipment[type] === key[x]) {
+                            item = JSON_CACHE['equip'].Head[key[x]];
+                            break;
+                        }
+                    }
+                } else if (type === "Body") {
+                    key = Object.keys(JSON_CACHE['equip'].Body);
+                    for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Body); x++) {
+                        if (this.Equipment[type] === key[x]) {
+                            item = JSON_CACHE['equip'].Body[key[x]];
+                            break;
+                        }
+                    }
+                } else if (type === "Weapon") {
+                    key = Object.keys(JSON_CACHE['equip'].Weapon);
+                    for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Weapon); x++) {
+                        if (this.Equipment[type] === key[x]) {
+                            item = JSON_CACHE['equip'].Weapon[key[x]];
+                            break;
+                        }
+                    }
+                } else if (type === "Feet") {
+                    key = Object.keys(JSON_CACHE['equip'].Feet);
+                    for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Feet); x++) {
+                        if (this.Equipment[type] === key[x]) {
+                            item = JSON_CACHE['equip'].Feet[key[x]];
+                            break;
+                        }
+                    }
+                }
+
+                this.setModifiedAttributes(key, this.Modified['HP'] - item.HP, this.Modified['MP'] - item.MP, this.Modified['Atk'] - item.Atk, this.Modified['Def'] - item.Def, this.Modified['MDef'] - item.MDef, this.Modified['Spd'] - item.Spd, this.Modified['Luc'] - item.Luc, type);
+                this.Equipment[type] = null;
+            }
         };
         Sprite.prototype.getTotalStats = function () {
             return {
@@ -346,6 +384,124 @@ var Game;
         return Sprite;
     })(Game.GameObject);
     Game.Sprite = Sprite;
+})(Game || (Game = {}));
+var control;
+var tiles;
+var Game;
+(function (Game) {
+    var Loop = (function () {
+        //remove alot of initialization code from here as it will go in the states
+        //need to put the code in here to deal with the states as needed thoughs
+        function Loop() {
+            this.render = function () {
+                //this.currentArea.render(this.context);
+            };
+            /*this.canvas = document.createElement('canvas');
+            this.canvas.id = canvasid;
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.canvas.tabindex = '1';
+            document.body.appendChild(this.canvas);*/
+            this.canvas = document.getElementById('layer1');
+            this.context = this.canvas.getContext('2d');
+            this.canvas2 = document.getElementById('layer2');
+            this.context2 = this.canvas.getContext('2d');
+
+            //control = new Game.input();
+            tiles = new Game.Tilemap();
+            tiles.Init();
+            this.width = 800;
+            this.currentArea = new Game.Area1(this.context, this.width, this);
+
+            var p1 = new Game.Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
+            var p2 = new Game.Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
+            p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+            p2.setBaseAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
+
+            //var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
+            //p1.equipItem(sword, sword.Type);
+            battleList[0] = p1;
+            battleList[1] = p2;
+        }
+        Loop.prototype.update = function () {
+            this.currentArea.update();
+        };
+
+        Loop.prototype.playerInput = function () {
+        };
+        return Loop;
+    })();
+    Game.Loop = Loop;
+})(Game || (Game = {}));
+var pos = 0;
+var audioElement = new Audio();
+var WORLD = 0;
+var sManager;
+
+//State system core will most likely be here so read the book and figure out
+//how to get it working and leading to each state as needed
+var Game;
+(function (Game) {
+    var Init = (function () {
+        function Init() {
+            var _this = this;
+            this.onComplete = function () {
+                //this.dialog = new Game.Cutscene("dia", 800, 600);
+                _this.world = new Game.Loop();
+                setInterval(_this.GameLoop, 1000 / 30);
+            };
+            this.GameLoop = function () {
+                _this.world.update();
+                _this.world.render();
+                //this.world.update();
+                //this.world.render();
+            };
+            var source = {
+                Images: {
+                    D: 'Assets/Image/diamond.png',
+                    S: 'Assets/Image/star.png',
+                    menu: 'Assets/Image/menuButton.png',
+                    back: 'Assets/Image/menuBack.png',
+                    LArrow: 'Assets/Image/arrowLeft',
+                    RArrow: 'Assets/Image/arrowRight',
+                    dialog: 'Assets/Image/dialogWindow.png',
+                    hero: 'Assets/Image/hero.png',
+                    status: 'Assets/Image/status.png',
+                    attack: 'Assets/Image/attack_button.png',
+                    defend: 'Assets/Image/defend_button.png'
+                },
+                Anim: {
+                    at: 'Assets/Atlas/test.json'
+                },
+                Sprite: {
+                    spr: 'Assets/Atlas/test.json'
+                },
+                Tileset: {
+                    rpg: 'Assets/Tilemap/newmap.json',
+                    carpet: 'Assets/Tilemap/nextmap.json'
+                },
+                XML: {
+                    chapter: 'Assets/XML/test.xml'
+                },
+                JSON: {
+                    equip: 'Assets/XML/Equipment.json'
+                },
+                Sounds: {
+                    car: 'Assets/Sound/car',
+                    punch: 'Assets/Sound/punch',
+                    wood: 'Assets/Sound/wood'
+                },
+                Music: {
+                    theme: 'Assets/Music/theme'
+                }
+            };
+            this.preloader = new Game.Preloader();
+            this.preloader.queueAssets(source, this.onComplete);
+            sManager = new Game.StateManager();
+        }
+        return Init;
+    })();
+    Game.Init = Init;
 })(Game || (Game = {}));
 var that = this;
 var keys = [];
@@ -648,54 +804,6 @@ var Game;
     })();
     Game.Preloader = Preloader;
 })(Game || (Game = {}));
-var Game;
-(function (Game) {
-    var StateManager = (function () {
-        /*currentInGameState = 0;
-        currentInGameStateFunction = null;
-        currentState = 0;
-        currentStateFunction = null;*/
-        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
-        //High on the list, will start getting through this ASAP with help from nick and/or the book
-        function StateManager() {
-            this.time = 0;
-            this.gameStates = [];
-            this.stateStack = new Array();
-        }
-        StateManager.prototype.addState = function (key, state) {
-            this.gameStates[key] = state;
-            //this.stateStack.push(state);
-            //state.init();
-        };
-        StateManager.prototype.pushState = function (state) {
-            this.stateStack.push(state);
-            state.init();
-            //this.stateStack.push(this.gameStates[key]);
-            //this.gameStates[key].init();
-        };
-        StateManager.prototype.popState = function () {
-            if (this.stateStack.length > 0 && this.time < Date.now()) {
-                this.time = Date.now() + 10;
-                this.stateStack.pop();
-                if (this.stateStack.length > 0) {
-                    var len = this.stateStack.length;
-                    this.stateStack[len - 1].init();
-                }
-            }
-        };
-        StateManager.prototype.updateStack = function () {
-            var len = this.stateStack.length;
-            this.stateStack[len - 1].update();
-        };
-        StateManager.prototype.renderStack = function () {
-            for (var s in this.stateStack) {
-                s.render();
-            }
-        };
-        return StateManager;
-    })();
-    Game.StateManager = StateManager;
-})(Game || (Game = {}));
 var objects = [];
 var Game;
 (function (Game) {
@@ -851,124 +959,6 @@ var Game;
     })();
     Game.Tilemap = Tilemap;
 })(Game || (Game = {}));
-var control;
-var tiles;
-var Game;
-(function (Game) {
-    var Loop = (function () {
-        //remove alot of initialization code from here as it will go in the states
-        //need to put the code in here to deal with the states as needed thoughs
-        function Loop() {
-            this.render = function () {
-                //this.currentArea.render(this.context);
-            };
-            /*this.canvas = document.createElement('canvas');
-            this.canvas.id = canvasid;
-            this.canvas.width = width;
-            this.canvas.height = height;
-            this.canvas.tabindex = '1';
-            document.body.appendChild(this.canvas);*/
-            this.canvas = document.getElementById('layer1');
-            this.context = this.canvas.getContext('2d');
-            this.canvas2 = document.getElementById('layer2');
-            this.context2 = this.canvas.getContext('2d');
-
-            //control = new Game.input();
-            tiles = new Game.Tilemap();
-            tiles.Init();
-            this.width = 800;
-            this.currentArea = new Game.Area1(this.context, this.width, this);
-
-            var p1 = new Game.Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
-            var p2 = new Game.Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
-            p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
-            p2.setBaseAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
-
-            //var sword = new Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
-            //p1.equipItem(sword, sword.Type);
-            battleList[0] = p1;
-            battleList[1] = p2;
-        }
-        Loop.prototype.update = function () {
-            this.currentArea.update();
-        };
-
-        Loop.prototype.playerInput = function () {
-        };
-        return Loop;
-    })();
-    Game.Loop = Loop;
-})(Game || (Game = {}));
-var pos = 0;
-var audioElement = new Audio();
-var WORLD = 0;
-var sManager;
-
-//State system core will most likely be here so read the book and figure out
-//how to get it working and leading to each state as needed
-var Game;
-(function (Game) {
-    var Init = (function () {
-        function Init() {
-            var _this = this;
-            this.onComplete = function () {
-                //this.dialog = new Game.Cutscene("dia", 800, 600);
-                _this.world = new Game.Loop();
-                setInterval(_this.GameLoop, 1000 / 30);
-            };
-            this.GameLoop = function () {
-                _this.world.update();
-                _this.world.render();
-                //this.world.update();
-                //this.world.render();
-            };
-            var source = {
-                Images: {
-                    D: 'Assets/Image/diamond.png',
-                    S: 'Assets/Image/star.png',
-                    menu: 'Assets/Image/menuButton.png',
-                    back: 'Assets/Image/menuBack.png',
-                    LArrow: 'Assets/Image/arrowLeft',
-                    RArrow: 'Assets/Image/arrowRight',
-                    dialog: 'Assets/Image/dialogWindow.png',
-                    hero: 'Assets/Image/hero.png',
-                    status: 'Assets/Image/status.png',
-                    attack: 'Assets/Image/attack_button.png',
-                    defend: 'Assets/Image/defend_button.png'
-                },
-                Anim: {
-                    at: 'Assets/Atlas/test.json'
-                },
-                Sprite: {
-                    spr: 'Assets/Atlas/test.json'
-                },
-                Tileset: {
-                    rpg: 'Assets/Tilemap/newmap.json',
-                    carpet: 'Assets/Tilemap/nextmap.json'
-                },
-                XML: {
-                    chapter: 'Assets/XML/test.xml'
-                },
-                JSON: {
-                    equip: 'Assets/XML/Equipment.json'
-                },
-                Sounds: {
-                    car: 'Assets/Sound/car',
-                    punch: 'Assets/Sound/punch',
-                    wood: 'Assets/Sound/wood'
-                },
-                Music: {
-                    theme: 'Assets/Music/theme'
-                }
-            };
-            this.preloader = new Game.Preloader();
-            this.preloader.queueAssets(source, this.onComplete);
-            sManager = new Game.StateManager();
-        }
-        return Init;
-    })();
-    Game.Init = Init;
-})(Game || (Game = {}));
 var Game;
 (function (Game) {
     var State = (function () {
@@ -1018,7 +1008,7 @@ var Game;
             this.e2.setBaseAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
             var sword = new Game.Weapon('hero', 'hero sword', 'Weapon', 10, 0, 4, 1, 1, 1, 1);
-            this.p1.equipItem(sword, 'Weapon');
+            this.p1.equipItem(sword.Name, sword, 'Weapon');
             battleList[0] = this.p1;
             battleList[1] = this.p2;
             battleList[2] = this.e1;
@@ -1189,39 +1179,6 @@ var Game;
     Game.Battle = Battle;
 })(Game || (Game = {}));
 ///<reference path='State.ts' />
-var Game;
-(function (Game) {
-    var Cutscene = (function (_super) {
-        __extends(Cutscene, _super);
-        function Cutscene(id, width, height, ctx, xmlID) {
-            _super.call(this);
-            this.canvas = document.getElementById('layer2');
-            this.context = this.canvas.getContext('2d');
-            this.xmlID = xmlID;
-            this.dia = new Game.Dialogue(this.context, width);
-        }
-        Cutscene.prototype.init = function () {
-            this.dia.startScene('chapter', 'scene', this.xmlID);
-        };
-
-        Cutscene.prototype.update = function () {
-            if (mousedown()) {
-                this.dia.updateScene();
-            }
-        };
-        Cutscene.prototype.render = function () {
-        };
-        Cutscene.prototype.pause = function () {
-        };
-        Cutscene.prototype.resume = function () {
-        };
-        Cutscene.prototype.destroy = function () {
-        };
-        return Cutscene;
-    })(Game.State);
-    Game.Cutscene = Cutscene;
-})(Game || (Game = {}));
-///<reference path='State.ts' />
 var equips = [];
 var Game;
 (function (Game) {
@@ -1236,6 +1193,9 @@ var Game;
         }
         EquipShop.prototype.drawEquip = function () {
             this.ctx2.clearRect(0, 0, 800, 600);
+            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
+            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
+            this.ctx2.fillText(battleList[0].Base.ID + " Equipment Area", 200, 125);
             this.ctx2.fillText("Head: " + battleList[0].Equipment['Head'], 75, 150);
             this.ctx2.fillText("Body: " + battleList[0].Equipment['Body'], 75, 175);
             this.ctx2.fillText("Weapon: " + battleList[0].Equipment['Weapon'], 75, 200);
@@ -1321,10 +1281,6 @@ var Game;
             }
         };
         EquipShop.prototype.init = function () {
-            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
-            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
-            this.ctx2.fillText(battleList[0].ID + " Equipment Area", 200, 125);
-
             this.drawEquip();
             this.addEquipPos();
         };
@@ -1447,61 +1403,57 @@ var Game;
             this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 300);
             var eq = JSON_CACHE['equip'];
             if (this.type === "Head") {
-                this.keys = Object.keys(eq.Head[0]);
-                for (var i = 0; i < eq.Head.length; i++) {
-                    this.ctx2.fillText(eq.Head[0][this.keys[i]].Name, 50, (25 * i) + 325);
+                this.hKeys = Object.keys(eq.Head);
+                for (var i = 0; i < ObjLength(eq.Head); i++) {
+                    this.ctx2.fillText(this.hKeys[i], 50, (25 * i) + 325);
                     var obj = {
-                        "Name": eq.Head[0][this.keys[i]].Name,
+                        "Name": this.hKeys[i],
                         "x": 50,
                         "y": (25 * i) + 325,
-                        "w": this.ctx2.measureText(eq.Head[0][this.keys[i]].Name).width,
+                        "w": this.ctx2.measureText(this.hKeys[i]).width,
                         "h": 25
                     };
                     currentEquips.push(obj);
                 }
-                this.keys = null;
             } else if (this.type === "Body") {
-                this.keys = Object.keys(eq.Body[0]);
-                for (var i = 0; i < eq.Body.length; i++) {
-                    this.ctx2.fillText(eq.Body[0][this.keys[i]].Name, 50, (25 * i) + 325);
+                this.bKeys = Object.keys(eq.Body);
+                for (var i = 0; i < ObjLength(eq.Body); i++) {
+                    this.ctx2.fillText(this.bKeys[i], 50, (25 * i) + 325);
                     var obj = {
-                        "Name": eq.Body[0][this.keys[i]].Name,
+                        "Name": this.bKeys[i],
                         "x": 50,
                         "y": (25 * i) + 325,
-                        "w": this.ctx2.measureText(eq.Body[0][this.keys[i]].Name).width,
+                        "w": this.ctx2.measureText(this.bKeys[i]).width,
                         "h": 25
                     };
                     currentEquips.push(obj);
                 }
-                this.keys = null;
             } else if (this.type === "Weapon") {
-                this.keys = Object.keys(eq.Weapon[0]);
-                for (var i = 0; i < eq.Weapon.length; i++) {
-                    this.ctx2.fillText(eq.Weapon[0][this.keys[i]].Name, 50, (25 * i) + 325);
+                this.wKeys = Object.keys(eq.Weapon);
+                for (var i = 0; i < ObjLength(eq.Weapon); i++) {
+                    this.ctx2.fillText(this.wKeys[i], 50, (25 * i) + 325);
                     var obj = {
-                        "Name": eq.Weapon[0][this.keys[i]].Name,
+                        "Name": this.wKeys[i],
                         "x": 50,
                         "y": (25 * i) + 325,
-                        "w": this.ctx2.measureText(eq.Weapon[0][this.keys[i]].Name).width,
+                        "w": this.ctx2.measureText(this.wKeys[i]).width,
                         "h": 25
                     };
                     currentEquips.push(obj);
                 }
-                this.keys = null;
             } else if (this.type === "Feet") {
-                this.keys = Object.keys(eq.Feet[0]);
-                for (var i = 0; i < eq.Feet.length; i++) {
-                    this.ctx2.fillText(eq.Feet[0][this.keys[i]].Name, 50, (25 * i) + 325);
+                this.fKeys = Object.keys(eq.Feet);
+                for (var i = 0; i < ObjLength(eq.Feet); i++) {
+                    this.ctx2.fillText(this.fKeys[i], 50, (25 * i) + 325);
                     var obj = {
-                        "Name": eq.Feet[0][this.keys[i]].Name,
+                        "Name": this.fKeys[i],
                         "x": 50,
                         "y": (25 * i) + 325,
-                        "w": this.ctx2.measureText(eq.Feet[0][this.keys[i]].Name).width,
+                        "w": this.ctx2.measureText(this.fKeys[i]).width,
                         "h": 25
                     };
                     currentEquips.push(obj);
                 }
-                this.keys = null;
             }
 
             this.itemSelected = false;
@@ -1512,7 +1464,7 @@ var Game;
             this.itemSelected = false;
             
             }*/
-            if (mousedown() && !this.itemSelected) {
+            if (mousedown()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < currentEquips.length; i++) {
@@ -1521,13 +1473,48 @@ var Game;
                     var y1 = currentEquips[i].y - 10;
                     var y2 = currentEquips[i].y + currentEquips[i].h;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        for (var x = 0; x <= JSON_CACHE['equip'].Weapon.length; x++) {
-                            if (currentEquips[i].Name === JSON_CACHE['equip'].Weapon[0][this.keys[x]].Name) {
-                                //this.itemSelected = true;
-                                this.item = JSON_CACHE['equip'].Weapon[0][this.keys[x]];
-                                battleList[0].equipItem(this.item, 'Weapon');
-                                sManager.popState();
-                                break;
+                        if (this.type === "Head") {
+                            for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Head); x++) {
+                                if (currentEquips[i].Name === this.hKeys[x]) {
+                                    this.item = JSON_CACHE['equip'].Head[this.hKeys[x]];
+                                    battleList[0].unequipItem(this.type);
+                                    battleList[0].equipItem(this.hKeys[x], this.item, 'Head');
+                                    sManager.popState();
+                                    break;
+                                }
+                            }
+                        } else if (this.type === "Body") {
+                            for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Body); x++) {
+                                if (currentEquips[i].Name === this.bKeys[x]) {
+                                    //this.itemSelected = true;
+                                    this.item = JSON_CACHE['equip'].Body[this.bKeys[x]];
+                                    battleList[0].unequipItem(this.type);
+                                    battleList[0].equipItem(this.bKeys[x], this.item, 'Body');
+                                    sManager.popState();
+                                    break;
+                                }
+                            }
+                        } else if (this.type === "Weapon") {
+                            for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Weapon); x++) {
+                                if (currentEquips[i].Name === this.wKeys[x]) {
+                                    //this.itemSelected = true;
+                                    this.item = JSON_CACHE['equip'].Weapon[this.wKeys[x]];
+                                    battleList[0].unequipItem(this.type);
+                                    battleList[0].equipItem(this.wKeys[x], this.item, 'Weapon');
+                                    sManager.popState();
+                                    break;
+                                }
+                            }
+                        } else if (this.type === "Feet") {
+                            for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Feet); x++) {
+                                if (currentEquips[i].Name === this.fKeys[x]) {
+                                    //this.itemSelected = true;
+                                    this.item = JSON_CACHE['equip'].Feet[this.fKeys[x]];
+                                    battleList[0].unequipItem(this.type);
+                                    battleList[0].equipItem(this.fKeys[x], this.item, 'Feet');
+                                    sManager.popState();
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1545,6 +1532,87 @@ var Game;
         return SelectEquip;
     })(Game.State);
     Game.SelectEquip = SelectEquip;
+})(Game || (Game = {}));
+var Game;
+(function (Game) {
+    var StateManager = (function () {
+        /*currentInGameState = 0;
+        currentInGameStateFunction = null;
+        currentState = 0;
+        currentStateFunction = null;*/
+        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
+        //High on the list, will start getting through this ASAP with help from nick and/or the book
+        function StateManager() {
+            this.time = 0;
+            this.gameStates = [];
+            this.stateStack = new Array();
+        }
+        StateManager.prototype.addState = function (key, state) {
+            this.gameStates[key] = state;
+            //this.stateStack.push(state);
+            //state.init();
+        };
+        StateManager.prototype.pushState = function (state) {
+            this.stateStack.push(state);
+            state.init();
+            //this.stateStack.push(this.gameStates[key]);
+            //this.gameStates[key].init();
+        };
+        StateManager.prototype.popState = function () {
+            if (this.stateStack.length > 0 && this.time < Date.now()) {
+                this.time = Date.now() + 10;
+                this.stateStack.pop();
+                if (this.stateStack.length > 0) {
+                    var len = this.stateStack.length;
+                    this.stateStack[len - 1].init();
+                }
+            }
+        };
+        StateManager.prototype.updateStack = function () {
+            var len = this.stateStack.length;
+            this.stateStack[len - 1].update();
+        };
+        StateManager.prototype.renderStack = function () {
+            for (var s in this.stateStack) {
+                s.render();
+            }
+        };
+        return StateManager;
+    })();
+    Game.StateManager = StateManager;
+})(Game || (Game = {}));
+///<reference path='State.ts' />
+var Game;
+(function (Game) {
+    var Cutscene = (function (_super) {
+        __extends(Cutscene, _super);
+        function Cutscene(id, width, height, ctx, xmlID) {
+            _super.call(this);
+            this.canvas = document.getElementById('layer2');
+            this.context = this.canvas.getContext('2d');
+            this.xmlID = xmlID;
+            this.dia = new Game.Dialogue(this.context, width);
+        }
+        Cutscene.prototype.init = function () {
+            this.dia.startScene('chapter', 'scene', this.xmlID);
+        };
+
+        Cutscene.prototype.update = function () {
+            if (mousedown()) {
+                this.dia.updateScene();
+            }
+        };
+        Cutscene.prototype.render = function () {
+        };
+        Cutscene.prototype.pause = function () {
+        };
+        Cutscene.prototype.resume = function () {
+        };
+        Cutscene.prototype.destroy = function () {
+        };
+        return Cutscene;
+    })(Game.State);
+    Game.Cutscene = Cutscene;
 })(Game || (Game = {}));
 ///<reference path='State.ts' />
 var Game;
@@ -1588,6 +1656,15 @@ var Game;
     })(Game.State);
     Game.StatusMenu = StatusMenu;
 })(Game || (Game = {}));
+function ObjLength(obj) {
+    var key, count = 0;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            count++;
+        }
+    }
+    return count;
+}
 /*
 * Returns a random integer between min and max
 * Using Math.round() will give you a non - uniform distribution!

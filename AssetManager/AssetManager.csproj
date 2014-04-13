@@ -68,6 +68,7 @@
     <TypeScriptCompile Include="Game\StateManager.ts" />
     <TypeScriptCompile Include="States\cutscene.ts" />
     <TypeScriptCompile Include="States\StatusMenu.ts" />
+    <TypeScriptCompile Include="Util\objectLength.ts" />
     <TypeScriptCompile Include="Util\randomizer.ts" />
     <TypeScriptCompile Include="Util\TextStyler.ts" />
     <TypeScriptCompile Include="Util\wordwrap.ts" />

@@ -17,6 +17,9 @@ module Game {
         }
         drawEquip() {
             this.ctx2.clearRect(0, 0, 800, 600);
+            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
+            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
+            this.ctx2.fillText(battleList[0].Base.ID + " Equipment Area", 200, 125);
             this.ctx2.fillText("Head: " + battleList[0].Equipment['Head'], 75, 150);
             this.ctx2.fillText("Body: " + battleList[0].Equipment['Body'], 75, 175);
             this.ctx2.fillText("Weapon: " + battleList[0].Equipment['Weapon'], 75, 200);
@@ -103,12 +106,6 @@ module Game {
             }
         }
         init() {
-
-
-            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
-            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
-            this.ctx2.fillText(battleList[0].ID + " Equipment Area", 200, 125);
-
             this.drawEquip();
             this.addEquipPos();
         }

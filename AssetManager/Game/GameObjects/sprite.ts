@@ -57,27 +57,68 @@ module Game {
         setModifiedAttributes(id?, hp?, mp?, atk?, def?, mdef?, spd?, luc?, type?) {
             this.Modified =
             {
-                "ID": "",
-                "HP": hp || 0,
+                "ID": id,
+                "HP": hp || 1,
                 "MP": mp || 0,
                 "Atk": atk || 0,
                 "Def": def || 0,
                 "Spd": spd || 0,
                 "MDef": mdef || 0,
                 "Luc": luc || 0,
-                "Type": type || 0,
+                "Type": type,
             };
         }
 
-        equipItem(equipment: Equipable, type) {
-            this.Equipment[type] = equipment.Name;
+        equipItem(name, equipment: Equipable, type) {
+            this.Equipment[type] = name;
 
-            this.setModifiedAttributes(equipment.Name, equipment.HP, equipment.MP, equipment.Atk, equipment.Def
-                , equipment.MDef, equipment.Spd, equipment.Luc, equipment.Type);
+                this.setModifiedAttributes(name, this.Modified['HP'] + equipment.HP, this.Modified['MP'] + equipment.MP, this.Modified['Atk'] + equipment.Atk, this.Modified['Def'] + equipment.Def, this.Modified['MDef'] + equipment.MDef, this.Modified['Spd'] + equipment.Spd, this.Modified['Luc'] + equipment.Luc, type);
         }
         unequipItem(type) {
-            this.Equipment[type] = null;
-            this.setModifiedAttributes();
+            if (this.Equipment[type] !== null) {
+                var key;
+                var item;
+                if (type === "Head") {
+                    key = Object.keys(JSON_CACHE['equip'].Head)
+                    for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Head); x++) {
+                        if (this.Equipment[type] === key[x]) {
+                            item = JSON_CACHE['equip'].Head[key[x]];
+                            break;
+                        }
+                    }
+                }
+                else if (type === "Body") {
+                    key = Object.keys(JSON_CACHE['equip'].Body)
+                    for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Body); x++) {
+                        if (this.Equipment[type] === key[x]) {
+                            item = JSON_CACHE['equip'].Body[key[x]];
+                            break;
+                        }
+                    }
+                }
+                else if (type === "Weapon") {
+                    key = Object.keys(JSON_CACHE['equip'].Weapon)
+                    for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Weapon); x++) {
+                        if (this.Equipment[type] === key[x]) {
+                            item = JSON_CACHE['equip'].Weapon[key[x]];
+                            break;
+                        }
+                    }
+                }
+                else if (type === "Feet") {
+                    key = Object.keys(JSON_CACHE['equip'].Feet)
+                    for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Feet); x++) {
+                        if (this.Equipment[type] === key[x]) {
+                            item = JSON_CACHE['equip'].Feet[key[x]];
+                            break;
+                        }
+                    }
+                }
+
+                this.setModifiedAttributes(key, this.Modified['HP'] - item.HP, this.Modified['MP'] - item.MP, this.Modified['Atk'] - item.Atk, this.Modified['Def'] - item.Def
+                    , this.Modified['MDef'] - item.MDef, this.Modified['Spd'] - item.Spd, this.Modified['Luc'] - item.Luc, type);
+                this.Equipment[type] = null;
+            }
         }
         getTotalStats() {
             return {
