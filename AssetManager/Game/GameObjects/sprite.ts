@@ -5,6 +5,8 @@ module Game {
         Base;
         Modified;
         Equipment: Object;
+        Current;
+        dead: boolean = false;
         //all the base attributes and methods are to be added here, this will come when
         //the battle system is being developed but for now it stays relatively empty i guess 
         constructor(img, x, y, w, h, scale?) {
@@ -28,6 +30,18 @@ module Game {
                 "Type": null
             };
             this.Modified =
+            {
+                "ID": null,
+                "HP": 0,
+                "MP": 0,
+                "Atk": 0,
+                "Def": 0,
+                "Spd": 0,
+                "MDef": 0,
+                "Luc": 0,
+                "Type": null
+            };
+            this.Current =
             {
                 "ID": null,
                 "HP": 0,

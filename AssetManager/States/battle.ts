@@ -4,12 +4,12 @@ var battleList = [];
 var menuOptions = [];
 module Game {
     export class Battle extends State {
-        ctx : CanvasRenderingContext2D;
-        ctx2 : CanvasRenderingContext2D;
-        p1 : Sprite;
-        p2 : Sprite;
-        e1 : Sprite;
-        e2 : Sprite;
+        ctx: CanvasRenderingContext2D;
+        ctx2: CanvasRenderingContext2D;
+        p1: Sprite;
+        p2: Sprite;
+        e1: Sprite;
+        e2: Sprite;
         mx;
         my;
         menuOptions: Object[];
@@ -22,25 +22,23 @@ module Game {
         drawCommands;
         endTime = 0;
         currentHP;
+        dead;
 
         constructor(ctx, ctx2) {
             super();
             this.ctx = ctx;
             this.ctx2 = ctx2;
-            this.p1 = new Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
-            this.p2 = new Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
+
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
 
-            this.p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
-            this.p2.setBaseAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
-            this.e1.setBaseAttributes('foe', 15, 0, 1, 0, 1, 1, 1, 1);
+            this.e1.setBaseAttributes('foe', 15, 0, 5, 0, 1, 1, 1, 1);
             this.e2.setBaseAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
             battleList[2] = this.e1;
             battleList[3] = this.e2;
             this.battleKeys = Object.keys(battleList);
-           
+
             menuOptions.push({
                 "Name": "attack",
                 "x": 550,
@@ -54,8 +52,8 @@ module Game {
         }
         statusGUI() {
             this.ctx.clearRect(0, 0, 800, 200);
-            for (var i = 0; i < this.battleKeys.length; i++) {     
-                this.ctx.fillText(battleList[i].Base.ID + " HP : " + battleList[i].getTotalStats().HP, (i + 1) * 150, 100);
+            for (var i = 0; i < this.battleKeys.length; i++) {
+                this.ctx.fillText(battleList[i].Base.ID + " HP : " + battleList[i].Current.HP, (i + 1) * 150, 100);
             }
         }
         newTurn() {
@@ -84,14 +82,15 @@ module Game {
             var aHP = 0;
             var eHP = 0;
             for (var i = 0; i < this.battleKeys.length; i++) {
+                console.log(battleList[i].Base.Type);
                 if (battleList[i].Base.Type === 0) {
-                    aHP += battleList[i].getTotalStats().HP;
+                    aHP += battleList[i].Current.HP;
                 }
                 else if (battleList[i].Base.Type === 1) {
-                    eHP += battleList[i].getTotalStats().HP;
+                    eHP += battleList[i].Current.HP;
                 }
             }
-            if (aHP === 0 || eHP === 0) {
+            if (aHP <= 0 || eHP <= 0) {
                 return true;
             }
             else {
@@ -99,6 +98,10 @@ module Game {
             }
         }
         init() {
+            for (var x = 0; x < this.battleKeys.length; x++) {
+                battleList[x].dead = false;
+                battleList[x].Current = battleList[x].getTotalStats();
+            }
             this.PlayerMenuInit();
             this.renderActors();
             this.currentPlayer = battleList[this.currentkey];
@@ -109,18 +112,21 @@ module Game {
             if (this.currentkey > 3) {
                 this.newTurn();
             }
-            if (this.currentPlayer.Base.Type === 0 && this.drawCommands && time > this.newTime) {
+            if (this.currentPlayer.Base.Type === 0 && !this.currentPlayer.dead && this.drawCommands && time > this.newTime) {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText("Player Turn", 350, 450);
                 this.renderActors();
                 this.drawCommands = false;
             }
-            if (this.battleOver()) {
+            if (this.battleOver() && time > this.endTime) {
+
+                this.ctx.clearRect(0, 0, 800, 600);
+                this.ctx2.clearRect(0, 0, 800, 600);
+                sManager.popState();
+            }
+            else if (this.battleOver()) {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText("THE BATTLE IS OVER", 400, 400);
-            }
-            else if (this.battleOver() && time > this.endTime) {
-                sManager.popState();
             }
             else if (this.currentPlayer.Base.Type === 0 && this.enemySelect === true) {
                 if (this.currentPlayer.Base.Type === 0 && mousedown()) {
@@ -133,7 +139,7 @@ module Game {
                         var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
                         if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                             for (var x = 0; x < this.battleKeys.length; x++) {
-                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].Base.Type === 1) {
+                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && !battleList[this.battleKeys[x]].dead && battleList[this.battleKeys[x]].Base.Type === 1) {
                                     this.target = battleList[this.battleKeys[x]];
                                     this.statusGUI();
                                     this.enemySelect = false;
@@ -145,23 +151,22 @@ module Game {
                 }
                 if (!this.enemySelect) {
                     this.drawCommands = true;
-                    this.target.getTotalStats().HP = this.target.getTotalStats().HP - this.currentPlayer.getTotalStats().Atk;
-                    if (this.target.getTotalStats().HP < 1) {
-                        this.target.Base.Type = 2;
+                    this.target.Current.HP = this.target.Current.HP - this.currentPlayer.Current.Atk;
+                    if (this.target.Current.HP < 1) {
+                        this.target.dead = true;
                         if (this.battleOver()) {
-                            this.endTime = Date.now() + 500;
+                            this.endTime = Date.now() + 1000;
                         }
                     }
-
                     this.ctx2.clearRect(300, 400, 600, 500);
-                    this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + this.target.Base.ID + " for " + this.currentPlayer.getTotalStats().Atk + " damage", 350, 450);
+                    this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + this.target.Base.ID + " for " + this.currentPlayer.Current.Atk + " damage", 350, 450);
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
                     this.newTime = Date.now() + 1000;
                 }
             }
-            else if (this.currentPlayer.Base.Type === 0 && mousedown()) {
+            else if (this.currentPlayer.Base.Type === 0 && mousedown() && !this.currentPlayer.dead) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < menuOptions.length; i++) {
@@ -179,21 +184,21 @@ module Game {
                     }
                 }
             }
-            else if (this.currentPlayer.Base.Type === 1) {
+            else if (this.currentPlayer.Base.Type === 1 && !this.currentPlayer.dead) {
                 if (time > this.newTime) {
                     this.ctx2.clearRect(300, 400, 600, 500);
                     //actual stat calculation
                     var targetNum = getRandomInt(0, this.battleKeys.length - 1);
-                    while (battleList[targetNum].Base.Type !== 0) {
+                    while (battleList[targetNum].dead || battleList[targetNum].Base.Type !== 0) {
                         targetNum = getRandomInt(0, this.battleKeys.length - 1);
                     }
                     this.target = battleList[targetNum];
-                    this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + battleList[targetNum].Base.ID + " for " + this.currentPlayer.getTotalStats().Atk + " damage", 350, 450);
-                    this.target.getTotalStats().HP = this.target.getTotalStats().HP - this.currentPlayer.getTotalStats().Atk;
-                    if (this.target.getTotalStats().HP < 1) {
-                        this.target.Base.Type = 2;
+                    this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + battleList[targetNum].Base.ID + " for " + this.currentPlayer.Current.Atk + " damage", 350, 450);
+                    this.target.Current.HP = this.target.Current.HP - this.currentPlayer.Current.Atk;
+                    if (this.target.Current.HP < 1) {
+                        this.target.dead = true;
                         if (this.battleOver()) {
-                            this.endTime = Date.now() + 500;
+                            this.endTime = Date.now() + 1000;
                         }
                     }
                     this.statusGUI();
@@ -202,7 +207,7 @@ module Game {
                     this.newTime = Date.now() + 1000;
                 }
             }
-            else if(this.currentPlayer.Base.Type === 2) {
+            else if (this.currentPlayer.dead) {
                 this.currentkey++;
                 this.currentPlayer = battleList[this.currentkey];
             }
