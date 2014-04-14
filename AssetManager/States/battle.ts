@@ -40,12 +40,12 @@ module Game {
             this.battleKeys = Object.keys(battleList);
 
             menuOptions.push({
-                "Name": "attack",
+                "Name": "Attack",
                 "x": 550,
                 "y": 200
             });
             menuOptions.push({
-                "Name": "defend",
+                "Name": "Defend",
                 "x": 550,
                 "y": 275
             });
@@ -82,7 +82,6 @@ module Game {
             var aHP = 0;
             var eHP = 0;
             for (var i = 0; i < this.battleKeys.length; i++) {
-                console.log(battleList[i].Base.Type);
                 if (battleList[i].Base.Type === 0) {
                     aHP += battleList[i].Current.HP;
                 }
@@ -170,16 +169,24 @@ module Game {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < menuOptions.length; i++) {
-                    var x1 = menuOptions[i].x;
-                    var x2 = menuOptions[i].x + 190;
-                    var y1 = menuOptions[i].y;
-                    var y2 = menuOptions[i].y + 100;
-                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        if (time > this.newTime) {
-                            //display text
+                    var a1 = menuOptions[i].x;
+                    var a2 = menuOptions[i].x + 190;
+                    var b1 = menuOptions[i].y - 75;
+                    var b2 = menuOptions[i].y + 50;
+                    if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2) && time > this.newTime) {
+                        if (menuOptions[i].Name === 'Attack') {
                             this.ctx2.clearRect(0, 0, 800, 600);
                             this.ctx2.fillText("Click to select Target", 350, 450);
                             this.enemySelect = true;
+                        }
+                        else if (menuOptions[i].Name === 'Defend') {
+                            this.ctx2.clearRect(300, 400, 600, 500);
+                            this.drawCommands = true;
+                            this.ctx2.fillText(this.currentPlayer.Base.ID + " Defends and takes reduced damage", 350, 450);
+                            this.statusGUI();
+                            this.currentkey++;
+                            this.currentPlayer = battleList[this.currentkey];
+                            this.newTime = Date.now() + 1000;
                         }
                     }
                 }
@@ -192,6 +199,7 @@ module Game {
                     while (battleList[targetNum].dead || battleList[targetNum].Base.Type !== 0) {
                         targetNum = getRandomInt(0, this.battleKeys.length - 1);
                     }
+
                     this.target = battleList[targetNum];
                     this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + battleList[targetNum].Base.ID + " for " + this.currentPlayer.Current.Atk + " damage", 350, 450);
                     this.target.Current.HP = this.target.Current.HP - this.currentPlayer.Current.Atk;
