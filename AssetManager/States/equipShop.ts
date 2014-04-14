@@ -104,6 +104,7 @@ module Game {
             }
         }
         init() {
+            console.log(JSON_CACHE['formation']);
             this.drawEquip();
             this.addEquipPos();
         }

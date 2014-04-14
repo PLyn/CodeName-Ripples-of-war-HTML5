@@ -54,6 +54,10 @@ module Game {
             this.ctx.clearRect(0, 0, 800, 200);
             for (var i = 0; i < this.battleKeys.length; i++) {
                 this.ctx.fillText(battleList[i].Base.ID + " HP : " + battleList[i].Current.HP, (i + 1) * 150, 100);
+
+                if (battleList[i].Base.Type === 0) {
+                    this.ctx.fillText("Formation Bonus: " + FORMATION.bonus.HP + " " + FORMATION.bonus.MP + " " + FORMATION.bonus.Atk + " " + FORMATION.bonus.Def + " " + FORMATION.bonus.Spd + " " + FORMATION.bonus.MDef + " " + FORMATION.bonus.Luc, 300, 500);
+                }
             }
         }
         newTurn() {
@@ -97,14 +101,14 @@ module Game {
             }
         }
         init() {
+            
             for (var x = 0; x < this.battleKeys.length; x++) {
-                battleList[x].dead = false;
-                battleList[x].Current = battleList[x].getTotalStats();
+                    battleList[x].dead = false;
+                    battleList[x].Current = battleList[x].getTotalStats();
             }
             this.PlayerMenuInit();
             this.renderActors();
             this.currentPlayer = battleList[this.currentkey];
-
         }
         update() {
             var time = Date.now();

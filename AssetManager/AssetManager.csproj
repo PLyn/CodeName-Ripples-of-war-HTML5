@@ -46,6 +46,7 @@
     <TypeScriptCompile Include="Areas\Area1.ts" />
     <TypeScriptCompile Include="Areas\Area2.ts" />
     <TypeScriptCompile Include="Areas\genericarea.ts" />
+    <TypeScriptCompile Include="Game\BattleFormation.ts" />
     <TypeScriptCompile Include="Game\dialogue.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\accessory.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\body.ts" />
@@ -82,6 +83,7 @@
     <Content Include="Assets\Tilemap\nextmap.json" />
     <Content Include="Assets\Tilemap\newmap.json" />
     <Content Include="Assets\XML\Equipment.json" />
+    <Content Include="Assets\XML\Formation.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

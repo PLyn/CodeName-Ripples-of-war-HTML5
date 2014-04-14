@@ -21,7 +21,7 @@ module Game {
         height = 0; //Height of Sprite
         isError = 0; //Keeps track of each file loaded with error
         isLoaded = 0; //Keeps track of each file loadded successfully
-        jsonKey;
+        jsonKey = [];
         numTilesX = 0; //Number of Tiles in each row
         numTilesY = 0; //Number of Tiles in each column
         pixelSizeX = 0; //Width in pixels of entire Tilemap
@@ -97,7 +97,7 @@ module Game {
             else {
                 key = Object.keys(url);
                 for (var i = 0; i < key.length; i++) {
-                    this.loadfile(key, url[key[i]], onLoad, typeOfFile);
+                    this.loadfile(key, url[key[i]], onLoad, typeOfFile, i);
                 }
             }
         }
@@ -138,13 +138,13 @@ module Game {
             }
             return ext;
         }
-        loadfile(key, url, onLoad, type) {
+        loadfile(key, url, onLoad, type, pos?) {
             var xobj = new XMLHttpRequest();
             xobj.open('GET', url, true);
             xobj.onreadystatechange = function () {
                 if (xobj.readyState == 4 && xobj.status == 200) {
                     if (type === 'json') {
-                        onLoad(key, xobj.responseText);
+                        onLoad(key, xobj.responseText, pos);
                     }
                     else if (type === 'xml') {
                         onLoad(key, xobj.responseXML);
@@ -217,14 +217,14 @@ module Game {
                 this.tileKey = key;//needed for getTile ()
             }
         }
-        onXMLLoad = (key, response) => {
-            XML_CACHE[key] = response;
+        onXMLLoad = (key, response, pos) => {
+            XML_CACHE[key[pos]] = response;
             this.isLoaded++;
             //rest to be implemented. not sure how to extract the info how i want yet...will do soon
             //saved xml file iin the global variable to be used later on as needed
         }
-        onJSONLoad = (key, response) => {
-            JSON_CACHE[key] = JSON.parse(response);
+        onJSONLoad = (key, response, pos) => {
+            JSON_CACHE[key[pos]] = JSON.parse(response);
             this.isLoaded++;
         }
     }

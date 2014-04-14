@@ -37,10 +37,11 @@ module Game {
                 },
                 XML: {
                     chapter: 'Assets/XML/test.xml',
-                    
+                    test: 'Assets/XML/test.xml'
                 },
                 JSON: {
-                    equip: 'Assets/XML/Equipment.json'
+                    equip: 'Assets/XML/Equipment.json',
+                    formation: 'Assets/XML/Formation.json'
                 },
                 Sounds: {
                     car: 'Assets/Sound/car',

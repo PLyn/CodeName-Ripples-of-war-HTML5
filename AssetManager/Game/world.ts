@@ -9,8 +9,8 @@ module Game {
         asset;
         currentArea;
         width;
+        battle; 
 
-        battle;
         //remove alot of initialization code from here as it will go in the states
         //need to put the code in here to deal with the states as needed thoughs
         constructor() {
@@ -39,6 +39,7 @@ module Game {
             //p1.equipItem(sword, sword.Type);
             battleList[0] = p1;
             battleList[1] = p2;
+            FORMATION = new Formation();
         }
         update() {
             this.currentArea.update();
