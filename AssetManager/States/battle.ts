@@ -76,8 +76,11 @@ module Game {
             this.ctx.clearRect(0, 0, 800, 600);
             for (var i = 0; i < this.battleKeys.length; i++) {
                 if (!battleList[this.battleKeys[i].dead]) {
-                    //this.formation = FORMATION.positions;
-                    battleList[this.battleKeys[i]].render(this.ctx, 100, 100);
+                    if (battleList[this.battleKeys[i]].Base.Type === 0) {
+                        this.formation = FORMATION.positions;
+                        battleList[this.battleKeys[i]].setPos(this.formation[i].x, this.formation[i].y);
+                    }
+                    battleList[this.battleKeys[i]].render(this.ctx);
                     //this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, this.formation[i].x, this.formation[i].y);
                     this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
                 }

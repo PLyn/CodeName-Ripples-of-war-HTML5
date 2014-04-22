@@ -19,9 +19,13 @@ module Game {
         update() {
 
         }
-        render(context, x, y) {
+        render(context) {
             //context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
             context.drawImage(this.img, this.x, this.y);
+        }
+        setPos(x, y) {
+            this.x = x;
+            this.y = y;
         }
     }
 }
