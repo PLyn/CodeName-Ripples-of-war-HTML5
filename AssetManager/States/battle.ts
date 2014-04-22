@@ -74,8 +74,9 @@ module Game {
         }
         renderActors() {
             this.ctx.clearRect(0, 0, 800, 600);
+
             for (var i = 0; i < this.battleKeys.length; i++) {
-                if (!battleList[this.battleKeys[i].dead]) {
+                if (!battleList[this.battleKeys[i]].dead) {
                     if (battleList[this.battleKeys[i]].Base.Type === 0) {
                         this.formation = FORMATION.positions;
                         battleList[this.battleKeys[i]].setPos(this.formation[i].x, this.formation[i].y);
@@ -130,7 +131,6 @@ module Game {
                 this.drawCommands = false;
             }
             if (this.battleOver() && time > this.endTime) {
-
                 this.ctx.clearRect(0, 0, 800, 600);
                 this.ctx2.clearRect(0, 0, 800, 600);
                 sManager.popState();
@@ -163,11 +163,12 @@ module Game {
                 if (!this.enemySelect) {
                     this.drawCommands = true;
                     this.target.Current.HP = this.target.Current.HP - this.currentPlayer.Current.Atk;
-                    if (this.target.Current.HP < 1) {
+                    if (this.target.Current.HP < 1){
                         this.target.dead = true;
                         if (this.battleOver()) {
                             this.endTime = Date.now() + 1000;
                         }
+                        this.renderActors();
                     }
                     this.ctx2.clearRect(300, 400, 600, 500);
                     this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + this.target.Base.ID + " for " + this.currentPlayer.Current.Atk + " damage", 350, 450);
@@ -183,7 +184,7 @@ module Game {
                 for (var i = 0; i < menuOptions.length; i++) {
                     var a1 = menuOptions[i].x;
                     var a2 = menuOptions[i].x + 190;
-                    var b1 = menuOptions[i].y - 75;
+                    var b1 = menuOptions[i].y;
                     var b2 = menuOptions[i].y + 50;
                     if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2) && time > this.newTime) {
                         if (menuOptions[i].Name === 'Attack') {
@@ -220,6 +221,7 @@ module Game {
                         if (this.battleOver()) {
                             this.endTime = Date.now() + 1000;
                         }
+                        this.renderActors();
                     }
                     this.statusGUI();
                     this.currentkey++;
