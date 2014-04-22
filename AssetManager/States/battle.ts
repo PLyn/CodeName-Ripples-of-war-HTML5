@@ -23,6 +23,7 @@ module Game {
         endTime = 0;
         currentHP;
         dead;
+        formation;
 
         constructor(ctx, ctx2) {
             super();
@@ -74,8 +75,12 @@ module Game {
         renderActors() {
             this.ctx.clearRect(0, 0, 800, 600);
             for (var i = 0; i < this.battleKeys.length; i++) {
-                battleList[this.battleKeys[i]].render(this.ctx, 100, 100);
-                this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
+                if (!battleList[this.battleKeys[i].dead]) {
+                    //this.formation = FORMATION.positions;
+                    battleList[this.battleKeys[i]].render(this.ctx, 100, 100);
+                    //this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, this.formation[i].x, this.formation[i].y);
+                    this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
+                }
             }
             for (var x = 0; x < menuOptions.length; x++) {
                 this.ctx2.drawImage(IMAGE_CACHE[menuOptions[x].Name], menuOptions[x].x, menuOptions[x].y);
