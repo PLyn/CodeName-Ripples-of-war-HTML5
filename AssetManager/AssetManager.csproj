@@ -55,6 +55,7 @@
     <TypeScriptCompile Include="Game\GameObjects\Item\Helm.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\weapon.ts" />
     <TypeScriptCompile Include="Game\GameObjects\sprite.ts" />
+    <TypeScriptCompile Include="Game\Spell\SpellManager.ts" />
     <TypeScriptCompile Include="Game\world.ts" />
     <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />
@@ -84,6 +85,7 @@
     <Content Include="Assets\Tilemap\newmap.json" />
     <Content Include="Assets\XML\Equipment.json" />
     <Content Include="Assets\XML\Formation.json" />
+    <Content Include="Assets\XML\Spells.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

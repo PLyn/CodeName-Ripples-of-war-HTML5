@@ -140,6 +140,11 @@ declare module Game {
         };
     }
 }
+declare module Game {
+    class SpellManager {
+        public SpellKeys: any;
+    }
+}
 declare var control: any;
 declare var tiles: any;
 declare module Game {

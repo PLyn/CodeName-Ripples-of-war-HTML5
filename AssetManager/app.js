@@ -468,6 +468,15 @@ var Game;
     })(Game.GameObject);
     Game.Sprite = Sprite;
 })(Game || (Game = {}));
+var Game;
+(function (Game) {
+    var SpellManager = (function () {
+        function SpellManager() {
+        }
+        return SpellManager;
+    })();
+    Game.SpellManager = SpellManager;
+})(Game || (Game = {}));
 var control;
 var tiles;
 var Game;
@@ -1115,7 +1124,6 @@ var Game;
                 if (battleList[i].Base.Type === 0) {
                     this.ctx.fillText("Formation Bonus: " + FORMATION.bonus.HP + " " + FORMATION.bonus.MP + " " + FORMATION.bonus.Atk + " " + FORMATION.bonus.Def + " " + FORMATION.bonus.Spd + " " + FORMATION.bonus.MDef + " " + FORMATION.bonus.Luc, 300, 500);
                 }
-                this.ctx.fillText(battleList[i].dead, 200, (i + 1) * 10);
             }
         };
         Battle.prototype.newTurn = function () {
