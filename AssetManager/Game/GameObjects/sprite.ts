@@ -8,10 +8,12 @@ module Game {
         Current;
         dead: boolean = false;
         Spells;
+        currentState;
         //all the base attributes and methods are to be added here, this will come when
         //the battle system is being developed but for now it stays relatively empty i guess 
         constructor(img, x, y, w, h, scale?) {
             super(img, x, y, w, h, scale);
+            this.currentState = 0;
             this.Spells = [];
             this.Equipment = {
                 "Head": null,

@@ -17,14 +17,15 @@ module Game {
                     S: 'Assets/Image/star.png',
                     menu: 'Assets/Image/menuButton.png',
                     back: 'Assets/Image/menuBack.png',
-                    LArrow: 'Assets/Image/arrowLeft',
-                    RArrow: 'Assets/Image/arrowRight',
+                    LArrow: 'Assets/Image/arrowLeft.png',
+                    RArrow: 'Assets/Image/arrowRight.png',
                     dialog: 'Assets/Image/dialogWindow.png',
                     hero: 'Assets/Image/hero.png',
                     status: 'Assets/Image/status.png',
                     Attack: 'Assets/Image/attack_button.png',
                     Defend: 'Assets/Image/defend_button.png',
-                    Spell: 'Assets/Image/spell.png'
+                    Spell: 'Assets/Image/spell.png',
+                    bg: 'Assets/Image/bg.jpg'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'

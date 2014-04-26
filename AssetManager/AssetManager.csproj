@@ -21,6 +21,7 @@
     <Content Include="Assets\Image\arrowLeft.png" />
     <Content Include="Assets\Image\arrowRight.png" />
     <Content Include="Assets\Image\attack_button.png" />
+    <Content Include="Assets\Image\bg.jpg" />
     <Content Include="Assets\Image\defend_button.png" />
     <Content Include="Assets\Image\dialogWindow.png" />
     <Content Include="Assets\Image\diamond.png" />
