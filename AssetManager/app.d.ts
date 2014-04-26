@@ -114,6 +114,13 @@ declare module Game {
         public setPos(x: any, y: any): void;
     }
 }
+declare var statusEffects: {
+    "normal": number;
+    "dead": number;
+    "poison": number;
+    "sleep": number;
+    "paralyze": number;
+};
 declare module Game {
     class Sprite extends GameObject {
         public ID: any;
