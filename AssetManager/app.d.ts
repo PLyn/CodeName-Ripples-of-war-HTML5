@@ -122,6 +122,7 @@ declare module Game {
         public Equipment: Object;
         public Current: any;
         public dead: boolean;
+        public Spells: any;
         constructor(img: any, x: any, y: any, w: any, h: any, scale?: any);
         public setBaseAttributes(id: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type: any): void;
         public setModifiedAttributes(id?: any, hp?: any, mp?: any, atk?: any, def?: any, mdef?: any, spd?: any, luc?: any, type?: any): void;
@@ -143,6 +144,9 @@ declare module Game {
 declare module Game {
     class SpellManager {
         public SpellKeys: any;
+        constructor();
+        public AddSpell(character: any, SpellName: any): void;
+        public RemoveSpell(character: any, SpellName: any): void;
     }
 }
 declare var control: any;
@@ -303,7 +307,10 @@ declare module Game {
         public currentHP: any;
         public dead: any;
         public formation: any;
+        public command: any;
         constructor(ctx: any, ctx2: any);
+        public Attack(): void;
+        public Target(time: any): void;
         public statusGUI(): void;
         public newTurn(): void;
         public PlayerMenuInit(): void;
