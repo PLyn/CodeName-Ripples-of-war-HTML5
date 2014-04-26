@@ -1,4 +1,11 @@
 ﻿///<reference path='gameobject.ts' />
+var statusEffects = {
+    "normal": 0,
+    "dead": 1,
+    "poison": 2,
+    "sleep": 3,
+    "paralyze": 4
+}
 module Game {
     export class Sprite extends GameObject {
         ID;

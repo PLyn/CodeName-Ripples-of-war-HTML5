@@ -165,3 +165,5 @@ $RECYCLE.BIN/
 # Mac crap
 >>>>>>> 12867c1ff0a9b959d6189d99a9c0416665ff740d
 .DS_Store
+*.js
+*.map

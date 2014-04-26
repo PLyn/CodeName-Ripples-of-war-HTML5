@@ -19,9 +19,9 @@
           "Damage": 0,
           "TargetAll": 0,
 		  "Effect": true,
-          "Status": "Poison",
+          "Status": "poison",
           "type": 0,
-          "Chance": 0.50   
+          "Chance": 50   
       }
   }
 }

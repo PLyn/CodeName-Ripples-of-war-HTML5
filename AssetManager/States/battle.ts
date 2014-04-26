@@ -35,7 +35,7 @@ module Game {
             this.ctx2 = ctx2;
             this.spellList = [];
             this.spell = new SpellManager();
-            this.spell.AddSpell(battleList[0], 'spell3');
+            this.spell.AddSpell(battleList[0], 'spell4');
             this.spell.AddSpell(battleList[1], 'spell2');
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
@@ -87,7 +87,7 @@ module Game {
                                     }
                                 }
                             }
-                            else if (this.command === 'Spell' && this.currentSpell.Damage > 0) {
+                            else if (this.command === 'Spell' && this.currentSpell.Damage >= 0) {
                                 for (var x = 0; x < this.battleKeys.length; x++) {
                                     if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].currentState !== 1 && battleList[this.battleKeys[x]].Base.Type === 1) {
                                         this.target = battleList[this.battleKeys[x]];
@@ -204,7 +204,22 @@ module Game {
         statusGUI() {
             this.ctx.clearRect(0, 0, 800, 200);
             for (var i = 0; i < this.battleKeys.length; i++) {
-                    this.ctx.fillText(battleList[i].Base.ID + " HP : " + battleList[i].Current.HP, 400, (i * 25) + 400);
+                this.ctx.fillText(battleList[i].Base.ID + " HP : " + battleList[i].Current.HP, 400, (i * 25) + 400);
+                if (battleList[i].currentState === 0) {
+                    this.ctx.fillText("Normal", 600, (i * 25) + 400);
+                }
+                else if (battleList[i].currentState === 1) {
+                    this.ctx.fillText("Dead", 600, (i * 25) + 400);
+                }
+                else if (battleList[i].currentState === 2) {
+                    this.ctx.fillText("Poisoned", 600, (i * 25) + 400);
+                }
+                else if (battleList[i].currentState === 3) {
+                    this.ctx.fillText("Asleep", 600, (i * 25) + 400);
+                }
+                else if (battleList[i].currentState === 4) {
+                    this.ctx.fillText("Paralyzed", 600, (i * 25) + 400);
+                }
                 /*if (battleList[i].Base.Type === 0) {
                     this.ctx.fillText("Formation Bonus: " + FORMATION.bonus.HP + " " + FORMATION.bonus.MP + " " + FORMATION.bonus.Atk + " " + FORMATION.bonus.Def + " " + FORMATION.bonus.Spd + " " + FORMATION.bonus.MDef + " " + FORMATION.bonus.Luc, 300, 500);
                 }*/
@@ -271,12 +286,18 @@ module Game {
                 this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 450);
             }
             else if (spell.Effect) {
+                //apply status effect
+                if (target.currentState === 0) {
+                    var chance = getRandomInt(0, 100);
+                    if (chance > spell.Chance) {
+                        target.currentState = statusEffects[spell.Status];
+                        this.ctx2.fillText(spell.Status, target.x, target.y + 20);
+                    }
+                }
                 target.Current.HP = target.Current.HP - spell.Damage;
                 this.checkSpriteState(target);
                 this.ctx2.clearRect(300, 400, 600, 500);
                 this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 450);
-                //apply status effect
-
             }
         }
         checkSpriteState(target) {
