@@ -2,19 +2,23 @@
   "Spells": {
       "spell1": {
           "Damage": 5,
-          "TargetAll": 0
+          "TargetAll": 0,
+		  "Effect": false
       },
       "spell2": {
           "Damage": 2,
-          "TargetAll": 1   
+          "TargetAll": 1, 
+		  "Effect": false  
       },
       "spell3": {
           "Damage": -5,
-          "TargetAll": 0   
+          "TargetAll": 0,
+		  "Effect": false   
       },
       "spell4": {
           "Damage": 0,
           "TargetAll": 0,
+		  "Effect": true,
           "Status": "Poison",
           "type": 0,
           "Chance": 0.50   

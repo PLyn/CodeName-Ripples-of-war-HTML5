@@ -322,6 +322,9 @@ declare module Game {
         public formation: any;
         public command: any;
         public spell: SpellManager;
+        public spellList: any;
+        public currentSpell: any;
+        public spellSelect: boolean;
         constructor(ctx: any, ctx2: any);
         public Action(): void;
         public SelectSpell(): void;
@@ -331,6 +334,8 @@ declare module Game {
         public PlayerMenuInit(): void;
         public renderActors(): void;
         public battleOver(): boolean;
+        public playerAttack(attacker: any, target: any): void;
+        public playerSpell(caster: any, spell: any, target: any): void;
         public init(): void;
         public update(): void;
         public render(): void;

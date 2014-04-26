@@ -25,15 +25,19 @@ module Game {
         dead;
         formation;
         command;
-        spell : SpellManager;
+        spell: SpellManager;
+        spellList;
+        currentSpell;
+        spellSelect: boolean = false;
 
         constructor(ctx, ctx2) {
             super();
             this.ctx = ctx;
             this.ctx2 = ctx2;
-
+            this.spellList = [];
             this.spell = new SpellManager();
             this.spell.AddSpell(battleList[0], 'spell1');
+            this.spell.AddSpell(battleList[1], 'spell2');
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
 
@@ -62,59 +66,107 @@ module Game {
         }
         Action() {
             if (this.currentPlayer.Base.Type === 0 && mousedown()) {
-                this.mx = mEvent.pageX;
-                this.my = mEvent.pageY;
-                for (var i = 0; i < this.battleKeys.length; i++) {
-                    var x1 = battleList[this.battleKeys[i]].x;
-                    var x2 = battleList[this.battleKeys[i]].x + battleList[this.battleKeys[i]].W;
-                    var y1 = battleList[this.battleKeys[i]].y;
-                    var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
-                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        if (this.command === 'Attack') {
-                            for (var x = 0; x < this.battleKeys.length; x++) {
-                                if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && !battleList[this.battleKeys[x]].dead && battleList[this.battleKeys[x]].Base.Type === 1) {
-                                    this.target = battleList[this.battleKeys[x]];
-                                    this.statusGUI();
-                                    this.enemySelect = false;
-                                    break;
+                if (this.command === 'spell' && this.currentSpell.TargetAll === 1) {
+                }
+                else {
+                    this.mx = mEvent.pageX;
+                    this.my = mEvent.pageY;
+                    for (var i = 0; i < this.battleKeys.length; i++) {
+                        var x1 = battleList[this.battleKeys[i]].x;
+                        var x2 = battleList[this.battleKeys[i]].x + battleList[this.battleKeys[i]].W;
+                        var y1 = battleList[this.battleKeys[i]].y;
+                        var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
+                        if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                            if (this.command === 'Attack') {
+                                for (var x = 0; x < this.battleKeys.length; x++) {
+                                    if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && !battleList[this.battleKeys[x]].dead && battleList[this.battleKeys[x]].Base.Type === 1) {
+                                        this.target = battleList[this.battleKeys[x]];
+                                        this.statusGUI();
+                                        this.enemySelect = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if (this.command === 'Spell' && this.currentSpell.TargetAll === 0) {
+                                for (var x = 0; x < this.battleKeys.length; x++) {
+                                    if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && !battleList[this.battleKeys[x]].dead && battleList[this.battleKeys[x]].Base.Type === 0) {
+                                        this.target = battleList[this.battleKeys[x]];
+                                        this.statusGUI();
+                                        this.enemySelect = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            else if (this.command === 'Spell' && this.currentSpell.TargetAll === 1) {
+                                for (var x = 0; x < this.battleKeys.length; x++) {
+                                    if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && !battleList[this.battleKeys[x]].dead && battleList[this.battleKeys[x]].Base.Type === 1) {
+                                        this.target = battleList[this.battleKeys[x]];
+                                        this.statusGUI();
+                                        this.enemySelect = false;
+                                        break;
+                                    }
                                 }
                             }
                         }
-                        else if (this.command === 'Spell') {
-
-                        }
                     }
                 }
-            }
-            if (!this.enemySelect) {
-                if (this.command === 'Attack') {
-                    this.drawCommands = true;
-                    this.target.Current.HP = this.target.Current.HP - this.currentPlayer.Current.Atk;
-                    if (this.target.Current.HP < 1) {
-                        this.target.dead = true;
-                        if (this.battleOver()) {
-                            this.endTime = Date.now() + 1000;
-                        }
-                        this.renderActors();
+                if (!this.enemySelect) {
+                    if (this.command === 'Attack') {
+                        this.playerAttack(this.currentPlayer, this.target);
                     }
-                    this.ctx2.clearRect(300, 400, 600, 500);
-                    this.ctx2.fillText(this.currentPlayer.Base.ID + " Attacks " + this.target.Base.ID + " for " + this.currentPlayer.Current.Atk + " damage", 350, 450);
+                    else if (this.command === 'Spell') {
+                        this.playerSpell(this.currentPlayer, this.currentSpell, this.target);
+                    }
+                    this.drawCommands = true;
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
                     this.newTime = Date.now() + 1000;
                 }
-                else if (this.command === 'Spell') {
-
-                }
             }
         }
         SelectSpell() {
-            this.ctx2.clearRect(0, 0, 800, 600);
+            //clear screen and draw dialog with spells on screen
             this.ctx2.drawImage(IMAGE_CACHE['dialog'], 25, 300);
-            var c = battleList[0].Spells.length;
-            for (var i = 0; i < 6; i++) {
+            for (var i = 0; i < this.currentPlayer.Spells.length; i++) {
+                this.spellList.push({
+                    "Name": this.currentPlayer.Spells[i],
+                    "x": 50,
+                    "y": 325 + (i * 25)
+                });
+                this.ctx2.fillText(this.spellList[i].Name, this.spellList[i].x, this.spellList[i].y);
             }
+            //pick up which spell was clicked on and stores it
+            var keys = Object.keys(JSON_CACHE['spell'].Spells);
+            this.mx = mEvent.pageX;
+            this.my = mEvent.pageY;
+            for (var i = 0; i < this.spellList.length; i++) {
+                var a1 = this.spellList[i].x - 30;
+                var a2 = this.spellList[i].x + 30;
+                var b1 = this.spellList[i].y - 20;
+                var b2 = this.spellList[i].y + 20;
+
+                if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2)) {
+                    for (var x = 0; x < keys.length; x++) {
+                        if (this.spellList[i].Name === keys[x]) {
+                            this.currentSpell = JSON_CACHE['spell'].Spells[keys[x]];
+                            //determines who to target
+                            if (this.currentSpell.TargetAll === 0) {
+                                this.ctx2.clearRect(0, 0, 800, 600);
+                                this.ctx2.fillText("Click to select Ally", 350, 450);
+                            }
+                            else {
+                                this.ctx2.clearRect(0, 0, 800, 600);
+                                this.ctx2.fillText("Click to select Enemy", 350, 450);
+                            }
+                            this.enemySelect = true;
+                            this.spellSelect = false;
+                            this.spellList.length = 0;
+                            break;
+                        }
+                    }
+                }
+            }      
         }
         Target(time) {
             this.mx = mEvent.pageX;
@@ -132,7 +184,9 @@ module Game {
                         this.enemySelect = true;
                     }
                     else if (menuOptions[i].Name === 'Spell') {
-                        this.SelectSpell();
+                        this.command = menuOptions[i].Name;
+                        this.ctx2.clearRect(0, 0, 800, 600);
+                        this.spellSelect = true;
                     }
                     else if (menuOptions[i].Name === 'Defend') {
                         this.command = menuOptions[i].Name;
@@ -205,6 +259,30 @@ module Game {
                 return false;
             }
         }
+        playerAttack(attacker, target) {
+            target.Current.HP = target.Current.HP - attacker.Current.Atk;
+            if (target.Current.HP < 1) {
+                target.dead = true;
+                if (this.battleOver()) {
+                    this.endTime = Date.now() + 1000;
+                }
+                this.renderActors();
+            }
+            this.ctx2.clearRect(300, 400, 600, 500);
+            this.ctx2.fillText(attacker.Base.ID + " Attacks " + target.Base.ID + " for " + attacker.Current.Atk + " damage", 350, 450);
+        }
+        playerSpell(caster, spell, target) {
+            target.Current.HP = target.Current.HP - spell.Damage;
+            if (target.Current.HP < 1) {
+                target.dead = true;
+                if (this.battleOver()) {
+                    this.endTime = Date.now() + 1000;
+                }
+                this.renderActors();
+            }
+                this.ctx2.clearRect(300, 400, 600, 500);
+                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 450);
+        }
         init() {
             
             for (var x = 0; x < this.battleKeys.length; x++) {
@@ -215,6 +293,7 @@ module Game {
             this.renderActors();
             this.currentPlayer = battleList[this.currentkey];
         }
+
         update() {
             var time = Date.now();
             if (this.currentkey > 3) {
@@ -235,7 +314,10 @@ module Game {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText("THE BATTLE IS OVER", 400, 400);
             }
-            else if (this.currentPlayer.Base.Type === 0 && this.enemySelect === true) {
+            else if (this.currentPlayer.Base.Type === 0 && this.spellSelect) {
+                this.SelectSpell();
+            }
+            else if (this.currentPlayer.Base.Type === 0 && this.enemySelect) {
                 this.Action();
             }
             else if (this.currentPlayer.Base.Type === 0 && mousedown() && !this.currentPlayer.dead) {
