@@ -2,10 +2,10 @@
     export class SpellManager{
         SpellKeys;
         constructor() {
-            this.SpellKeys = Object.keys(JSON_CACHE['spell']);
+            this.SpellKeys = Object.keys(JSON_CACHE['spell'].Spells);
         }
         AddSpell(character, SpellName) {
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < this.SpellKeys.length; i++) {
                 if (SpellName === this.SpellKeys[i]) {
                     character.Spells.push(SpellName);
                     break;

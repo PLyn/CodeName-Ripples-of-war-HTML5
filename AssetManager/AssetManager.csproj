@@ -27,6 +27,7 @@
     <Content Include="Assets\Image\hero.png" />
     <Content Include="Assets\Image\menuBack.png" />
     <Content Include="Assets\Image\menuButton.png" />
+    <Content Include="Assets\Image\spell.png" />
     <Content Include="Assets\Image\status.png" />
     <Content Include="Assets\Music\theme.mp3" />
     <Content Include="Assets\Tilemap\obj_misk_atlas.png" />

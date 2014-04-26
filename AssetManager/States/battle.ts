@@ -25,12 +25,15 @@ module Game {
         dead;
         formation;
         command;
+        spell : SpellManager;
 
         constructor(ctx, ctx2) {
             super();
             this.ctx = ctx;
             this.ctx2 = ctx2;
 
+            this.spell = new SpellManager();
+            this.spell.AddSpell(battleList[0], 'spell1');
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
 
@@ -44,6 +47,11 @@ module Game {
             menuOptions.push({
                 "Name": "Attack",
                 "x": 550,
+                "y": 125
+            });
+            menuOptions.push({
+                "Name": "Spell",
+                "x": 550,
                 "y": 200
             });
             menuOptions.push({
@@ -52,7 +60,7 @@ module Game {
                 "y": 275
             });
         }
-        Attack() {
+        Action() {
             if (this.currentPlayer.Base.Type === 0 && mousedown()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
@@ -102,7 +110,11 @@ module Game {
             }
         }
         SelectSpell() {
-
+            this.ctx2.clearRect(0, 0, 800, 600);
+            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 25, 300);
+            var c = battleList[0].Spells.length;
+            for (var i = 0; i < 6; i++) {
+            }
         }
         Target(time) {
             this.mx = mEvent.pageX;
@@ -120,7 +132,7 @@ module Game {
                         this.enemySelect = true;
                     }
                     else if (menuOptions[i].Name === 'Spell') {
-
+                        this.SelectSpell();
                     }
                     else if (menuOptions[i].Name === 'Defend') {
                         this.command = menuOptions[i].Name;
@@ -224,7 +236,7 @@ module Game {
                 this.ctx2.fillText("THE BATTLE IS OVER", 400, 400);
             }
             else if (this.currentPlayer.Base.Type === 0 && this.enemySelect === true) {
-                this.Attack();
+                this.Action();
             }
             else if (this.currentPlayer.Base.Type === 0 && mousedown() && !this.currentPlayer.dead) {
                 this.Target(time);

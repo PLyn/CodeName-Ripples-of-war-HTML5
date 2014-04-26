@@ -23,7 +23,8 @@ module Game {
                     hero: 'Assets/Image/hero.png',
                     status: 'Assets/Image/status.png',
                     Attack: 'Assets/Image/attack_button.png',
-                    Defend: 'Assets/Image/defend_button.png'
+                    Defend: 'Assets/Image/defend_button.png',
+                    Spell: 'Assets/Image/spell.png'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'
