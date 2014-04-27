@@ -10,26 +10,26 @@ module Game {
 
         constructor() {
             this.formKey = Object.keys(JSON_CACHE['formation']['Formations']);     
-            this.current = JSON_CACHE['formation']['Formations'][this.formKey[0]];
+            this.current = this.formKey[0];
             this.positions = [];
-
+            var currentFormation = JSON_CACHE['formation']['Formations'][this.current];
             //add positions 
             for (var i = 0; i < this.positionLength; i++) {
                 var obj = {
-                    "x": this.current.positions.x[i],
-                    "y": this.current.positions.y[i]
+                    "x": currentFormation.positions.x[i],
+                    "y": currentFormation.positions.y[i]
                 };
                 this.positions[i] = obj;
             }
             //add bonues to objects
             this.bonus = {
-                "HP": this.current.bonus.HP,
-                "MP": this.current.bonus.MP,
-                "Atk": this.current.bonus.Atk,
-                "Def": this.current.bonus.Def,
-                "Spd": this.current.bonus.Spd,
-                "MDef": this.current.bonus.MDef,
-                "Luc": this.current.bonus.Luc
+                "HP": currentFormation.bonus.HP,
+                "MP": currentFormation.bonus.MP,
+                "Atk": currentFormation.bonus.Atk,
+                "Def": currentFormation.bonus.Def,
+                "Spd": currentFormation.bonus.Spd,
+                "MDef": currentFormation.bonus.MDef,
+                "Luc": currentFormation.bonus.Luc
             };
 
             this.battleKeys = Object.keys(battleList);

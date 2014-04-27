@@ -67,6 +67,7 @@
     <TypeScriptCompile Include="States\battle.ts" />
     <TypeScriptCompile Include="States\equipShop.ts" />
     <TypeScriptCompile Include="States\explore.ts" />
+    <TypeScriptCompile Include="States\FormationState.ts" />
     <TypeScriptCompile Include="States\selectEquip.ts" />
     <TypeScriptCompile Include="States\State.ts" />
     <TypeScriptCompile Include="Game\StateManager.ts" />

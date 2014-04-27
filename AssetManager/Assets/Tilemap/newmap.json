@@ -18,12 +18,12 @@
                 {
                  "gid":931,
                  "height":0,
-                 "name":"chair",
+                 "name":"Change Formation",
                  "properties":
                     {
                      "ID":"0"
                     },
-                 "type":"cut",
+                 "type":"form",
                  "visible":true,
                  "width":0,
                  "x":94,
