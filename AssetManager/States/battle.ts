@@ -294,6 +294,10 @@ module Game {
                         this.ctx2.fillText(spell.Status, target.x, target.y + 20);
                     }
                 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> remotes/origin/Equipment
                 target.Current.HP = target.Current.HP - spell.Damage;
                 this.checkSpriteState(target);
                 this.ctx2.clearRect(300, 400, 600, 500);
