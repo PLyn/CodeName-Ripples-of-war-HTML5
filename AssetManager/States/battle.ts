@@ -121,7 +121,7 @@ module Game {
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
-                    this.newTime = Date.now() + 1000;
+                    this.newTime = Date.now() + 2000;
                 }
             }
         }
@@ -153,11 +153,11 @@ module Game {
                             //determines who to target
                             if (this.currentSpell.TargetAll === 0) {
                                 this.ctx2.clearRect(0, 0, 800, 600);
-                                this.ctx2.fillText("Click to select Ally", 350, 450);
+                                this.ctx2.fillText("Click to select Ally", 350, 100);
                             }
                             else {
                                 this.ctx2.clearRect(0, 0, 800, 600);
-                                this.ctx2.fillText("Click to select Enemy", 350, 450);
+                                this.ctx2.fillText("Click to select Enemy", 350, 100);
                             }
                             this.enemySelect = true;
                             this.spellSelect = false;
@@ -180,7 +180,7 @@ module Game {
                     if (menuOptions[i].Name === 'Attack') {
                         this.command = menuOptions[i].Name;
                         this.ctx2.clearRect(0, 0, 800, 600);
-                        this.ctx2.fillText("Click to select Target", 350, 450);
+                        this.ctx2.fillText("Click to select Target", 350, 100);
                         this.enemySelect = true;
                     }
                     else if (menuOptions[i].Name === 'Spell') {
@@ -190,19 +190,19 @@ module Game {
                     }
                     else if (menuOptions[i].Name === 'Defend') {
                         this.command = menuOptions[i].Name;
-                        this.ctx2.clearRect(300, 400, 600, 500);
+                        this.ctx2.clearRect(0, 0, 800, 200);
                         this.drawCommands = true;
-                        this.ctx2.fillText(this.currentPlayer.Base.ID + " Defends and takes reduced damage", 350, 450);
+                        this.ctx2.fillText(this.currentPlayer.Base.ID + " Defends and takes reduced damage", 350, 100);
                         this.statusGUI();
                         this.currentkey++;
                         this.currentPlayer = battleList[this.currentkey];
-                        this.newTime = Date.now() + 1000;
+                        this.newTime = Date.now() + 2000;
                     }
                 }
             }
         }
         statusGUI() {
-            this.ctx.clearRect(0, 0, 800, 200);
+            this.ctx.clearRect(0, 375, 800, 600);
             for (var i = 0; i < this.battleKeys.length; i++) {
                 this.ctx.fillText(battleList[i].Base.ID + " HP : " + battleList[i].Current.HP, 400, (i * 25) + 400);
                 if (battleList[i].currentState === 0) {
@@ -275,15 +275,15 @@ module Game {
         playerAttack(attacker, target) {
             target.Current.HP = target.Current.HP - attacker.Current.Atk;
             this.checkSpriteState(target);
-            this.ctx2.clearRect(300, 400, 600, 500);
-            this.ctx2.fillText(attacker.Base.ID + " Attacks " + target.Base.ID + " for " + attacker.Current.Atk + " damage", 350, 450);
+            this.ctx2.clearRect(0, 0, 800, 200);
+            this.ctx2.fillText(attacker.Base.ID + " Attacks " + target.Base.ID + " for " + attacker.Current.Atk + " damage", 350, 100);
         }
         playerSpell(caster, spell, target) {
             if (!spell.Effect) {
                 target.Current.HP = target.Current.HP - spell.Damage;
                 this.checkSpriteState(target);
-                this.ctx2.clearRect(300, 400, 600, 500);
-                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 450);
+                this.ctx2.clearRect(0, 0, 800, 200);
+                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
             }
             else if (spell.Effect) {
                 //apply status effect
@@ -297,14 +297,14 @@ module Game {
                 target.Current.HP = target.Current.HP - spell.Damage;
                 this.checkSpriteState(target);
                 this.ctx2.clearRect(300, 400, 600, 500);
-                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 450);
+                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
             }
         }
         checkSpriteState(target) {
             if (target.Current.HP < 1) {
                 target.currentState = 1;
                 if (this.battleOver()) {
-                    this.endTime = Date.now() + 1000;
+                    this.endTime = Date.now() + 2000;
                 }
                 this.renderActors();
             }
@@ -326,7 +326,7 @@ module Game {
             }
             if (this.currentPlayer.Base.Type === 0 && this.currentPlayer.currentState !== 1 && this.drawCommands && time > this.newTime) {
                 this.ctx2.clearRect(0, 0, 800, 600);
-                this.ctx2.fillText("Player Turn", 350, 450);
+                this.ctx2.fillText("Player Turn", 350, 100);
                 this.renderActors();
                 this.drawCommands = false;
             }
@@ -337,7 +337,7 @@ module Game {
             }
             else if (this.battleOver()) {
                 this.ctx2.clearRect(0, 0, 800, 600);
-                this.ctx2.fillText("THE BATTLE IS OVER", 400, 400);
+                this.ctx2.fillText("THE BATTLE IS OVER", 400, 100);
             }
             else if (this.currentPlayer.Base.Type === 0 && this.spellSelect) {
                 this.SelectSpell();
@@ -361,7 +361,7 @@ module Game {
                     this.statusGUI();
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
-                    this.newTime = Date.now() + 1000;
+                    this.newTime = Date.now() + 2000;
                 }
             }
             else if (this.currentPlayer.currentState === 1) {
