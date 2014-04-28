@@ -69,7 +69,7 @@ module Game {
             this.Base = 
             {
                 "ID" : id,
-                "HP" : hp || 1,
+                "HP" : hp,
                 "MP" : mp || 0,
                 "Atk" : atk || 0,
                 "Def" : def || 0,
@@ -83,7 +83,7 @@ module Game {
             this.Modified =
             {
                 "ID": id,
-                "HP": hp || 1,
+                "HP": hp,
                 "MP": mp || 0,
                 "Atk": atk || 0,
                 "Def": def || 0,

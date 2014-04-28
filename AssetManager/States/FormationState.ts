@@ -20,7 +20,9 @@ module Game {
             this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
             setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
             this.ctx2.fillText('Formations', 150, 125);
-
+            for (var i = 0; i < this.keys.length; i++) {
+                this.ctx2.fillText(this.keys[i], this.forms[i].x, this.forms[i].y);
+            }
             this.ctx2.fillText("Formation Bonuses", 400, 125);
             this.ctx2.fillText("HP: " + FORMATION.bonus.HP, 400, 150);
             this.ctx2.fillText("MP: " + FORMATION.bonus.MP, 400, 175);
@@ -32,6 +34,9 @@ module Game {
 
             this.ctx2.fillText("Current Formation: " + FORMATION.current, 200, 325);
 
+            this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
+        }
+        addObjects() {
             this.keys = Object.keys(JSON_CACHE['formation'].Formations);
             for (var i = 0; i < this.keys.length; i++) {
                 this.forms.push({
@@ -51,7 +56,6 @@ module Game {
                 "h": 50
             };
             this.forms.push(obj);
-            this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
         }
         changeFormation() {
             if (Date.now() > this.time && this.back) {
@@ -75,8 +79,8 @@ module Game {
                             //sManager.pushState(new SelectEquip(this.ctx2, equips[i].type));
                             for (var x = 0; x <= this.keys.length; x++) {
                                 if (this.forms[i].Name === this.keys[i]) {
-                                    FORMATION.setFormation(this.keys[i])
-                                    this.back = true;
+                                    FORMATION.setFormation(this.keys[i]);
+                                    this.draw();
                                     this.time = Date.now() + 100;
                                     break;
                                 }
@@ -87,6 +91,7 @@ module Game {
             }
         }
         init() {
+            this.addObjects();
             this.draw();
         }
         update() {

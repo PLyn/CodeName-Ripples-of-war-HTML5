@@ -1,21 +1,21 @@
 ﻿{
   "Spells": {
-      "spell1": {
+      "Fireball": {
           "Damage": 5,
           "TargetAll": 0,
 		  "Effect": false
       },
-      "spell2": {
+      "Icestorm": {
           "Damage": 2,
           "TargetAll": 1, 
 		  "Effect": false  
       },
-      "spell3": {
+      "Heal Light": {
           "Damage": -5,
           "TargetAll": 0,
 		  "Effect": false   
       },
-      "spell4": {
+      "Poison Dust": {
           "Damage": 0,
           "TargetAll": 0,
 		  "Effect": true,

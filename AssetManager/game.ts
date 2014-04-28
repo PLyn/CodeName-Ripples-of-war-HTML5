@@ -25,7 +25,7 @@ module Game {
                     Attack: 'Assets/Image/attack_button.png',
                     Defend: 'Assets/Image/defend_button.png',
                     Spell: 'Assets/Image/spell.png',
-                    bg: 'Assets/Image/bg.jpg'
+                    bg: 'Assets/Image/bg.png'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'

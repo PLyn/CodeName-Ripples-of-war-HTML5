@@ -423,6 +423,7 @@ declare module Game {
         public keys: any;
         constructor(ctx: any, ctx2: any);
         public draw(): void;
+        public addObjects(): void;
         public changeFormation(): void;
         public init(): void;
         public update(): void;

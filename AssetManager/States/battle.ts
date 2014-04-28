@@ -35,8 +35,10 @@ module Game {
             this.ctx2 = ctx2;
             this.spellList = [];
             this.spell = new SpellManager();
-            this.spell.AddSpell(battleList[0], 'spell4');
-            this.spell.AddSpell(battleList[1], 'spell2');
+            var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
+            this.spell.AddSpell(battleList[0], spellkeys[0]);
+            this.spell.AddSpell(battleList[1], spellkeys[3]);
+
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
 
@@ -62,7 +64,7 @@ module Game {
                 "x": 550,
                 "y": 275
             });
-
+            this.ctx.drawImage(IMAGE_CACHE['bg'], 0, 0);
         }
         Action() {
             if (this.currentPlayer.Base.Type === 0 && mousedown()) {
@@ -122,6 +124,7 @@ module Game {
                     this.currentkey++;
                     this.currentPlayer = battleList[this.currentkey];
                     this.newTime = Date.now() + 2000;
+                    this.ctx2.clearRect(540, 125, 260, 150); //clear commands only
                 }
             }
         }
@@ -151,7 +154,7 @@ module Game {
                         if (this.spellList[i].Name === keys[x]) {
                             this.currentSpell = JSON_CACHE['spell'].Spells[keys[x]];
                             //determines who to target
-                            if (this.currentSpell.TargetAll === 0) {
+                            if (this.currentSpell.Damage < 0) {
                                 this.ctx2.clearRect(0, 0, 800, 600);
                                 this.ctx2.fillText("Click to select Ally", 350, 100);
                             }
@@ -159,6 +162,7 @@ module Game {
                                 this.ctx2.clearRect(0, 0, 800, 600);
                                 this.ctx2.fillText("Click to select Enemy", 350, 100);
                             }
+                            this.statusGUI();
                             this.enemySelect = true;
                             this.spellSelect = false;
                             this.spellList.length = 0;
@@ -180,17 +184,20 @@ module Game {
                     if (menuOptions[i].Name === 'Attack') {
                         this.command = menuOptions[i].Name;
                         this.ctx2.clearRect(0, 0, 800, 600);
+                        this.statusGUI();
                         this.ctx2.fillText("Click to select Target", 350, 100);
                         this.enemySelect = true;
                     }
                     else if (menuOptions[i].Name === 'Spell') {
                         this.command = menuOptions[i].Name;
                         this.ctx2.clearRect(0, 0, 800, 600);
+                        this.statusGUI();
                         this.spellSelect = true;
                     }
                     else if (menuOptions[i].Name === 'Defend') {
                         this.command = menuOptions[i].Name;
-                        this.ctx2.clearRect(0, 0, 800, 200);
+                        this.ctx2.clearRect(0, 0, 800, 600);
+                        this.statusGUI();
                         this.drawCommands = true;
                         this.ctx2.fillText(this.currentPlayer.Base.ID + " Defends and takes reduced damage", 350, 100);
                         this.statusGUI();
@@ -202,23 +209,24 @@ module Game {
             }
         }
         statusGUI() {
-            this.ctx.clearRect(0, 375, 800, 600);
+            this.ctx2.clearRect(0, 375, 800, 600);
+            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 100, 375);
             for (var i = 0; i < this.battleKeys.length; i++) {
-                this.ctx.fillText(battleList[i].Base.ID + " HP : " + battleList[i].Current.HP, 400, (i * 25) + 400);
+                this.ctx2.fillText(battleList[i].Base.ID + " HP : " + battleList[i].Current.HP, 400, (i * 25) + 400);
                 if (battleList[i].currentState === 0) {
-                    this.ctx.fillText("Normal", 600, (i * 25) + 400);
+                    this.ctx2.fillText("Normal", 600, (i * 25) + 400);
                 }
                 else if (battleList[i].currentState === 1) {
-                    this.ctx.fillText("Dead", 600, (i * 25) + 400);
+                    this.ctx2.fillText("Dead", 600, (i * 25) + 400);
                 }
                 else if (battleList[i].currentState === 2) {
-                    this.ctx.fillText("Poisoned", 600, (i * 25) + 400);
+                    this.ctx2.fillText("Poisoned", 600, (i * 25) + 400);
                 }
                 else if (battleList[i].currentState === 3) {
-                    this.ctx.fillText("Asleep", 600, (i * 25) + 400);
+                    this.ctx2.fillText("Asleep", 600, (i * 25) + 400);
                 }
                 else if (battleList[i].currentState === 4) {
-                    this.ctx.fillText("Paralyzed", 600, (i * 25) + 400);
+                    this.ctx2.fillText("Paralyzed", 600, (i * 25) + 400);
                 }
                 /*if (battleList[i].Base.Type === 0) {
                     this.ctx.fillText("Formation Bonus: " + FORMATION.bonus.HP + " " + FORMATION.bonus.MP + " " + FORMATION.bonus.Atk + " " + FORMATION.bonus.Def + " " + FORMATION.bonus.Spd + " " + FORMATION.bonus.MDef + " " + FORMATION.bonus.Luc, 300, 500);
@@ -232,12 +240,13 @@ module Game {
         PlayerMenuInit() {
             this.ctx.clearRect(0, 0, 800, 600);
             this.ctx2.clearRect(0, 0, 800, 600);
-            setStyle(this.ctx, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
-            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
+            setStyle(this.ctx, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
+            setStyle(this.ctx2, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
             this.statusGUI();
         }
         renderActors() {
             this.ctx.clearRect(0, 0, 800, 600);
+            this.ctx.drawImage(IMAGE_CACHE['bg'], 0, 0);
             for (var i = 0; i < this.battleKeys.length; i++) {
                 if (battleList[this.battleKeys[i]].currentState !== 1) {
                     if (battleList[this.battleKeys[i]].Base.Type === 0) {
@@ -275,14 +284,14 @@ module Game {
         playerAttack(attacker, target) {
             target.Current.HP = target.Current.HP - attacker.Current.Atk;
             this.checkSpriteState(target);
-            this.ctx2.clearRect(0, 0, 800, 200);
+            this.ctx2.clearRect(0, 0, 800, 600);
             this.ctx2.fillText(attacker.Base.ID + " Attacks " + target.Base.ID + " for " + attacker.Current.Atk + " damage", 350, 100);
         }
         playerSpell(caster, spell, target) {
             if (!spell.Effect) {
                 target.Current.HP = target.Current.HP - spell.Damage;
                 this.checkSpriteState(target);
-                this.ctx2.clearRect(0, 0, 800, 200);
+                this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
             }
             else if (spell.Effect) {
@@ -296,7 +305,7 @@ module Game {
                 }
                 target.Current.HP = target.Current.HP - spell.Damage;
                 this.checkSpriteState(target);
-                this.ctx2.clearRect(300, 400, 600, 500);
+                this.ctx2.clearRect(0, 0, 800, 600);
                 this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
             }
         }
@@ -337,6 +346,7 @@ module Game {
             }
             else if (this.battleOver()) {
                 this.ctx2.clearRect(0, 0, 800, 600);
+                this.statusGUI();
                 this.ctx2.fillText("THE BATTLE IS OVER", 400, 100);
             }
             else if (this.currentPlayer.Base.Type === 0 && this.spellSelect) {
@@ -350,7 +360,7 @@ module Game {
             }
             else if (this.currentPlayer.Base.Type === 1 && this.currentPlayer.currentState !== 1) {
                 if (time > this.newTime) {
-                    this.ctx2.clearRect(300, 400, 600, 500);
+                    this.ctx2.clearRect(0, 0, 800, 600);
                     //actual stat calculation
                     var targetNum = getRandomInt(0, this.battleKeys.length - 1);
                     while (battleList[targetNum].currentState === 1 || battleList[targetNum].Base.Type !== 0) {
