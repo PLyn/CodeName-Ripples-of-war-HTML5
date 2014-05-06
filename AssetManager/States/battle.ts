@@ -37,7 +37,7 @@ module Game {
             this.spell = new SpellManager();
             var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
             this.spell.AddSpell(battleList[0], spellkeys[0]);
-            this.spell.AddSpell(battleList[1], spellkeys[3]);
+            this.spell.AddSpell(battleList[1], spellkeys[2]);
 
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
@@ -288,30 +288,31 @@ module Game {
             this.ctx2.fillText(attacker.Base.ID + " Attacks " + target.Base.ID + " for " + attacker.Current.Atk + " damage", 350, 100);
         }
         playerSpell(caster, spell, target) {
-            if (!spell.Effect) {
-                target.Current.HP = target.Current.HP - spell.Damage;
-                this.checkSpriteState(target);
-                this.ctx2.clearRect(0, 0, 800, 600);
-                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
-            }
-            else if (spell.Effect) {
+            if (spell.Effect) {
                 //apply status effect
-                if (target.currentState === 0) {
+                if (target.currentState === 0 && chance > spell.Chance) {
                     var chance = getRandomInt(0, 100);
-                    if (chance > spell.Chance) {
-                        target.currentState = statusEffects[spell.Status];
-                        this.ctx2.fillText(spell.Status, target.x, target.y + 20);
-                    }
+                    target.currentState = statusEffects[spell.Status];
+                    this.ctx2.fillText(spell.Status, target.x, target.y + 20);
                 }
-                target.Current.HP = target.Current.HP - spell.Damage;
-                this.checkSpriteState(target);
-                this.ctx2.clearRect(0, 0, 800, 600);
-                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
+            }
+            target.Current.HP = target.Current.HP - spell.Damage;
+            if (target.Current.HP > target.getTotalStats().HP) {
+                target.Current.HP = target.getTotalStats().HP;
+            }
+            this.checkSpriteState(target);
+            this.ctx2.clearRect(0, 0, 800, 600);
+            if (spell.Damage > 0) {
+                this.ctx2.fillText(caster.Base.ID + " Casts spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
+            }
+            else if (spell.Damage <= 0) {
+                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " and heals " + -spell.Damage + " HP", 350, 100);
             }
         }
         checkSpriteState(target) {
             if (target.Current.HP < 1) {
                 target.currentState = 1;
+                target.Current.HP = 0;
                 if (this.battleOver()) {
                     this.endTime = Date.now() + 2000;
                 }
