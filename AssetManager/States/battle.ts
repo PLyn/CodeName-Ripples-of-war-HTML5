@@ -28,6 +28,8 @@ module Game {
         spellList;
         currentSpell;
         spellSelect: boolean = false;
+        status;
+        applyStatus = true;
 
         constructor(ctx, ctx2) {
             super();
@@ -36,8 +38,8 @@ module Game {
             this.spellList = [];
             this.spell = new SpellManager();
             var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
-            this.spell.AddSpell(battleList[0], spellkeys[0]);
-            this.spell.AddSpell(battleList[1], spellkeys[2]);
+            this.spell.AddSpell(battleList[0], spellkeys[3]);
+            this.spell.AddSpell(battleList[1], spellkeys[3]);
 
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
@@ -48,6 +50,8 @@ module Game {
             battleList[2] = this.e1;
             battleList[3] = this.e2;
             this.battleKeys = Object.keys(battleList);
+
+            this.status = new StatusEffect();
 
             menuOptions.push({
                 "Name": "Attack",
@@ -288,25 +292,28 @@ module Game {
             this.ctx2.fillText(attacker.Base.ID + " Attacks " + target.Base.ID + " for " + attacker.Current.Atk + " damage", 350, 100);
         }
         playerSpell(caster, spell, target) {
+            this.ctx2.clearRect(0, 0, 800, 600);
             if (spell.Effect) {
                 //apply status effect
+                var chance = getRandomInt(0, 100);
                 if (target.currentState === 0 && chance > spell.Chance) {
-                    var chance = getRandomInt(0, 100);
                     target.currentState = statusEffects[spell.Status];
+                    this.ctx2.fillText(caster.Base.ID + " Casts spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
                     this.ctx2.fillText(spell.Status, target.x, target.y + 20);
                 }
             }
-            target.Current.HP = target.Current.HP - spell.Damage;
-            if (target.Current.HP > target.getTotalStats().HP) {
-                target.Current.HP = target.getTotalStats().HP;
-            }
-            this.checkSpriteState(target);
-            this.ctx2.clearRect(0, 0, 800, 600);
-            if (spell.Damage > 0) {
-                this.ctx2.fillText(caster.Base.ID + " Casts spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
-            }
-            else if (spell.Damage <= 0) {
-                this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " and heals " + -spell.Damage + " HP", 350, 100);
+            else {
+                target.Current.HP = target.Current.HP - spell.Damage;
+                if (target.Current.HP > target.getTotalStats().HP) {
+                    target.Current.HP = target.getTotalStats().HP;
+                }
+                this.checkSpriteState(target);
+                if (spell.Damage > 0) {
+                    this.ctx2.fillText(caster.Base.ID + " Casts spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
+                }
+                else if (spell.Damage <= 0) {
+                    this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " and heals " + -spell.Damage + " HP", 350, 100);
+                }
             }
         }
         checkSpriteState(target) {
@@ -361,18 +368,35 @@ module Game {
             }
             else if (this.currentPlayer.Base.Type === 1 && this.currentPlayer.currentState !== 1) {
                 if (time > this.newTime) {
-                    this.ctx2.clearRect(0, 0, 800, 600);
-                    //actual stat calculation
-                    var targetNum = getRandomInt(0, this.battleKeys.length - 1);
-                    while (battleList[targetNum].currentState === 1 || battleList[targetNum].Base.Type !== 0) {
-                        targetNum = getRandomInt(0, this.battleKeys.length - 1);
+                    if (this.applyStatus) {
+                        if (this.currentPlayer.currentState === statusEffects['poison']) {
+                            this.ctx2.clearRect(0, 0, 800, 600);
+                            this.statusGUI();
+                            this.ctx2.fillText(this.currentPlayer.Base.ID + " suffers 5 damage from poison", 350, 100);
+                            this.currentPlayer.Current.HP -= 5;
+                        }
+                        else if (this.currentPlayer.currentState === statusEffects['sleep']) {
+                        }
+                        else if (this.currentPlayer.currentState === statusEffects['paralyze']) {
+                        }
+                        this.applyStatus = false;
+                        this.newTime = Date.now() + 2000;
                     }
-                    this.target = battleList[targetNum];
-                    this.playerAttack(this.currentPlayer, this.target);
-                    this.statusGUI();
-                    this.currentkey++;
-                    this.currentPlayer = battleList[this.currentkey];
-                    this.newTime = Date.now() + 2000;
+                    else {
+                        this.ctx2.clearRect(0, 0, 800, 600);
+                        //actual stat calculation
+                        var targetNum = getRandomInt(0, this.battleKeys.length - 1);
+                        while (battleList[targetNum].currentState === 1 || battleList[targetNum].Base.Type !== 0) {
+                            targetNum = getRandomInt(0, this.battleKeys.length - 1);
+                        }
+                        this.target = battleList[targetNum];
+                        this.playerAttack(this.currentPlayer, this.target);
+                        this.statusGUI();
+                        this.currentkey++;
+                        this.currentPlayer = battleList[this.currentkey];
+                        this.newTime = Date.now() + 2000;
+                        this.applyStatus = true;
+                    }
                 }
             }
             else if (this.currentPlayer.currentState === 1) {
