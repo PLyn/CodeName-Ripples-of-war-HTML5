@@ -140,6 +140,9 @@ module Game {
         }
         loadfile(key, url, onLoad, type, pos?) {
             var xobj = new XMLHttpRequest();
+            if (type === 'xml') {
+                xobj.overrideMimeType('text/xml');
+            }
             xobj.open('GET', url, true);
             xobj.onreadystatechange = function () {
                 if (xobj.readyState == 4 && xobj.status == 200) {
@@ -147,7 +150,7 @@ module Game {
                         onLoad(key, xobj.responseText, pos);
                     }
                     else if (type === 'xml') {
-                        onLoad(key, xobj.responseXML);
+                        onLoad(key, xobj.responseXML, pos);
                     }
                     else if (type === 'mp3') {
                         onLoad(key, xobj.response);

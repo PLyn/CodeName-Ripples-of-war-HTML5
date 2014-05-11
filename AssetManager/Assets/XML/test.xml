@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Cutscenes>
 	<scene id="1">
-    <hero>Why is a chair here?</hero>
+    <hero type="dialog">Why is a chair here?</hero>
     <guide>someone wanted to sit there maybe</guide>
     <hero>Just great...A talking fish!</hero>
     <guide>Touche</guide>
