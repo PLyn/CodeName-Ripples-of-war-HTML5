@@ -51,8 +51,6 @@ module Game {
             battleList[3] = this.e2;
             this.battleKeys = Object.keys(battleList);
 
-            this.status = new StatusEffect();
-
             menuOptions.push({
                 "Name": "Attack",
                 "x": 550,
