@@ -57,7 +57,6 @@
     <TypeScriptCompile Include="Game\GameObjects\Item\Helm.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\weapon.ts" />
     <TypeScriptCompile Include="Game\GameObjects\sprite.ts" />
-    <TypeScriptCompile Include="Game\GameObjects\StatusEffect.ts" />
     <TypeScriptCompile Include="Game\Spell\SpellManager.ts" />
     <TypeScriptCompile Include="Game\world.ts" />
     <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />

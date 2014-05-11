@@ -150,16 +150,6 @@ declare module Game {
     }
 }
 declare module Game {
-    class StatusEffect {
-        public effects: {
-            "Poison": number;
-            "Paralyze": number;
-            "Sleep": number;
-        };
-        public apply(target: any): void;
-    }
-}
-declare module Game {
     class SpellManager {
         public SpellKeys: any;
         constructor();
@@ -459,8 +449,20 @@ declare module Game {
         public context: any;
         public ctl: any;
         public xmlID: any;
+        public node: any;
+        public lines: any[];
+        public canvasWidth: any;
+        public ctx: any;
+        public linePos: number;
+        public time: number;
+        public currentTime: number;
+        public prevName: any;
+        public lineHeight: number;
+        public initNode: boolean;
+        public nCounter: number;
         constructor(id: any, width: any, height: any, ctx: any, xmlID: any);
         public init(): void;
+        public nextNode(): void;
         public update(): void;
         public render(): void;
         public pause(): void;

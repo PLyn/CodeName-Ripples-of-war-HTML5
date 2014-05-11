@@ -12,7 +12,7 @@
     <hero>Just who are you...</hero>
   </scene>
   <scene id="3">
-    <hero>a wheel?</hero>
+    <hero type ="Dialog">a wheel?</hero>
   </scene>
   <scene id="4">
     <guide>Welcome to the middle of nowhere!</guide>
