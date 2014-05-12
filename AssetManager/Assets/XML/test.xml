@@ -12,6 +12,8 @@
     <hero>Just who are you...</hero>
   </scene>
   <scene id="3">
+    <at type="anim"></at>
+    <car type="Sfx"></car>
     <hero type ="Dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>
   </scene>
   <scene id="4">

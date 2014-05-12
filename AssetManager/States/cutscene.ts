@@ -19,6 +19,11 @@ module Game {
         lineHeight = 1;
         initNode = true;
         nCounter = 0;
+        nodeCount = 0;
+        textNodes = [];
+        sfx;
+        anim;
+        animate;
         constructor(id, width, height, ctx, xmlID) {
             super();
             this.canvas = <HTMLCanvasElement> document.getElementById('layer2');
@@ -29,90 +34,98 @@ module Game {
         }
         init() {
             this.node = XML_CACHE['chapter'].getElementsByTagName('scene')[this.xmlID];
+            var count = 0;
+            for (var x = 0; x < this.node.childNodes.length; x++) {
+                if (this.node.childNodes[x].nodeType === 1) {
+                    this.textNodes[count] = this.node.childNodes[x];
+                    count++;
+                    this.nodeCount++;
+                }
+            }
+            this.currentNode = this.textNodes[this.nCounter];
             //this.lines = wrap(this.context, this.canvasWidth, this.dialogueObject);
             //this.prevName = this.lines[this.linePos].name;
         }
         nextNode() {
             this.nCounter++;
-            this.currentNode = this.node.childNodes[this.nCounter];
-            if (this.nCounter >= (this.node.childNodes.length - 1)) {
+            this.currentNode = this.textNodes[this.nCounter];
+            if (this.nCounter >= this.nodeCount) {
                 sManager.popState();
             }
         }
         update() {
             this.currentTime = Date.now();
-            if (mousedown()) {
-                this.currentNode = this.node.childNodes[this.nCounter];
-                if (this.currentNode.nodeType !== 1) {
-                    this.nextNode();
-                }
-                switch (this.currentNode.getAttribute('type')) {
-                    case "Dialog":
-                        if (this.initNode) {
-                            this.lines = wrap(this.context, this.canvasWidth, this.currentNode);
+            switch (this.currentNode.getAttribute('type')) {
+                case "Dialog":
+                    if (this.initNode) {
+                        this.lines = wrap(this.context, this.canvasWidth, this.currentNode);
+                        this.prevName = this.lines[this.linePos].name;
+                        this.initNode = false;
+                        this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
+
+                        this.time = this.currentTime + 750;
+                        if (this.prevName !== this.lines[this.linePos].name) {
+                            this.context.clearRect(0, 0, 800, 600);
                             this.prevName = this.lines[this.linePos].name;
-                            this.initNode = false;
+                            this.lineHeight = 1;
                             this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
                         }
-                        if (this.linePos < this.lines.length && this.currentTime > this.time) {
-                            this.time = this.currentTime + 750;
-                            if (this.prevName !== this.lines[this.linePos].name) {
-                                this.context.clearRect(0, 0, 800, 600);
-                                this.prevName = this.lines[this.linePos].name;
-                                this.lineHeight = 1;
-                                this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
-                            }
-                            else if (this.linePos >= 1) {
-                                this.lineHeight += 25;
-                            }
-                            this.context.fillText(this.lines[this.linePos].message, 50, (425 + this.lineHeight));
-                            this.context.fillText(this.lines[this.linePos].name, 30, 400);
-                            this.linePos++;
+                        else if (this.linePos >= 1) {
+                            this.lineHeight += 25;
                         }
-                        else if (this.linePos >= this.lines.length && this.currentTime > this.time) {
-                            this.initNode = true;
-                            this.nextNode();
+                        this.context.fillText(this.lines[this.linePos].message, 50, (425 + this.lineHeight));
+                        this.context.fillText(this.lines[this.linePos].name, 30, 400);
+                        this.linePos++;
+                    }
+                    if (this.linePos < this.lines.length && this.currentTime > this.time && mousedown()) {
+                        this.time = this.currentTime + 750;
+                        if (this.prevName !== this.lines[this.linePos].name) {
+                            this.context.clearRect(0, 0, 800, 600);
+                            this.prevName = this.lines[this.linePos].name;
+                            this.lineHeight = 1;
+                            this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
                         }
-                        break;
-                    case "SFX":
-                        if (this.initNode) {
-                            var sfx;
-                            var soundKeys = Object.keys(SOUND_CACHE);
-                            for (var i = 0; i < SOUND_CACHE.length; i++) {
-                                if (this.currentNode.nodeName === soundKeys[i]) {
-                                    sfx = SOUND_CACHE[soundKeys[i]];
-                                    sfx.play();
-                                    break;
-                                }
-                            }
+                        else if (this.linePos >= 1) {
+                            this.lineHeight += 25;
                         }
-                        if (sfx.ended) {
-                            this.initNode = true;
-                            this.nextNode();
-                        }
-                        break;
-                    case "Action":
-                        break;
-                    case "GFX":
-                        if (this.initNode) {
-                            var gfx;
-                            var animKeys = Object.keys(ANIM_CACHE);
-                            for (var i = 0; i < ANIM_CACHE.length; i++) {
-                                if (this.currentNode.nodeName === animKeys[i]) {
-                                    gfx = ANIM_CACHE[animKeys[i]];
-                                    
-                                    break;
-                                }
-                            }
-                        }
-                        /*if (sfx.ended) {
-                            this.initNode = true;
-                            this.nextNode();
-                        }*/
-                        break;
-                    default:
-                        break;
-                }
+                        this.context.fillText(this.lines[this.linePos].message, 50, (425 + this.lineHeight));
+                        this.context.fillText(this.lines[this.linePos].name, 30, 400);
+                        this.linePos++;
+                    }
+                    else if (this.linePos >= this.lines.length && this.currentTime > this.time && mousedown()) {
+                        this.initNode = true;
+                        this.nextNode();
+                    }
+                    break;
+                case "Sfx":
+                    if (this.initNode) {
+                        this.sfx = SOUND_CACHE[this.currentNode.nodeName];
+                        this.sfx.play();
+                        this.initNode = false;
+                    }
+                    else if (this.sfx.ended) {
+
+                        this.initNode = true;
+                        this.nextNode();
+                    }
+                    break;
+                case "Action":
+                    break;
+                case "anim":
+                    if (this.initNode) {
+                        this.anim = ANIM_CACHE[this.currentNode.nodeName];
+                        this.animate = new Animation(this.context);
+                        this.animate.queueAnimation(this.anim);
+                        this.animate.play();
+                        this.initNode = false;
+                    }
+                    else if (this.animate.finishPlaying) {
+                        this.initNode = true;
+                        this.nextNode();
+                    }
+                    break;
+                default:
+                    break;
             }
         }
         render() {

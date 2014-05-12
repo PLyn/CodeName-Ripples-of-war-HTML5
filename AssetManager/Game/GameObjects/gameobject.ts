@@ -6,7 +6,7 @@ module Game {
         W = 0;
         H = 0;
         img = new Image();
-        scale = 0;
+        scale = 1;
         //pretty much complete imo, other classes such as sprite will extend the variables and functionality
         constructor(img, x, y, w, h, scale?) {
             this.img = img;
@@ -19,9 +19,9 @@ module Game {
         update() {
 
         }
-        render(context) {
-            //context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
-            context.drawImage(this.img, this.x, this.y);
+        render(context, x, y) {
+            context.drawImage(this.img, this.x, this.y, this.W, this.H, x, y, this.W * this.scale, this.H * this.scale);
+            //context.drawImage(this.img, this.x, this.y);
         }
         setPos(x, y) {
             this.x = x;

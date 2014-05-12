@@ -48,6 +48,7 @@
     <TypeScriptCompile Include="Areas\Area1.ts" />
     <TypeScriptCompile Include="Areas\Area2.ts" />
     <TypeScriptCompile Include="Areas\genericarea.ts" />
+    <TypeScriptCompile Include="Game\animation.ts" />
     <TypeScriptCompile Include="Game\BattleFormation.ts" />
     <TypeScriptCompile Include="Game\dialogue.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\accessory.ts" />
@@ -74,6 +75,7 @@
     <TypeScriptCompile Include="States\cutscene.ts" />
     <TypeScriptCompile Include="States\StatusMenu.ts" />
     <TypeScriptCompile Include="Util\objectLength.ts" />
+    <TypeScriptCompile Include="Util\raf.ts" />
     <TypeScriptCompile Include="Util\randomizer.ts" />
     <TypeScriptCompile Include="Util\TextStyler.ts" />
     <TypeScriptCompile Include="Util\wordwrap.ts" />
