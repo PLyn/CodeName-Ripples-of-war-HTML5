@@ -140,9 +140,6 @@ module Game {
         }
         loadfile(key, url, onLoad, type, pos?) {
             var xobj = new XMLHttpRequest();
-            if (type === 'xml') {
-                xobj.overrideMimeType('text/xml');
-            }
             xobj.open('GET', url, true);
             xobj.onreadystatechange = function () {
                 if (xobj.readyState == 4 && xobj.status == 200) {

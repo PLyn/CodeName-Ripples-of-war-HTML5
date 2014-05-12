@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Cutscenes>
 	<scene id="1">
-    <hero type="dialog">Why is a chair here?</hero>
+    <hero>Why is a chair here?</hero>
     <guide>someone wanted to sit there maybe</guide>
     <hero>Just great...A talking fish!</hero>
     <guide>Touche</guide>
@@ -12,7 +12,7 @@
     <hero>Just who are you...</hero>
   </scene>
   <scene id="3">
-    <hero type ="Dialog">a wheel?</hero>
+    <hero type ="Dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>
   </scene>
   <scene id="4">
     <guide>Welcome to the middle of nowhere!</guide>

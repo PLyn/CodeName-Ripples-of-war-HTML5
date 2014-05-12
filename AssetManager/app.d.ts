@@ -450,6 +450,7 @@ declare module Game {
         public ctl: any;
         public xmlID: any;
         public node: any;
+        public currentNode: any;
         public lines: any[];
         public canvasWidth: any;
         public ctx: any;

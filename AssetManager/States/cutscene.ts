@@ -8,6 +8,7 @@ module Game {
         xmlID;
 
         node;
+        currentNode;
         lines = [];
         canvasWidth;
         ctx;
@@ -33,34 +34,39 @@ module Game {
         }
         nextNode() {
             this.nCounter++;
-            if (this.nCounter >= this.node.length) {
+            this.currentNode = this.node.childNodes[this.nCounter];
+            if (this.nCounter >= (this.node.childNodes.length - 1)) {
                 sManager.popState();
             }
         }
         update() {
             this.currentTime = Date.now();
             if (mousedown()) {
-                var node = this.node[this.nCounter];
-                switch (node) {
+                this.currentNode = this.node.childNodes[this.nCounter];
+                if (this.currentNode.nodeType !== 1) {
+                    this.nextNode();
+                }
+                switch (this.currentNode.getAttribute('type')) {
                     case "Dialog":
                         if (this.initNode) {
-                            this.lines = wrap(this.context, this.canvasWidth, node);
+                            this.lines = wrap(this.context, this.canvasWidth, this.currentNode);
                             this.prevName = this.lines[this.linePos].name;
                             this.initNode = false;
+                            this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
                         }
                         if (this.linePos < this.lines.length && this.currentTime > this.time) {
                             this.time = this.currentTime + 750;
                             if (this.prevName !== this.lines[this.linePos].name) {
-                                this.ctx.clearRect(0, 0, 800, 600);
+                                this.context.clearRect(0, 0, 800, 600);
                                 this.prevName = this.lines[this.linePos].name;
                                 this.lineHeight = 1;
+                                this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
                             }
                             else if (this.linePos >= 1) {
                                 this.lineHeight += 25;
                             }
-                            this.ctx.drawImage(IMAGE_CACHE['dialog'], 25, 350);
-                            this.ctx.fillText(this.lines[this.linePos].message, 50, (425 + this.lineHeight));
-                            this.ctx.fillText(this.lines[this.linePos].name, 30, 400);
+                            this.context.fillText(this.lines[this.linePos].message, 50, (425 + this.lineHeight));
+                            this.context.fillText(this.lines[this.linePos].name, 30, 400);
                             this.linePos++;
                         }
                         else if (this.linePos >= this.lines.length && this.currentTime > this.time) {
@@ -73,7 +79,7 @@ module Game {
                             var sfx;
                             var soundKeys = Object.keys(SOUND_CACHE);
                             for (var i = 0; i < SOUND_CACHE.length; i++) {
-                                if (node.nodeName === soundKeys[i]) {
+                                if (this.currentNode.nodeName === soundKeys[i]) {
                                     sfx = SOUND_CACHE[soundKeys[i]];
                                     sfx.play();
                                     break;
@@ -92,7 +98,7 @@ module Game {
                             var gfx;
                             var animKeys = Object.keys(ANIM_CACHE);
                             for (var i = 0; i < ANIM_CACHE.length; i++) {
-                                if (node.nodeName === animKeys[i]) {
+                                if (this.currentNode.nodeName === animKeys[i]) {
                                     gfx = ANIM_CACHE[animKeys[i]];
                                     
                                     break;
