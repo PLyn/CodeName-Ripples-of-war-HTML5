@@ -29,6 +29,14 @@ module Game {
             this.layer1ctx = canvas2.getContext('2d');
 
             this.game = game;
+        }
+        init() {
+            this.layer1ctx.clearRect(0, 0, 800, 600);
+            this.layer2ctx.clearRect(0, 0, 800, 600);
+            tiles.setTileset(this.layer1ctx, this.mapID);
+            this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
+            this.layer1ctx.drawImage(IMAGE_CACHE['hero'], 200, 250);
+
             objects.push(
                 {
                     "height": 75,
@@ -44,13 +52,6 @@ module Game {
                 }
                 );
         }
-        init() {
-            this.layer1ctx.clearRect(0, 0, 800, 600);
-            this.layer2ctx.clearRect(0, 0, 800, 600);
-            tiles.setTileset(this.layer1ctx, this.mapID);
-            this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
-            this.layer1ctx.drawImage(IMAGE_CACHE['hero'], 200, 250);
-        }
         update() {
             if (mousedown()) {
                 this.mx = mEvent.pageX;
@@ -63,7 +64,6 @@ module Game {
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (objects[i].type === 'exit') {
                             if (objects[i].properties.ID === '0') {//EXIT TO WORLD
-                                console.log("exit");
                                 sManager.popState();
                                 this.game.currentArea = new Game.Area1(this.layer1ctx, 800, this);
                             }

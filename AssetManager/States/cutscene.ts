@@ -124,6 +124,8 @@ module Game {
                         this.nextNode();
                     }
                     break;
+                case "bgm":
+                    break;
                 default:
                     break;
             }

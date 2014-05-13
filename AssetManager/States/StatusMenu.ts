@@ -3,29 +3,90 @@ module Game {
     export class StatusMenu extends State {
         mx;
         my;
+        menuItems;
+        context;
         //used as the base class to be extended for each state
         //might need some initialization code to remove some clutter
         //from each state to make stuff look better
         constructor(ctx) {
             super();
-            ctx.fillStyle = "rgba(0, 0, 0, 0.8)";
-            ctx.fillRect(0, 0, 650, 600);
-            ctx.drawImage(IMAGE_CACHE['status'], 0, 100);
-            ctx.drawImage(IMAGE_CACHE['back'], 50, 500);
+            //ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+            //ctx.fillRect(0, 0, 650, 600);
+            this.context = ctx;
+
+            this.menuItems = [];
+            this.menuItems.push({
+                "name": "back",
+                "x": 40,
+                "y": 490,
+                "w": 80,
+                "h": 70 
+            });
+            this.menuItems.push({
+                "name": "equip",
+                "x": 40,
+                "y": 490,
+                "w": 80,
+                "h": 70 
+            });
+            this.menuItems.push({
+                "name": "formation",
+                "x": 40,
+                "y": 490,
+                "w": 80,
+                "h": 70 
+            });
+            this.menuItems.push({
+                "name": "inventory",
+                "x": 40,
+                "y": 490,
+                "w": 80,
+                "h": 70
+            });
+            this.menuItems.push({
+                "name": "status",
+                "x": 40,
+                "y": 490,
+                "w": 80,
+                "h": 70
+            });
+            this.menuItems.push({
+                "name": "setting",
+                "x": 40,
+                "y": 490,
+                "w": 80,
+                "h": 70
+            });
+            this.menuItems.push({
+                "name": "save",
+                "x": 40,
+                "y": 490,
+                "w": 80,
+                "h": 70
+            });
         }
         init() {
-
+            this.context.drawImage(IMAGE_CACHE['status'], 0, 100);
+            this.context.drawImage(IMAGE_CACHE['back'], 50, 500);
         }
         update() {
             if (mousedown()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
-                var x1 = 40;
-                var x2 = 120;
-                var y1 = 490;
-                var y2 = 560;
-                if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                    sManager.popState();
+                for (var x = 0; x < this.menuItems.length; x++) {
+                    var x1 = this.menuItems[x].x;
+                    var x2 = this.menuItems[x].x + this.menuItems[x].y;
+                    var y1 = this.menuItems[x].w;
+                    var y2 = this.menuItems[x].y + this.menuItems[x].h;
+                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                        switch (this.menuItems[x].name) {
+                            case "back":
+                                sManager.popState();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 }
             }
         }

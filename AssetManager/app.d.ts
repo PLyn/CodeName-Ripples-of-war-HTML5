@@ -491,6 +491,8 @@ declare module Game {
     class StatusMenu extends State {
         public mx: any;
         public my: any;
+        public menuItems: any;
+        public context: any;
         constructor(ctx: any);
         public init(): void;
         public update(): void;

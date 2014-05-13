@@ -12,9 +12,11 @@
     <hero>Just who are you...</hero>
   </scene>
   <scene id="3">
+    <off type="bgm"></off>
     <at type="anim"></at>
     <car type="Sfx"></car>
     <hero type ="Dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>
+    <on type="bgm"></on>
   </scene>
   <scene id="4">
     <guide>Welcome to the middle of nowhere!</guide>
