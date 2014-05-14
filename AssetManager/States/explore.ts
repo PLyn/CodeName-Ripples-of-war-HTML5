@@ -79,14 +79,6 @@ module Game {
                             this.layer2ctx.clearRect(0, 0, 800, 600);
                             sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, objects[i].properties.ID));
                         }
-                        else if (objects[i].type === 'shop') {
-                            this.layer2ctx.clearRect(0, 0, 800, 600);
-                            sManager.pushState(new EquipShop(this.layer1ctx, this.layer2ctx));
-                        }
-                        else if (objects[i].type === 'form') {
-                            this.layer2ctx.clearRect(0, 0, 800, 600);
-                            sManager.pushState(new FormationState(this.layer1ctx, this.layer2ctx));
-                        }
                         else if (objects[i].type === 'battle') {
                             sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx));
                         }

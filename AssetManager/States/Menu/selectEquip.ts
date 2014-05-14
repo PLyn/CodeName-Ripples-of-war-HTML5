@@ -1,4 +1,4 @@
-﻿///<reference path='State.ts' />
+﻿///<reference path='../State.ts' />
 var currentEquips = [];
 module Game {
     export class SelectEquip extends State {

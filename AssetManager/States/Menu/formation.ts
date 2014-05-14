@@ -1,6 +1,6 @@
-﻿///<reference path='State.ts' />
+﻿///<reference path='../State.ts' />
 module Game {
-    export class FormationState extends State{
+    export class Formation extends State{
         ctx : CanvasRenderingContext2D;
         ctx2: CanvasRenderingContext2D;
         mx;
@@ -9,9 +9,8 @@ module Game {
         back = false;
         forms;
         keys;
-        constructor(ctx, ctx2) {
+        constructor(ctx2) {
             super();
-            this.ctx = ctx; 
             this.ctx2 = ctx2;
             this.forms = [];
         }

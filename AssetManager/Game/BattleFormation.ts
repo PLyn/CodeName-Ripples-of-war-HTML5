@@ -1,6 +1,6 @@
 ﻿var FORMATION;
 module Game {
-    export class Formation {
+    export class BattleFormation {
         positions;
         bonus;
         current;

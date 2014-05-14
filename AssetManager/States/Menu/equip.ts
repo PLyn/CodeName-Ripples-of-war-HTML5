@@ -1,7 +1,7 @@
-﻿///<reference path='State.ts' />
+﻿///<reference path='../State.ts' />
 var equips = [];
 module Game {
-    export class EquipShop extends State{
+    export class Equip extends State{
         ctx : CanvasRenderingContext2D;
         ctx2: CanvasRenderingContext2D;
         mx;
@@ -9,9 +9,8 @@ module Game {
         time = 0;
         back = false;
         stats;
-        constructor(ctx, ctx2) {
+        constructor(ctx2) {
             super();
-            this.ctx = ctx; 
             this.ctx2 = ctx2;
 
         }

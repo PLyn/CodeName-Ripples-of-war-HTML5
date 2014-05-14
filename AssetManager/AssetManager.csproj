@@ -66,10 +66,14 @@
     <TypeScriptCompile Include="Game\manager.ts" />
     <TypeScriptCompile Include="Game\tilemap.ts" />
     <TypeScriptCompile Include="States\battle.ts" />
-    <TypeScriptCompile Include="States\equipShop.ts" />
+    <TypeScriptCompile Include="States\Menu\equip.ts" />
     <TypeScriptCompile Include="States\explore.ts" />
-    <TypeScriptCompile Include="States\FormationState.ts" />
-    <TypeScriptCompile Include="States\selectEquip.ts" />
+    <TypeScriptCompile Include="States\Menu\formation.ts" />
+    <TypeScriptCompile Include="States\Menu\inventory.ts" />
+    <TypeScriptCompile Include="States\Menu\save.ts" />
+    <TypeScriptCompile Include="States\Menu\selectEquip.ts" />
+    <TypeScriptCompile Include="States\Menu\setting.ts" />
+    <TypeScriptCompile Include="States\Menu\status.ts" />
     <TypeScriptCompile Include="States\State.ts" />
     <TypeScriptCompile Include="Game\StateManager.ts" />
     <TypeScriptCompile Include="States\cutscene.ts" />

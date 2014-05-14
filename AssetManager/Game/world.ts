@@ -39,7 +39,7 @@ module Game {
             //p1.equipItem(sword, sword.Type);
             battleList[0] = p1;
             battleList[1] = p2;
-            FORMATION = new Formation();
+            FORMATION = new BattleFormation();
         }
         update() {
             this.currentArea.update();
