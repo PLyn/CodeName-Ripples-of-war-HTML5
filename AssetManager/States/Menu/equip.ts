@@ -82,7 +82,7 @@ module Game {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 sManager.popState();
             }
-            if (mousedown()) {
+            if (mousedown) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < equips.length; i++) {

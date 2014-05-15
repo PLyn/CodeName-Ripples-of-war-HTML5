@@ -1,6 +1,6 @@
 ﻿var that = this;
 var keys = [];
-var click = false;
+var mousedown = false;
 var canvas;
 var mEvent = null;
 
@@ -8,17 +8,14 @@ document.addEventListener('mousedown', function (e) {
     e.stopPropagation();
     e.preventDefault();
     that.mEvent = e;
-    that.click = true;
+    that.mousedown = true;
 });
 document.addEventListener('mouseup', function (e) {
     e.stopPropagation();
     e.preventDefault();
-    that.click = false;
+    that.mousedown = false;
 });
 
-function mousedown() {
-    return click;
-}
 /*module Game {
     export class input {
         keys;

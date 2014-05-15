@@ -70,7 +70,7 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['back'], 50, 500);
         }
         update() {
-            if (mousedown()) {
+            if (mousedown) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var x = 0; x < this.menuItems.length; x++) {
@@ -84,6 +84,7 @@ module Game {
                                 sManager.popState();
                                 break;
                             case "inventory":
+                                sManager.pushState(new Inventory(this.context));
                                 break;
                             case "equip":
                                 sManager.pushState(new Equip(this.context));

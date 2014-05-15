@@ -26,7 +26,7 @@
         }
         popState() {
             if (this.stateStack.length > 0 && this.time < Date.now()) {
-                this.time = Date.now() + 10;
+                this.time = Date.now() + 1000;
                 this.stateStack.pop();
                 if (this.stateStack.length > 0) {
                     var len = this.stateStack.length;

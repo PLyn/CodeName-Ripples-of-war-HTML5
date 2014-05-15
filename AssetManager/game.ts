@@ -43,6 +43,7 @@ module Game {
                 JSON: {
                     equip: 'Assets/XML/Equipment.json',
                     formation: 'Assets/XML/Formation.json',
+                    items: 'Assets/XML/item.json',
                     spell: 'Assets/XML/Spells.json'
                 },
                 Sounds: {

@@ -1,0 +1,12 @@
+﻿{
+	"consumable": {
+		"item1": {
+			"name": "potion"
+		}
+	},
+	"quest":{
+		"item2": {
+			"name": "potion2"
+		}
+	}
+}

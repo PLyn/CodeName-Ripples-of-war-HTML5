@@ -69,7 +69,7 @@ module Game {
             this.ctx.drawImage(IMAGE_CACHE['bg'], 0, 0);
         }
         Action() {
-            if (this.currentPlayer.Base.Type === 0 && mousedown()) {
+            if (this.currentPlayer.Base.Type === 0 && mousedown) {
                 if (this.command === 'spell' && this.currentSpell.TargetAll === 1) {
                 }
                 else {
@@ -361,7 +361,7 @@ module Game {
             else if (this.currentPlayer.Base.Type === 0 && this.enemySelect) {
                 this.Action();
             }
-            else if (this.currentPlayer.Base.Type === 0 && mousedown() && this.currentPlayer.currentState !== 1) {
+            else if (this.currentPlayer.Base.Type === 0 && mousedown && this.currentPlayer.currentState !== 1) {
                 this.Target(time);
             }
             else if (this.currentPlayer.Base.Type === 1 && this.currentPlayer.currentState !== 1) {

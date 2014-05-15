@@ -56,6 +56,7 @@
     <TypeScriptCompile Include="Game\GameObjects\Item\equipable.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\feet.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\Helm.ts" />
+    <TypeScriptCompile Include="Game\GameObjects\Item\item.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\weapon.ts" />
     <TypeScriptCompile Include="Game\GameObjects\sprite.ts" />
     <TypeScriptCompile Include="Game\Spell\SpellManager.ts" />
@@ -70,6 +71,7 @@
     <TypeScriptCompile Include="States\explore.ts" />
     <TypeScriptCompile Include="States\Menu\formation.ts" />
     <TypeScriptCompile Include="States\Menu\inventory.ts" />
+    <TypeScriptCompile Include="States\Menu\itemDetails.ts" />
     <TypeScriptCompile Include="States\Menu\save.ts" />
     <TypeScriptCompile Include="States\Menu\selectEquip.ts" />
     <TypeScriptCompile Include="States\Menu\setting.ts" />
@@ -95,6 +97,7 @@
     <Content Include="Assets\XML\Equipment.json" />
     <Content Include="Assets\XML\Formation.json" />
     <Content Include="Assets\XML\Spells.json" />
+    <Content Include="Assets\XML\item.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

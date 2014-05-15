@@ -77,7 +77,7 @@ module Game {
                         this.context.fillText(this.lines[this.linePos].name, 30, 400);
                         this.linePos++;
                     }
-                    if (this.linePos < this.lines.length && this.currentTime > this.time && mousedown()) {
+                    if (this.linePos < this.lines.length && this.currentTime > this.time && mousedown) {
                         this.time = this.currentTime + 750;
                         if (this.prevName !== this.lines[this.linePos].name) {
                             this.context.clearRect(0, 0, 800, 600);
@@ -92,7 +92,7 @@ module Game {
                         this.context.fillText(this.lines[this.linePos].name, 30, 400);
                         this.linePos++;
                     }
-                    else if (this.linePos >= this.lines.length && this.currentTime > this.time && mousedown()) {
+                    else if (this.linePos >= this.lines.length && this.currentTime > this.time && mousedown) {
                         this.initNode = true;
                         this.nextNode();
                     }
