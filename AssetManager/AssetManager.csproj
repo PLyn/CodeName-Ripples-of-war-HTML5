@@ -56,10 +56,10 @@
     <TypeScriptCompile Include="Game\GameObjects\Item\equipable.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\feet.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\Helm.ts" />
-    <TypeScriptCompile Include="Game\GameObjects\Item\item.ts" />
+    <TypeScriptCompile Include="Game\itemManager.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\weapon.ts" />
     <TypeScriptCompile Include="Game\GameObjects\sprite.ts" />
-    <TypeScriptCompile Include="Game\Spell\SpellManager.ts" />
+    <TypeScriptCompile Include="Game\SpellManager.ts" />
     <TypeScriptCompile Include="Game\world.ts" />
     <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />

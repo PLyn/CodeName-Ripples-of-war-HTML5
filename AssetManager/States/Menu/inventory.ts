@@ -17,8 +17,8 @@ module Game {
             this.context.fillText("Key Items", 75, 120);
 
             this.items = [];
-            var ikeys = Object.keys(JSON_CACHE['items']['consumable']);
-            var items = JSON_CACHE['items']['consumable'];
+            var ikeys = Object.keys(ITEM.consumable);
+            var items = ITEM.consumable;
             for (var x = 0; x < ikeys.length; x++) {
                 this.context.fillText(items[ikeys[x]].name, 25, 150 + (x * 30));
                 this.items.push({
@@ -60,7 +60,7 @@ module Game {
                     this.context.fillText(items[ikeys[x]], 25, 130 + (x * 30));
                 }
             }
-            else if (type === "comsumable") {
+            else if (type === "consumable") {
                 var ikeys = Object.keys(JSON_CACHE['items']['consumable']);
                 var items = JSON_CACHE['items']['consumable'];
                 for (var x = 0; x < ikeys.length; x++) {
