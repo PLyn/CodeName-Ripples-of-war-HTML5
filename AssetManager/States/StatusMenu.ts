@@ -25,49 +25,49 @@ module Game {
             this.menuItems.push({
                 "name": "equip",
                 "x": 485,
-                "y": 75,
+                "y": 175,
                 "w": 150,
                 "h": 40 
             });
             this.menuItems.push({
                 "name": "formation",
                 "x": 485,
-                "y": 135,
+                "y": 235,
                 "w": 150,
                 "h": 40 
             });
             this.menuItems.push({
                 "name": "inventory",
                 "x": 485,
-                "y": 20,
+                "y": 120,
                 "w": 150,
                 "h": 40 
             });
             this.menuItems.push({
                 "name": "status",
                 "x": 485,
-                "y": 185,
+                "y": 285,
                 "w": 150,
                 "h": 40 
             });
             this.menuItems.push({
                 "name": "setting",
                 "x": 485,
-                "y": 245,
+                "y": 345,
                 "w": 150,
                 "h": 40 
             });
             this.menuItems.push({
                 "name": "save",
                 "x": 485,
-                "y": 300,
+                "y": 400,
                 "w": 150,
                 "h": 40 
             });
         }
         init() {
             this.context.drawImage(IMAGE_CACHE['status'], 0, 100);
-            this.context.drawImage(IMAGE_CACHE['back'], 50, 500);
+            this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
         }
         update() {
             if (mousedown) {
@@ -93,6 +93,7 @@ module Game {
                                 sManager.pushState(new Formation(this.context));
                                 break;
                             case "status":
+                                sManager.pushState(new Status(this.context));
                                 break;
                             case "setting":
                                 break;

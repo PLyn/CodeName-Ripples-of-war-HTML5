@@ -16,9 +16,9 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['dialog'], 35, 150);
             this.context.fillText(this.item.name, 45, 160);
             this.context.fillText("description here", 45, 200);
-            this.context.fillText("Image here", 150, 200);
+            this.context.fillText("Image here", 200, 200);
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
-            this.context.fillText("Use", 200, 500);
+            this.context.fillText("Use", 300, 300);
 
             this.clickBounds.push({
                 "name": "back",

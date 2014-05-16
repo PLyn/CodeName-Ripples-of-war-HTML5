@@ -24,7 +24,6 @@ module Game {
         currentHP;
         formation;
         command;
-        spell: SpellManager;
         spellList;
         currentSpell;
         spellSelect: boolean = false;
@@ -36,10 +35,6 @@ module Game {
             this.ctx = ctx;
             this.ctx2 = ctx2;
             this.spellList = [];
-            this.spell = new SpellManager();
-            var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
-            this.spell.AddSpell(battleList[0], spellkeys[3]);
-            this.spell.AddSpell(battleList[1], spellkeys[3]);
 
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);

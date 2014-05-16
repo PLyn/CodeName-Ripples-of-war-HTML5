@@ -10,7 +10,7 @@ module Game {
         currentArea;
         width;
         battle; 
-
+        spell;
         //remove alot of initialization code from here as it will go in the states
         //need to put the code in here to deal with the states as needed thoughs
         constructor() {
@@ -41,6 +41,10 @@ module Game {
             battleList[1] = p2;
             FORMATION = new BattleFormation();
             ITEM = new ItemManager();
+            this.spell = new SpellManager();
+            var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
+            this.spell.AddSpell(battleList[0], spellkeys[3]);
+            this.spell.AddSpell(battleList[1], spellkeys[3]);
             //ITEM.add("potion", 2, "consumable")
         }
         update() {

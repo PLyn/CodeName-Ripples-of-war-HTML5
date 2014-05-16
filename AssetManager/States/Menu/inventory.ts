@@ -14,7 +14,7 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['dialog'], 15, 100);
 
             this.context.fillText("Items", 25, 120);
-            this.context.fillText("Key Items", 75, 120);
+            this.context.fillText("Key Items", 100, 120);
 
             this.items = [];
             var ikeys = Object.keys(ITEM.consumable);
@@ -22,6 +22,7 @@ module Game {
             for (var x = 0; x < ikeys.length; x++) {
                 if (items[ikeys[x]].quantity > 0) {
                     this.context.fillText(items[ikeys[x]].name, 25, 150 + (x * 30));
+                    this.context.fillText(items[ikeys[x]].quantity, 100, 150 + (x * 30));
                     this.items.push({
                         "name": items[ikeys[x]].name,
                         "x": 25,
