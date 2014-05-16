@@ -20,14 +20,16 @@ module Game {
             var ikeys = Object.keys(ITEM.consumable);
             var items = ITEM.consumable;
             for (var x = 0; x < ikeys.length; x++) {
-                this.context.fillText(items[ikeys[x]].name, 25, 150 + (x * 30));
-                this.items.push({
-                    "name": items[ikeys[x]].name,
-                    "x": 25,
-                    "y": (150 + (x * 30)),
-                    "w": this.context.measureText(items[ikeys[x]]).width,
-                    "h": 15
-                });
+                if (items[ikeys[x]].quantity > 0) {
+                    this.context.fillText(items[ikeys[x]].name, 25, 150 + (x * 30));
+                    this.items.push({
+                        "name": items[ikeys[x]].name,
+                        "x": 25,
+                        "y": (150 + (x * 30)),
+                        "w": this.context.measureText(items[ikeys[x]]).width,
+                        "h": 15
+                    });
+                }
             }
             this.items.push({
                 "name": "quest",

@@ -104,7 +104,6 @@ module Game {
                         this.initNode = false;
                     }
                     else if (this.sfx.ended) {
-
                         this.initNode = true;
                         this.nextNode();
                     }
@@ -125,6 +124,11 @@ module Game {
                     }
                     break;
                 case "bgm":
+                    this.nextNode();
+                    break;
+                case "item":
+                    ITEM.add(this.currentNode.nodeName, this.currentNode.getAttribute('quantity'), this.currentNode.getAttribute('itemType'));
+                    this.nextNode();
                     break;
                 default:
                     break;

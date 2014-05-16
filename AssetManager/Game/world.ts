@@ -41,7 +41,7 @@ module Game {
             battleList[1] = p2;
             FORMATION = new BattleFormation();
             ITEM = new ItemManager();
-            ITEM.add("potion", 2, "consumable")
+            //ITEM.add("potion", 2, "consumable")
         }
         update() {
             this.currentArea.update();

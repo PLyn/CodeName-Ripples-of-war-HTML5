@@ -114,7 +114,6 @@ declare module Game {
         public itemKeys: any;
         constructor();
         public add(name: any, amt: any, type: any): void;
-        public remove(name: any, amt: any, type: any): void;
     }
 }
 declare module Game {
