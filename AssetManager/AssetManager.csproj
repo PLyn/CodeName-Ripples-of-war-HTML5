@@ -22,6 +22,7 @@
     <Content Include="Assets\Image\arrowRight.png" />
     <Content Include="Assets\Image\attack_button.png" />
     <Content Include="Assets\Image\bg.png" />
+    <Content Include="Assets\Image\box.png" />
     <Content Include="Assets\Image\defend_button.png" />
     <Content Include="Assets\Image\dialogWindow.png" />
     <Content Include="Assets\Image\diamond.png" />
@@ -30,6 +31,7 @@
     <Content Include="Assets\Image\menuButton.png" />
     <Content Include="Assets\Image\spell.png" />
     <Content Include="Assets\Image\status.png" />
+    <Content Include="Assets\Image\tick.png" />
     <Content Include="Assets\Music\theme.mp3" />
     <Content Include="Assets\Tilemap\obj_misk_atlas.png" />
     <Content Include="Assets\Sound\car.mp3" />

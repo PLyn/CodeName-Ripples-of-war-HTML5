@@ -96,6 +96,7 @@ module Game {
                                 sManager.pushState(new Status(this.context));
                                 break;
                             case "setting":
+                                sManager.pushState(new Setting(this.context));
                                 break;
                             case "save":
                                 break;

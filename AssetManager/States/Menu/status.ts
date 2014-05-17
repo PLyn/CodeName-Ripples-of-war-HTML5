@@ -60,26 +60,27 @@ module Game {
             this.init();
         }
         update() {
-            this.mx = mEvent.pageX;
-            this.my = mEvent.pageY;
-            var keys = Object.keys(this.objects);
-            for (var i = 0; i < keys.length; i++) {
-                var x1 = this.objects[keys[i]].x;
-                var x2 = this.objects[keys[i]].x + this.objects[keys[i]].w;
-                var y1 = this.objects[keys[i]].y;
-                var y2 = this.objects[keys[i]].y + this.objects[keys[i]].h;
-                if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                    if (this.objects[keys[i]].Name === "back") {
-                        this.context.clearRect(0, 0, 800, 600);
-                        sManager.popState();
-                    }
-                    else {
-                        this.reload(this.objects[keys[i]].Name);
-                        break;
+            if (mousedown) {
+                this.mx = mEvent.pageX;
+                this.my = mEvent.pageY;
+                var keys = Object.keys(this.objects);
+                for (var i = 0; i < keys.length; i++) {
+                    var x1 = this.objects[keys[i]].x;
+                    var x2 = this.objects[keys[i]].x + this.objects[keys[i]].w;
+                    var y1 = this.objects[keys[i]].y;
+                    var y2 = this.objects[keys[i]].y + this.objects[keys[i]].h;
+                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                        if (this.objects[keys[i]].Name === "back") {
+                            this.context.clearRect(0, 0, 800, 600);
+                            sManager.popState();
+                        }
+                        else {
+                            this.reload(this.objects[keys[i]].Name);
+                            break;
+                        }
                     }
                 }
             }
-        
         }
         render() {
 

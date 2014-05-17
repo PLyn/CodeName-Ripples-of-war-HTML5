@@ -506,6 +506,20 @@ declare module Game {
         public destroy(): void;
     }
 }
+declare module Game {
+    class Save extends State {
+        public context: any;
+        public mx: any;
+        public my: any;
+        constructor(context: any);
+        public init(): void;
+        public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+    }
+}
 declare var currentEquips: any[];
 declare module Game {
     class SelectEquip extends State {
@@ -523,6 +537,26 @@ declare module Game {
         constructor(ctx2: any, type: any);
         public init(): void;
         public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+    }
+}
+declare module Game {
+    class Setting extends State {
+        public context: CanvasRenderingContext2D;
+        public mx: any;
+        public my: any;
+        public objects: any;
+        public soundBool: boolean;
+        public musicBool: boolean;
+        public time: number;
+        constructor(context: any);
+        public init(): void;
+        public update(): void;
+        public soundBox(): void;
+        public musicBox(): void;
         public render(): void;
         public pause(): void;
         public resume(): void;
