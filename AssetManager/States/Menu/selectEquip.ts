@@ -13,11 +13,13 @@ module Game {
         itemSelected = false;
         time = 0;
         type;
+        battler;
 
-        constructor(ctx2, type) {
+        constructor(ctx2, type, battler) {
             super();
             this.ctx2 = ctx2;
             this.type = type;
+            this.battler = battler;
         }
         init() {
             this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 300);
@@ -31,7 +33,7 @@ module Game {
                         "x": 50,
                         "y": (25 * i) + 325,
                         "w": this.ctx2.measureText(this.hKeys[i]).width,
-                        "h": 25
+                        "h": 15
                     }
                 currentEquips.push(obj);
                 }
@@ -45,7 +47,7 @@ module Game {
                         "x": 50,
                         "y": (25 * i) + 325,
                         "w": this.ctx2.measureText(this.bKeys[i]).width,
-                        "h": 25
+                        "h": 15
                     }
                 currentEquips.push(obj);
                 }
@@ -59,7 +61,7 @@ module Game {
                         "x": 50,
                         "y": (25 * i) + 325,
                         "w": this.ctx2.measureText(this.wKeys[i]).width,
-                        "h": 25
+                        "h": 15
                     }
                 currentEquips.push(obj);
                 }
@@ -73,7 +75,7 @@ module Game {
                         "x": 50,
                         "y": (25 * i) + 325,
                         "w": this.ctx2.measureText(this.fKeys[i]).width,
-                        "h": 25
+                        "h": 15
                     }
                 currentEquips.push(obj);
                 }
@@ -100,8 +102,8 @@ module Game {
                             for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Head); x++) {
                                 if (currentEquips[i].Name === this.hKeys[x]) {
                                     this.item = JSON_CACHE['equip'].Head[this.hKeys[x]];
-                                    battleList[0].unequipItem(this.type);
-                                    battleList[0].equipItem(this.hKeys[x], this.item, 'Head');
+                                    this.battler.unequipItem(this.type);
+                                    this.battler.equipItem(this.hKeys[x], this.item, 'Head');
                                     sManager.popState();
                                     break;
                                 }
@@ -112,8 +114,8 @@ module Game {
                                 if (currentEquips[i].Name === this.bKeys[x]) {
                                     //this.itemSelected = true;
                                     this.item = JSON_CACHE['equip'].Body[this.bKeys[x]];
-                                    battleList[0].unequipItem(this.type);
-                                    battleList[0].equipItem(this.bKeys[x], this.item, 'Body');
+                                    this.battler.unequipItem(this.type);
+                                    this.battler.equipItem(this.bKeys[x], this.item, 'Body');
                                     sManager.popState();
                                     break;
                                 }
@@ -124,8 +126,8 @@ module Game {
                                 if (currentEquips[i].Name === this.wKeys[x]) {
                                     //this.itemSelected = true;
                                     this.item = JSON_CACHE['equip'].Weapon[this.wKeys[x]];
-                                    battleList[0].unequipItem(this.type);
-                                    battleList[0].equipItem(this.wKeys[x], this.item, 'Weapon');
+                                    this.battler.unequipItem(this.type);
+                                    this.battler.equipItem(this.wKeys[x], this.item, 'Weapon');
                                     sManager.popState();
                                     break;
                                 }
@@ -136,8 +138,8 @@ module Game {
                                 if (currentEquips[i].Name === this.fKeys[x]) {
                                     //this.itemSelected = true;
                                     this.item = JSON_CACHE['equip'].Feet[this.fKeys[x]];
-                                    battleList[0].unequipItem(this.type);
-                                    battleList[0].equipItem(this.fKeys[x], this.item, 'Feet');
+                                    this.battler.unequipItem(this.type);
+                                    this.battler.equipItem(this.fKeys[x], this.item, 'Feet');
                                     sManager.popState();
                                     break;
                                 }

@@ -365,17 +365,21 @@ declare module Game {
 declare var equips: any[];
 declare module Game {
     class Equip extends State {
-        public ctx: CanvasRenderingContext2D;
-        public ctx2: CanvasRenderingContext2D;
+        public context: CanvasRenderingContext2D;
         public mx: any;
         public my: any;
         public time: number;
         public back: boolean;
         public stats: any;
-        constructor(ctx2: any);
+        public objects: any;
+        public battler: any;
+        constructor(context: any);
         public drawEquip(): void;
         public addEquipPos(): void;
         public changeEquip(): void;
+        public drawPC(): void;
+        public reload(name: any): void;
+        public checkCurrentChar(): void;
         public init(): void;
         public update(): void;
         public render(): void;
@@ -415,6 +419,8 @@ declare module Game {
         public back: boolean;
         public forms: any;
         public keys: any;
+        public battleKeys: any;
+        public formation: any;
         constructor(ctx2: any);
         public draw(): void;
         public addObjects(): void;
@@ -493,7 +499,8 @@ declare module Game {
         public itemSelected: boolean;
         public time: number;
         public type: any;
-        constructor(ctx2: any, type: any);
+        public battler: any;
+        constructor(ctx2: any, type: any, battler: any);
         public init(): void;
         public update(): void;
         public render(): void;

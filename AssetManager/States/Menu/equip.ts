@@ -2,70 +2,72 @@
 var equips = [];
 module Game {
     export class Equip extends State{
-        ctx : CanvasRenderingContext2D;
-        ctx2: CanvasRenderingContext2D;
+        context: CanvasRenderingContext2D;
         mx;
         my;
         time = 0;
         back = false;
         stats;
-        constructor(ctx2) {
+        objects;
+        battler;
+        constructor(context) {
             super();
-            this.ctx2 = ctx2;
-
+            this.context = context;
+            this.battler = battleList[0];
+            this.objects = [];
         }
         drawEquip() {
-            this.ctx2.clearRect(0, 0, 800, 600);
-            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
-            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
-            this.ctx2.fillText(battleList[0].Base.ID + " Equipment Area", 200, 125);
-            this.ctx2.fillText("Head: " + battleList[0].Equipment['Head'], 75, 150);
-            this.ctx2.fillText("Body: " + battleList[0].Equipment['Body'], 75, 175);
-            this.ctx2.fillText("Weapon: " + battleList[0].Equipment['Weapon'], 75, 200);
-            this.ctx2.fillText("Feet: " + battleList[0].Equipment['Feet'], 75, 225);
+            this.context.clearRect(0, 0, 800, 600);
+            this.context.drawImage(IMAGE_CACHE['dialog'], 15, 100);
+            setStyle(this.context, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
 
-            this.stats = battleList[0].getTotalStats();
-            this.ctx2.fillText("HP: " + this.stats.HP, 400, 150);
-            this.ctx2.fillText("MP: " + this.stats.MP, 400, 175);
-            this.ctx2.fillText("Attack: " + this.stats.Atk, 400, 200);
-            this.ctx2.fillText("Defense: " + this.stats.Def, 400, 225);
-            this.ctx2.fillText("Speed: " + this.stats.Spd, 400, 250);
-            this.ctx2.fillText("Magic Defense: " + this.stats.MDef, 400, 275);
-            this.ctx2.fillText("Luck: " + this.stats.Luc, 400, 300);
+            this.context.fillText("Head: " + this.battler.Equipment['Head'], 75, 175);
+            this.context.fillText("Body: " + this.battler.Equipment['Body'], 75, 200);
+            this.context.fillText("Weapon: " + this.battler.Equipment['Weapon'], 75, 225);
+            this.context.fillText("Feet: " + this.battler.Equipment['Feet'], 75, 250);
 
-            this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
+            this.stats = this.battler.getTotalStats();
+            this.context.fillText("HP: " + this.stats.HP, 400, 175);
+            this.context.fillText("MP: " + this.stats.MP, 400, 200);
+            this.context.fillText("Attack: " + this.stats.Atk, 400, 225);
+            this.context.fillText("Defense: " + this.stats.Def, 400, 250);
+            this.context.fillText("Speed: " + this.stats.Spd, 400, 275);
+            this.context.fillText("Magic Defense: " + this.stats.MDef, 400, 300);
+            this.context.fillText("Luck: " + this.stats.Luc, 400, 325);
+
+            this.context.drawImage(IMAGE_CACHE['back'], 25, 500);
         }
         addEquipPos() {
             var obj = {
                 "type": "Head",
                 "x": 75,
-                "y": 145,
-                "w": this.ctx2.measureText("Head: " + battleList[0].Equipment['Head']).width,
-                "h": 5
+                "y": 175,
+                "w": this.context.measureText("Head: " + this.battler.Equipment['Head']).width,
+                "h": 15
             };
             equips.push(obj);
             obj = {
                 "type": "Body",
                 "x": 75,
-                "y": 175,
-                "w": this.ctx2.measureText("Body: " + battleList[0].Equipment['Body']).width,
-                "h": 5
+                "y": 200,
+                "w": this.context.measureText("Body: " + this.battler.Equipment['Body']).width,
+                "h": 15
             };
             equips.push(obj);
             obj = {
                 "type": "Weapon",
                 "x": 75,
-                "y": 200,
-                "w": this.ctx2.measureText("Weapon: " + battleList[0].Equipment['Weapon']).width,
-                "h": 5
+                "y": 225,
+                "w": this.context.measureText("Weapon: " + this.battler.Equipment['Weapon']).width,
+                "h": 15
             };
             equips.push(obj);
             obj = {
                 "type": "Feet",
                 "x": 75,
-                "y": 225,
-                "w": this.ctx2.measureText("Legs: " + battleList[0].Equipment['Feet']).width,
-                "h": 5
+                "y": 250,
+                "w": this.context.measureText("Legs: " + this.battler.Equipment['Feet']).width,
+                "h": 15
             };
             equips.push(obj);
             obj = {
@@ -79,7 +81,7 @@ module Game {
         }
         changeEquip() {
             if (Date.now() > this.time && this.back) {
-                this.ctx2.clearRect(0, 0, 800, 600);
+                this.context.clearRect(0, 0, 800, 600);
                 sManager.popState();
             }
             if (mousedown) {
@@ -96,20 +98,67 @@ module Game {
                             this.time = Date.now() + 100;
                         }
                         else {
-                            sManager.pushState(new SelectEquip(this.ctx2, equips[i].type));
+                            sManager.pushState(new SelectEquip(this.context, equips[i].type, this.battler));
                         }
                     }
                 }
             }
         }
+        drawPC() {
+            var oKeys = Object.keys(battleList);
+            for (var y = 0; y < oKeys.length; y++) {
+                if (battleList[oKeys[y]].Base.Type === 0) {
+                    if (this.battler === battleList[oKeys[y]]) {
+                        this.context.fillText("*", 210 + (y * 75), 140)
+                    }
+                    this.context.fillText(battleList[oKeys[y]].Base.ID, 200 + (y * 75), 125);
+                    this.objects[y] = {
+                        "Name": battleList[oKeys[y]].Base.ID,
+                        "x": 200 + (y * 75),
+                        "y": 125,
+                        "w": this.context.measureText(battleList[oKeys[y]].Base.ID).width,
+                        "h": 15
+                    };
+                }
+            }
+        }
+        reload(name) {
+            var oKeys = Object.keys(battleList);
+            for (var y = 0; y < oKeys.length; y++) {
+                if (battleList[oKeys[y]].Base.Type === 0 && name === battleList[oKeys[y]].Base.ID) {
+                    this.battler = battleList[oKeys[y]];
+                    break;
+                }
+            }
+            this.context.clearRect(0, 0, 800, 600);
+            this.init();
+        }
+        checkCurrentChar() {
+            if (mousedown) {
+                this.mx = mEvent.pageX;
+                this.my = mEvent.pageY;
+                var keys = Object.keys(this.objects);
+                for (var i = 0; i < keys.length; i++) {
+                    var x1 = this.objects[i].x;
+                    var x2 = this.objects[i].x + this.objects[i].w;
+                    var y1 = this.objects[i].y;
+                    var y2 = this.objects[i].y + this.objects[i].h;
+                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+                        this.reload(this.objects[keys[i]].Name);
+                    }
+                }
+            }
+        }
         init() {
-            console.log(JSON_CACHE['formation']);
             this.drawEquip();
+            this.drawPC();
             this.addEquipPos();
         }
         update() {
             this.drawEquip();
+            this.drawPC();
             this.changeEquip();
+            this.checkCurrentChar();
         }
         render() {
         }

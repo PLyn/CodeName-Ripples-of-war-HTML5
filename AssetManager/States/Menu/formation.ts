@@ -9,10 +9,13 @@ module Game {
         back = false;
         forms;
         keys;
+        battleKeys;
+        formation;
         constructor(ctx2) {
             super();
             this.ctx2 = ctx2;
             this.forms = [];
+            this.battleKeys = Object.keys(battleList);
         }
         draw(){
             this.ctx2.clearRect(0, 0, 800, 600);
@@ -34,6 +37,18 @@ module Game {
             this.ctx2.fillText("Current Formation: " + FORMATION.current, 200, 325);
 
             this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
+
+           /* for (var i = 0; i < this.battleKeys.length; i++) {
+                if (battleList[this.battleKeys[i]].currentState !== 1) {
+                    if (battleList[this.battleKeys[i]].Base.Type === 0) {
+                        this.formation = FORMATION.positions[i];
+                        //battleList[this.battleKeys[i]].setPos(this.formation[i].x, this.formation[i].y);
+                    }
+                    battleList[this.battleKeys[i]].render(this.ctx2, this.formation.x, this.formation.y);
+                    //this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, this.formation[i].x, this.formation[i].y);
+                    this.ctx2.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
+                }
+            }*/
         }
         addObjects() {
             this.keys = Object.keys(JSON_CACHE['formation'].Formations);
@@ -43,7 +58,7 @@ module Game {
                     "x": 25,
                     "y": (i * 50) + 150,
                     "w": 75,
-                    "h": 5
+                    "h": 15
                 });
                 this.ctx2.fillText(this.keys[i], this.forms[i].x, this.forms[i].y);
             }
