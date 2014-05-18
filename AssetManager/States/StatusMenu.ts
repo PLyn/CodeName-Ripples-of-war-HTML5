@@ -99,6 +99,7 @@ module Game {
                                 sManager.pushState(new Setting(this.context));
                                 break;
                             case "save":
+                                sManager.pushState(new Save(this.context));
                                 break;
                             default:
                                 break;
