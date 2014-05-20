@@ -89,7 +89,10 @@ module Game {
                         "x": 0,
                         "y": 0
                     };
-
+                    var key = Object.keys(objects);
+                    for (var y = 0; y < key.length; y++) {
+                        objects[key[y]] = obj;
+                    }
                     for (var x = 0; x < tileObjects.length; x++) {
                         var tile = this.getTile(tileObjects[x].gid);
                         if (tileObjects[x].width !== 0) {

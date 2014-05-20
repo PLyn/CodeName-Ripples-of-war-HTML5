@@ -12,6 +12,7 @@ module Game {
         init() {
             this.context.clearRect(0, 0, 800, 600);
             this.context.drawImage(IMAGE_CACHE['dialog'], 15, 100);
+            this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
 
             this.context.fillText("Items", 25, 120);
             this.context.fillText("Key Items", 100, 120);

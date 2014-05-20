@@ -19,8 +19,8 @@ module Game {
                 "name": "back",
                 "x": 40,
                 "y": 490,
-                "w": 80,
-                "h": 70 
+                "w": 75,
+                "h": 75 
             });
             this.menuItems.push({
                 "name": "equip",
@@ -81,6 +81,7 @@ module Game {
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         switch (this.menuItems[x].name) {
                             case "back":
+                                this.context.clearRect(0, 0, 800, 600);
                                 sManager.popState();
                                 break;
                             case "inventory":

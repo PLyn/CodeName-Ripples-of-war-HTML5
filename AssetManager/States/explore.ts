@@ -36,7 +36,6 @@ module Game {
             tiles.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
             this.layer1ctx.drawImage(IMAGE_CACHE['hero'], 200, 250);
-
             objects.push(
                 {
                     "height": 75,

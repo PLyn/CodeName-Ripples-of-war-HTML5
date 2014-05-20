@@ -47,6 +47,7 @@ module Game {
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         switch (this.clickBounds[x].name) {
                             case "back":
+                                this.context.clearRect(0, 0, 800, 600);
                                 sManager.popState();
                                 break;
                             case "use":
