@@ -172,6 +172,16 @@ declare module Game {
     }
 }
 declare module Game {
+    class SaveSystem {
+        public TileMapObjects: any;
+        public PartyMembers: Sprite[];
+        public switches: any;
+        constructor();
+        public save(): void;
+        public load(): void;
+    }
+}
+declare module Game {
     class SpellManager {
         public SpellKeys: any;
         constructor();
@@ -217,6 +227,7 @@ declare var keys: any[];
 declare var mousedown: boolean;
 declare var canvas: any;
 declare var mEvent: any;
+declare var clickTime: number;
 declare var ANIM_CACHE: any[];
 declare var IMAGE_CACHE: any[];
 declare var SPRITE_CACHE: any[];
@@ -598,6 +609,18 @@ declare module Game {
         public mx: any;
         public my: any;
         public menuItems: any;
+        public context: any;
+        constructor(ctx: any);
+        public init(): void;
+        public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+    }
+}
+declare module Game {
+    class Title extends State {
         public context: any;
         constructor(ctx: any);
         public init(): void;

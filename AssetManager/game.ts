@@ -27,7 +27,8 @@ module Game {
                     Spell: 'Assets/Image/spell.png',
                     bg: 'Assets/Image/bg.png',
                     tick: 'Assets/Image/tick.png',
-                    box: 'Assets/Image/box.png'
+                    box: 'Assets/Image/box.png',
+                    ripple: 'Assets/Image/ripple.jpg'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'

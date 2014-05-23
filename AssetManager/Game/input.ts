@@ -3,7 +3,7 @@ var keys = [];
 var mousedown = false;
 var canvas;
 var mEvent = null;
-
+var clickTime = 0;
 document.addEventListener('mousedown', function (e) {
     e.stopPropagation();
     e.preventDefault();

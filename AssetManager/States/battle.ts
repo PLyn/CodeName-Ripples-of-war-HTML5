@@ -341,6 +341,11 @@ module Game {
                 this.drawCommands = false;
             }
             if (this.battleOver() && time > this.endTime) {
+                for (var t = 0; t < this.battleKeys.length; t++) {
+                    if (battleList[this.battleKeys[t]].Base.Type !== 0) {
+                        battleList[this.battleKeys[t]] = battleList[this.battleKeys[t]].splice(t,1); //double check to ensure it works properly
+                    }
+                }
                 this.ctx.clearRect(0, 0, 800, 600);
                 this.ctx2.clearRect(0, 0, 800, 600);
                 sManager.popState();
