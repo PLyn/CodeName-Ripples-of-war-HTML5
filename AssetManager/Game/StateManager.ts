@@ -34,6 +34,11 @@
                 }
             }
         }
+        restart() {
+            for (var x = 0; x < this.stateStack.length; x++) {
+                this.stateStack.pop();
+            }
+        }
         updateStack() {
             var len = this.stateStack.length;
             this.stateStack[len - 1].update();

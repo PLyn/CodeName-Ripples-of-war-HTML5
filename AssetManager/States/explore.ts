@@ -9,18 +9,17 @@ module Game {
 
         layer1ctx;
         layer2ctx;
-        currentArea;
         mapID;
-        game;
-        constructor(ctx, w, mapID, area, game) {
+        width;
+        constructor(ctx, w, mapID) {
             super();
             this.x = 0;
             this.y = 0;
             this.mx = 0;
             this.my = 0;
             this.velocity = 2.0;
-
-            this.currentArea = area;
+            this.width = w;
+            //this.currentArea = area;
             this.mapID = mapID;
             var canvas = <HTMLCanvasElement> document.getElementById('layer2');
             this.layer2ctx = canvas.getContext('2d');
@@ -28,12 +27,12 @@ module Game {
             var canvas2 = <HTMLCanvasElement> document.getElementById('layer1');
             this.layer1ctx = canvas2.getContext('2d');
 
-            this.game = game;
+            //this.game = game;
         }
         init() {
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
-            tiles.setTileset(this.layer1ctx, this.mapID);
+            TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
             this.layer1ctx.drawImage(IMAGE_CACHE['hero'], 200, 250);
             objects.push(
@@ -64,11 +63,11 @@ module Game {
                         if (objects[i].type === 'exit') {
                             if (objects[i].properties.ID === '0') {//EXIT TO WORLD
                                 sManager.popState();
-                                this.game.currentArea = new Game.Area1(this.layer1ctx, 800, this);
+                                sManager.pushState(new Explore(this.layer1ctx, this.width, 'rpg'));
                             }
                             else if (objects[i].properties.ID === '1') {//EXIT TO NEW AREA
                                 sManager.popState();
-                                this.game.currentArea = new Game.Area2(this.layer1ctx, 800, this);
+                                sManager.pushState(new Explore(this.layer1ctx, this.width, 'carpet'));
                             }
                         }
                         else if (objects[i].type === 'menu') {

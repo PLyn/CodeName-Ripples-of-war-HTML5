@@ -18,6 +18,7 @@ module Game {
         objy;
 
         key; 
+        currentIndex;
         Init() {
             this.key = [];
             this.key = Object.keys(TILESET_CACHE);
@@ -50,7 +51,8 @@ module Game {
                 console.log("tileset not loaded");
                 return;
             }*/
-
+            this.currentIndex = index;
+            objects = [];
             for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
                 if (TILEDATA_CACHE[index].layers[layeridX].type === "tilelayer") {
 
