@@ -45,9 +45,12 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['dialog'], 45, 150);
             this.context.fillText("Your game is currently being " + type, 200, 200);
             this.saveTime = Date.now() + 1000;
-            if (type === "saved") {
+            if (type === "saved" && this.saveTime < Date.now()) {
+                SAVE.save();
             }
-            else if(type === "loaded") {
+            else if (type === "loaded") {
+                sManager.restart();
+                SAVE.load(800);
             }
             this.type = type;
             this.initBool = true;
@@ -64,7 +67,9 @@ module Game {
                     var y2 = this.objects[keys[i]].y + this.objects[keys[i]].h;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (this.objects[keys[i]].Name === "save") {
-                            this.action("saved");
+                            //this.action("saved");
+                            this.context.clearRect(0, 0, 800, 600);
+                            SAVE.save();
                         }
                         else if (this.objects[keys[i]].Name === "load") {
                             this.action("loaded");

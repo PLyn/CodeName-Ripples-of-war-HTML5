@@ -2,6 +2,7 @@
 var audioElement = new Audio();
 var WORLD = 0;
 var sManager;
+var GAME_VERSION = "0.01";
 //State system core will most likely be here so read the book and figure out
 //how to get it working and leading to each state as needed
 module Game {

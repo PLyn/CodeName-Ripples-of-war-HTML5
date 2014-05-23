@@ -171,16 +171,19 @@ declare module Game {
         };
     }
 }
+declare var SAVE: any;
 declare module Game {
     class SaveSystem {
-        public TileMapObjects: any;
+        public MapID: any;
         public PartyMembers: Sprite[];
         public switches: any;
-        constructor();
+        public context: any;
+        constructor(ctx: any);
         public save(): void;
-        public load(): void;
+        public load(w: any): void;
     }
 }
+declare var SPELL: any;
 declare module Game {
     class SpellManager {
         public SpellKeys: any;
@@ -189,19 +192,14 @@ declare module Game {
         public RemoveSpell(character: any, SpellName: any): void;
     }
 }
-declare var control: any;
-declare var tiles: any;
+declare var TileMap: any;
 declare module Game {
     class Loop {
         public canvas: any;
         public context: any;
         public canvas2: any;
         public context2: any;
-        public asset: any;
-        public currentArea: any;
         public width: any;
-        public battle: any;
-        public spell: any;
         constructor();
         public update(): void;
         public render: () => void;
@@ -212,6 +210,7 @@ declare var pos: number;
 declare var audioElement: HTMLAudioElement;
 declare var WORLD: number;
 declare var sManager: any;
+declare var GAME_VERSION: string;
 declare module Game {
     class Init {
         public preloader: any;
@@ -299,6 +298,7 @@ declare module Game {
         public objx: any;
         public objy: any;
         public key: any;
+        public currentIndex: any;
         public Init(): void;
         public getTile(tileIndex: any): {
             "img": any;
@@ -408,10 +408,9 @@ declare module Game {
         public my: any;
         public layer1ctx: any;
         public layer2ctx: any;
-        public currentArea: any;
         public mapID: any;
-        public game: any;
-        constructor(ctx: any, w: any, mapID: any, area: any, game: any);
+        public width: any;
+        constructor(ctx: any, w: any, mapID: any);
         public init(): void;
         public update(): void;
         public render(): void;
@@ -566,6 +565,7 @@ declare module Game {
         public addState(key: any, state: any): void;
         public pushState(state: any): void;
         public popState(): void;
+        public restart(): void;
         public updateStack(): void;
         public renderStack(): void;
     }
@@ -621,8 +621,12 @@ declare module Game {
 }
 declare module Game {
     class Title extends State {
-        public context: any;
-        constructor(ctx: any);
+        public context: CanvasRenderingContext2D;
+        public MenuItems: any;
+        public mx: any;
+        public my: any;
+        public width: any;
+        constructor(ctx: any, w: any);
         public init(): void;
         public update(): void;
         public render(): void;

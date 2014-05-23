@@ -1,4 +1,12 @@
-﻿module Game {
+﻿/*      Spell Manager to add and remove spells from characters. Example of use below:
+*            SPELL = new SpellManager();
+*            var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
+*            SPELL.AddSpell(battleList[0], spellkeys[3]);
+*            SPELL.AddSpell(battleList[1], spellkeys[3]);
+*/
+
+var SPELL;
+module Game {
     export class SpellManager{
         SpellKeys;
         constructor() {
