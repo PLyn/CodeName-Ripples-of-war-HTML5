@@ -56,7 +56,7 @@ module Game {
             this.initBool = true;
         }
         update() {
-            if (mousedown && this.time < Date.now()) {
+            if (mouseClicked() && this.time < Date.now()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 var keys = Object.keys(this.objects);

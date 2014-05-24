@@ -60,7 +60,7 @@ module Game {
             this.init();
         }
         update() {
-            if (mousedown) {
+            if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 var keys = Object.keys(this.objects);

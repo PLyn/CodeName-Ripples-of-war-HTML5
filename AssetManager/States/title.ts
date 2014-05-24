@@ -37,7 +37,7 @@ module Game {
 
         }
         update() {
-            if (mousedown) {
+            if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var x = 0; x < this.MenuItems.length; x++) {
@@ -47,8 +47,10 @@ module Game {
                     var y2 = this.MenuItems[x].y + this.MenuItems[x].h;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (this.MenuItems[x].name === "new") {
+                            this.context.clearRect(0, 0, 800, 600);
                             sManager.popState();
-                            sManager.pushState(new Explore(this.context, this.width, 'rpg'));
+                            sManager.pushState(new Cutscene("id", 600, 200, this.context, 0));
+                            //sManager.pushState(new Explore(this.context, this.width, 'rpg'));
                         }
                         else if (this.MenuItems[x].name === "load") {
                             if (localStorage.getItem("TileMap") === null || localStorage.getItem("Party") === null) {

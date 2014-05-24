@@ -70,7 +70,7 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
         }
         update() {
-            if (mousedown) {
+            if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var x = 0; x < this.menuItems.length; x++) {

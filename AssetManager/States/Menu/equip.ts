@@ -84,7 +84,7 @@ module Game {
                 this.context.clearRect(0, 0, 800, 600);
                 sManager.popState();
             }
-            if (mousedown) {
+            if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < equips.length; i++) {
@@ -134,7 +134,7 @@ module Game {
             this.init();
         }
         checkCurrentChar() {
-            if (mousedown) {
+            if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 var keys = Object.keys(this.objects);

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Cutscenes>
 	<scene id="1">
-    <hero>Why is a chair here?</hero>
-    <guide>someone wanted to sit there maybe</guide>
-    <hero>Just great...A talking fish!</hero>
-    <guide>Touche</guide>
+    <hero type="dialog">I wandered the lands for years after "that" incident. I eventually settled in the small province of Cindara and became one of the local residents in a short time. I have ran from my past til now. The gears have destiny have began to turn once again...</hero>
+    <explore type="next" id="rpg"></explore>
   </scene>
 	<scene id="2">
     <hero>Tools...They are not for you obviously.</hero>
@@ -16,8 +14,8 @@
     <potion type="item" quantity="2" itemType="consumable"></potion>
     <potion type="item" quantity="1" itemType="consumable"></potion>
     <at type="anim"></at>
-    <car type="Sfx"></car>
-    <hero type="Dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>
+    <car type="sfx"></car>
+    <hero type="dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>
     <on type="bgm"></on>
   </scene>
   <scene id="4">

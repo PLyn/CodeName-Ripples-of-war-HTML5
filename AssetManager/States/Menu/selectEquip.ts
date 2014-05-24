@@ -89,7 +89,7 @@ module Game {
                 this.itemSelected = false;
 
             }*/
-            if (mousedown) {
+            if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < currentEquips.length; i++) {

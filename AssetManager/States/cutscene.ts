@@ -49,15 +49,17 @@ module Game {
         nextNode() {
             this.nCounter++;
             this.currentNode = this.textNodes[this.nCounter];
-            if (this.nCounter >= this.nodeCount) {
+            /*if (this.nCounter >= this.nodeCount) {
                 sManager.popState();
-            }
+            }*/
         }
         update() {
             this.currentTime = Date.now();
             switch (this.currentNode.getAttribute('type')) {
-                case "Dialog":
+                case "dialog":
                     if (this.initNode) {
+                        this.linePos = 0;
+                        this.lineHeight = 1;
                         this.lines = wrap(this.context, this.canvasWidth, this.currentNode);
                         this.prevName = this.lines[this.linePos].name;
                         this.initNode = false;
@@ -77,7 +79,7 @@ module Game {
                         this.context.fillText(this.lines[this.linePos].name, 30, 400);
                         this.linePos++;
                     }
-                    if (this.linePos < this.lines.length && this.currentTime > this.time && mousedown) {
+                    if (this.linePos < this.lines.length && this.currentTime > this.time && mouseClicked()) {
                         this.time = this.currentTime + 750;
                         if (this.prevName !== this.lines[this.linePos].name) {
                             this.context.clearRect(0, 0, 800, 600);
@@ -92,12 +94,12 @@ module Game {
                         this.context.fillText(this.lines[this.linePos].name, 30, 400);
                         this.linePos++;
                     }
-                    else if (this.linePos >= this.lines.length && this.currentTime > this.time && mousedown) {
+                    else if (this.linePos >= this.lines.length && this.currentTime > this.time && mouseClicked()) {
                         this.initNode = true;
                         this.nextNode();
                     }
                     break;
-                case "Sfx":
+                case "sfx":
                     if (this.initNode) {
                         this.sfx = SOUND_CACHE[this.currentNode.nodeName];
                         this.sfx.play();
@@ -108,7 +110,7 @@ module Game {
                         this.nextNode();
                     }
                     break;
-                case "Action":
+                case "action":
                     break;
                 case "anim":
                     if (this.initNode) {
@@ -130,6 +132,20 @@ module Game {
                     ITEM.add(this.currentNode.nodeName, this.currentNode.getAttribute('quantity'), this.currentNode.getAttribute('itemType'));
                     this.nextNode();
                     break;
+                case "next":
+                    var id = this.currentNode.getAttribute('id');
+                    sManager.popState();
+                    switch (this.currentNode.nodeName) {
+                        case "explore":
+                            sManager.pushState(new Explore(this.context, 800, id));
+                            break;
+                        case "battle":
+                            break;
+                        case "dialog":
+                            break;
+                        default:
+                            break; 
+                    }
                 default:
                     break;
             }

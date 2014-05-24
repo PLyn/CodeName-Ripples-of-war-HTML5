@@ -53,7 +53,7 @@ module Game {
             this.context.fillText("Save Settings", 250, 325);
         }
         update() {
-            if (mousedown && this.time < Date.now()) {
+            if (mouseClicked() && this.time < Date.now()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 var keys = Object.keys(this.objects);

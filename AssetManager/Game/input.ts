@@ -15,7 +15,15 @@ document.addEventListener('mouseup', function (e) {
     e.preventDefault();
     that.mousedown = false;
 });
-
+function mouseClicked() {
+    if (mousedown) {
+        mousedown = false;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 /*module Game {
     export class input {
         keys;

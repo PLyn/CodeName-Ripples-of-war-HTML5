@@ -13,15 +13,15 @@
                     var length = templine.length;
                     var word = words[key];
                     templine = templine + word + ' ';
-                    if (ctx.measureText(templine).width >= (cwidth * 0.85)) {
+                    if (ctx.measureText(templine).width >= (cwidth * 0.95)) {
                         lines.push({ "name": text.nodeName, "message": templine.substring(0, length) });
                         key--;
                         templine = "";
                     }
-                    else if (ctx.measureText(templine).width >= (cwidth * 0.70)) {
+                    /*else if (ctx.measureText(templine).width >= (cwidth * 0.70)) {
                         lines.push({ "name": text.nodeName, "message": templine });
                         templine = "";
-                    }
+                    }*/
                 }
                 lines.push({ "name": text.nodeName, "message": templine });
             }

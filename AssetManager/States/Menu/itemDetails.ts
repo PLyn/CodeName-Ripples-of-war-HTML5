@@ -36,7 +36,7 @@ module Game {
             });
         }
         update() {
-            if (mousedown) {
+            if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var x = 0; x < this.clickBounds.length; x++) {

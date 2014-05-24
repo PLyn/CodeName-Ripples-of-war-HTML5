@@ -51,7 +51,7 @@ module Game {
                 );
         }
         update() {
-            if (mousedown) {
+            if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < objects.length; i++) {
