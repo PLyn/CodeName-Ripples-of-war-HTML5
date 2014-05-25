@@ -29,12 +29,16 @@ module Game {
         spellSelect: boolean = false;
         status;
         applyStatus = true;
+        EnemyID;
 
-        constructor(ctx, ctx2) {
+        constructor(ctx, ctx2, EnemyID) {
             super();
             this.ctx = ctx;
             this.ctx2 = ctx2;
             this.spellList = [];
+            this.EnemyID = EnemyID;
+
+            //for(var e = 0; e < )
 
             this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
             this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);

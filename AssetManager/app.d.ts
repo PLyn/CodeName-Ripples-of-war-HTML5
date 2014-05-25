@@ -171,6 +171,15 @@ declare module Game {
         };
     }
 }
+declare var PARTY: any;
+declare module Game {
+    class PartyManager {
+        public character: any;
+        constructor();
+        public add(char: any, type: any): void;
+        public remove(char: any, type: any): void;
+    }
+}
 declare var SAVE: any;
 declare module Game {
     class SaveSystem {
@@ -359,7 +368,8 @@ declare module Game {
         public spellSelect: boolean;
         public status: any;
         public applyStatus: boolean;
-        constructor(ctx: any, ctx2: any);
+        public EnemyID: any;
+        constructor(ctx: any, ctx2: any, EnemyID: any);
         public Action(): void;
         public SelectSpell(): void;
         public Target(time: any): void;

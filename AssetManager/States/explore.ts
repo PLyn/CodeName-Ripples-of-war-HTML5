@@ -78,7 +78,7 @@ module Game {
                             sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, objects[i].properties.ID));
                         }
                         else if (objects[i].type === 'battle') {
-                            sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx));
+                            sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx, 0));
                         }
 
                     }

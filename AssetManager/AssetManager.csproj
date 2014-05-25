@@ -62,6 +62,7 @@
     <TypeScriptCompile Include="Game\itemManager.ts" />
     <TypeScriptCompile Include="Game\GameObjects\Item\weapon.ts" />
     <TypeScriptCompile Include="Game\GameObjects\sprite.ts" />
+    <TypeScriptCompile Include="Game\PartyManager.ts" />
     <TypeScriptCompile Include="Game\Save.ts" />
     <TypeScriptCompile Include="Game\SpellManager.ts" />
     <TypeScriptCompile Include="Game\world.ts" />
@@ -103,6 +104,8 @@
     <Content Include="Assets\XML\Formation.json" />
     <Content Include="Assets\XML\Spells.json" />
     <Content Include="Assets\XML\item.json" />
+    <Content Include="Assets\XML\characters.json" />
+    <Content Include="Assets\XML\EnemyGroups.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

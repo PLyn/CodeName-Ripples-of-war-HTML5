@@ -1,0 +1,114 @@
+{
+  "Party": {
+    "Shadow": {
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        }
+    },
+    "Syndra":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        }
+    },
+    "Johnathan":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        }
+    },
+    "Max":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        }
+    },
+    "Selina":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        }
+    },
+    "Thomas":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        }
+    },
+    "Riza":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        }
+    },
+    "Mikigami":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        }
+    }
+  },
+  "Enemies":{
+        "Goblin":{
+            "Img": "S",
+            "HP": 5,
+            "MP": 0,
+            "Atk": 0,
+            "Def": 5,
+            "Spd": 0,
+            "MDef": 0,
+            "Luc": 0,
+            "Abilities":{
+            }
+        }
+  }
+}
