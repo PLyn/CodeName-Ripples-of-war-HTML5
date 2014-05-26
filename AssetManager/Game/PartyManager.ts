@@ -5,13 +5,15 @@ module Game {
         constructor() {
             this.character = "";
         }
-        add(char, type) {
+        add(char, type, x?, y?) {
+            var x = x || 400;
+            var y = y || 250;
             var keys = Object.keys(JSON_CACHE['character']['Party']);
-            for (var x = 0; x < keys.length; x++) {
-                if (char === keys[x]) {
-                    var b = JSON_CACHE['character']['Party'][keys[x]];
-                    var p1 = new Sprite(IMAGE_CACHE[b.Img], 400, 250, 35, 35);
-                    p1.setBaseAttributes(keys[x], b.HP, b.MP, b.Atk, b.Def, b.MDef, b.Spd, b.Luc, type);
+            for (var s = 0; s < keys.length; s++) {
+                if (char === keys[s]) {
+                    var b = JSON_CACHE['character']['Party'][keys[s]];
+                    var p1 = new Sprite(IMAGE_CACHE[b.Img]);
+                    p1.setBaseAttributes(keys[s], b.HP, b.MP, b.Atk, b.Def, b.MDef, b.Spd, b.Luc, type);
                     //p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
                     battleList.push(p1);
                 }

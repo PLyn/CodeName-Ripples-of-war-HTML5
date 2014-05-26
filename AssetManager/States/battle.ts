@@ -38,16 +38,30 @@ module Game {
             this.spellList = [];
             this.EnemyID = EnemyID;
 
-            //for(var e = 0; e < )
+            var enemy;
+            var eGroup = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID];
+            var egroupkeys = Object.keys(eGroup);
+            var ekeys = Object.keys(JSON_CACHE['character']['Enemies']);
+            for (var e = 0; e < egroupkeys.length; e++) {
+                for (var i = 0; i < ekeys.length; i++) {
+                    if (eGroup[e].id === ekeys[i]) {
+                        break;
+                    }
+                }
+                enemy = JSON_CACHE['character']['Enemies'][ekeys[i]];
+                this.e1 = new Sprite(IMAGE_CACHE[enemy.Img]);
+                this.e1.setBaseAttributes(ekeys[i], enemy.HP, enemy.MP, enemy.Atk, enemy.Def, enemy.MDef, enemy.Spd, enemy.Luc, 1);
+                battleList.push(this.e1);
+            }
 
-            this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 35, 35);
-            this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 35, 35);
+            /*this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 24, 22);
+            this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 24, 22);
 
             this.e1.setBaseAttributes('foe', 15, 0, 5, 0, 1, 1, 1, 1);
             this.e2.setBaseAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
 
-            battleList[2] = this.e1;
-            battleList[3] = this.e2;
+            battleList[0] = this.e1;
+            battleList[1] = this.e2;*/
             this.battleKeys = Object.keys(battleList);
 
             menuOptions.push({
@@ -254,7 +268,7 @@ module Game {
                         this.formation = FORMATION.positions;
                         battleList[this.battleKeys[i]].setPos(this.formation[i].x, this.formation[i].y);
                     }
-                    battleList[this.battleKeys[i]].render(this.ctx);
+                    battleList[this.battleKeys[i]].render(this.ctx, battleList[this.battleKeys[i]].x, battleList[this.battleKeys[i]].y);
                     //this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, this.formation[i].x, this.formation[i].y);
                     this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
                 }

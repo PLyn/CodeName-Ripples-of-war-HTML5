@@ -21,7 +21,7 @@ module Game {
             PARTY = new PartyManager();
             PARTY.add("Shadow", 0);
             PARTY.add("Syndra", 0);
-            PARTY.remove("Shadow", 0);
+            //PARTY.remove("Shadow", 0);
             //var p1 = new Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
             //var p2 = new Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
            // p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
