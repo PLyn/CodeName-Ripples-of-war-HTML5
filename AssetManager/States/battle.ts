@@ -30,7 +30,7 @@ module Game {
         status;
         applyStatus = true;
         EnemyID;
-
+        nextState;
         constructor(ctx, ctx2, EnemyID) {
             super();
             this.ctx = ctx;
@@ -38,10 +38,10 @@ module Game {
             this.spellList = [];
             this.EnemyID = EnemyID;
 
-            
 
+            this.nextState = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].next;
             var enemy;
-            var eGroup = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID];
+            var eGroup = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID]['pos'];
             var egroupkeys = Object.keys(eGroup);
             var ekeys = Object.keys(JSON_CACHE['character']['Enemies']);
             for (var e = 0; e < egroupkeys.length; e++) {
@@ -51,7 +51,7 @@ module Game {
                     }
                 }
                 enemy = JSON_CACHE['character']['Enemies'][ekeys[i]];
-                this.e1 = new Sprite(IMAGE_CACHE[enemy.Img]);
+                this.e1 = new Sprite(IMAGE_CACHE[enemy.Img], eGroup[e].x, eGroup[e].y);
                 this.e1.setBaseAttributes(ekeys[i], enemy.HP, enemy.MP, enemy.Atk, enemy.Def, enemy.MDef, enemy.Spd, enemy.Luc, 1);
                 battleList.push(this.e1);
             }
@@ -90,10 +90,10 @@ module Game {
                     this.mx = mEvent.pageX;
                     this.my = mEvent.pageY;
                     for (var i = 0; i < this.battleKeys.length; i++) {
-                        var x1 = battleList[this.battleKeys[i]].x;
-                        var x2 = battleList[this.battleKeys[i]].x + battleList[this.battleKeys[i]].W;
-                        var y1 = battleList[this.battleKeys[i]].y;
-                        var y2 = battleList[this.battleKeys[i]].y + battleList[this.battleKeys[i]].H;
+                        var x1 = battleList[this.battleKeys[i]].dx;
+                        var x2 = battleList[this.battleKeys[i]].dx + battleList[this.battleKeys[i]].W;
+                        var y1 = battleList[this.battleKeys[i]].dy;
+                        var y2 = battleList[this.battleKeys[i]].dy + battleList[this.battleKeys[i]].H;
                         if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                             if (this.command === 'Attack') {
                                 for (var x = 0; x < this.battleKeys.length; x++) {
@@ -269,9 +269,9 @@ module Game {
                         this.formation = FORMATION.positions;
                         battleList[this.battleKeys[i]].setPos(this.formation[i].x, this.formation[i].y);
                     }
-                    battleList[this.battleKeys[i]].render(this.ctx, battleList[this.battleKeys[i]].x, battleList[this.battleKeys[i]].y);
+                    battleList[this.battleKeys[i]].render(this.ctx);
                     //this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, this.formation[i].x, this.formation[i].y);
-                    this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
+                    this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].dx + 20, battleList[this.battleKeys[i]].dy - 5);
                 }
             }
             for (var x = 0; x < menuOptions.length; x++) {
@@ -360,14 +360,20 @@ module Game {
                 this.drawCommands = false;
             }
             if (this.battleOver() && time > this.endTime) {
-                for (var t = 0; t < this.battleKeys.length; t++) {
-                    if (battleList[this.battleKeys[t]].Base.Type !== 0) {
-                        battleList[this.battleKeys[t]] = battleList[this.battleKeys[t]].splice(t,1); //double check to ensure it works properly
+                for (var t = 0; t < this.battleKeys.length; t++) {  
+                    if (battleList[this.battleKeys[t]].Base.Type === 1) {
+                        var list = battleList; 
+                        battleList = [];
+                        battleList = list.splice(t, this.battleKeys.length - t); //double check to ensure it works properly
+                        break;
                     }
                 }
                 this.ctx.clearRect(0, 0, 800, 600);
                 this.ctx2.clearRect(0, 0, 800, 600);
                 sManager.popState();
+                if(this.nextState === "scene"){
+                    sManager.pushState(new Cutscene("id", 800, 600, this.ctx2, 0));
+                }
             }
             else if (this.battleOver()) {
                 this.ctx2.clearRect(0, 0, 800, 600);

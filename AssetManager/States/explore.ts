@@ -60,6 +60,7 @@ module Game {
                     var y1 = objects[i].y;
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
+
                         if (objects[i].type === 'exit') {
                             if (objects[i].properties.ID === '0') {//EXIT TO WORLD
                                 sManager.popState();

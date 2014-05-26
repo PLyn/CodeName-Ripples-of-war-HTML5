@@ -12,7 +12,7 @@ module Game {
             for (var s = 0; s < keys.length; s++) {
                 if (char === keys[s]) {
                     var b = JSON_CACHE['character']['Party'][keys[s]];
-                    var p1 = new Sprite(IMAGE_CACHE[b.Img]);
+                    var p1 = new Sprite(IMAGE_CACHE[b.Img], 0, 0);
                     p1.setBaseAttributes(keys[s], b.HP, b.MP, b.Atk, b.Def, b.MDef, b.Spd, b.Luc, type);
                     //p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
                     battleList.push(p1);

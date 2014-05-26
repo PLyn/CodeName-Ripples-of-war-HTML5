@@ -69,7 +69,7 @@
     <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />
     <TypeScriptCompile Include="Game\input.ts" />
-    <TypeScriptCompile Include="Game\manager.ts" />
+    <TypeScriptCompile Include="Game\preloader.ts" />
     <TypeScriptCompile Include="Game\tilemap.ts" />
     <TypeScriptCompile Include="States\battle.ts" />
     <TypeScriptCompile Include="States\Menu\equip.ts" />

@@ -1,4 +1,4 @@
-declare var SCENE: any;
+﻿declare var SCENE: any;
 declare var EX: any;
 declare var startScene: any;
 declare module Game {
@@ -70,6 +70,23 @@ declare module Game {
         public updateScene: () => void;
     }
 }
+declare var GAME_OBJECTS: any[];
+declare module Game {
+    class GameObject {
+        public sx: number;
+        public sy: number;
+        public dx: number;
+        public dy: number;
+        public W: number;
+        public H: number;
+        public img: HTMLImageElement;
+        public scale: number;
+        constructor(img: any, dx?: any, dy?: any, sx?: any, sy?: any, w?: any, h?: any, scale?: any);
+        public update(): void;
+        public render(context: any): void;
+        public setPos(x: any, y: any): void;
+    }
+}
 declare module Game {
     class Equipable {
         public Name: any;
@@ -105,35 +122,9 @@ declare module Game {
         constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
     }
 }
-declare var ITEM: any;
-declare module Game {
-    class ItemManager {
-        public consumable: Object[];
-        public quest: Object[];
-        public itemSource: any;
-        public itemKeys: any;
-        constructor();
-        public add(name: any, amt: any, type: any): void;
-    }
-}
 declare module Game {
     class Weapon extends Equipable {
         constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
-    }
-}
-declare var GAME_OBJECTS: any[];
-declare module Game {
-    class GameObject {
-        public x: number;
-        public y: number;
-        public W: number;
-        public H: number;
-        public img: HTMLImageElement;
-        public scale: number;
-        constructor(img: any, x?: any, y?: any, w?: any, h?: any, scale?: any);
-        public update(): void;
-        public render(context: any, x: any, y: any): void;
-        public setPos(x: any, y: any): void;
     }
 }
 declare var statusEffects: {
@@ -153,7 +144,7 @@ declare module Game {
         public dead: boolean;
         public Spells: any;
         public currentState: any;
-        constructor(img: any, x?: any, y?: any, scale?: any);
+        constructor(img: any, dx?: any, dy?: any, sx?: any, sy?: any, w?: any, h?: any, scale?: any);
         public setBaseAttributes(id: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type: any): void;
         public setModifiedAttributes(id?: any, hp?: any, mp?: any, atk?: any, def?: any, mdef?: any, spd?: any, luc?: any, type?: any): void;
         public equipItem(name: any, equipment: Equipable, type: any): void;
@@ -171,6 +162,24 @@ declare module Game {
         };
     }
 }
+declare var that: any;
+declare var keys: any[];
+declare var mousedown: boolean;
+declare var canvas: any;
+declare var mEvent: any;
+declare var clickTime: number;
+declare function mouseClicked(): boolean;
+declare var ITEM: any;
+declare module Game {
+    class ItemManager {
+        public consumable: Object[];
+        public quest: Object[];
+        public itemSource: any;
+        public itemKeys: any;
+        constructor();
+        public add(name: any, amt: any, type: any): void;
+    }
+}
 declare var PARTY: any;
 declare module Game {
     class PartyManager {
@@ -180,68 +189,6 @@ declare module Game {
         public remove(char: any, type: any): void;
     }
 }
-declare var SAVE: any;
-declare module Game {
-    class SaveSystem {
-        public MapID: any;
-        public PartyMembers: Sprite[];
-        public QuestItems: Object[];
-        public cName: any;
-        public cAmt: any;
-        public qName: any;
-        public qAmt: any;
-        public switches: any;
-        public context: any;
-        constructor(ctx: any);
-        public save(): void;
-        public load(w: any): void;
-    }
-}
-declare var SPELL: any;
-declare module Game {
-    class SpellManager {
-        public SpellKeys: any;
-        constructor();
-        public AddSpell(character: any, SpellName: any): void;
-        public RemoveSpell(character: any, SpellName: any): void;
-    }
-}
-declare var TileMap: any;
-declare module Game {
-    class Loop {
-        public canvas: any;
-        public context: any;
-        public canvas2: any;
-        public context2: any;
-        public width: any;
-        constructor();
-        public update(): void;
-        public render: () => void;
-        public playerInput(): void;
-    }
-}
-declare var pos: number;
-declare var audioElement: HTMLAudioElement;
-declare var WORLD: number;
-declare var sManager: any;
-declare var GAME_VERSION: string;
-declare module Game {
-    class Init {
-        public preloader: any;
-        public world: any;
-        public dialog: any;
-        constructor();
-        public onComplete: () => void;
-        public GameLoop: () => void;
-    }
-}
-declare var that: any;
-declare var keys: any[];
-declare var mousedown: boolean;
-declare var canvas: any;
-declare var mEvent: any;
-declare var clickTime: number;
-declare function mouseClicked(): boolean;
 declare var ANIM_CACHE: any[];
 declare var IMAGE_CACHE: any[];
 declare var SPRITE_CACHE: any[];
@@ -295,6 +242,46 @@ declare module Game {
         public onJSONLoad: (key: any, response: any, pos: any) => void;
     }
 }
+declare var SAVE: any;
+declare module Game {
+    class SaveSystem {
+        public MapID: any;
+        public PartyMembers: Sprite[];
+        public QuestItems: Object[];
+        public cName: any;
+        public cAmt: any;
+        public qName: any;
+        public qAmt: any;
+        public switches: any;
+        public context: any;
+        constructor(ctx: any);
+        public save(): void;
+        public load(w: any): void;
+    }
+}
+declare var SPELL: any;
+declare module Game {
+    class SpellManager {
+        public SpellKeys: any;
+        constructor();
+        public AddSpell(character: any, SpellName: any): void;
+        public RemoveSpell(character: any, SpellName: any): void;
+    }
+}
+declare module Game {
+    class StateManager {
+        public gameStates: any;
+        public stateStack: State[];
+        public time: number;
+        constructor();
+        public addState(key: any, state: any): void;
+        public pushState(state: any): void;
+        public popState(): void;
+        public restart(): void;
+        public updateStack(): void;
+        public renderStack(): void;
+    }
+}
 declare var objects: any[];
 declare module Game {
     class Tilemap {
@@ -325,6 +312,35 @@ declare module Game {
         public addObject(obj: any): void;
         public updateObject(objName: any, obj: any): void;
         public removeObject(objName: any): void;
+    }
+}
+declare var TileMap: any;
+declare module Game {
+    class Loop {
+        public canvas: any;
+        public context: any;
+        public canvas2: any;
+        public context2: any;
+        public width: any;
+        constructor();
+        public update(): void;
+        public render: () => void;
+        public playerInput(): void;
+    }
+}
+declare var pos: number;
+declare var audioElement: HTMLAudioElement;
+declare var WORLD: number;
+declare var sManager: any;
+declare var GAME_VERSION: string;
+declare module Game {
+    class Init {
+        public preloader: any;
+        public world: any;
+        public dialog: any;
+        constructor();
+        public onComplete: () => void;
+        public GameLoop: () => void;
     }
 }
 declare module Game {
@@ -369,6 +385,7 @@ declare module Game {
         public status: any;
         public applyStatus: boolean;
         public EnemyID: any;
+        public nextState: any;
         constructor(ctx: any, ctx2: any, EnemyID: any);
         public Action(): void;
         public SelectSpell(): void;
@@ -381,6 +398,60 @@ declare module Game {
         public playerAttack(attacker: any, target: any): void;
         public playerSpell(caster: any, spell: any, target: any): void;
         public checkSpriteState(target: any): void;
+        public init(): void;
+        public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+    }
+}
+declare module Game {
+    class Cutscene extends State {
+        public dia: any;
+        public canvas: any;
+        public context: any;
+        public ctl: any;
+        public xmlID: any;
+        public node: any;
+        public currentNode: any;
+        public lines: any[];
+        public canvasWidth: any;
+        public ctx: any;
+        public linePos: number;
+        public time: number;
+        public currentTime: number;
+        public prevName: any;
+        public lineHeight: number;
+        public initNode: boolean;
+        public nCounter: number;
+        public nodeCount: number;
+        public textNodes: any[];
+        public sfx: any;
+        public anim: any;
+        public animate: any;
+        constructor(id: any, width: any, height: any, ctx: any, xmlID: any);
+        public init(): void;
+        public nextNode(): void;
+        public update(): void;
+        public render(): void;
+        public pause(): void;
+        public resume(): void;
+        public destroy(): void;
+    }
+}
+declare module Game {
+    class Explore extends State {
+        public x: any;
+        public y: any;
+        public velocity: any;
+        public mx: any;
+        public my: any;
+        public layer1ctx: any;
+        public layer2ctx: any;
+        public mapID: any;
+        public width: any;
+        constructor(ctx: any, w: any, mapID: any);
         public init(): void;
         public update(): void;
         public render(): void;
@@ -407,26 +478,6 @@ declare module Game {
         public drawPC(): void;
         public reload(name: any): void;
         public checkCurrentChar(): void;
-        public init(): void;
-        public update(): void;
-        public render(): void;
-        public pause(): void;
-        public resume(): void;
-        public destroy(): void;
-    }
-}
-declare module Game {
-    class Explore extends State {
-        public x: any;
-        public y: any;
-        public velocity: any;
-        public mx: any;
-        public my: any;
-        public layer1ctx: any;
-        public layer2ctx: any;
-        public mapID: any;
-        public width: any;
-        constructor(ctx: any, w: any, mapID: any);
         public init(): void;
         public update(): void;
         public render(): void;
@@ -565,54 +616,6 @@ declare module Game {
         constructor(context: any);
         public init(): void;
         public reload(name: any): void;
-        public update(): void;
-        public render(): void;
-        public pause(): void;
-        public resume(): void;
-        public destroy(): void;
-    }
-}
-declare module Game {
-    class StateManager {
-        public gameStates: any;
-        public stateStack: State[];
-        public time: number;
-        constructor();
-        public addState(key: any, state: any): void;
-        public pushState(state: any): void;
-        public popState(): void;
-        public restart(): void;
-        public updateStack(): void;
-        public renderStack(): void;
-    }
-}
-declare module Game {
-    class Cutscene extends State {
-        public dia: any;
-        public canvas: any;
-        public context: any;
-        public ctl: any;
-        public xmlID: any;
-        public node: any;
-        public currentNode: any;
-        public lines: any[];
-        public canvasWidth: any;
-        public ctx: any;
-        public linePos: number;
-        public time: number;
-        public currentTime: number;
-        public prevName: any;
-        public lineHeight: number;
-        public initNode: boolean;
-        public nCounter: number;
-        public nodeCount: number;
-        public textNodes: any[];
-        public sfx: any;
-        public anim: any;
-        public animate: any;
-        constructor(id: any, width: any, height: any, ctx: any, xmlID: any);
-        public init(): void;
-        public nextNode(): void;
         public update(): void;
         public render(): void;
         public pause(): void;
