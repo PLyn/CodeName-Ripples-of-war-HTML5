@@ -32,6 +32,16 @@ module Game {
             FORMATION = new BattleFormation();
             ITEM = new ItemManager();
             SPELL = new SpellManager();
+
+            //pathfinding example
+            /*var matrix = [
+                [0, 0, 0, 1, 0],
+                [1, 0, 0, 0, 1],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ];
+            var path = findPath(matrix, [0, 0], [2, 4]);*/
         }
         update() {
             sManager.updateStack();
