@@ -33,6 +33,7 @@ module Game {
             this.canvasWidth = width;
         }
         init() {
+            this.initNode = true;
             this.node = XML_CACHE['chapter'].getElementsByTagName('scene')[this.xmlID];
             var count = 0;
             for (var x = 0; x < this.node.childNodes.length; x++) {

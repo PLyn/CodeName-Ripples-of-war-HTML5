@@ -165,7 +165,7 @@ module Game {
             this.animSource.src = 'Assets/Atlas/' + this.animData.meta.image;
             for (var i = 0; i < this.animData.frames.length; i++) {
                 frame = this.animData.frames[i].frame;
-                holder[i] = new Game.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Game.GameObject(this.spriteSource, 0, 0, frame.x, frame.y, frame.w, frame.h);
             }
             ANIM_CACHE[key[this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
             this.animPos++; //Move to the next key of the array
@@ -182,7 +182,7 @@ module Game {
                 var frame = this.spriteData.frames[i].frame;
                 //figure out whats wrong with the associative array
                 var indexes = this.spriteData.frames[i].filename.substring(0, this.spriteData.frames[i].filename.length - 4);
-                holder[i] = new Game.GameObject(this.spriteSource, frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Game.GameObject(this.spriteSource, 0, 0 ,frame.x, frame.y, frame.w, frame.h);
                 SPRITE_CACHE[i] = holder[i];
             }           
             this.spritePos++;

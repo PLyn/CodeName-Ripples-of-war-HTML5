@@ -17,7 +17,7 @@ module Game {
             this.context.clearRect(0, 0, 800, 600);
             var im = this.animHolder[this.counter];
             //this.context.drawImage(im.img, im.x, im.y, im.W, im.H, 200, 200, im.W * im.scale, im.H * im.scale);
-            this.animHolder[this.counter].render(this.context, 200, 200);
+            this.animHolder[this.counter].render(this.context);
             this.counter++;
             if (this.counter >= ObjLength(this.animHolder)) {
                 cancelAnimationFrame(animate);

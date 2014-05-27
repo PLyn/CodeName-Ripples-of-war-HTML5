@@ -38,8 +38,9 @@ module Game {
                     spr: 'Assets/Atlas/test.json'
                 },
                 Tileset: {
-                    rpg: 'Assets/Tilemap/newmap.json',
-                    carpet: 'Assets/Tilemap/nextmap.json'
+                    map1: 'Assets/Tilemap/map1.json',
+                    map2: 'Assets/Tilemap/map2.json'
+                    //carpet: 'Assets/Tilemap/nextmap.json'
                 },
                 XML: {
                     chapter: 'Assets/XML/test.xml'

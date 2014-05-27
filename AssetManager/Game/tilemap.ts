@@ -81,54 +81,57 @@ module Game {
                 }
                 else if (TILEDATA_CACHE[index].layers[layeridX].type === "objectgroup") {
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
-                    var obj = {
-                        "name": "",
-                        "type": "",
-                        "properties": {
-                            "ID": 0
-                        },
-                        "width": 0,
-                        "x": 0,
-                        "y": 0
-                    };
                     var key = Object.keys(objects);
-                    for (var y = 0; y < key.length; y++) {
-                        objects[key[y]] = obj;
-                    }
+                    /*for (var y = 0; y < key.length; y++) {
+                        objects[key[y]] = [];
+                    }*/
+                    objects = [];
                     for (var x = 0; x < tileObjects.length; x++) {
                         var tile = this.getTile(tileObjects[x].gid);
-                        if (tileObjects[x].width !== 0) {
-                            obj.width = tileObjects[x].width;
-                        }
-                        else {
-                            obj.width = 32;//TILEDATA_CACHE[index].tilesets.tilewidth;
-                        }
-                        obj.name = tileObjects[x].name;
+                        /*obj.name = tileObjects[x].name;
                         obj.type = tileObjects[x].type;
                         obj.properties.ID = tileObjects[x].properties.ID;
                         obj.x = tileObjects[x].x;
-                        obj.y = tileObjects[x].y;
-                        objects[x] = {
-                            "name": obj.name,
-                            "type": obj.type,
-                            "properties": {
-                                "ID": obj.properties.ID
-                            },
-                            "width": obj.width,
-                            "x": obj.x,
-                            "y": obj.y
-                        };
+                        obj.y = tileObjects[x].y;*/
 
                         var w = TILEDATA_CACHE[index].tilewidth;
                         var h = TILEDATA_CACHE[index].tileheight;
-                        this.objimg = tile.img;
-                        this.objpx = tile.px;
-                        this.objpy = tile.py;
-                        this.objx = obj.x;
-                        this.objy = obj.y;
-                        setStyle(context,'Calibri', '12pt', 'black', 'bold', 'italic', 'center');
-                        context.fillText(obj.name, obj.x + 10, obj.y - 10);
-                        context.drawImage(tile.img, tile.px, tile.py, w, h, obj.x, obj.y, w, h);
+                        //this.objimg = tile.img;
+                        //this.objpx = tile.px;
+                        //this.objpy = tile.py;
+                        //this.objx = obj.x;
+                        //this.objy = obj.y;
+
+                        var y = tileObjects[x].y - 64;
+                        setStyle(context, 'Calibri', '12pt', 'black', 'bold', 'italic', 'center');
+                        context.drawImage(tile.img, tile.px, tile.py, w, h, tileObjects[x].x, y, w, h);
+                        context.fillText(tileObjects[x].name, tileObjects[x].x + 32, y - 10);
+                        if (tileObjects[x].type === "exit") {
+                            objects[x] = {
+                                "name": tileObjects[x].name,
+                                "type": tileObjects[x].type,
+                                "properties": {
+                                    "Type": tileObjects[x].properties.Type,
+                                    "ID": tileObjects[x].properties.ID
+                                },
+                                "width": w,
+                                "x": tileObjects[x].x,
+                                "y": y
+                            };
+                        }
+                        else {
+                            objects[x] = {
+                                "name": tileObjects[x].name,
+                                "type": tileObjects[x].type,
+                                "properties": {
+                                    "Type": 0,
+                                    "ID": tileObjects[x].properties.ID
+                                },
+                                "width": w,
+                                "x": tileObjects[x].x,
+                                "y": y
+                            };
+                        }
                     }
                 }
             } //end of function

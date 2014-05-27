@@ -62,13 +62,13 @@ module Game {
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
 
                         if (objects[i].type === 'exit') {
-                            if (objects[i].properties.ID === '0') {//EXIT TO WORLD
+                            if (objects[i].properties.Type === '0') {//EXIT TO WORLD
                                 sManager.popState();
-                                sManager.pushState(new Explore(this.layer1ctx, this.width, 'rpg'));
+                                sManager.pushState(new Explore(this.layer1ctx, this.width, objects[i].properties.ID));
                             }
-                            else if (objects[i].properties.ID === '1') {//EXIT TO NEW AREA
+                            else if (objects[i].properties.Type === '1') {//EXIT TO NEW AREA
                                 sManager.popState();
-                                sManager.pushState(new Explore(this.layer1ctx, this.width, 'carpet'));
+                                sManager.pushState(new Explore(this.layer1ctx, this.width, 'map1'));
                             }
                         }
                         else if (objects[i].type === 'menu') {
@@ -76,7 +76,7 @@ module Game {
                         }
                         else if (objects[i].type === 'cut') {
                             this.layer2ctx.clearRect(0, 0, 800, 600);
-                            sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, objects[i].properties.ID));
+                            sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, +objects[i].properties.ID));
                         }
                         else if (objects[i].type === 'battle') {
                             sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx, 0));

@@ -40,6 +40,7 @@
     <Content Include="Assets\Sound\wood.mp3" />
     <Content Include="Assets\Image\star.png" />
     <Content Include="Assets\Atlas\test.png" />
+    <Content Include="Assets\Tilemap\mapTileset.png" />
     <Content Include="Assets\XML\test.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -107,6 +108,8 @@
     <Content Include="Assets\XML\item.json" />
     <Content Include="Assets\XML\characters.json" />
     <Content Include="Assets\XML\EnemyGroups.json" />
+    <Content Include="Assets\Tilemap\map1.json" />
+    <Content Include="Assets\Tilemap\map2.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
