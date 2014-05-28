@@ -11,6 +11,7 @@ module Game {
         layer2ctx;
         mapID;
         width;
+        map;
         constructor(ctx, w, mapID) {
             super();
             this.x = 0;
@@ -28,6 +29,7 @@ module Game {
             this.layer1ctx = canvas2.getContext('2d');
 
             //this.game = game;
+
         }
         init() {
             this.layer1ctx.clearRect(0, 0, 800, 600);
@@ -49,6 +51,10 @@ module Game {
                     "y": 5
                 }
                 );
+
+            this.map = FormatTilemap(this.mapID);
+            var path = findPath(this.map, [8, 8], [6, 7]);
+            var x = 0;
         }
         update() {
             if (mouseClicked()) {

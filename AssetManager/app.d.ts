@@ -429,6 +429,7 @@ declare module Game {
         public layer2ctx: any;
         public mapID: any;
         public width: any;
+        public map: any;
         constructor(ctx: any, w: any, mapID: any);
         public init(): void;
         public update(): void;
@@ -658,4 +659,5 @@ declare function ObjLength(obj: any): number;
 declare function findPath(world: any, pathStart: any, pathEnd: any): any[];
 declare function getRandomInt(min: any, max: any): any;
 declare function setStyle(ctx: any, font: any, size: any, color: any, bold?: any, italic?: any, align?: any): void;
+declare function FormatTilemap(mapID: any): any[];
 declare function wrap(ctx: any, cwidth: any, text: any): any[];

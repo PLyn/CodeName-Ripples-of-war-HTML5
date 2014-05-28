@@ -92,6 +92,7 @@
     <TypeScriptCompile Include="Util\raf.ts" />
     <TypeScriptCompile Include="Util\randomizer.ts" />
     <TypeScriptCompile Include="Util\TextStyler.ts" />
+    <TypeScriptCompile Include="Util\TilemapFormatter.ts" />
     <TypeScriptCompile Include="Util\wordwrap.ts" />
   </ItemGroup>
   <ItemGroup>

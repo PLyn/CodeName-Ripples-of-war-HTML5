@@ -57,6 +57,7 @@ module Game {
                 if (TILEDATA_CACHE[index].layers[layeridX].type === "tilelayer") {
 
                     var data = TILEDATA_CACHE[index].layers[layeridX].data;
+
                     for (var tileidX = 0; tileidX < data.length; tileidX++) {
                         var ID = data[tileidX];
                         if (ID === 0) { //If ID is 0, no tiles is at the current tile so skip ahead
