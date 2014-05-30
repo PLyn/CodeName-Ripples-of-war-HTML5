@@ -155,6 +155,10 @@ declare module Game {
         public dead: boolean;
         public Spells: any;
         public currentState: any;
+        public mox: any;
+        public moy: any;
+        public context: any;
+        public interval: any;
         constructor(img: any, dx?: any, dy?: any, sx?: any, sy?: any, w?: any, h?: any, scale?: any);
         public setBaseAttributes(id: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type: any): void;
         public setModifiedAttributes(id?: any, hp?: any, mp?: any, atk?: any, def?: any, mdef?: any, spd?: any, luc?: any, type?: any): void;
@@ -194,6 +198,8 @@ declare module Game {
         public qAmt: any;
         public switches: any;
         public context: any;
+        public ctx: any;
+        public ctx2: any;
         constructor(ctx: any);
         public save(): void;
         public load(w: any): void;
@@ -655,6 +661,7 @@ declare module Game {
         public destroy(): void;
     }
 }
+declare function moveSprite(context: any, x: any, y: any): void;
 declare function ObjLength(obj: any): number;
 declare function findPath(world: any, pathStart: any, pathEnd: any): any[];
 declare function getRandomInt(min: any, max: any): any;

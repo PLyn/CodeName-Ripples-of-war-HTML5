@@ -46,6 +46,7 @@ module Game {
             this.context.fillText("Your game is currently being " + type, 200, 200);
             this.saveTime = Date.now() + 1000;
             if (type === "saved" && this.saveTime < Date.now()) {
+                sManager.restart();
                 SAVE.save();
             }
             else if (type === "loaded") {

@@ -87,6 +87,7 @@
     <TypeScriptCompile Include="States\cutscene.ts" />
     <TypeScriptCompile Include="States\StatusMenu.ts" />
     <TypeScriptCompile Include="States\title.ts" />
+    <TypeScriptCompile Include="Util\move.ts" />
     <TypeScriptCompile Include="Util\objectLength.ts" />
     <TypeScriptCompile Include="Util\pathFinding.ts" />
     <TypeScriptCompile Include="Util\raf.ts" />

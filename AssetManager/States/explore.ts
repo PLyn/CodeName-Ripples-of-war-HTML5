@@ -36,9 +36,9 @@ module Game {
             this.layer2ctx.clearRect(0, 0, 800, 600);
             TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
-            this.layer1ctx.drawImage(IMAGE_CACHE['hero'], 200, 250);
+            this.layer2ctx.drawImage(IMAGE_CACHE['D'],( 7 * 64) + 16, (5 * 64) + 16);
             objects.push(
-                {
+                  {
                     "height": 75,
                     "name": "menu",
                     "properties":
@@ -51,10 +51,11 @@ module Game {
                     "y": 5
                 }
                 );
-
+            //battleList[0].setPos((8*64) + 16, (8*64) + 16);
+            //battleList[0].render(this.layer2ctx);
             this.map = FormatTilemap(this.mapID);
-            var path = findPath(this.map, [8, 8], [6, 7]);
-            var x = 0;
+            //var path = findPath(this.map, [8, 8], [6, 7]);
+            //var x = 0;
         }
         update() {
             if (mouseClicked()) {
@@ -66,11 +67,26 @@ module Game {
                     var y1 = objects[i].y;
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-
+                        var path = findPath(this.map, [7, 5], [Math.floor(this.mx / 64), Math.floor(this.my / 64)]);
+                        var keys = Object.keys(path);
+                        var ctx = this.layer2ctx;
+                        var x = 0;
+                            //for (var x = 0; x < keys.length; x++) {
+                            if (objects[i].type !== 'menu' && path !== null) {
+                                var timer = setInterval(() => {
+                                    moveSprite(ctx, path[x][0], path[x][1]);
+                                    x++;
+                                    if (x >= (keys.length - 1)) {
+                                        clearInterval(timer);
+                                    }
+                                }, 1000 / 5);
+                            }
+                        //}
+                        
                         if (objects[i].type === 'exit') {
                             if (objects[i].properties.Type === '0') {//EXIT TO WORLD
                                 sManager.popState();
-                                sManager.pushState(new Explore(this.layer1ctx, this.width, objects[i].properties.ID));
+                                sManager.pushState(new Explore(this.layer2ctx, this.width, objects[i].properties.ID));
                             }
                             else if (objects[i].properties.Type === '1') {//EXIT TO NEW AREA
                                 sManager.popState();
@@ -87,7 +103,7 @@ module Game {
                         else if (objects[i].type === 'battle') {
                             sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx, 0));
                         }
-
+                        
                     }
                 }
             }

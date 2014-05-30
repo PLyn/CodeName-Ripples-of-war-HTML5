@@ -5,15 +5,14 @@
     <explore type="next" id="map1"></explore>
   </scene>
 	<scene id="1">
-    <at type="anim"></at>
     <car type="sfx"></car>
-    <hero type="dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>
+    <hero type="dialog">You obtained a potion!</hero>
+    <potion type="item" quantity="1" itemType="consumable"></potion>
     <x type="next"></x>
   </scene>
   <scene id="2">
     <off type="bgm"></off>
     <potion type="item" quantity="2" itemType="consumable"></potion>
-    <potion type="item" quantity="1" itemType="consumable"></potion>
     <at type="anim"></at>
     <car type="sfx"></car>
     <hero type="dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>

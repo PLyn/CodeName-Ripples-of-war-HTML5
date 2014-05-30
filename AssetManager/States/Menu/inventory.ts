@@ -58,6 +58,12 @@ module Game {
         reload(type: String) {
             this.context.clearRect(0, 0, 800, 600);
             if (type === "quest") {
+                this.context.drawImage(IMAGE_CACHE['dialog'], 15, 100);
+                this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
+
+                this.context.fillText("Items", 25, 120);
+                this.context.fillText("Key Items", 100, 120);
+
                 var ikeys = Object.keys(JSON_CACHE['items']['quest']);
                 var items = JSON_CACHE['items']['quest'];
                 for (var x = 0; x < ikeys.length; x++) {
@@ -65,6 +71,12 @@ module Game {
                 }
             }
             else if (type === "consumable") {
+                this.context.drawImage(IMAGE_CACHE['dialog'], 15, 100);
+                this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
+
+                this.context.fillText("Items", 25, 120);
+                this.context.fillText("Key Items", 100, 120);
+
                 var ikeys = Object.keys(JSON_CACHE['items']['consumable']);
                 var items = JSON_CACHE['items']['consumable'];
                 for (var x = 0; x < ikeys.length; x++) {
@@ -90,6 +102,7 @@ module Game {
                                 this.reload("consumable");
                                 break;
                             case "back":
+                                this.context.clearRect(0, 0 ,800, 600);
                                 sManager.popState();
                                 break;
                             default:

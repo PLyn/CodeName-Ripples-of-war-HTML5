@@ -28,7 +28,7 @@ module Game {
                     }
                     else if (type === "quest") {
                         this.quest[this.itemKeys[x]] = {
-                            "name": this.itemSource[this.itemKeys[x]],
+                            "name": this.itemSource[this.itemKeys[x]].name,
                             "quantity": amt
                         };
                     }

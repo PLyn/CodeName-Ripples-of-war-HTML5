@@ -16,6 +16,8 @@ module Game {
         dead: boolean = false;
         Spells;
         currentState;
+
+        mox; moy; context; interval;
         //all the base attributes and methods are to be added here, this will come when
         //the battle system is being developed but for now it stays relatively empty i guess 
         constructor(img, dx?, dy?, sx?, sy?, w?, h?, scale?) {

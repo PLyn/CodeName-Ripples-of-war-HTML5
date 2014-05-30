@@ -35,9 +35,7 @@
             }
         }
         restart() {
-            for (var x = 0; x < this.stateStack.length; x++) {
-                this.stateStack.pop();
-            }
+            this.stateStack.slice(0, this.stateStack.length);
         }
         updateStack() {
             var len = this.stateStack.length;

@@ -17,6 +17,7 @@ module Game {
             this.objects = [];
         }
         drawEquip() {
+            this.battler = battleList[0];
             this.context.clearRect(0, 0, 800, 600);
             this.context.drawImage(IMAGE_CACHE['dialog'], 15, 100);
             setStyle(this.context, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
