@@ -12,7 +12,6 @@ module Game {
         mapID;
         width;
         map;
-        Path: PathFind;
         constructor(ctx, w, mapID) {
             super();
             this.x = 0;
@@ -68,8 +67,9 @@ module Game {
                     var x2 = objects[i].x + objects[i].width;
                     var y1 = objects[i].y;
                     var y2 = objects[i].y + objects[i].width;
-                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {     
-                        var path = findPath(this.map, [5, 5], [Math.floor(this.mx / 64), Math.floor(this.my / 64)]);
+                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {  
+                        var path = [];   
+                        path = findPath(this.map, [5, 5], [Math.floor(this.mx / 64), Math.floor(this.my / 64)]);
                         var keys = Object.keys(path);
                         var ctx = this.layer2ctx;
                         var x = 0;

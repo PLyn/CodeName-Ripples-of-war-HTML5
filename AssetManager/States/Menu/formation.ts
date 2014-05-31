@@ -56,9 +56,9 @@ module Game {
                 this.forms.push({
                     "Name": this.keys[i],
                     "x": 25,
-                    "y": (i * 50) + 150,
+                    "y": (i * 50) + 145,
                     "w": 75,
-                    "h": 15
+                    "h": 5
                 });
                 this.ctx2.fillText(this.keys[i], this.forms[i].x, this.forms[i].y);
             }

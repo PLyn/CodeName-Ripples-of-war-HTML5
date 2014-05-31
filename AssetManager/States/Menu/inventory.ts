@@ -14,8 +14,8 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['dialog'], 15, 100);
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
 
-            this.context.fillText("Items", 25, 120);
-            this.context.fillText("Key Items", 100, 120);
+            this.context.fillText("Consumable", 25, 120);
+            this.context.fillText("Quest", 150, 120);
 
             this.items = [];
             var ikeys = Object.keys(ITEM.consumable);
@@ -29,23 +29,23 @@ module Game {
                         "x": 25,
                         "y": (150 + (x * 30)),
                         "w": this.context.measureText(items[ikeys[x]]).width,
-                        "h": 15
+                        "h": 5
                     });
                 }
             }
             this.items.push({
                 "name": "quest",
-                "x": 75,
-                "y": 120,
+                "x": 150,
+                "y": 115,
                 "w": this.context.measureText("quest").width,
-                "h": 15
+                "h": 5
             });
             this.items.push({
                 "name": "consumable",
                 "x": 25,
-                "y": 120,
+                "y": 115,
                 "w": this.context.measureText("consumable").width,
-                "h": 15
+                "h": 5
             });
             this.items.push({
                 "name": "back",
@@ -75,12 +75,13 @@ module Game {
                 this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
 
                 this.context.fillText("Items", 25, 120);
-                this.context.fillText("Key Items", 100, 120);
+                this.context.fillText("Key Items", 150, 120);
 
                 var ikeys = Object.keys(JSON_CACHE['items']['consumable']);
                 var items = JSON_CACHE['items']['consumable'];
                 for (var x = 0; x < ikeys.length; x++) {
-                    this.context.fillText(items[ikeys[x]], 25, 130 + (x * 30));
+                    this.context.fillText(items[ikeys[x]].name, 25, 150 + (x * 30));
+                    this.context.fillText(items[ikeys[x]].quantity, 100, 150 + (x * 30));
                 }
             }
         }

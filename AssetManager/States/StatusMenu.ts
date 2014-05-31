@@ -4,15 +4,17 @@ module Game {
         mx;
         my;
         menuItems;
-        context;
+        context: CanvasRenderingContext2D;
         //used as the base class to be extended for each state
         //might need some initialization code to remove some clutter
         //from each state to make stuff look better
         constructor(ctx) {
             super();
-            //ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
-            //ctx.fillRect(0, 0, 650, 600);
             this.context = ctx;
+            this.context.clearRect(0,0, 800, 600);
+            this.context.fillStyle = "rgba(0, 0, 0, 0.6)";
+            this.context.fillRect(0, 0, 650, 600);
+            
 
             this.menuItems = [];
             this.menuItems.push({
@@ -23,51 +25,72 @@ module Game {
                 "h": 75 
             });
             this.menuItems.push({
-                "name": "equip",
-                "x": 485,
-                "y": 175,
+                "name": "inventory",
+                "x": 400,
+                "y": 100,
                 "w": 150,
-                "h": 40 
+                "h": 45
+            });
+            this.menuItems.push({
+                "name": "equip",
+                "x": 400,
+                "y": 160,
+                "w": 150,
+                "h": 45 
             });
             this.menuItems.push({
                 "name": "formation",
-                "x": 485,
-                "y": 235,
+                "x": 400,
+                "y": 220,
                 "w": 150,
                 "h": 40 
             });
-            this.menuItems.push({
-                "name": "inventory",
-                "x": 485,
-                "y": 120,
-                "w": 150,
-                "h": 40 
-            });
+
             this.menuItems.push({
                 "name": "status",
-                "x": 485,
-                "y": 285,
+                "x": 400,
+                "y": 270,
                 "w": 150,
-                "h": 40 
+                "h": 45 
             });
             this.menuItems.push({
                 "name": "setting",
-                "x": 485,
-                "y": 345,
+                "x": 400,
+                "y": 330,
                 "w": 150,
-                "h": 40 
+                "h": 45 
             });
             this.menuItems.push({
                 "name": "save",
-                "x": 485,
-                "y": 400,
+                "x": 400,
+                "y": 380,
                 "w": 150,
-                "h": 40 
+                "h": 45 
             });
         }
         init() {
-            this.context.drawImage(IMAGE_CACHE['status'], 0, 100);
+            this.context.drawImage(IMAGE_CACHE['status'], 400, 100);
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
+
+            this.context.fillStyle = "blue";
+            this.context.fillRect(10, 100, 380, 100);
+            this.context.fillRect(10, 225, 380, 100);
+            this.context.fillRect(10, 350, 380, 100);
+
+            this.context.strokeStyle = "#FF0000";
+            this.context.strokeRect(9, 99, 382, 102);
+            this.context.strokeRect(9, 224, 382, 102);
+            this.context.strokeRect(9, 349, 382, 102);
+
+            setStyle(this.context, 'calibre', 14, "white", "bold");
+            for (var x = 0; x < PARTY_SIZE; x++) {
+                if (battleList[x].Base.Type === 0) {
+                    this.context.drawImage(battleList[x].img, 25, 15 + (125 * (x + 1)));
+                    this.context.fillText("Level: 1", 75, 15 + (125 * (x + 1)));
+                    this.context.fillText("HP: " + battleList[x].getTotalStats().HP, 75, 35 + (125 * (x + 1)));
+                    this.context.fillText("MP: " + battleList[x].getTotalStats().MP, 150, 35 + (125 * (x + 1)));
+                }
+            }
         }
         update() {
             if (mouseClicked()) {

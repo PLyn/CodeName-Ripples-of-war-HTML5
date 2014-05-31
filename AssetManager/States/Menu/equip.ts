@@ -42,33 +42,33 @@ module Game {
             var obj = {
                 "type": "Head",
                 "x": 75,
-                "y": 175,
+                "y": 170,
                 "w": this.context.measureText("Head: " + this.battler.Equipment['Head']).width,
-                "h": 15
+                "h": 5
             };
             equips.push(obj);
             obj = {
                 "type": "Body",
                 "x": 75,
-                "y": 200,
+                "y": 195,
                 "w": this.context.measureText("Body: " + this.battler.Equipment['Body']).width,
-                "h": 15
+                "h": 5
             };
             equips.push(obj);
             obj = {
                 "type": "Weapon",
                 "x": 75,
-                "y": 225,
+                "y": 220,
                 "w": this.context.measureText("Weapon: " + this.battler.Equipment['Weapon']).width,
-                "h": 15
+                "h": 5
             };
             equips.push(obj);
             obj = {
                 "type": "Feet",
                 "x": 75,
-                "y": 250,
+                "y": 245,
                 "w": this.context.measureText("Legs: " + this.battler.Equipment['Feet']).width,
-                "h": 15
+                "h": 5
             };
             equips.push(obj);
             obj = {
@@ -116,9 +116,9 @@ module Game {
                     this.objects[y] = {
                         "Name": battleList[oKeys[y]].Base.ID,
                         "x": 200 + (y * 75),
-                        "y": 125,
+                        "y": 120,
                         "w": this.context.measureText(battleList[oKeys[y]].Base.ID).width,
-                        "h": 15
+                        "h": 5
                     };
                 }
             }

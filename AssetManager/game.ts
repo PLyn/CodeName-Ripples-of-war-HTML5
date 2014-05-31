@@ -2,7 +2,11 @@
 var audioElement = new Audio();
 var WORLD = 0;
 var sManager;
-var GAME_VERSION = "0.02";
+var GAME_VERSION = "0.10";
+var PARTY_SIZE = 3;
+var GAME_WIDTH = 800;
+var GAME_HEIGHT = 600;
+
 //State system core will most likely be here so read the book and figure out
 //how to get it working and leading to each state as needed
 module Game {

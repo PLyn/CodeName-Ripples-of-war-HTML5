@@ -30,9 +30,9 @@ module Game {
             this.clickBounds.push({
                 "name": "use",
                 "x": 150,
-                "y": 400,
+                "y": 395,
                 "w": this.context.measureText("use").width,
-                "h": 15
+                "h": 5
             });
         }
         update() {

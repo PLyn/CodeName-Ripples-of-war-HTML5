@@ -15,14 +15,14 @@ module Game {
             this.objects.push({
                 "Name": "sound",
                 "x": 250,
-                "y": 175,
+                "y": 170,
                 "w": 36,
                 "h": 35
             });
             this.objects.push({
                 "Name": "music",
                 "x": 250,
-                "y": 225,
+                "y": 220,
                 "w": 36,
                 "h": 35
             });
@@ -36,9 +36,9 @@ module Game {
             this.objects.push({
                 "Name": "save",
                 "x": 250,
-                "y": 325,
+                "y": 320,
                 "w": this.context.measureText("Save Settings").width,
-                "h": 15
+                "h": 5
             });
         }
         init() {

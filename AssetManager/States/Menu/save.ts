@@ -24,16 +24,16 @@ module Game {
             this.objects.push({
                 "Name": "load",
                 "x": 200,
-                "y": 300,
+                "y": 295,
                 "w": this.context.measureText("Load Game").width,
-                "h": 75
+                "h": 5
             });
             this.objects.push({
                 "Name": "save",
                 "x": 200,
-                "y": 250,
+                "y": 245,
                 "w": this.context.measureText("Save Game").width,
-                "h": 15
+                "h": 5
             });
         }
         init() {
@@ -68,7 +68,6 @@ module Game {
                     var y2 = this.objects[keys[i]].y + this.objects[keys[i]].h;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         if (this.objects[keys[i]].Name === "save") {
-                            //this.action("saved");
                             this.context.clearRect(0, 0, 800, 600);
                             SAVE.save();
                         }

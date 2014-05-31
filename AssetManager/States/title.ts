@@ -23,16 +23,16 @@ module Game {
             this.MenuItems.push({
                 "name": "new",
                 "x": 300,
-                "y": 300,
+                "y": 290,
                 "w": this.context.measureText("New Game").width,
-                "h": 20
+                "h": 10
             });
             this.MenuItems.push({
                 "name": "load",
                 "x": 300,
-                "y": 350,
+                "y": 340,
                 "w": this.context.measureText("Continue Game").width,
-                "h": 20
+                "h": 10
             });
 
         }

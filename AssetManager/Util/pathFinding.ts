@@ -12,7 +12,7 @@ function findPath(world, pathStart, pathEnd)
 	// anything higher than this number is considered blocked
 	// this is handy is you use numbered sprites, more than one
 	// of which is walkable road, grass, mud, etc
-	var maxWalkableTileNum = 1;
+	var maxWalkableTileNum = 0;
 
 	// keep track of the world dimensions
     // Note that this A-star implementation expects the world array to be square: 
@@ -24,17 +24,17 @@ function findPath(world, pathStart, pathEnd)
 
 	// which heuristic should we use?
 	// default: no diagonals (Manhattan)
-	/*var distanceFunction = ManhattanDistance;
+	var distanceFunction = ManhattanDistance;
 	var findNeighbours = function(){}; // empty
 
 	
-*/
+/*
 	// alternate heuristics, depending on your game:
 
 	// diagonals allowed but no sqeezing through cracks:
 	var distanceFunction = DiagonalDistance;
 	var findNeighbours = DiagonalNeighbours;
-    /*
+    
 	// diagonals and squeezing through cracks allowed:
 	var distanceFunction = DiagonalDistance;
 	var findNeighbours = DiagonalNeighboursFree;

@@ -66,7 +66,7 @@ module Game {
                         this.initNode = false;
                         this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
 
-                        this.time = this.currentTime + 750;
+                        this.time = this.currentTime + 500;
                         if (this.prevName !== this.lines[this.linePos].name) {
                             this.context.clearRect(0, 0, 800, 600);
                             this.prevName = this.lines[this.linePos].name;
@@ -81,7 +81,7 @@ module Game {
                         this.linePos++;
                     }
                     if (this.linePos < this.lines.length && this.currentTime > this.time && mouseClicked()) {
-                        this.time = this.currentTime + 750;
+                        this.time = this.currentTime + 500;
                         if (this.prevName !== this.lines[this.linePos].name) {
                             this.context.clearRect(0, 0, 800, 600);
                             this.prevName = this.lines[this.linePos].name;

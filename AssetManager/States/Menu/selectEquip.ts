@@ -31,9 +31,9 @@ module Game {
                     var obj = {
                         "Name": this.hKeys[i],
                         "x": 50,
-                        "y": (25 * i) + 325,
+                        "y": (25 * i) + 320,
                         "w": this.ctx2.measureText(this.hKeys[i]).width,
-                        "h": 15
+                        "h": 5
                     }
                 currentEquips.push(obj);
                 }
@@ -45,9 +45,9 @@ module Game {
                     var obj = {
                         "Name": this.bKeys[i],
                         "x": 50,
-                        "y": (25 * i) + 325,
+                        "y": (25 * i) + 320,
                         "w": this.ctx2.measureText(this.bKeys[i]).width,
-                        "h": 15
+                        "h": 5
                     }
                 currentEquips.push(obj);
                 }
@@ -59,9 +59,9 @@ module Game {
                     var obj = {
                         "Name": this.wKeys[i],
                         "x": 50,
-                        "y": (25 * i) + 325,
+                        "y": (25 * i) + 320,
                         "w": this.ctx2.measureText(this.wKeys[i]).width,
-                        "h": 15
+                        "h": 5
                     }
                 currentEquips.push(obj);
                 }
@@ -73,9 +73,9 @@ module Game {
                     var obj = {
                         "Name": this.fKeys[i],
                         "x": 50,
-                        "y": (25 * i) + 325,
+                        "y": (25 * i) + 320,
                         "w": this.ctx2.measureText(this.fKeys[i]).width,
-                        "h": 15
+                        "h": 5
                     }
                 currentEquips.push(obj);
                 }
@@ -84,11 +84,6 @@ module Game {
             this.itemSelected = false;
         }
         update() {
-            /*var time = Date.now();
-            if (this.itemSelected) {
-                this.itemSelected = false;
-
-            }*/
             if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
