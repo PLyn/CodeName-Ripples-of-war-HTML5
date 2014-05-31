@@ -100,6 +100,10 @@ module Game {
                         this.nextNode();
                     }
                     break;
+                case "bg":
+                    this.context.drawImage(IMAGE_CACHE[this.currentNode.nodeName], 0, 0);
+                    this.nextNode();
+                    break;
                 case "sfx":
                     if (this.initNode) {
                         this.sfx = SOUND_CACHE[this.currentNode.nodeName];
