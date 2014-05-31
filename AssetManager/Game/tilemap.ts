@@ -82,7 +82,7 @@ module Game {
                 }
                 else if (TILEDATA_CACHE[index].layers[layeridX].type === "objectgroup") {
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
-                    var key = Object.keys(objects);
+                    //var key = Object.keys(objects);
                     /*for (var y = 0; y < key.length; y++) {
                         objects[key[y]] = [];
                     }*/

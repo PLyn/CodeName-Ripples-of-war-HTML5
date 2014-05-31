@@ -12,6 +12,7 @@ module Game {
         mapID;
         width;
         map;
+        Path: PathFind;
         constructor(ctx, w, mapID) {
             super();
             this.x = 0;
@@ -36,7 +37,7 @@ module Game {
             this.layer2ctx.clearRect(0, 0, 800, 600);
             TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
-            this.layer2ctx.drawImage(IMAGE_CACHE['D'],( 7 * 64) + 16, (5 * 64) + 16);
+            this.layer2ctx.drawImage(IMAGE_CACHE['D'],( 5 * 64) + 16, (5 * 64) + 16);
             objects.push(
                   {
                     "height": 75,
@@ -56,6 +57,7 @@ module Game {
             this.map = FormatTilemap(this.mapID);
             //var path = findPath(this.map, [8, 8], [6, 7]);
             //var x = 0;
+
         }
         update() {
             if (mouseClicked()) {
@@ -66,13 +68,13 @@ module Game {
                     var x2 = objects[i].x + objects[i].width;
                     var y1 = objects[i].y;
                     var y2 = objects[i].y + objects[i].width;
-                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        var path = findPath(this.map, [7, 5], [Math.floor(this.mx / 64), Math.floor(this.my / 64)]);
+                    if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {     
+                        var path = findPath(this.map, [5, 5], [Math.floor(this.mx / 64), Math.floor(this.my / 64)]);
                         var keys = Object.keys(path);
                         var ctx = this.layer2ctx;
                         var x = 0;
                             //for (var x = 0; x < keys.length; x++) {
-                            if (objects[i].type !== 'menu' && path !== null) {
+                            if (objects[i].type !== 'menu' && path !== []) {
                                 var timer = setInterval(() => {
                                     moveSprite(ctx, path[x][0], path[x][1]);
                                     x++;

@@ -1,3 +1,4 @@
+/// <reference path="Util/easystarjs.d.ts" />
 window.onload = function () {
     var game = new Game.Init();
 }

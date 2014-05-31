@@ -2,7 +2,7 @@
 <Cutscenes>
 	<scene id="0">
     <hero type="dialog">I wandered the lands for years after "that" incident. I have ran from my past til now. The gears have destiny have began to turn once again...</hero>
-    <explore type="next" id="map1"></explore>
+    <explore type="next" id="map2"></explore>
   </scene>
 	<scene id="1">
     <car type="sfx"></car>
