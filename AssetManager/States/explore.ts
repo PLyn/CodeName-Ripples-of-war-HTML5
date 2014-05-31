@@ -74,7 +74,10 @@ module Game {
                         var ctx = this.layer2ctx;
                         var x = 0;
                             //for (var x = 0; x < keys.length; x++) {
-                            if (objects[i].type !== 'menu' && path !== []) {
+                        if (typeof path !== 'undefined' && path.length > 0) {
+                            // the array is defined and has at least one element
+                        
+                            if (objects[i].type !== 'menu') {
                                 var timer = setInterval(() => {
                                     moveSprite(ctx, path[x][0], path[x][1]);
                                     x++;
@@ -84,7 +87,7 @@ module Game {
                                 }, 1000 / 5);
                             }
                         //}
-                        
+                        }
                         if (objects[i].type === 'exit') {
                             if (objects[i].properties.Type === '0') {//EXIT TO WORLD
                                 sManager.popState();
