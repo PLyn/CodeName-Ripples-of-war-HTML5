@@ -45,6 +45,8 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="default.htm" />
+    <Content Include="Util\easystar-0.1.7.js" />
+    <Content Include="Util\pathfinding-browser.min.js" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -87,6 +89,8 @@
     <TypeScriptCompile Include="States\cutscene.ts" />
     <TypeScriptCompile Include="States\StatusMenu.ts" />
     <TypeScriptCompile Include="States\title.ts" />
+    <TypeScriptCompile Include="Util\Astar.ts" />
+    <TypeScriptCompile Include="Util\easystarjs.d.ts" />
     <TypeScriptCompile Include="Util\move.ts" />
     <TypeScriptCompile Include="Util\objectLength.ts" />
     <TypeScriptCompile Include="Util\pathFinding.ts" />

@@ -1,3 +1,4 @@
+/// <reference path="Util/easystarjs.d.ts" />
 declare var SCENE: any;
 declare var EX: any;
 declare var startScene: any;
@@ -436,6 +437,7 @@ declare module Game {
         public mapID: any;
         public width: any;
         public map: any;
+        public Path: PathFind;
         constructor(ctx: any, w: any, mapID: any);
         public init(): void;
         public update(): void;
@@ -659,6 +661,49 @@ declare module Game {
         public pause(): void;
         public resume(): void;
         public destroy(): void;
+    }
+}
+declare module Game {
+    class PathFind {
+        public parent: any;
+        public x: any;
+        public y: any;
+        public costSofar: any;
+        public simpleDistanceToTarget: any;
+        public bestGuessDistance: any;
+        public OPEN_LIST: number;
+        public CLOSED_LIST: number;
+        public getHighestPriorityElement: any;
+        public shiftHighestPriorityElement: any;
+        public length: any;
+        public insert: any;
+        public MAX_HEAP: number;
+        public MIN_HEAP: number;
+        public isDoneCalculating: boolean;
+        public pointsToAvoid: {};
+        public startX: any;
+        public callback: any;
+        public startY: any;
+        public endX: any;
+        public endY: any;
+        public nodeHash: {};
+        public openList: any;
+        public setGrid: any;
+        public enableDiagonals: any;
+        public disableDiagonals: any;
+        public setAcceptableTiles: any;
+        public setTileCost: any;
+        public setIterationsPerCalculation: any;
+        public avoidAdditionalPoint: any;
+        public stopAvoidingAdditionalPoint: any;
+        public stopAvoidingAllAdditionalPoints: any;
+        public findPath: any;
+        public calculate: any;
+        constructor();
+        public Node(parent: any, x: any, y: any, costSoFar: any, simpleDistanceToTarget: any): void;
+        public PriorityQueue(criteria: any, heapType: any): void;
+        public instance(): void;
+        public js(): void;
     }
 }
 declare function moveSprite(context: any, x: any, y: any): void;
