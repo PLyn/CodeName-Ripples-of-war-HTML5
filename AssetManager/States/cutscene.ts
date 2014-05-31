@@ -104,6 +104,10 @@ module Game {
                     this.context.drawImage(IMAGE_CACHE[this.currentNode.nodeName], 0, 0);
                     this.nextNode();
                     break;
+                case "switch":
+                    QUEST.Switch[this.currentNode.nodeName] = this.currentNode.getAttribute('value');
+                    this.nextNode();
+                    break;
                 case "sfx":
                     if (this.initNode) {
                         this.sfx = SOUND_CACHE[this.currentNode.nodeName];

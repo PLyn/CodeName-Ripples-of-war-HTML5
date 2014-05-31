@@ -18,21 +18,16 @@ module Game {
             this.width = 800;
             //sManager.pushState(new Explore(this.context, this.width, 'rpg'));
             sManager.pushState(new Title(this.context, this.width));
-            PARTY = new PartyManager();
-            PARTY.add("Shadow", 0);
-            PARTY.add("Syndra", 0);
-            PARTY.add("Johnathan", 0);
-            //PARTY.remove("Shadow", 0);
-            //var p1 = new Sprite(IMAGE_CACHE['D'], 400, 250, 35, 35);
-            //var p2 = new Sprite(IMAGE_CACHE['D'], 400, 325, 35, 35);
-           // p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
-            //p2.setBaseAttributes('ally', 5, 2, 1, 1, 1, 1, 1, 0);
-           // battleList[0] = p1;
-            //battleList[1] = p2;
 
+            PARTY = new PartyManager();
             FORMATION = new BattleFormation();
             ITEM = new ItemManager();
             SPELL = new SpellManager();
+            QUEST = new QuestManager();
+
+            PARTY.add("Shadow", 0);
+            PARTY.add("Syndra", 0);
+            PARTY.add("Johnathan", 0);
         }
         update() {
             sManager.updateStack();
