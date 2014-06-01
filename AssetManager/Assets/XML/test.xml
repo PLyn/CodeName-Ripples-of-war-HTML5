@@ -13,22 +13,13 @@
     <x type="next"></x>
   </scene>
   <scene id="2">
-    <off type="bgm"></off>
     <potion type="item" quantity="2" itemType="consumable"></potion>
-    <at type="anim"></at>
+    <helper type="dialog">Here is two potions, it might be useful aganist Kira east of here. She will take it easy on you so do not worry about dying yet</helper>
     <car type="sfx"></car>
-    <hero type="dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>
-    <on type="bgm"></on>
     <x type="next"></x>
   </scene>
   <scene id="3">
-    <off type="bgm"></off>
-    <potion type="item" quantity="2" itemType="consumable"></potion>
-    <potion type="item" quantity="1" itemType="consumable"></potion>
-    <at type="anim"></at>
-    <car type="sfx"></car>
-    <hero type="dialog">a wheel? do you think it could possibly be useful later on? maybse it could be useful to take with me</hero>
-    <on type="bgm"></on>
-    <x type="next"></x>
+    <kira type="dialog">Let's Duel!</kira>
+    <battle type="next" id="0"></battle>
   </scene>
 </Cutscenes>

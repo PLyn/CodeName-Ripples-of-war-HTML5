@@ -449,6 +449,7 @@ declare module Game {
         constructor(ctx: any, w: any, mapID: any);
         public init(): void;
         public update(): void;
+        public nextState(i: any): void;
         public render(): void;
         public pause(): void;
         public resume(): void;
@@ -610,7 +611,9 @@ declare module Game {
     class Cutscene extends State {
         public dia: any;
         public canvas: any;
+        public canvas2: any;
         public context: any;
+        public context2: any;
         public ctl: any;
         public xmlID: any;
         public node: any;

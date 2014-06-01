@@ -3,7 +3,9 @@ module Game {
     export class Cutscene extends State {
         dia;
         canvas;
+        canvas2;
         context;
+        context2;
         ctl;
         xmlID;
 
@@ -28,6 +30,8 @@ module Game {
             super();
             this.canvas = <HTMLCanvasElement> document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
+            this.canvas2 = <HTMLCanvasElement> document.getElementById('layer1');
+            this.context2 = this.canvas.getContext('2d');
             this.xmlID = xmlID;
             setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
             this.canvasWidth = width;
@@ -149,12 +153,14 @@ module Game {
                             sManager.pushState(new Explore(this.context, 800, id));
                             break;
                         case "battle":
+                            sManager.pushState(new Battle(this.context2, this.context, +id));
                             break;
                         case "dialog":
                             break;
                         default:
                             break; 
                     }
+                    break;
                 default:
                     break;
             }

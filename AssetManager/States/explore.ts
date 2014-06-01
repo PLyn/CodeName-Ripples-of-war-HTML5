@@ -34,6 +34,7 @@ module Game {
         init() {
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
+
             TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
             this.layer2ctx.drawImage(IMAGE_CACHE['D'],( 5 * 64) + 16, (5 * 64) + 16);
@@ -73,44 +74,46 @@ module Game {
                         var keys = Object.keys(path);
                         var ctx = this.layer2ctx;
                         var x = 0;
-                            //for (var x = 0; x < keys.length; x++) {
-                        if (typeof path !== 'undefined' && path.length > 0) {
-                            // the array is defined and has at least one element
-                        
+                        if (objects[i].type === 'menu' || objects[i].type === 'exit') {
+                            this.nextState(i);
+                        }
+                        else if (typeof path !== 'undefined' && path.length > 0) {
                             if (objects[i].type !== 'menu') {
                                 var timer = setInterval(() => {
                                     moveSprite(ctx, path[x][0], path[x][1]);
                                     x++;
                                     if (x >= (keys.length - 1)) {
                                         clearInterval(timer);
+                                        this.nextState(i);
                                     }
                                 }, 1000 / 5);
                             }
-                        //}
                         }
-                        if (objects[i].type === 'exit') {
-                            if (objects[i].properties.Type === '0') {//EXIT TO WORLD
-                                sManager.popState();
-                                sManager.pushState(new Explore(this.layer2ctx, this.width, objects[i].properties.ID));
-                            }
-                            else if (objects[i].properties.Type === '1') {//EXIT TO NEW AREA
-                                sManager.popState();
-                                sManager.pushState(new Explore(this.layer1ctx, this.width, 'map1'));
-                            }
-                        }
-                        else if (objects[i].type === 'menu') {
-                            sManager.pushState(new StatusMenu(this.layer2ctx));
-                        }
-                        else if (objects[i].type === 'cut') {
-                            this.layer2ctx.clearRect(0, 0, 800, 600);
-                            sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, +objects[i].properties.ID));
-                        }
-                        else if (objects[i].type === 'battle') {
-                            sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx, 0));
-                        }
-                        
+                        break;
                     }
                 }
+            }
+        }
+        nextState(i) {
+            if (objects[i].type === 'exit') {
+                if (objects[i].properties.Type === "0") {//EXIT TO WORLD
+                    sManager.popState();
+                    sManager.pushState(new Explore(this.layer2ctx, this.width, objects[i].properties.ID));
+                }
+                else if (objects[i].properties.Type === "1") {//EXIT TO NEW AREA
+                    sManager.popState();
+                    sManager.pushState(new Explore(this.layer1ctx, this.width, 'map1'));
+                }
+            }
+            else if (objects[i].type === 'menu') {
+                sManager.pushState(new StatusMenu(this.layer2ctx));
+            }
+            else if (objects[i].type === 'cut') {
+                this.layer2ctx.clearRect(0, 0, 800, 600);
+                sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, +objects[i].properties.ID));
+            }
+            else if (objects[i].type === 'battle') {
+                sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx, 0));
             }
         }
         render() {}

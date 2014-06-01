@@ -603,6 +603,10 @@ var Game;
     var QuestManager = (function () {
         function QuestManager() {
             this.Switch = [];
+            var key = Object.keys(JSON_CACHE['switches']);
+            for (var x = 0; x < key.length; x++) {
+                this.Switch[key[x]] = JSON_CACHE['switches'][key[x]];
+            }
         }
         return QuestManager;
     })();
@@ -849,7 +853,8 @@ var Game;
                     items: 'Assets/XML/item.json',
                     spell: 'Assets/XML/Spells.json',
                     character: 'Assets/XML/characters.json',
-                    Enemies: 'Assets/XML/EnemyGroups.json'
+                    Enemies: 'Assets/XML/EnemyGroups.json',
+                    switches: 'Assets/XML/switches.json'
                 },
                 Sounds: {
                     car: 'Assets/Sound/car',
@@ -1965,6 +1970,7 @@ var Game;
         Explore.prototype.init = function () {
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
+
             TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
             this.layer2ctx.drawImage(IMAGE_CACHE['D'], (5 * 64) + 16, (5 * 64) + 16);
@@ -1986,6 +1992,7 @@ var Game;
             //var x = 0;
         };
         Explore.prototype.update = function () {
+            var _this = this;
             if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
@@ -2000,39 +2007,41 @@ var Game;
                         var keys = Object.keys(path);
                         var ctx = this.layer2ctx;
                         var x = 0;
-
-                        //for (var x = 0; x < keys.length; x++) {
-                        if (typeof path !== 'undefined' && path.length > 0) {
-                            // the array is defined and has at least one element
+                        if (objects[i].type === 'menu' || objects[i].type === 'exit') {
+                            this.nextState(i);
+                        } else if (typeof path !== 'undefined' && path.length > 0) {
                             if (objects[i].type !== 'menu') {
                                 var timer = setInterval(function () {
                                     moveSprite(ctx, path[x][0], path[x][1]);
                                     x++;
                                     if (x >= (keys.length - 1)) {
                                         clearInterval(timer);
+                                        _this.nextState(i);
                                     }
                                 }, 1000 / 5);
                             }
-                            //}
                         }
-                        if (objects[i].type === 'exit') {
-                            if (objects[i].properties.Type === '0') {
-                                sManager.popState();
-                                sManager.pushState(new Explore(this.layer2ctx, this.width, objects[i].properties.ID));
-                            } else if (objects[i].properties.Type === '1') {
-                                sManager.popState();
-                                sManager.pushState(new Explore(this.layer1ctx, this.width, 'map1'));
-                            }
-                        } else if (objects[i].type === 'menu') {
-                            sManager.pushState(new Game.StatusMenu(this.layer2ctx));
-                        } else if (objects[i].type === 'cut') {
-                            this.layer2ctx.clearRect(0, 0, 800, 600);
-                            sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, +objects[i].properties.ID));
-                        } else if (objects[i].type === 'battle') {
-                            sManager.pushState(new Game.Battle(this.layer1ctx, this.layer2ctx, 0));
-                        }
+                        break;
                     }
                 }
+            }
+        };
+        Explore.prototype.nextState = function (i) {
+            if (objects[i].type === 'exit') {
+                if (objects[i].properties.Type === "0") {
+                    sManager.popState();
+                    sManager.pushState(new Explore(this.layer2ctx, this.width, objects[i].properties.ID));
+                } else if (objects[i].properties.Type === "1") {
+                    sManager.popState();
+                    sManager.pushState(new Explore(this.layer1ctx, this.width, 'map1'));
+                }
+            } else if (objects[i].type === 'menu') {
+                sManager.pushState(new Game.StatusMenu(this.layer2ctx));
+            } else if (objects[i].type === 'cut') {
+                this.layer2ctx.clearRect(0, 0, 800, 600);
+                sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, +objects[i].properties.ID));
+            } else if (objects[i].type === 'battle') {
+                sManager.pushState(new Game.Battle(this.layer1ctx, this.layer2ctx, 0));
             }
         };
         Explore.prototype.render = function () {
@@ -2878,6 +2887,8 @@ var Game;
             this.textNodes = [];
             this.canvas = document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
+            this.canvas2 = document.getElementById('layer1');
+            this.context2 = this.canvas.getContext('2d');
             this.xmlID = xmlID;
             setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
             this.canvasWidth = width;
@@ -2994,12 +3005,14 @@ var Game;
                             sManager.pushState(new Game.Explore(this.context, 800, id));
                             break;
                         case "battle":
+                            sManager.pushState(new Game.Battle(this.context2, this.context, +id));
                             break;
                         case "dialog":
                             break;
                         default:
                             break;
                     }
+                    break;
                 default:
                     break;
             }

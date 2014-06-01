@@ -34,6 +34,7 @@
     <Content Include="Assets\Image\status.png" />
     <Content Include="Assets\Image\tick.png" />
     <Content Include="Assets\Music\theme.mp3" />
+    <Content Include="Assets\Tilemap\charset.png" />
     <Content Include="Assets\Tilemap\obj_misk_atlas.png" />
     <Content Include="Assets\Sound\car.mp3" />
     <Content Include="Assets\Sound\punch.mp3" />
@@ -111,6 +112,7 @@
     <Content Include="Assets\XML\item.json" />
     <Content Include="Assets\XML\characters.json" />
     <Content Include="Assets\XML\EnemyGroups.json" />
+    <Content Include="Assets\XML\switches.json" />
     <Content Include="Assets\Tilemap\map1.json" />
     <Content Include="Assets\Tilemap\map2.json" />
     <None Include="web.Debug.config">
