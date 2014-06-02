@@ -1,4 +1,4 @@
-﻿declare var SCENE: any;
+declare var SCENE: any;
 declare var EX: any;
 declare var startScene: any;
 declare module Game {
