@@ -33,7 +33,14 @@ module Game {
             this.menu = initializeMenuBounds();
 
             //the states that the battle can be in which would alter what is drawn and listened from input
-            this.states = ["PSelect", "PAttack", "PSpell", "PDefend", "EAction"];
+            this.states = {
+                "PSelect": 0,
+                "PAttack": 1,
+                "PSpell": 2,
+                "PDefend": 3,
+                "EAction": 4,
+                "EndTurn": 5
+            };
         }
         drawLayer1() {
             this.context.clearRect(0, 0, 800, 600);
@@ -67,7 +74,7 @@ module Game {
             this.drawLayer1();
             this.drawLayer2();
             this.cTurn = 0;
-            this.cState = this.states[0];
+            this.cState = this.states["PSelect"];
         }
         update() {
             var time = Date.now();
@@ -76,7 +83,17 @@ module Game {
                 this.playerSelect(time);
             }
             else if (mouseClicked() && this.cState === "PAttack") {
-
+                this.playerAttackTarget(time);
+            }
+            else if (mouseClicked() && this.cState === "PSpell") {
+                SpellSelectDialog(this.queue[this.cTurn], this.context2);
+                this.playerSpellTarget(time);
+            }
+            else if (mouseClicked() && this.cState === "PDefend") {
+                this.queue[this.cTurn].defend = true;
+            }
+            else if (this.cState === "EndTurn") {
+                this.cTurn++;
             }
         }
         render() {
@@ -92,30 +109,23 @@ module Game {
 
         }
         playerSelect(time) {
-            this.mx = mEvent.pageX;
-            this.my = mEvent.pageY;
-            for (var i = 0; i < this.menu.length; i++) {
-                var a1 = this.menu[i].x;
-                var a2 = this.menu[i].x + 190;
-                var b1 = this.menu[i].y;
-                var b2 = this.menu[i].y + 50;
-                if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2) && time > this.newTime) {
-                    switch (this.menu[i]) {
-                        case "Attack":
-                            this.cState = this.states[1];
-                            break;
-                        case "Spell":
-                            this.cState = this.states[2];
-                            break;
-                        case "Defend":
-                            this.cState = this.states[3];
-                            break;
-                        default:
-                            break;
-                    }
-                    this.context2.clearRect(0, 0, 800, 600);
-                    this.drawLayer2();
+            input_template(this.menu.length, this.menu, f);
+            function f(i) {
+                switch (this.menu[i]) {
+                    case "Attack":
+                        this.cState = this.states["PAttack"];
+                        break;
+                    case "Spell":
+                        this.cState = this.states["PSpell"];
+                        break;
+                    case "Defend":
+                        this.cState = this.states["PDefend"];
+                        break;
+                    default:
+                        break;
                 }
+                this.context2.clearRect(0, 0, 800, 600);
+                this.drawLayer2();
             }
         }
         playerAttackTarget(time) {
@@ -129,11 +139,15 @@ module Game {
                 if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2) && time > this.newTime) {
                     if (this.queue[i].Base.Type === 1 && this.queue[i].currentState !== 1) {
                         this.cTarget = i;
-                        this.cState = this.states[4];
+                        Attack(this.queue[this.cTurn], this.queue[this.cTarget[i]]);
+                        this.cState = this.states["EndTurn"];
                         break;
                     }
                 }
             }
+        }
+        playerSpellTarget(time) {
+
         }
     }
 }

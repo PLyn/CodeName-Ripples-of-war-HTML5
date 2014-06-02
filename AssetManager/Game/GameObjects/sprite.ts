@@ -18,6 +18,7 @@ module Game {
         Spells;
         currentState;
         growth;
+        defend = false;
 
         mox; moy; context; interval;
         //all the base attributes and methods are to be added here, this will come when

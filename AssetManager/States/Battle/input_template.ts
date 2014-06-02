@@ -7,7 +7,7 @@
         var y1 = bounds.y;
         var y2 = bounds.y + bounds.h;
         if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
-            f;
+            f(i);
         }
     }
 }
