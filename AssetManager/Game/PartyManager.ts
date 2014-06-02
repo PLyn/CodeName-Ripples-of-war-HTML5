@@ -15,6 +15,7 @@ module Game {
                     var p1 = new Sprite(IMAGE_CACHE[b.Img], 0, 0);
                     p1.setBaseAttributes(keys[s], b.HP, b.MP, b.Atk, b.Def, b.MDef, b.Spd, b.Luc, type);
                     //p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+                    p1.growth = b.growth;
                     battleList.push(p1);
                 }
             }

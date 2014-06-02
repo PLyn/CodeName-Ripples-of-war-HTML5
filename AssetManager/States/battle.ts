@@ -38,7 +38,6 @@ module Game {
             this.spellList = [];
             this.EnemyID = EnemyID;
 
-
             this.nextState = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].next;
             var enemy;
             var eGroup = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID]['pos'];
@@ -200,7 +199,8 @@ module Game {
                     if (menuOptions[i].Name === 'Attack') {
                         this.command = menuOptions[i].Name;
                         this.ctx2.clearRect(0, 0, 800, 600);
-                        this.statusGUI();
+                        //this.statusGUI();
+                        this.renderActors();
                         this.ctx2.fillText("Click to select Target", 350, 100);
                         this.enemySelect = true;
                     }

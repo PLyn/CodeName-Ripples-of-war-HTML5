@@ -8,6 +8,7 @@ var statusEffects = {
 }
 module Game {
     export class Sprite extends GameObject {
+        Level;
         ID;
         Base;
         Modified;
@@ -16,6 +17,7 @@ module Game {
         dead: boolean = false;
         Spells;
         currentState;
+        growth;
 
         mox; moy; context; interval;
         //all the base attributes and methods are to be added here, this will come when
@@ -66,6 +68,7 @@ module Game {
                 "Luc": 0,
                 "Type": null
             };
+            this.Level = 1;
         }
         setBaseAttributes(id, hp, mp, atk, def, mdef, spd, luc, type) {
             this.Base = 
@@ -158,6 +161,9 @@ module Game {
                 "Luc": this.Base['Luc'] + this.Modified['Luc'],
                 "Type": this.Base['Type']
                 };
+        }
+        levelUp() {
+
         }
     }
 }

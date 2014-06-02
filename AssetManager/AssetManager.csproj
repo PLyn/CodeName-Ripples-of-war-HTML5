@@ -75,6 +75,10 @@
     <TypeScriptCompile Include="Game\AssetManager.ts" />
     <TypeScriptCompile Include="Game\TilemapManager.ts" />
     <TypeScriptCompile Include="States\battle.ts" />
+    <TypeScriptCompile Include="States\Battle\AttackTarget.ts" />
+    <TypeScriptCompile Include="States\Battle\Battle_Remake.ts" />
+    <TypeScriptCompile Include="States\Battle\initializeMenuBounds.ts" />
+    <TypeScriptCompile Include="States\Battle\input_template.ts" />
     <TypeScriptCompile Include="States\Menu\equip.ts" />
     <TypeScriptCompile Include="States\explore.ts" />
     <TypeScriptCompile Include="States\Menu\formation.ts" />
@@ -89,7 +93,10 @@
     <TypeScriptCompile Include="States\cutscene.ts" />
     <TypeScriptCompile Include="States\StatusMenu.ts" />
     <TypeScriptCompile Include="States\title.ts" />
-    <TypeScriptCompile Include="Util\move.ts" />
+    <TypeScriptCompile Include="States\Battle\InitializeBattlePositions.ts" />
+    <TypeScriptCompile Include="Util\DialogWindows.ts" />
+    <TypeScriptCompile Include="Util\LevelUp.ts" />
+    <TypeScriptCompile Include="Util\moveSprite.ts" />
     <TypeScriptCompile Include="Util\objectLength.ts" />
     <TypeScriptCompile Include="Util\pathFinding.ts" />
     <TypeScriptCompile Include="Util\raf.ts" />
@@ -115,6 +122,7 @@
     <Content Include="Assets\XML\switches.json" />
     <Content Include="Assets\Tilemap\map1.json" />
     <Content Include="Assets\Tilemap\map2.json" />
+    <Content Include="Assets\XML\LocationMap.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

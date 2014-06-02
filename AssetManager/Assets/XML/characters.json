@@ -10,8 +10,8 @@
         "MDef": 0,
         "Luc": 0,
         "Abilities":{
-            "Fireball" : 2
-        }
+        },
+        "growth": "+ + + + + + +"
     },
     "Syndra":{
         "Img": "D",
@@ -23,7 +23,8 @@
         "MDef": 0,
         "Luc": 0,
         "Abilities":{
-        }
+        },
+        "growth": "- + ++++ --- ++ + +++"
     },
     "Johnathan":{
         "Img": "D",
@@ -35,7 +36,8 @@
         "MDef": 0,
         "Luc": 0,
         "Abilities":{
-        }
+        },
+        "growth": "- - - - - - -"
     },
     "Max":{
         "Img": "D",
@@ -47,7 +49,8 @@
         "MDef": 0,
         "Luc": 0,
         "Abilities":{
-        }
+        },
+        "growth": "- - - - - - -"
     },
     "Selina":{
         "Img": "D",
@@ -59,7 +62,8 @@
         "MDef": 0,
         "Luc": 0,
         "Abilities":{
-        }
+        },
+        "growth": "- - - - - - -"
     },
     "Thomas":{
         "Img": "D",
@@ -71,7 +75,8 @@
         "MDef": 0,
         "Luc": 0,
         "Abilities":{
-        }
+        },
+       "growth": "- - - - - - -"
     },
     "Riza":{
         "Img": "D",
@@ -83,7 +88,8 @@
         "MDef": 0,
         "Luc": 0,
         "Abilities":{
-        }
+        },
+        "growth": "- - - - - - -"
     },
     "Mikigami":{
         "Img": "D",
@@ -95,7 +101,8 @@
         "MDef": 0,
         "Luc": 0,
         "Abilities":{
-        }
+        },
+        "growth": "- - - - - - -"
     }
   },
   "Enemies":{
@@ -109,7 +116,8 @@
             "MDef": 0,
             "Luc": 0,
             "Abilities":{
-            }
+            },
+            "growth": "- - - - - - -"
         }
   }
 }

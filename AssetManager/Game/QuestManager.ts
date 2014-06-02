@@ -5,9 +5,11 @@ module Game {
 
         constructor() {
             this.Switch = [];
-            var key = Object.keys(JSON_CACHE['switches']);
+            var key = Object.keys(JSON_CACHE['location']);
             for (var x = 0; x < key.length; x++) {
-                this.Switch[key[x]] = JSON_CACHE['switches'][key[x]];
+                var bkeys = Object.keys(JSON_CACHE['location'][key[x]]);
+                for (var y = 0; y < bkeys.length; y++)
+                    this.Switch[bkeys[y]] = false;
             }
         }
     }

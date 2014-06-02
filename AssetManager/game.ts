@@ -56,7 +56,7 @@ module Game {
                     spell: 'Assets/XML/Spells.json',
                     character: 'Assets/XML/characters.json',
                     Enemies: 'Assets/XML/EnemyGroups.json',
-                    switches: 'Assets/XML/switches.json'
+                    location: 'Assets/XML/locationMap.json'
                 },
                 Sounds: {
                     car: 'Assets/Sound/car',

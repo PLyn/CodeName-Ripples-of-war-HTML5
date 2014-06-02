@@ -80,7 +80,7 @@ module Game {
                         else if (typeof path !== 'undefined' && path.length > 0) {
                             if (objects[i].type !== 'menu') {
                                 var timer = setInterval(() => {
-                                    moveSprite(ctx, path[x][0], path[x][1]);
+                                    moveSprite(ctx, path[x][0], path[x][1], battleList[0]);
                                     x++;
                                     if (x >= (keys.length - 1)) {
                                         clearInterval(timer);
@@ -110,7 +110,19 @@ module Game {
             }
             else if (objects[i].type === 'cut') {
                 this.layer2ctx.clearRect(0, 0, 800, 600);
-                sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, +objects[i].properties.ID));
+                var sceneid = +objects[i].properties.ID;
+                if (typeof JSON_CACHE['location'][this.mapID] !== 'undefined' && JSON_CACHE['location'][this.mapID].length > 0) {
+                    var keys = Object.keys(JSON_CACHE['location'][this.mapID]);
+                    for (var c = 0; c < keys.length; c++) {
+                        if (QUEST.Switch[keys[c]]) {
+                            sceneid = JSON_CACHE['location'][this.mapID][keys[c]];
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+                sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, sceneid));
             }
             else if (objects[i].type === 'battle') {
                 sManager.pushState(new Battle(this.layer1ctx, this.layer2ctx, 0));
