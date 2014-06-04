@@ -75,10 +75,13 @@
     <TypeScriptCompile Include="Game\AssetManager.ts" />
     <TypeScriptCompile Include="Game\TilemapManager.ts" />
     <TypeScriptCompile Include="States\battle.ts" />
+    <TypeScriptCompile Include="States\Battle\Attack.ts" />
     <TypeScriptCompile Include="States\Battle\AttackTarget.ts" />
     <TypeScriptCompile Include="States\Battle\Battle_Remake.ts" />
+    <TypeScriptCompile Include="States\Battle\EnemyAI.ts" />
     <TypeScriptCompile Include="States\Battle\initializeMenuBounds.ts" />
     <TypeScriptCompile Include="States\Battle\input_template.ts" />
+    <TypeScriptCompile Include="States\Battle\SpellCommand.ts" />
     <TypeScriptCompile Include="States\Menu\equip.ts" />
     <TypeScriptCompile Include="States\explore.ts" />
     <TypeScriptCompile Include="States\Menu\formation.ts" />

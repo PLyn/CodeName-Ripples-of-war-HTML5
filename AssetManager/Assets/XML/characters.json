@@ -116,6 +116,9 @@
             "MDef": 0,
             "Luc": 0,
             "Abilities":{
+                "Attack":  35,
+                "Defend":  35,
+                "Fireball":  30
             },
             "growth": "- - - - - - -"
         }

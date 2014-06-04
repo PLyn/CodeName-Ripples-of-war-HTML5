@@ -72,15 +72,9 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['status'], 400, 100);
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
 
-            this.context.fillStyle = "blue";
-            this.context.fillRect(10, 100, 380, 100);
-            this.context.fillRect(10, 225, 380, 100);
-            this.context.fillRect(10, 350, 380, 100);
-
-            this.context.strokeStyle = "#FF0000";
-            this.context.strokeRect(9, 99, 382, 102);
-            this.context.strokeRect(9, 224, 382, 102);
-            this.context.strokeRect(9, 349, 382, 102);
+            quickWindow(this.context, 10, 100, 380, 100, "blue", "#FF0000");
+            quickWindow(this.context, 10, 225, 380, 100, "blue", "#FF0000");
+            quickWindow(this.context, 10, 350, 380, 100, "blue", "#FF0000");
 
             setStyle(this.context, 'calibre', 14, "white", "bold");
             for (var x = 0; x < PARTY_SIZE; x++) {

@@ -3,7 +3,7 @@ var BattleQ = [];
 var battleList = [];
 var menuOptions = [];
 module Game {
-    export class Battle extends State {
+    export class Battle_Old extends State {
         ctx: CanvasRenderingContext2D;
         ctx2: CanvasRenderingContext2D;
         p1: Sprite;

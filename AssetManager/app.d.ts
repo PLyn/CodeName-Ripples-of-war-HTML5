@@ -1,4 +1,4 @@
-declare var SCENE: any;
+﻿declare var SCENE: any;
 declare var EX: any;
 declare var startScene: any;
 declare module Game {
@@ -199,6 +199,7 @@ declare module Game {
         public Spells: any;
         public currentState: any;
         public growth: any;
+        public defend: boolean;
         public mox: any;
         public moy: any;
         public context: any;
@@ -362,6 +363,10 @@ declare module Game {
         public GameLoop: () => void;
     }
 }
+declare function Attack(Attacker: Game.Sprite, Target: Game.Sprite): {
+    "Atk": Game.Sprite;
+    "Tar": Game.Sprite;
+};
 declare module Game {
     class State {
         constructor();
@@ -375,7 +380,7 @@ declare module Game {
 }
 declare var battleList: any[];
 declare module Game {
-    class BattleRewrite extends State {
+    class Battle extends State {
         public nextState: any;
         public queue: Sprite[];
         public menu: any;
@@ -387,6 +392,7 @@ declare module Game {
         public mx: any;
         public my: any;
         public newTime: any;
+        public cTarget: any;
         constructor(EnemyID: any);
         public drawLayer1(): void;
         public drawLayer2(): void;
@@ -396,16 +402,28 @@ declare module Game {
         public pause(): void;
         public resume(): void;
         public destroy(): void;
+        public playerSelect(time: any): void;
+        public playerAttackTarget(time: any): void;
     }
 }
-declare function initializeBattlePositions(enemyID: any): void;
+declare function EnemyAction(enemy: Game.Sprite, queue: Game.Sprite[]): Game.Sprite[];
+declare function checkSpellType(spell: any, queue: Game.Sprite[]): Game.Sprite[];
+declare function initializeBattlePositions(enemyID: any): any[];
 declare function initializeMenuBounds(): any[];
 declare function input_template(len: any, bounds: any, f: any): void;
+declare function SpellSelectDialog(sp: Game.Sprite, context: CanvasRenderingContext2D): any[];
+declare function getSpellTouched(bounds: any): {
+    "spell": any;
+    "SpellName": string;
+};
+declare function selectSpellTargets(spell: any, queue: Game.Sprite[]): Game.Sprite[];
+declare function castSpellSingle(spell: any, sp: Game.Sprite): Game.Sprite;
+declare function castSpellAll(spell: any, queue: Game.Sprite[]): Game.Sprite[];
 declare var BattleQ: any[];
 declare var battleList: any[];
 declare var menuOptions: any[];
 declare module Game {
-    class Battle extends State {
+    class Battle_Old extends State {
         public ctx: CanvasRenderingContext2D;
         public ctx2: CanvasRenderingContext2D;
         public p1: Sprite;
@@ -705,7 +723,7 @@ declare module Game {
         public destroy(): void;
     }
 }
-declare function quickWindow(x: any, y: any, w: any, h: any, fcolor: any, scolor: any): void;
+declare function quickWindow(context: any, x: any, y: any, w: any, h: any, fcolor: any, scolor: any): void;
 declare function LevelUp(sprite: Game.Sprite, context: any): void;
 declare function LevelUpDisplay(context: CanvasRenderingContext2D, growth: any, base: any, name: any, spells: any): void;
 declare function moveSprite(context: any, dx: any, dy: any, sprite: Game.Sprite): void;

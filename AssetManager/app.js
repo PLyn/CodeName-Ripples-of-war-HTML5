@@ -624,6 +624,7 @@ var Game;
         function Sprite(img, dx, dy, sx, sy, w, h, scale) {
             _super.call(this, img, dx, dy, sx, sy, w, h, scale);
             this.dead = false;
+            this.defend = false;
             this.currentState = 0;
             this.Spells = [];
             this.Equipment = {
@@ -881,16 +882,18 @@ var Game;
         PartyManager.prototype.add = function (char, type, x, y) {
             var x = x || 400;
             var y = y || 250;
-            var keys = Object.keys(JSON_CACHE['character']['Party']);
-            for (var s = 0; s < keys.length; s++) {
-                if (char === keys[s]) {
-                    var b = JSON_CACHE['character']['Party'][keys[s]];
-                    var p1 = new Game.Sprite(IMAGE_CACHE[b.Img], 0, 0);
-                    p1.setBaseAttributes(keys[s], b.HP, b.MP, b.Atk, b.Def, b.MDef, b.Spd, b.Luc, type);
+            if (type === 0) {
+                var keys = Object.keys(JSON_CACHE['character']['Party']);
+                for (var s = 0; s < keys.length; s++) {
+                    if (char === keys[s]) {
+                        var b = JSON_CACHE['character']['Party'][keys[s]];
+                        var p1 = new Game.Sprite(IMAGE_CACHE[b.Img], 0, 0);
+                        p1.setBaseAttributes(keys[s], b.HP, b.MP, b.Atk, b.Def, b.MDef, b.Spd, b.Luc, type);
 
-                    //p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
-                    p1.growth = b.growth;
-                    battleList.push(p1);
+                        //p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
+                        p1.growth = b.growth;
+                        battleList.push(p1);
+                    }
                 }
             }
         };
@@ -1406,6 +1409,20 @@ var Game;
     })();
     Game.Init = Init;
 })(Game || (Game = {}));
+function Attack(Attacker, Target) {
+    var dmg = Attacker.Base.Atk;
+    if (Target.defend)
+        dmg = dmg / 2;
+    var def = Target.Base.Def;
+    var result = dmg - def;
+
+    if (result < 0)
+        result = 0;
+
+    Target.Base.HP -= result;
+
+    return { "Atk": Attacker, "Tar": Target };
+}
 var Game;
 (function (Game) {
     var State = (function () {
@@ -1434,9 +1451,9 @@ var Game;
 var battleList = [];
 var Game;
 (function (Game) {
-    var BattleRewrite = (function (_super) {
-        __extends(BattleRewrite, _super);
-        function BattleRewrite(EnemyID) {
+    var Battle = (function (_super) {
+        __extends(Battle, _super);
+        function Battle(EnemyID) {
             _super.call(this);
 
             //get canvases from html
@@ -1448,35 +1465,52 @@ var Game;
             //saves the next state the player will go if victory is achieved
             this.nextState = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].next;
 
-            //initializes battle positions for all characters in the battle list
-            initializeBattlePositions(EnemyID);
-
             //Battle queue is now in the queue variable
             this.queue = [];
             this.queue = battleList;
+
+            //initializes battle positions for all characters in the battle list
+            var enemies = initializeBattlePositions(EnemyID);
+            for (var x = 0; x < enemies.length; x++) {
+                this.queue.push(enemies[x]);
+            }
 
             //use function to add all the menu items to the menu array
             this.menu = [];
             this.menu = initializeMenuBounds();
 
             //the states that the battle can be in which would alter what is drawn and listened from input
-            this.states = ["PSelect", "PAttack", "PSpell", "PDefend", "EAction"];
+            this.states = {
+                "PSelect": 0,
+                "PAttack": 1,
+                "PSpell": 2,
+                "PDefend": 3,
+                "EAction": 4,
+                "EndTurn": 5,
+                "PrePlayerTurn": 6,
+                "PreEnemyTurn": 7,
+                "EndPhase": 8
+            };
         }
-        BattleRewrite.prototype.drawLayer1 = function () {
+        Battle.prototype.drawLayer1 = function () {
+            //clears screen
             this.context.clearRect(0, 0, 800, 600);
+
+            //draws static background
             this.context.drawImage(IMAGE_CACHE['bg'], 0, 0);
+            //can add additional background details in this layer
         };
-        BattleRewrite.prototype.drawLayer2 = function () {
+        Battle.prototype.drawLayer2 = function () {
             //clears layer
             this.context2.clearRect(0, 0, 800, 600);
 
+            //draws HUD window and labels above the data
+            quickWindow(this.context2, 100, 375, 600, 220, "blue", "red");
+
             //set text properties
             setStyle(this.context2, 'Calibri', '12 pt', 'white', 'bold');
-
-            //draws HUD window and labels above the data
-            quickWindow(100, 375, 600, 300, "blue", "red");
-            this.context2.fillText("Party", 550, 380);
-            this.context2.fillText("Enemies", 200, 380);
+            this.context2.fillText("Party", 550, 385);
+            this.context2.fillText("Enemies", 200, 385);
 
             for (var s = 0; s < this.queue.length; s++) {
                 this.queue[s].render(this.context2);
@@ -1489,63 +1523,146 @@ var Game;
                     this.context2.fillText(this.queue[s].Base.ID, 200, 400 + (s * 20));
                 }
             }
+
             //render menu buttons only if player is in Player select action state
+            if (this.cState === "PSelect") {
+                this.context2.drawImage(IMAGE_CACHE['Attack'], 600, 200);
+                this.context2.drawImage(IMAGE_CACHE['Spell'], 600, 300);
+                this.context2.drawImage(IMAGE_CACHE['Defend'], 600, 400);
+            }
         };
-        BattleRewrite.prototype.init = function () {
+        Battle.prototype.init = function () {
+            this.cState = this.states["PSelect"];
             this.drawLayer1();
             this.drawLayer2();
             this.cTurn = 0;
-            this.cState = this.states[0];
         };
-        BattleRewrite.prototype.update = function () {
+        Battle.prototype.update = function () {
             var time = Date.now();
 
             //if player action select state is action
             if (mouseClicked() && this.cState === "PSelect") {
-                this.playerSelect();
+                this.playerSelect(time);
             } else if (mouseClicked() && this.cState === "PAttack") {
+                this.playerAttackTarget(time);
+            } else if (mouseClicked() && this.cState === "PSpell") {
+                var bounds = SpellSelectDialog(this.queue[this.cTurn], this.context2);
+                var spell = getSpellTouched(bounds);
+                this.queue = selectSpellTargets(spell.spell, this.queue);
+                this.cState = this.states["EndTurn"];
+            } else if (mouseClicked() && this.cState === "PDefend") {
+                this.queue[this.cTurn].defend = true;
+                this.cState = this.states["EndTurn"];
+            } else if (this.cState === "EAction") {
+                EnemyAction(this.queue[this.cTurn], this.queue);
+            } else if (this.cState === "EndTurn") {
+                this.cTurn++;
+                if (this.cTurn === (this.queue.length - 1)) {
+                    this.cState = this.states["EndPhase"];
+                }
+            } else if (this.cState === "EndPhase") {
+                this.cTurn = 0;
             }
         };
-        BattleRewrite.prototype.render = function () {
+        Battle.prototype.render = function () {
         };
-        BattleRewrite.prototype.pause = function () {
+        Battle.prototype.pause = function () {
         };
-        BattleRewrite.prototype.resume = function () {
+        Battle.prototype.resume = function () {
         };
-        BattleRewrite.prototype.destroy = function () {
+        Battle.prototype.destroy = function () {
         };
-        BattleRewrite.prototype.playerSelect = function () {
+        Battle.prototype.playerSelect = function (time) {
+            input_template(this.menu.length, this.menu, f);
+            function f(i) {
+                switch (this.menu[i]) {
+                    case "Attack":
+                        this.cState = this.states["PAttack"];
+                        break;
+                    case "Spell":
+                        this.cState = this.states["PSpell"];
+                        break;
+                    case "Defend":
+                        this.cState = this.states["PDefend"];
+                        break;
+                    default:
+                        break;
+                }
+                this.context2.clearRect(0, 0, 800, 600);
+                this.drawLayer2();
+            }
+        };
+        Battle.prototype.playerAttackTarget = function (time) {
             this.mx = mEvent.pageX;
             this.my = mEvent.pageY;
-            for (var i = 0; i < this.menu.length; i++) {
-                var a1 = this.menu[i].x;
-                var a2 = this.menu[i].x + 190;
-                var b1 = this.menu[i].y;
-                var b2 = this.menu[i].y + 50;
+            for (var i = 0; i < this.queue.length; i++) {
+                var a1 = this.queue[i].dx;
+                var a2 = this.queue[i].dx + this.queue[i].W;
+                var b1 = this.queue[i].dy;
+                var b2 = this.queue[i].dy + this.queue[i].H;
                 if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2) && time > this.newTime) {
-                    switch (this.menu[i]) {
-                        case "Attack":
-                            this.cState = this.states[1];
-                            break;
-                        case "Spell":
-                            this.cState = this.states[2];
-                            break;
-                        case "Defend":
-                            this.cState = this.states[3];
-                            break;
-                        default:
-                            break;
+                    if (this.queue[i].Base.Type === 1 && this.queue[i].currentState !== 1) {
+                        this.cTarget = i;
+                        Attack(this.queue[this.cTurn], this.queue[this.cTarget[i]]);
+                        this.cState = this.states["EndTurn"];
+                        break;
                     }
-                    this.context2.clearRect(0, 0, 800, 600);
-                    this.drawLayer2();
                 }
             }
         };
-        return BattleRewrite;
+        return Battle;
     })(Game.State);
-    Game.BattleRewrite = BattleRewrite;
+    Game.Battle = Battle;
 })(Game || (Game = {}));
+function EnemyAction(enemy, queue) {
+    var total = 100;
+    var parts = [];
+    var foe;
+    var keys = Object.keys(JSON_CACHE['character']['Enemies']);
+    for (var x = 0; x < keys.length; x++) {
+        if (enemy.Base.ID === keys[x]) {
+            foe = JSON_CACHE['character']['Enemies'][keys[x]].Abilities;
+        }
+    }
+    var rand = getRandomInt(0, 100);
+    var key = Object.keys(foe);
+    var cAbilities;
+    for (var y = 0; y < foe.length; y++) {
+        if (rand >= foe[key[y]] && foe[key[y]] >= rand) {
+            cAbilities = y;
+        }
+    }
+    if (cAbilities === "Attack") {
+    } else if (cAbilities === "Defend") {
+    } else {
+        var spellkey = Object.keys(JSON_CACHE['spell']['Spells']);
+        for (var x = 0; x < spellkey.length; x++) {
+            if (cAbilities === spellkey[x]) {
+                return checkSpellType(JSON_CACHE['spell']['Spells'][spellkey[x]], queue);
+                break;
+            }
+        }
+    }
+}
+function checkSpellType(spell, queue) {
+    if (spell.All === 0) {
+        var counter = 0;
+
+        for (var x = 0; x < queue.length; x++) {
+            if (queue[x].Base.Type === 0) {
+                counter++;
+            }
+        }
+        var rand = getRandomInt(0, counter);
+        queue[rand] = castSpellSingle(spell, queue[rand]);
+        return queue;
+    } else if (spell.All === 1) {
+        return castSpellAll(spell, queue);
+    }
+}
 function initializeBattlePositions(enemyID) {
+    var enemies = [];
+
     //Allies formation initialization
     var f = FORMATION.positions;
     for (var a = 0; a < battleList.length; a++) {
@@ -1555,6 +1672,7 @@ function initializeBattlePositions(enemyID) {
     //Enemies creation and initialization then added into battlelist
     //stores all the data about the enemies from both the enemygroups and enemy json files
     var eData = [];
+    var eStat = [];
 
     //gets enemy position and name
     var group = JSON_CACHE['Enemies']['EnemyGroups'][enemyID]['pos'];
@@ -1576,34 +1694,35 @@ function initializeBattlePositions(enemyID) {
     //get key of all values in enemies
     var key = Object.keys(foe);
 
-    for (var e = 0; e < key.length; e++) {
-        if (eData[e].id === key[e]) {
-            eData[e] = {
-                "Img": foe[e].Img,
-                "HP": foe[e].HP,
-                "MP": foe[e].MP,
-                "Atk": foe[e].Atk,
-                "Def": foe[e].Def,
-                "Spd": foe[e].Spd,
-                "MDef": foe[e].MDef,
-                "Luc": foe[e].Luc,
-                "Abilities": foe[e].Abilities,
-                "growth": foe[e].growth
-            };
+    for (var e = 0; e < ekeys.length; e++) {
+        for (var x = 0; x < key.length; x++) {
+            if (eData[e].id === key[x]) {
+                eStat[e] = {
+                    "Img": foe[key[x]].Img,
+                    "HP": foe[key[x]].HP,
+                    "MP": foe[key[x]].MP,
+                    "Atk": foe[key[x]].Atk,
+                    "Def": foe[key[x]].Def,
+                    "Spd": foe[key[x]].Spd,
+                    "MDef": foe[key[x]].MDef,
+                    "Luc": foe[key[x]].Luc,
+                    "Abilities": foe[key[x]].Abilities,
+                    "growth": foe[key[x]].growth
+                };
+            }
         }
     }
 
     //create sprites using all the data drawn from the enemy groups and enemy files
     var spr;
     for (var x = 0; x < ekeys.length; x++) {
-        spr = new Game.Sprite(eData[x].Img, eData[x].x, eData[x].y, 0, 0, eData[x].w, eData[x].h, 1);
-        spr.setBaseAttributes(eData[x].id, eData[x].HP, eData[x].MP, eData[x].Atk, eData[x].Def, eData[x].MDef, eData[x].Spd, eData[x].Luc, 1);
+        spr = new Game.Sprite(IMAGE_CACHE[eStat[x].Img], eData[x].x, eData[x].y);
+        spr.setBaseAttributes(eData[x].id, eStat[x].HP, eStat[x].MP, eStat[x].Atk, eStat[x].Def, eStat[x].MDef, eStat[x].Spd, eStat[x].Luc, 1);
+        spr.currentState = 0;
+        spr.Current = spr.getTotalStats();
+        enemies.push(spr);
     }
-
-    for (var x = 0; x < battleList.length; x++) {
-        battleList[x].currentState = 0;
-        battleList[x].Current = battleList[x].getTotalStats();
-    }
+    return enemies;
 }
 function initializeMenuBounds() {
     var menu = [];
@@ -1634,9 +1753,96 @@ function input_template(len, bounds, f) {
         var y1 = bounds.y;
         var y2 = bounds.y + bounds.h;
         if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
-            f;
+            f(i);
         }
     }
+}
+function SpellSelectDialog(sp, context) {
+    quickWindow(context, 50, 400, 600, 200, "blue", "red");
+    setStyle(this.context, 'calibre', 14, "white", "bold");
+    context.fillText(sp.Base.ID + " Spells", 150, 405);
+    var bounds = [];
+    for (var x = 0; x < sp.Spells.length; x++) {
+        context.fillText(sp.Spells[x], 75, 420 + (x * 20));
+        bounds[x] = {
+            "name": sp.Spells[x],
+            "x": 75,
+            "y": 420 + (x * 20),
+            "w": context.measureText(sp.Spells[x]).width,
+            "h": 10
+        };
+    }
+    return bounds;
+}
+function getSpellTouched(bounds) {
+    var index = 0;
+    var mx = mEvent.pageX;
+    var my = mEvent.pageY;
+    for (var i = 0; i < bounds.length; i++) {
+        var a1 = bounds[i].dx;
+        var a2 = bounds[i].dx + bounds[i].w;
+        var b1 = bounds[i].dy;
+        var b2 = bounds[i].dy + bounds[i].h;
+        if ((a1 <= mx && mx <= a2) && (b1 <= my && my <= b2)) {
+            var spells = Object.keys(JSON_CACHE['spell']['Spells']);
+            for (var x = 0; x < spells.length; x++) {
+                if (bounds[i].name === spells[x]) {
+                    index = x;
+                    break;
+                }
+            }
+        }
+    }
+    return { "spell": JSON_CACHE['spell']['Spells'][spells[index]], "SpellName": spells[index] };
+}
+function selectSpellTargets(spell, queue) {
+    var bounds = [];
+    if (spell.All === 0) {
+        //select target
+        var mx = mEvent.pageX;
+        var my = mEvent.pageY;
+        for (var i = 0; i < queue.length; i++) {
+            var a1 = queue[i].dx;
+            var a2 = queue[i].dx + queue[i].W;
+            var b1 = queue[i].dy;
+            var b2 = queue[i].dy + queue[i].H;
+            if ((a1 <= mx && mx <= a2) && (b1 <= my && my <= b2)) {
+                var sprite = castSpellSingle(spell, queue[i]);
+                queue[i] = sprite;
+            }
+        }
+        return queue;
+    } else if (spell.All === 1) {
+        //go ahead and cast
+        return castSpellAll(spell, queue);
+    }
+}
+function castSpellSingle(spell, sp) {
+    var dmg = spell.Damage;
+    var def = sp.Base.MDef;
+
+    var result = dmg - def;
+    switch (spell.Type) {
+        case "Enemy":
+            sp.Base.HP -= result;
+            break;
+        case "Ally":
+            sp.Base.HP += dmg;
+            break;
+        default:
+            break;
+    }
+    return sp;
+}
+function castSpellAll(spell, queue) {
+    for (var x = 0; x < queue.length; x++) {
+        if (queue[x].Base.Type === 0 && spell.Type === "Ally") {
+            queue[x].Base.HP += spell.Damage;
+        } else if (queue[x].Base.Type === 1 && spell.Type === "Enemy") {
+            queue[x].Base.HP -= (spell.Damage - queue[x].Base.MDef);
+        }
+    }
+    return queue;
 }
 ///<reference path='State.ts' />
 var BattleQ = [];
@@ -1644,9 +1850,9 @@ var battleList = [];
 var menuOptions = [];
 var Game;
 (function (Game) {
-    var Battle = (function (_super) {
-        __extends(Battle, _super);
-        function Battle(ctx, ctx2, EnemyID) {
+    var Battle_Old = (function (_super) {
+        __extends(Battle_Old, _super);
+        function Battle_Old(ctx, ctx2, EnemyID) {
             _super.call(this);
             this.newTime = 0;
             this.currentkey = 0;
@@ -1702,7 +1908,7 @@ var Game;
             });
             this.ctx.drawImage(IMAGE_CACHE['bg'], 0, 0);
         }
-        Battle.prototype.Action = function () {
+        Battle_Old.prototype.Action = function () {
             if (this.currentPlayer.Base.Type === 0 && mouseClicked()) {
                 if (this.command === 'spell' && this.currentSpell.TargetAll === 1) {
                 } else {
@@ -1760,7 +1966,7 @@ var Game;
                 }
             }
         };
-        Battle.prototype.SelectSpell = function () {
+        Battle_Old.prototype.SelectSpell = function () {
             //clear screen and draw dialog with spells on screen
             this.ctx2.drawImage(IMAGE_CACHE['dialog'], 25, 300);
             for (var i = 0; i < this.currentPlayer.Spells.length; i++) {
@@ -1805,7 +2011,7 @@ var Game;
                 }
             }
         };
-        Battle.prototype.Target = function (time) {
+        Battle_Old.prototype.Target = function (time) {
             this.mx = mEvent.pageX;
             this.my = mEvent.pageY;
             for (var i = 0; i < menuOptions.length; i++) {
@@ -1841,7 +2047,7 @@ var Game;
                 }
             }
         };
-        Battle.prototype.statusGUI = function () {
+        Battle_Old.prototype.statusGUI = function () {
             this.ctx2.clearRect(0, 375, 800, 600);
             this.ctx2.drawImage(IMAGE_CACHE['dialog'], 100, 375);
             for (var i = 0; i < this.battleKeys.length; i++) {
@@ -1862,18 +2068,18 @@ var Game;
                 }*/
             }
         };
-        Battle.prototype.newTurn = function () {
+        Battle_Old.prototype.newTurn = function () {
             this.currentkey = 0;
             this.currentPlayer = battleList[this.currentkey];
         };
-        Battle.prototype.PlayerMenuInit = function () {
+        Battle_Old.prototype.PlayerMenuInit = function () {
             this.ctx.clearRect(0, 0, 800, 600);
             this.ctx2.clearRect(0, 0, 800, 600);
             setStyle(this.ctx, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
             setStyle(this.ctx2, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
             this.statusGUI();
         };
-        Battle.prototype.renderActors = function () {
+        Battle_Old.prototype.renderActors = function () {
             this.ctx.clearRect(0, 0, 800, 600);
             this.ctx.drawImage(IMAGE_CACHE['bg'], 0, 0);
             for (var i = 0; i < this.battleKeys.length; i++) {
@@ -1893,7 +2099,7 @@ var Game;
             }
             this.statusGUI();
         };
-        Battle.prototype.battleOver = function () {
+        Battle_Old.prototype.battleOver = function () {
             var aHP = 0;
             var eHP = 0;
             for (var i = 0; i < this.battleKeys.length; i++) {
@@ -1909,13 +2115,13 @@ var Game;
                 return false;
             }
         };
-        Battle.prototype.playerAttack = function (attacker, target) {
+        Battle_Old.prototype.playerAttack = function (attacker, target) {
             target.Current.HP = target.Current.HP - attacker.Current.Atk;
             this.checkSpriteState(target);
             this.ctx2.clearRect(0, 0, 800, 600);
             this.ctx2.fillText(attacker.Base.ID + " Attacks " + target.Base.ID + " for " + attacker.Current.Atk + " damage", 350, 100);
         };
-        Battle.prototype.playerSpell = function (caster, spell, target) {
+        Battle_Old.prototype.playerSpell = function (caster, spell, target) {
             this.ctx2.clearRect(0, 0, 800, 600);
             if (spell.Effect) {
                 //apply status effect
@@ -1938,7 +2144,7 @@ var Game;
                 }
             }
         };
-        Battle.prototype.checkSpriteState = function (target) {
+        Battle_Old.prototype.checkSpriteState = function (target) {
             if (target.Current.HP < 1) {
                 target.currentState = 1;
                 target.Current.HP = 0;
@@ -1948,7 +2154,7 @@ var Game;
                 this.renderActors();
             }
         };
-        Battle.prototype.init = function () {
+        Battle_Old.prototype.init = function () {
             for (var x = 0; x < this.battleKeys.length; x++) {
                 battleList[x].currentState = 0;
                 battleList[x].Current = battleList[x].getTotalStats();
@@ -1958,7 +2164,7 @@ var Game;
             this.currentPlayer = battleList[this.currentkey];
         };
 
-        Battle.prototype.update = function () {
+        Battle_Old.prototype.update = function () {
             var time = Date.now();
             if (this.currentkey > 3) {
                 this.newTurn();
@@ -2029,17 +2235,17 @@ var Game;
                 this.currentPlayer = battleList[this.currentkey];
             }
         };
-        Battle.prototype.render = function () {
+        Battle_Old.prototype.render = function () {
         };
-        Battle.prototype.pause = function () {
+        Battle_Old.prototype.pause = function () {
         };
-        Battle.prototype.resume = function () {
+        Battle_Old.prototype.resume = function () {
         };
-        Battle.prototype.destroy = function () {
+        Battle_Old.prototype.destroy = function () {
         };
-        return Battle;
+        return Battle_Old;
     })(Game.State);
-    Game.Battle = Battle;
+    Game.Battle_Old = Battle_Old;
 })(Game || (Game = {}));
 ///<reference path='State.ts' />
 var Game;
@@ -2179,7 +2385,7 @@ var Game;
                         case "battle":
                             this.context.clearRect(0, 0, 800, 600);
                             this.context2.clearRect(0, 0, 800, 600);
-                            sManager.pushState(new Game.Battle(this.context, this.context2, +id));
+                            sManager.pushState(new Game.Battle(+id));
                             break;
                         case "dialog":
                             break;
@@ -2311,7 +2517,7 @@ var Game;
                 }
                 sManager.pushState(new Game.Cutscene("id", 800, 600, this.layer2ctx, sceneid));
             } else if (objects[i].type === 'battle') {
-                sManager.pushState(new Game.Battle(this.layer1ctx, this.layer2ctx, 0));
+                sManager.pushState(new Game.Battle(0));
             }
         };
         Explore.prototype.render = function () {
@@ -3329,15 +3535,9 @@ var Game;
             this.context.drawImage(IMAGE_CACHE['status'], 400, 100);
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
 
-            this.context.fillStyle = "blue";
-            this.context.fillRect(10, 100, 380, 100);
-            this.context.fillRect(10, 225, 380, 100);
-            this.context.fillRect(10, 350, 380, 100);
-
-            this.context.strokeStyle = "#FF0000";
-            this.context.strokeRect(9, 99, 382, 102);
-            this.context.strokeRect(9, 224, 382, 102);
-            this.context.strokeRect(9, 349, 382, 102);
+            quickWindow(this.context, 10, 100, 380, 100, "blue", "#FF0000");
+            quickWindow(this.context, 10, 225, 380, 100, "blue", "#FF0000");
+            quickWindow(this.context, 10, 350, 380, 100, "blue", "#FF0000");
 
             setStyle(this.context, 'calibre', 14, "white", "bold");
             for (var x = 0; x < PARTY_SIZE; x++) {
@@ -3474,12 +3674,12 @@ var Game;
     })(Game.State);
     Game.Title = Title;
 })(Game || (Game = {}));
-function quickWindow(x, y, w, h, fcolor, scolor) {
-    this.context.fillStyle = fcolor;
-    this.context.fillRect(x, y, w, h);
+function quickWindow(context, x, y, w, h, fcolor, scolor) {
+    context.fillStyle = fcolor;
+    context.fillRect(x, y, w, h);
 
-    this.context.strokeStyle = scolor;
-    this.context.strokeRect(x - 1, y - 1, w + 2, h + 2);
+    context.strokeStyle = scolor;
+    context.strokeRect(x - 1, y - 1, w + 2, h + 2);
 }
 function LevelUp(sprite, context) {
     var growth = [];

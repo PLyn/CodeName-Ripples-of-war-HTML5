@@ -155,7 +155,7 @@ module Game {
                         case "battle":
                             this.context.clearRect(0, 0, 800, 600);
                             this.context2.clearRect(0,0,800,600);
-                            sManager.pushState(new Battle(this.context, this.context2, +id));
+                            sManager.pushState(new Battle(+id));
                             break;
                         case "dialog":
                             break;

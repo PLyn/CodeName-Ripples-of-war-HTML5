@@ -1,27 +1,26 @@
 ﻿{
   "Spells": {
       "Fireball": {
+          "Type" :  "Enemy",
           "Damage": 5,
-          "TargetAll": 0,
+          "All": 0,
 		  "Effect": false
       },
-      "Icestorm": {
-          "Damage": 2,
-          "TargetAll": 1, 
+      "Heal": {
+          "Type":  "Ally",
+          "Damage": 3,
+          "All": 0, 
 		  "Effect": false  
       },
-      "Heal Light": {
-          "Damage": -5,
-          "TargetAll": 0,
-		  "Effect": false   
-      },
-      "Poison Dust": {
-          "Damage": 0,
-          "TargetAll": 0,
+      "Poison Shot": {
+          "Type":  "Enemy",
+          "Damage": 1,
+          "All": 0,
 		  "Effect": true,
-          "Status": "poison",
-          "type": 0,
-          "Chance": 50   
+          "Status":  {
+            "Effect":  "Poison",
+            "Chance":  "50"    
+          }  
       }
   }
 }

@@ -1,7 +1,7 @@
-﻿function quickWindow(x, y, w, h, fcolor, scolor) {
-    this.context.fillStyle = fcolor;
-    this.context.fillRect(x, y, w, h);
+﻿function quickWindow(context ,x, y, w, h, fcolor, scolor) {
+    context.fillStyle = fcolor;
+    context.fillRect(x, y, w, h);
     
-    this.context.strokeStyle = scolor;
-    this.context.strokeRect(x-1, y-1, w+2, h+2);
+    context.strokeStyle = scolor;
+    context.strokeRect(x-1, y-1, w+2, h+2);
 }

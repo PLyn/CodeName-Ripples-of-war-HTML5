@@ -2,7 +2,7 @@
 
 var battleList = [];
 module Game {
-    export class BattleRewrite extends State {
+    export class Battle extends State {
         nextState;
         queue: Sprite[];
         menu;
@@ -23,11 +23,14 @@ module Game {
             this.context2 = canvas2.getContext('2d');
             //saves the next state the player will go if victory is achieved
             this.nextState = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].next;
-            //initializes battle positions for all characters in the battle list
-            initializeBattlePositions(EnemyID);  
             //Battle queue is now in the queue variable
             this.queue = [];
             this.queue = battleList;
+            //initializes battle positions for all characters in the battle list
+            var enemies = initializeBattlePositions(EnemyID); 
+            for (var x = 0; x < enemies.length; x++) {
+                this.queue.push(enemies[x]);
+            }
             //use function to add all the menu items to the menu array
             this.menu = [];
             this.menu = initializeMenuBounds();
@@ -39,22 +42,28 @@ module Game {
                 "PSpell": 2,
                 "PDefend": 3,
                 "EAction": 4,
-                "EndTurn": 5
+                "EndTurn": 5,
+                "PrePlayerTurn": 6,
+                "PreEnemyTurn": 7,
+                "EndPhase" : 8
             };
         }
         drawLayer1() {
+            //clears screen
             this.context.clearRect(0, 0, 800, 600);
+            //draws static background
             this.context.drawImage(IMAGE_CACHE['bg'], 0, 0);
+            //can add additional background details in this layer
         }
         drawLayer2() {
             //clears layer
             this.context2.clearRect(0, 0, 800, 600);
+            //draws HUD window and labels above the data
+            quickWindow(this.context2, 100, 375, 600, 220, "blue", "red");
             //set text properties
             setStyle(this.context2, 'Calibri', '12 pt', 'white', 'bold');
-            //draws HUD window and labels above the data
-            quickWindow(100, 375, 600, 300, "blue", "red");
-            this.context2.fillText("Party", 550, 380);
-            this.context2.fillText("Enemies", 200, 380);
+            this.context2.fillText("Party", 550, 385);
+            this.context2.fillText("Enemies", 200, 385);
             //draws all the sprites from the queue and the HUD text as well
             for (var s = 0; s < this.queue.length; s++) {
                 this.queue[s].render(this.context2);
@@ -69,12 +78,17 @@ module Game {
                 }
             }
             //render menu buttons only if player is in Player select action state
+            if (this.cState === "PSelect") {
+                this.context2.drawImage(IMAGE_CACHE['Attack'], 600, 200);
+                this.context2.drawImage(IMAGE_CACHE['Spell'], 600, 300);
+                this.context2.drawImage(IMAGE_CACHE['Defend'], 600, 400);
+            }
         }
         init() {
+            this.cState = this.states["PSelect"];
             this.drawLayer1();
             this.drawLayer2();
             this.cTurn = 0;
-            this.cState = this.states["PSelect"];
         }
         update() {
             var time = Date.now();
@@ -86,14 +100,26 @@ module Game {
                 this.playerAttackTarget(time);
             }
             else if (mouseClicked() && this.cState === "PSpell") {
-                SpellSelectDialog(this.queue[this.cTurn], this.context2);
-                this.playerSpellTarget(time);
+                var bounds = SpellSelectDialog(this.queue[this.cTurn], this.context2);
+                var spell = getSpellTouched(bounds);
+                this.queue = selectSpellTargets(spell.spell, this.queue);
+                this.cState = this.states["EndTurn"];
             }
             else if (mouseClicked() && this.cState === "PDefend") {
                 this.queue[this.cTurn].defend = true;
+                this.cState = this.states["EndTurn"];
+            }
+            else if (this.cState === "EAction") {
+                EnemyAction(this.queue[this.cTurn], this.queue);
             }
             else if (this.cState === "EndTurn") {
                 this.cTurn++;
+                if (this.cTurn === (this.queue.length - 1)) {
+                    this.cState = this.states["EndPhase"];
+                }
+            }
+            else if (this.cState === "EndPhase") {
+                this.cTurn = 0;
             }
         }
         render() {
@@ -145,9 +171,6 @@ module Game {
                     }
                 }
             }
-        }
-        playerSpellTarget(time) {
-
         }
     }
 }
