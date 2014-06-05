@@ -26,6 +26,8 @@ module Game {
             QUEST = new QuestManager();
 
             PARTY.add("Shadow", 0);
+            var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
+            SPELL.AddSpell(battleList[0], spellkeys[1]);
             PARTY.add("Syndra", 0);
             PARTY.add("Johnathan", 0);
         }

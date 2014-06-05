@@ -25,6 +25,7 @@ module Game {
         //the battle system is being developed but for now it stays relatively empty i guess 
         constructor(img, dx?, dy?, sx?, sy?, w?, h?, scale?) {
             super(img, dx, dy, sx, sy, w, h, scale);
+            this.defend = false;
             this.currentState = 0;
             this.Spells = [];
             this.Equipment = {

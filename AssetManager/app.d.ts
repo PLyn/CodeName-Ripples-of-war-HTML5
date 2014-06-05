@@ -391,8 +391,10 @@ declare module Game {
         public cState: any;
         public mx: any;
         public my: any;
-        public newTime: any;
+        public newTime: number;
         public cTarget: any;
+        public cSpell: any;
+        public cSpellData: any;
         constructor(EnemyID: any);
         public drawLayer1(): void;
         public drawLayer2(): void;
@@ -412,13 +414,9 @@ declare function initializeBattlePositions(enemyID: any): any[];
 declare function initializeMenuBounds(): any[];
 declare function input_template(len: any, bounds: any, f: any): void;
 declare function SpellSelectDialog(sp: Game.Sprite, context: CanvasRenderingContext2D): any[];
-declare function getSpellTouched(bounds: any): {
-    "spell": any;
-    "SpellName": string;
-};
-declare function selectSpellTargets(spell: any, queue: Game.Sprite[]): Game.Sprite[];
 declare function castSpellSingle(spell: any, sp: Game.Sprite): Game.Sprite;
 declare function castSpellAll(spell: any, queue: Game.Sprite[]): Game.Sprite[];
+declare function StateDialogs(context: CanvasRenderingContext2D, state: any): void;
 declare var BattleQ: any[];
 declare var battleList: any[];
 declare var menuOptions: any[];

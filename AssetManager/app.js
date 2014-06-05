@@ -625,6 +625,7 @@ var Game;
             _super.call(this, img, dx, dy, sx, sy, w, h, scale);
             this.dead = false;
             this.defend = false;
+            this.defend = false;
             this.currentState = 0;
             this.Spells = [];
             this.Equipment = {
@@ -1311,6 +1312,8 @@ var Game;
             QUEST = new Game.QuestManager();
 
             PARTY.add("Shadow", 0);
+            var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
+            SPELL.AddSpell(battleList[0], spellkeys[1]);
             PARTY.add("Syndra", 0);
             PARTY.add("Johnathan", 0);
         }
@@ -1455,6 +1458,7 @@ var Game;
         __extends(Battle, _super);
         function Battle(EnemyID) {
             _super.call(this);
+            this.newTime = 0;
 
             //get canvases from html
             var canvas = document.getElementById('layer1');
@@ -1469,6 +1473,10 @@ var Game;
             this.queue = [];
             this.queue = battleList;
 
+            for (var y = 0; y < this.queue.length; y++) {
+                this.queue[y].Current = this.queue[y].getTotalStats();
+            }
+
             //initializes battle positions for all characters in the battle list
             var enemies = initializeBattlePositions(EnemyID);
             for (var x = 0; x < enemies.length; x++) {
@@ -1479,17 +1487,23 @@ var Game;
             this.menu = [];
             this.menu = initializeMenuBounds();
 
+            //current spell and data
+            this.cSpell = [];
+            this.cSpellData = [];
+
             //the states that the battle can be in which would alter what is drawn and listened from input
             this.states = {
                 "PSelect": 0,
                 "PAttack": 1,
                 "PSpell": 2,
-                "PDefend": 3,
-                "EAction": 4,
-                "EndTurn": 5,
-                "PrePlayerTurn": 6,
-                "PreEnemyTurn": 7,
-                "EndPhase": 8
+                "SpellSelect": 3,
+                "SpellTarget": 4,
+                "PDefend": 5,
+                "EAction": 6,
+                "EndTurn": 7,
+                "PrePlayerTurn": 8,
+                "PreEnemyTurn": 9,
+                "EndPhase": 10
             };
         }
         Battle.prototype.drawLayer1 = function () {
@@ -1518,18 +1532,12 @@ var Game;
                 //sprite is ally then print name and HP
                 if (this.queue[s].Base.Type === 0) {
                     this.context2.fillText(this.queue[s].Base.ID, 500, 400 + (s * 20));
-                    this.context2.fillText(this.queue[s].getTotalStats().HP, 600, 400 + (s * 20));
+                    this.context2.fillText(this.queue[s].Current.HP + " / " + this.queue[s].getTotalStats().HP, 600, 400 + (s * 20));
                 } else if (this.queue[s].Base.Type === 1 && this.queue[s].currentState !== 1) {
                     this.context2.fillText(this.queue[s].Base.ID, 200, 400 + (s * 20));
                 }
             }
-
-            //render menu buttons only if player is in Player select action state
-            if (this.cState === "PSelect") {
-                this.context2.drawImage(IMAGE_CACHE['Attack'], 600, 200);
-                this.context2.drawImage(IMAGE_CACHE['Spell'], 600, 300);
-                this.context2.drawImage(IMAGE_CACHE['Defend'], 600, 400);
-            }
+            StateDialogs(this.context2, this.cState);
         };
         Battle.prototype.init = function () {
             this.cState = this.states["PSelect"];
@@ -1541,26 +1549,77 @@ var Game;
             var time = Date.now();
 
             //if player action select state is action
-            if (mouseClicked() && this.cState === "PSelect") {
+            if (this.cState === this.states["PSelect"] && mouseClicked() && time > this.newTime) {
                 this.playerSelect(time);
-            } else if (mouseClicked() && this.cState === "PAttack") {
+            } else if (this.cState === this.states["PAttack"] && mouseClicked() && time > this.newTime) {
                 this.playerAttackTarget(time);
-            } else if (mouseClicked() && this.cState === "PSpell") {
-                var bounds = SpellSelectDialog(this.queue[this.cTurn], this.context2);
-                var spell = getSpellTouched(bounds);
-                this.queue = selectSpellTargets(spell.spell, this.queue);
-                this.cState = this.states["EndTurn"];
-            } else if (mouseClicked() && this.cState === "PDefend") {
+            } else if (this.cState === this.states["PSpell"]) {
+                this.cState = this.states["SpellSelect"];
+                this.drawLayer2();
+                this.cSpellData = SpellSelectDialog(this.queue[this.cTurn], this.context2);
+            } else if (this.cState === this.states["SpellSelect"] && mouseClicked() && time > this.newTime) {
+                var spells = Object.keys(JSON_CACHE['spell']['Spells']);
+                var mx = mEvent.pageX;
+                var my = mEvent.pageY;
+                for (var i = 0; i < this.cSpellData.length; i++) {
+                    var a1 = this.cSpellData[i].x;
+                    var a2 = this.cSpellData[i].x + this.cSpellData[i].w;
+                    var b1 = this.cSpellData[i].y;
+                    var b2 = this.cSpellData[i].y + this.cSpellData[i].h;
+                    if ((a1 <= mx && mx <= a2) && (b1 <= my && my <= b2)) {
+                        for (var x = 0; x < spells.length; x++) {
+                            if (this.cSpellData[i].name === spells[x]) {
+                                this.cSpell = JSON_CACHE['spell']['Spells'][spells[x]];
+                                this.cState = this.states["SpellTarget"];
+                                this.drawLayer2();
+                                break;
+                            }
+                        }
+                    }
+                }
+            } else if (this.cState === this.states["SpellTarget"] && mouseClicked() && time > this.newTime) {
+                var bounds = [];
+                if (this.cSpell.All === 0) {
+                    //select target
+                    var mx = mEvent.pageX;
+                    var my = mEvent.pageY;
+                    for (var i = 0; i < this.queue.length; i++) {
+                        var x1 = this.queue[i].dx;
+                        var x2 = this.queue[i].dx + this.queue[i].W;
+                        var y1 = this.queue[i].dy;
+                        var y2 = this.queue[i].dy + this.queue[i].H;
+                        if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
+                            var sprite = castSpellSingle(this.cSpell, this.queue[i]);
+                            this.queue[i] = sprite;
+                            this.cState = this.states["EndTurn"];
+                            this.drawLayer2();
+                        }
+                    }
+                } else if (this.cSpell.All === 1) {
+                    //go ahead and cast
+                    this.queue = castSpellAll(this.cSpell, this.queue);
+                    this.cState = this.states["EndTurn"];
+                    this.drawLayer2();
+                }
+            } else if (this.cState === this.states["PDefend"]) {
                 this.queue[this.cTurn].defend = true;
                 this.cState = this.states["EndTurn"];
-            } else if (this.cState === "EAction") {
+                this.drawLayer2();
+            } else if (this.cState === this.states["EAction"]) {
                 EnemyAction(this.queue[this.cTurn], this.queue);
-            } else if (this.cState === "EndTurn") {
+            } else if (this.cState === this.states["EndTurn"]) {
                 this.cTurn++;
                 if (this.cTurn === (this.queue.length - 1)) {
                     this.cState = this.states["EndPhase"];
+                    this.drawLayer2();
+                } else if (this.queue[this.cTurn].Base.Type === 0) {
+                    this.cState = this.states["PSelect"];
+                    this.drawLayer2();
+                } else if (this.queue[this.cTurn].Base.Type === 1) {
+                    this.cState = this.states["EAction"];
+                    this.drawLayer2();
                 }
-            } else if (this.cState === "EndPhase") {
+            } else if (this.cState === this.states["EndPhase"]) {
                 this.cTurn = 0;
             }
         };
@@ -1573,23 +1632,29 @@ var Game;
         Battle.prototype.destroy = function () {
         };
         Battle.prototype.playerSelect = function (time) {
-            input_template(this.menu.length, this.menu, f);
-            function f(i) {
-                switch (this.menu[i]) {
-                    case "Attack":
-                        this.cState = this.states["PAttack"];
-                        break;
-                    case "Spell":
-                        this.cState = this.states["PSpell"];
-                        break;
-                    case "Defend":
-                        this.cState = this.states["PDefend"];
-                        break;
-                    default:
-                        break;
+            this.mx = mEvent.pageX;
+            this.my = mEvent.pageY;
+            for (var i = 0; i < this.menu.length; i++) {
+                var a1 = this.menu[i].x;
+                var a2 = this.menu[i].x + this.menu[i].w;
+                var b1 = this.menu[i].y;
+                var b2 = this.menu[i].y + this.menu[i].h;
+                if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2) && time > this.newTime) {
+                    switch (this.menu[i].Name) {
+                        case "Attack":
+                            this.cState = this.states["PAttack"];
+                            break;
+                        case "Spell":
+                            this.cState = this.states["PSpell"];
+                            break;
+                        case "Defend":
+                            this.cState = this.states["PDefend"];
+                            break;
+                        default:
+                            break;
+                    }
+                    this.drawLayer2();
                 }
-                this.context2.clearRect(0, 0, 800, 600);
-                this.drawLayer2();
             }
         };
         Battle.prototype.playerAttackTarget = function (time) {
@@ -1603,7 +1668,9 @@ var Game;
                 if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2) && time > this.newTime) {
                     if (this.queue[i].Base.Type === 1 && this.queue[i].currentState !== 1) {
                         this.cTarget = i;
-                        Attack(this.queue[this.cTurn], this.queue[this.cTarget[i]]);
+                        var sprites = Attack(this.queue[this.cTurn], this.queue[i]);
+                        this.queue[this.cTurn] = sprites.Atk;
+                        this.queue[i] = sprites.Tar;
                         this.cState = this.states["EndTurn"];
                         break;
                     }
@@ -1728,18 +1795,24 @@ function initializeMenuBounds() {
     var menu = [];
     menu.push({
         "Name": "Attack",
-        "x": 550,
-        "y": 125
+        "x": 600,
+        "y": 50,
+        "w": 190,
+        "h": 50
     });
     menu.push({
         "Name": "Spell",
-        "x": 550,
-        "y": 200
+        "x": 600,
+        "y": 150,
+        "w": 190,
+        "h": 50
     });
     menu.push({
         "Name": "Defend",
-        "x": 550,
-        "y": 275
+        "x": 600,
+        "y": 250,
+        "w": 190,
+        "h": 50
     });
 
     return menu;
@@ -1748,10 +1821,10 @@ function input_template(len, bounds, f) {
     var mx = mEvent.pageX;
     var my = mEvent.pageY;
     for (var i = 0; i < len; i++) {
-        var x1 = bounds.x;
-        var x2 = bounds.x + bounds.w;
-        var y1 = bounds.y;
-        var y2 = bounds.y + bounds.h;
+        var x1 = bounds[i].x;
+        var x2 = bounds[i].x + bounds[i].w;
+        var y1 = bounds[i].y;
+        var y2 = bounds[i].y + bounds[i].h;
         if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
             f(i);
         }
@@ -1759,63 +1832,20 @@ function input_template(len, bounds, f) {
 }
 function SpellSelectDialog(sp, context) {
     quickWindow(context, 50, 400, 600, 200, "blue", "red");
-    setStyle(this.context, 'calibre', 14, "white", "bold");
-    context.fillText(sp.Base.ID + " Spells", 150, 405);
+    setStyle(context, 'calibre', 14, "white", "bold");
+    context.fillText(sp.Base.ID + " Spells", 150, 415);
     var bounds = [];
     for (var x = 0; x < sp.Spells.length; x++) {
-        context.fillText(sp.Spells[x], 75, 420 + (x * 20));
+        context.fillText(sp.Spells[x], 75, 430 + (x * 20));
         bounds[x] = {
             "name": sp.Spells[x],
             "x": 75,
-            "y": 420 + (x * 20),
+            "y": 430 + (x * 20),
             "w": context.measureText(sp.Spells[x]).width,
             "h": 10
         };
     }
     return bounds;
-}
-function getSpellTouched(bounds) {
-    var index = 0;
-    var mx = mEvent.pageX;
-    var my = mEvent.pageY;
-    for (var i = 0; i < bounds.length; i++) {
-        var a1 = bounds[i].dx;
-        var a2 = bounds[i].dx + bounds[i].w;
-        var b1 = bounds[i].dy;
-        var b2 = bounds[i].dy + bounds[i].h;
-        if ((a1 <= mx && mx <= a2) && (b1 <= my && my <= b2)) {
-            var spells = Object.keys(JSON_CACHE['spell']['Spells']);
-            for (var x = 0; x < spells.length; x++) {
-                if (bounds[i].name === spells[x]) {
-                    index = x;
-                    break;
-                }
-            }
-        }
-    }
-    return { "spell": JSON_CACHE['spell']['Spells'][spells[index]], "SpellName": spells[index] };
-}
-function selectSpellTargets(spell, queue) {
-    var bounds = [];
-    if (spell.All === 0) {
-        //select target
-        var mx = mEvent.pageX;
-        var my = mEvent.pageY;
-        for (var i = 0; i < queue.length; i++) {
-            var a1 = queue[i].dx;
-            var a2 = queue[i].dx + queue[i].W;
-            var b1 = queue[i].dy;
-            var b2 = queue[i].dy + queue[i].H;
-            if ((a1 <= mx && mx <= a2) && (b1 <= my && my <= b2)) {
-                var sprite = castSpellSingle(spell, queue[i]);
-                queue[i] = sprite;
-            }
-        }
-        return queue;
-    } else if (spell.All === 1) {
-        //go ahead and cast
-        return castSpellAll(spell, queue);
-    }
 }
 function castSpellSingle(spell, sp) {
     var dmg = spell.Damage;
@@ -1843,6 +1873,29 @@ function castSpellAll(spell, queue) {
         }
     }
     return queue;
+}
+function StateDialogs(context, state) {
+    setStyle(context, 'Calibri', '18 pt', 'white', 'bold');
+    switch (state) {
+        case 0:
+            context.drawImage(IMAGE_CACHE['Attack'], 600, 50);
+            context.drawImage(IMAGE_CACHE['Spell'], 600, 150);
+            context.drawImage(IMAGE_CACHE['Defend'], 600, 250);
+            break;
+        case 1:
+            context.fillText("Select target to Attack", 350, 50);
+            break;
+        case 3:
+            context.fillText("Select Spell to cast", 350, 50);
+            break;
+        case 4:
+            context.fillText("Select Target to cast spell", 350, 50);
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+    }
 }
 ///<reference path='State.ts' />
 var BattleQ = [];
