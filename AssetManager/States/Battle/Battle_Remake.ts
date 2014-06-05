@@ -90,7 +90,7 @@ module Game {
             StateDialogs(this.context2, this.cState);
         }
         init() {
-            this.cState = this.states["PSelect"];
+            this.cState = this.states["PrePlayerTurn"];
             this.drawLayer1();
             this.drawLayer2();
             this.cTurn = 0;
@@ -98,6 +98,11 @@ module Game {
         update() {
             var time = Date.now();
             //if player action select state is action
+            
+            if (this.cState === this.states["PrePlayerTurn"] && time > this.newTime) {
+                this.drawLayer2();
+                this.cState = this.states["PSelect"];
+            }
                 if (this.cState === this.states["PSelect"] && mouseClicked() && time > this.newTime) {
                     this.playerSelect(time);
                 }
@@ -162,7 +167,9 @@ module Game {
                     this.drawLayer2();
                 }
                 else if (this.cState === this.states["EAction"]) {
-                    EnemyAction(this.queue[this.cTurn], this.queue);
+                    this.queue = EnemyAction(this.queue[this.cTurn], this.queue);
+                    this.cState = this.states["EndTurn"];
+                    this.drawLayer2();
                 }
                 else if (this.cState === this.states["EndTurn"]) {
                     this.cTurn++;
@@ -171,7 +178,7 @@ module Game {
                         this.drawLayer2();
                     }
                     else if (this.queue[this.cTurn].Base.Type === 0) {
-                        this.cState = this.states["PSelect"];
+                        this.cState = this.states["PrePlayerTurn"];
                         this.drawLayer2();
                     }
                     else if (this.queue[this.cTurn].Base.Type === 1) {
@@ -181,6 +188,14 @@ module Game {
                 }
                 else if (this.cState === this.states["EndPhase"]) {
                     this.cTurn = 0;
+                    if (this.queue[this.cTurn].Base.Type === 0) {
+                        this.cState = this.states["PrePlayerTurn"];
+                        this.drawLayer2();
+                    }
+                    else if (this.queue[this.cTurn].Base.Type === 1) {
+                        this.cState = this.states["EAction"];
+                        this.drawLayer2();
+                    }
                 }
         }
         render() {

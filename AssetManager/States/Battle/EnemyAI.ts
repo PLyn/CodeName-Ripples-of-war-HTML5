@@ -17,9 +17,10 @@
         }
     }
     if (cAbilities === "Attack") {
-
+        return queue;
     }
     else if (cAbilities === "Defend") {
+        return queue;
     }
     else {
         var spellkey = Object.keys(JSON_CACHE['spell']['Spells']);
@@ -29,6 +30,7 @@
                 break;
             }
         }
+        return queue;
     }
 }
 function checkSpellType(spell, queue: Game.Sprite[]) {   

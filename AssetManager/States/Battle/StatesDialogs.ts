@@ -1,7 +1,7 @@
 ﻿function StateDialogs(context: CanvasRenderingContext2D, state) {
     setStyle(context, 'Calibri', '18 pt', 'white', 'bold');
     switch (state) {
-        case 0: //p select
+        case 8: //p select
             context.drawImage(IMAGE_CACHE['Attack'], 600, 50);
             context.drawImage(IMAGE_CACHE['Spell'], 600, 150);
             context.drawImage(IMAGE_CACHE['Defend'], 600, 250);
