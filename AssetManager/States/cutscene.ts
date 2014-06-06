@@ -133,10 +133,10 @@ module Game {
                         this.animate.play();
                         this.initNode = false;
                     }
-                    else if (this.animate.finishPlaying) {
+                    /*else if (this.animate.finishPlaying) {
                         this.initNode = true;
                         this.nextNode();
-                    }
+                    }*/
                     break;
                 case "bgm":
                     this.nextNode();

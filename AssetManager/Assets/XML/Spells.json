@@ -21,6 +21,12 @@
             "Effect":  "Poison",
             "Chance":  "50"    
           }  
+      },
+      "Storm":  {
+          "Type":  "Enemy",
+          "Damage":  2,
+          "All":  1,
+          "Effect":  false
       }
   }
 }

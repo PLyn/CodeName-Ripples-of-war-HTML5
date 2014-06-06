@@ -15,31 +15,53 @@
     }
     return bounds;
 }
-function castSpellSingle(spell, sp: Game.Sprite) {
+function castSpellSingle(spell, sp: Game.Sprite, caster?: Game.Sprite) {
     var dmg = spell.Damage;
     var def = sp.Base.MDef;
 
     var result = dmg - def;
     switch (spell.Type) {
         case "Enemy":
-            sp.Base.HP -= result;
+            sp.Current.HP -= result;
             break;
         case "Ally":
-            sp.Base.HP += dmg;
+            sp.Current.HP += dmg;
             break;
         default:
             break;
     }
     return sp;
 }
-function castSpellAll(spell, queue: Game.Sprite[]) {
-    for (var x = 0; x < queue.length; x++) {
-        if (queue[x].Base.Type === 0 && spell.Type === "Ally") {
-                queue[x].Base.HP += spell.Damage;
-        }
-        else if (queue[x].Base.Type === 1 && spell.Type === "Enemy") {
-            queue[x].Base.HP -= (spell.Damage - queue[x].Base.MDef);
-        }
+function castSpellAll(spell, queue: Game.Sprite[], caster?: Game.Sprite) {
+    switch (spell.Type) {
+        case "Enemy":
+            for (var x = 0; x < queue.length; x++) {
+                if (caster.Base.Type === 0) {
+                    if (queue[x].Base.Type === 1 && queue[x].currentState !== 1) {
+                        queue[x].Current.HP -= (spell.Damage - queue[x].Base.MDef);
+                    }
+                }
+                else if (caster.Base.Type === 1) {
+                    if (queue[x].Base.Type === 0 && queue[x].currentState !== 1) {
+                        queue[x].Current.HP -= (spell.Damage - queue[x].Base.MDef);
+                    }
+                }
+            }
+            break;
+        case "Ally":
+            if (caster.Base.Type === 0) {
+                if (queue[x].Base.Type === 0 && queue[x].currentState !== 1) {
+                    queue[x].Current.HP += spell.Damage;
+                }
+            }
+            else if (caster.Base.Type === 1) {
+                if (queue[x].Base.Type === 1 && queue[x].currentState !== 1) {
+                    queue[x].Current.HP += spell.Damage;
+                }
+            }
+            break;
+        default:
+            break;
     }
     return queue;
 }

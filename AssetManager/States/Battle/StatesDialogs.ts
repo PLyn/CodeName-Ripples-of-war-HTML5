@@ -15,7 +15,8 @@
         case 4: //pdefend
             context.fillText("Select Target to cast spell", 350, 50);
             break;
-        case 6: //pre ally turn
+        case 9: //enemy turn
+            context.fillText("Enemy's Turn", 350, 150);;
             break;
         case 7: //pre enemy turn
             break;

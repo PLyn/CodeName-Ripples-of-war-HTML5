@@ -1,11 +1,11 @@
 ﻿function LevelUp(sprite: Game.Sprite, context) {
     var growth = [];
-    var split = sprite.growth.split();
+    var split = sprite.growth.split(" ");
     var keys = Object.keys(sprite.Base);
     var increase = 0;
     var lvl = sprite.Level + 1;
     var newSpells = [];
-    var spell = Object.keys(JSON_CACHE['character']['Party'][spell[y]]['Abilities']);
+    var spell = Object.keys(JSON_CACHE['character']['Party'][sprite.Base.ID]['Abilities']);
     for (var y = 0; y < spell.length; y++) {
         if (lvl === JSON_CACHE['character']['Party'][spell[y]]['Abilities'][spell[y]]) {
             var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
@@ -60,18 +60,18 @@ function LevelUpDisplay(context: CanvasRenderingContext2D, growth, base, name, s
     context.strokeStyle = "#FF0000";
     context.strokeRect(249, 249, 402, 302);
     //levelup text
-    setStyle(this.context, 'calibre', 16, "yellow", "bold");
+    setStyle(context, 'calibre', 16, "yellow", "bold");
     context.fillText("Level Up!", 300, 265);
     //Name and stats
-    setStyle(this.context, 'calibre', 12, "white", "bold");
+    setStyle(context, 'calibre', 12, "white", "bold");
     context.fillText(name, 255, 265);
-    context.fillText("HP: " + base.HP + " + " + growth.HP, 275, 300);
-    context.fillText("MP: " + base.MP + " + " + growth.MP, 275, 320);
-    context.fillText("Attack: " + base.Atk + " + " + growth.Atk, 275, 340);
-    context.fillText("Defense: " + base.Def + " + " + growth.Def, 275, 360);
-    context.fillText("Speed: " + base.Spd + " + " + growth.Spd, 275, 380);
-    context.fillText("M. Defense: " + base.MDef + " + " + growth.MDef, 275, 400);
-    context.fillText("Luck: " + base.Luc + " + " + growth.Luc, 275, 420);
+    context.fillText("HP: " + (base.HP - growth.HP) + " + " + growth.HP + " = " + base.HP , 275, 300);
+    context.fillText("MP: " + (base.MP - growth.MP) + " + " + growth.MP + " = " + base.MP, 275, 320);
+    context.fillText("Attack: " + (base.Atk - growth.Atk) + " + " + growth.Atk + " = " + base.Atk, 275, 340);
+    context.fillText("Defense: " + (base.Def - growth.Def) + " + " + growth.Def + " = " + base.Def, 275, 360);
+    context.fillText("Speed: " + (base.Spd - growth.Spd) + " + " + growth.Spd + " = " + base.Spd, 275, 380);
+    context.fillText("M. Defense: " + (base.MDef - growth.MDef) + " + " + growth.MDef + " = " + base.MDef, 275, 400);
+    context.fillText("Luck: " + (base.Luc - growth.Luc) + " + " + growth.Luc + " = " + base.Luc, 275, 420);
 
     context.fillText("Spells Learned: ", 255, 440);
     var newSpellKeys = Object.keys(spells);
