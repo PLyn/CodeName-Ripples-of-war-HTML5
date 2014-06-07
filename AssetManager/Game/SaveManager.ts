@@ -59,7 +59,7 @@ module Game {
             this.ctx.clearRect(0, 0, 800, 600);
             this.ctx2.clearRect(0, 0, 800, 600);
 
-            sManager.pushState(new Title(this.ctx, 800));
+            sManager.pushState(new Title(this.ctx));
         }
         load(w) {
             if (localStorage.getItem("TileMap") === null || localStorage.getItem("Party") === null) {
@@ -101,7 +101,7 @@ module Game {
                     };
                 }
             }
-                sManager.pushState(new Explore(context, w, this.MapID));
+                sManager.pushState(new Explore(context, this.MapID));
             }
         }
     }

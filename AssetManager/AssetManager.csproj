@@ -35,6 +35,7 @@
     <Content Include="Assets\Image\tick.png" />
     <Content Include="Assets\Music\theme.mp3" />
     <Content Include="Assets\Tilemap\charset.png" />
+    <Content Include="Assets\Tilemap\hero.png" />
     <Content Include="Assets\Tilemap\obj_misk_atlas.png" />
     <Content Include="Assets\Sound\car.mp3" />
     <Content Include="Assets\Sound\punch.mp3" />
@@ -71,7 +72,7 @@
     <TypeScriptCompile Include="Game\world.ts" />
     <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />
-    <TypeScriptCompile Include="Game\InutManager.ts" />
+    <TypeScriptCompile Include="Game\InputManager.ts" />
     <TypeScriptCompile Include="Game\AssetManager.ts" />
     <TypeScriptCompile Include="Game\TilemapManager.ts" />
     <TypeScriptCompile Include="States\battle.ts" />
@@ -123,10 +124,10 @@
     <Content Include="Assets\XML\item.json" />
     <Content Include="Assets\XML\characters.json" />
     <Content Include="Assets\XML\EnemyGroups.json" />
-    <Content Include="Assets\XML\switches.json" />
     <Content Include="Assets\Tilemap\map1.json" />
     <Content Include="Assets\Tilemap\map2.json" />
     <Content Include="Assets\XML\LocationMap.json" />
+    <Content Include="Assets\Tilemap\map3.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

@@ -11,7 +11,9 @@ var XML_CACHE = []; //Global xml cache to get specific xml files
 var SOUND_CACHE = []; //Global sounds cache
 var MUSIC_CACHE = []; //Global Music cache
 var JSON_CACHE = [];
-
+var isLoaded = 0;
+var totalAssets = 0;
+var tilesetPos = 0;
 module Game {
     export class Preloader {
         animData; //Holds the parsed JSON for the atlases
@@ -44,16 +46,17 @@ module Game {
         x = 0; //x Coordinate of sprite
         xmlKey; //The keys for the XML_CACHE array when it is being used
         y = 0; //y Coordinate of sprite
-
+        callback = new function () { };
         queueAssets(Assets, load) {
+            this.callback = load;
             var Assetkeys = Object.keys(Assets);
             for (var x = 0; x < Assetkeys.length; x++) {
                 var itemkeys = Object.keys(Assets[Assetkeys[x]]);
                 for (var y = 0; y < itemkeys.length; y++) {
-                    this.totalAssets++;
+                    totalAssets++;
                 }
             }
-            if (Assets.Images) { 
+            if (Assets.Images) {
                 this.genericLoader(Assets.Images, true);
             }
             if (Assets.Anim) {
@@ -77,19 +80,19 @@ module Game {
             if (Assets.Music) {
                 this.soundloader(Assets.Music, 'Music');
             }
-            this.timerid = setInterval(() => {
-                if (this.isLoaded === this.totalAssets) {
-                    clearInterval(this.timerid);
-                    this.isFilesLoaded = true;
-                    load();
+            var that = this;
+            this.timerid = setInterval(function () {
+                if (isLoaded >= totalAssets) {
+                    clearInterval(that.timerid);
+                    startGame();
                 }
-            }, 1000 / 2);
+            }, 1000 / 1);
         }
         genericLoader(url, isImage, key?, onLoad?, typeOfFile?) {
             if (isImage) {
                 for (var file in url) {
                     IMAGE_CACHE[file] = new Image();
-                    IMAGE_CACHE[file].onload = this.isLoaded++;
+                    IMAGE_CACHE[file].onload = isLoaded++;
                     IMAGE_CACHE[file].onerror = this.isError++;
                     IMAGE_CACHE[file].src = url[file];
                 }
@@ -112,8 +115,8 @@ module Game {
                     audioType = this.soundFormat(SOUND_CACHE[key[pos]]);
                     SOUND_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     SOUND_CACHE[key[pos]].load();
-                    SOUND_CACHE[key[pos]].addEventListener('canplaythrough', () => {
-                        this.isLoaded++;
+                    SOUND_CACHE[key[pos]].addEventListener('canplaythrough', function (){
+                        isLoaded++;
                     });
                 }
                 else if (type === 'Music') {
@@ -122,8 +125,8 @@ module Game {
                     audioType = this.soundFormat(MUSIC_CACHE[key[pos]]);
                     MUSIC_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     MUSIC_CACHE[key[pos]].load();
-                    MUSIC_CACHE[key[pos]].addEventListener('canplaythrough', () => {
-                        this.isLoaded++;
+                    MUSIC_CACHE[key[pos]].addEventListener('canplaythrough', function(){
+                        isLoaded++;
                     });
                 }
             }
@@ -161,7 +164,7 @@ module Game {
             var frame;
             this.animData = JSON.parse(response);
             
-            this.animSource.onload = () => { this.isLoaded++; };
+            this.animSource.onload = () => { isLoaded++; };
             this.animSource.src = 'Assets/Atlas/' + this.animData.meta.image;
             for (var i = 0; i < this.animData.frames.length; i++) {
                 frame = this.animData.frames[i].frame;
@@ -175,7 +178,7 @@ module Game {
             
             this.spriteData = JSON.parse(response);
             this.spriteSource.onload = () => {
-                this.isLoaded++;
+                isLoaded++;
             }
             this.spriteSource.src = 'Assets/Atlas/' + this.spriteData.meta.image;
             for (var i = 0; i < this.spriteData.frames.length; i++) {
@@ -197,10 +200,11 @@ module Game {
             this.pixelSizeY = this.numTilesY * this.tileSizeY;
 
             var tiledata = this.tiledData.tilesets;
+            var tileset_holder = [];
             for (var i = 0; i < tiledata.length; i++){
                 var tilesetimage = new Image();
-                tilesetimage.onload = () => { this.isLoaded++;  };
-                tilesetimage.src = "Assets/Tilemap/" + this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
+                tilesetimage.onload = () => { isLoaded++; };
+                tilesetimage.src = "Assets/Tilemap/" + tiledata[i].image.replace(/^.*[\\\/]/, '');
                 var tileData = {
                     "firstgid": tiledata[i].firstgid,
                     "image": tilesetimage,
@@ -211,21 +215,22 @@ module Game {
                     "numYTiles": Math.floor(tiledata[i].imageheight / this.tileSizeY)
                     
                 };
-                TILESET_CACHE[key[this.tilesetPos]] = tileData;
-                TILEDATA_CACHE[key[this.tilesetPos]] = this.tiledData;
-                this.tilesetPos++;
+                tileset_holder.push(tileData);
+
                 this.tileKey = key;//needed for getTile ()
             }
+            TILESET_CACHE[key[i]] = tileset_holder;
+            TILEDATA_CACHE[key[i]] = this.tiledData;
         }
         onXMLLoad = (key, response, pos) => {
             XML_CACHE[key[pos]] = response;
-            this.isLoaded++;
+            isLoaded++;
             //rest to be implemented. not sure how to extract the info how i want yet...will do soon
             //saved xml file iin the global variable to be used later on as needed
         }
         onJSONLoad = (key, response, pos) => {
             JSON_CACHE[key[pos]] = JSON.parse(response);
-            this.isLoaded++;
+            isLoaded++;
         }
     }
 }

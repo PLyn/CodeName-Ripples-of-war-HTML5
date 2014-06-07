@@ -10,16 +10,14 @@ module Game {
         layer1ctx;
         layer2ctx;
         mapID;
-        width;
         map;
-        constructor(ctx, w, mapID) {
+        constructor(ctx, mapID) {
             super();
             this.x = 0;
             this.y = 0;
             this.mx = 0;
             this.my = 0;
             this.velocity = 2.0;
-            this.width = w;
             //this.currentArea = area;
             this.mapID = mapID;
             var canvas = <HTMLCanvasElement> document.getElementById('layer2');
@@ -98,11 +96,11 @@ module Game {
             if (objects[i].type === 'exit') {
                 if (objects[i].properties.Type === "0") {//EXIT TO WORLD
                     sManager.popState();
-                    sManager.pushState(new Explore(this.layer2ctx, this.width, objects[i].properties.ID));
+                    sManager.pushState(new Explore(this.layer2ctx, objects[i].properties.ID));
                 }
                 else if (objects[i].properties.Type === "1") {//EXIT TO NEW AREA
                     sManager.popState();
-                    sManager.pushState(new Explore(this.layer1ctx, this.width, 'map1'));
+                    sManager.pushState(new Explore(this.layer1ctx, 'map1'));
                 }
             }
             else if (objects[i].type === 'menu') {
@@ -111,7 +109,7 @@ module Game {
             else if (objects[i].type === 'cut') {
                 this.layer2ctx.clearRect(0, 0, 800, 600);
                 var sceneid = +objects[i].properties.ID;
-                if (typeof JSON_CACHE['location'][this.mapID] !== 'undefined') {
+                if (typeof JSON_CACHE['location'][this.mapID][objects[i].name] !== 'undefined') {
                     var keys = Object.keys(JSON_CACHE['location'][this.mapID][objects[i].name]);
                     for (var c = 0; c < keys.length; c++) {
                         if (QUEST.Switch[keys[c]]) {
@@ -122,10 +120,10 @@ module Game {
                         }
                     }
                 }
-                sManager.pushState(new Cutscene(800,this.layer2ctx, +sceneid));
+                sManager.pushState(new Cutscene(this.layer2ctx, +sceneid));
             }
             else if (objects[i].type === 'battle') {
-                sManager.pushState(new Battle(0));
+                sManager.pushState(new Battle(+objects[i].properties.ID));
             }
         }
         render() {}

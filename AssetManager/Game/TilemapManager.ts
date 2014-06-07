@@ -17,15 +17,12 @@ module Game {
         objx;
         objy;
 
-        key; 
         currentIndex;
         Init() {
-            this.key = [];
-            this.key = Object.keys(TILESET_CACHE);
         }   
         //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
         //Functions to test if file are loaded and can be rendered properly 
-        getTile(tileIndex) {
+        getTile(tileIndex, index) {
             var tile = {
                 "img": null,
                 "px": 0,
@@ -33,15 +30,17 @@ module Game {
             };
 
             var i = 0;
-            for (i = 0; i < this.key.length; i--) {
-                if (TILESET_CACHE[this.key[i]].firstgid <= tileIndex) break;
+            var key = Object.keys(TILESET_CACHE[index]);
+            var tileset = TILESET_CACHE[index];
+            for (i = (key.length - 1); i >= 0; i--) {
+                if (tileset[i].firstgid <= tileIndex) break;
             }
-            tile.img = TILESET_CACHE[this.key[i]].image;
-            var localIndex = tileIndex - TILESET_CACHE[this.key[i]].firstgid;
-            var localtileX = Math.floor(localIndex % TILESET_CACHE[this.key[i]].numXTiles);
-            var localtileY = Math.floor(localIndex / TILESET_CACHE[this.key[i]].numXTiles);
-            tile.px = localtileX * TILEDATA_CACHE[this.key[i]].tilewidth;
-            tile.py = localtileY * TILEDATA_CACHE[this.key[i]].tileheight;
+            tile.img = tileset[i].image;
+            var localIndex = (tileIndex - tileset[key[i]].firstgid);
+            var localtileX = Math.floor((tileIndex - tileset[key[i]].firstgid) % tileset[key[i]].numXTiles);
+            var localtileY = Math.floor((tileIndex - tileset[key[i]].firstgid) / tileset[key[i]].numXTiles);
+            tile.px = localtileX * TILEDATA_CACHE[index].tilesets[i].tilewidth;
+            tile.py = localtileY * TILEDATA_CACHE[index].tilesets[i].tileheight;
 
             return tile;
         }
@@ -63,7 +62,7 @@ module Game {
                         if (ID === 0) { //If ID is 0, no tiles is at the current tile so skip ahead
                             continue;
                         }
-                        var tileloc = this.getTile(ID);
+                        var tileloc = this.getTile(ID, index);
 
                         var worldX = Math.floor(tileidX % TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tilewidth;
                         var worldY = Math.floor(tileidX / TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tileheight;
@@ -88,7 +87,7 @@ module Game {
                     }*/
                     objects = [];
                     for (var x = 0; x < tileObjects.length; x++) {
-                        var tile = this.getTile(tileObjects[x].gid);
+                        var tile = this.getTile(tileObjects[x].gid, index);
                         /*obj.name = tileObjects[x].name;
                         obj.type = tileObjects[x].type;
                         obj.properties.ID = tileObjects[x].properties.ID;

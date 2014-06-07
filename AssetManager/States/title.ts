@@ -5,12 +5,10 @@ module Game {
         MenuItems;
         mx;
         my;
-        width;
-        constructor(ctx, w) {
+        constructor(ctx) {
             super();
             this.context = ctx;
             this.MenuItems = [];
-            this.width = w;
             SAVE = new SaveSystem(ctx);
         }
         init() {
@@ -49,7 +47,7 @@ module Game {
                         if (this.MenuItems[x].name === "new") {
                             this.context.clearRect(0, 0, 800, 600);
                             sManager.popState();
-                            sManager.pushState(new Cutscene(600, this.context, 0));
+                            sManager.pushState(new Cutscene(this.context, 0));
                             //sManager.pushState(new Explore(this.context, this.width, 'rpg'));
                         }
                         else if (this.MenuItems[x].name === "load") {
@@ -58,7 +56,7 @@ module Game {
                             }
                             else {
                                 sManager.popState();
-                                SAVE.load(this.width);
+                                SAVE.load(GAME_WIDTH);
                             }
                         }
                     }

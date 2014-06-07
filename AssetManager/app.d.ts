@@ -58,7 +58,6 @@ declare module Game {
     class Dialogue {
         public dialogueObject: any;
         public lines: any[];
-        public canvasWidth: any;
         public ctx: any;
         public linePos: number;
         public time: number;
@@ -232,7 +231,6 @@ declare module Game {
         public context: any;
         public canvas2: any;
         public context2: any;
-        public width: any;
         constructor();
         public update(): void;
         public render: () => void;
@@ -257,6 +255,7 @@ declare module Game {
         public GameLoop: () => void;
     }
 }
+declare function startGame(): void;
 declare var that: any;
 declare var keys: any[];
 declare var mousedown: boolean;
@@ -273,6 +272,9 @@ declare var XML_CACHE: any[];
 declare var SOUND_CACHE: any[];
 declare var MUSIC_CACHE: any[];
 declare var JSON_CACHE: any[];
+declare var isLoaded: number;
+declare var totalAssets: number;
+declare var tilesetPos: number;
 declare module Game {
     class Preloader {
         public animData: any;
@@ -305,6 +307,7 @@ declare module Game {
         public x: number;
         public xmlKey: any;
         public y: number;
+        public callback: any;
         public queueAssets(Assets: any, load: any): void;
         public genericLoader(url: any, isImage: any, key?: any, onLoad?: any, typeOfFile?: any): void;
         public soundloader(sounds: any, type: any): void;
@@ -334,10 +337,9 @@ declare module Game {
         public objh: any;
         public objx: any;
         public objy: any;
-        public key: any;
         public currentIndex: any;
         public Init(): void;
-        public getTile(tileIndex: any): {
+        public getTile(tileIndex: any, index: any): {
             "img": any;
             "px": number;
             "py": number;
@@ -496,9 +498,8 @@ declare module Game {
         public layer1ctx: any;
         public layer2ctx: any;
         public mapID: any;
-        public width: any;
         public map: any;
-        constructor(ctx: any, w: any, mapID: any);
+        constructor(ctx: any, mapID: any);
         public init(): void;
         public update(): void;
         public nextState(i: any): void;
@@ -671,7 +672,6 @@ declare module Game {
         public node: any;
         public currentNode: any;
         public lines: any[];
-        public canvasWidth: any;
         public ctx: any;
         public linePos: number;
         public time: number;
@@ -685,7 +685,7 @@ declare module Game {
         public sfx: any;
         public anim: any;
         public animate: any;
-        constructor(width: any, ctx: any, xmlID: any);
+        constructor(ctx: any, xmlID: any);
         public init(): void;
         public nextNode(): void;
         public update(): void;
@@ -716,8 +716,7 @@ declare module Game {
         public MenuItems: any;
         public mx: any;
         public my: any;
-        public width: any;
-        constructor(ctx: any, w: any);
+        constructor(ctx: any);
         public init(): void;
         public update(): void;
         public render(): void;
@@ -736,4 +735,4 @@ declare function findPath(world: any, pathStart: any, pathEnd: any): any[];
 declare function getRandomInt(min: any, max: any): any;
 declare function setStyle(ctx: any, font: any, size: any, color: any, bold?: any, italic?: any, align?: any): void;
 declare function FormatTilemap(mapID: any): any[];
-declare function wrap(ctx: any, cwidth: any, text: any): any[];
+declare function wrap(ctx: any, text: any): any[];

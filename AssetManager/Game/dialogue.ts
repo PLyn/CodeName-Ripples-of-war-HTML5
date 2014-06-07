@@ -2,7 +2,6 @@
     export class Dialogue {
         dialogueObject;
         lines = [];
-        canvasWidth;
         ctx;
         linePos = 0;
         time = 0;
@@ -16,12 +15,11 @@
         //care of in the state system since the canvas should probably be created there
         constructor(ctx, cwidth) {
             this.ctx = ctx;
-            this.canvasWidth = cwidth;
             setStyle(this.ctx, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
         }
         startScene = (key, tagName, index) => {
             this.dialogueObject = XML_CACHE[key].getElementsByTagName(tagName)[index];
-            this.lines = wrap(this.ctx, this.canvasWidth, this.dialogueObject);
+            this.lines = wrap(this.ctx, this.dialogueObject);
             this.prevName = this.lines[this.linePos].name;
             /*this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
             this.ctx.fillText(this.lines[this.linePos].name, 50, 250);

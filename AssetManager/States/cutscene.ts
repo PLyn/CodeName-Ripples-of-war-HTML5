@@ -12,7 +12,6 @@ module Game {
         node;
         currentNode;
         lines = [];
-        canvasWidth;
         ctx;
         linePos = 0;
         time = 0;
@@ -26,7 +25,7 @@ module Game {
         sfx;
         anim;
         animate;
-        constructor(width, ctx, xmlID) {
+        constructor(ctx, xmlID) {
             super();
             this.canvas = <HTMLCanvasElement> document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
@@ -34,7 +33,6 @@ module Game {
             this.context2 = this.canvas.getContext('2d');
             this.xmlID = xmlID;
             setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
-            this.canvasWidth = width;
         }
         init() {
             this.initNode = true;
@@ -65,7 +63,7 @@ module Game {
                     if (this.initNode) {
                         this.linePos = 0;
                         this.lineHeight = 1;
-                        this.lines = wrap(this.context, this.canvasWidth, this.currentNode);
+                        this.lines = wrap(this.context, this.currentNode);
                         this.prevName = this.lines[this.linePos].name;
                         this.initNode = false;
                         this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
@@ -108,6 +106,16 @@ module Game {
                     this.context.drawImage(IMAGE_CACHE[this.currentNode.nodeName], 0, 0);
                     this.nextNode();
                     break;
+                case "party":
+                    if (this.currentNode.getAttribute('value') === "add") {
+                        PARTY.add(this.currentNode.nodeName, 0);
+                    }
+                    else if (this.currentNode.getAttribute('value') === "remove") {
+                        PARTY.remove(this.currentNode.nodeName, 0);
+                    }
+                    //level up character to current level and add spells as well check if there is noone in the party here
+                    this.nextNode();
+                    break;
                 case "switch":
                     QUEST.Switch[this.currentNode.nodeName] = this.currentNode.getAttribute('value');
                     this.nextNode();
@@ -139,6 +147,12 @@ module Game {
                     }
                     break;
                 case "bgm":
+                    var bgm = MUSIC_CACHE[this.currentNode.nodeName];
+                    bgm.addEventListener('ended', function () {
+                        this.currentTime = 0;
+                        this.play();
+                    }, false);
+                    bgm.play();
                     this.nextNode();
                     break;
                 case "item":
@@ -150,7 +164,7 @@ module Game {
                     sManager.popState();
                     switch (this.currentNode.nodeName) {
                         case "explore":
-                            sManager.pushState(new Explore(this.context, 800, id));
+                            sManager.pushState(new Explore(this.context, id));
                             break;
                         case "battle":
                             this.context.clearRect(0, 0, 800, 600);
@@ -158,6 +172,7 @@ module Game {
                             sManager.pushState(new Battle(+id));
                             break;
                         case "dialog":
+                            sManager.pushState(new Cutscene(this.context, +id));
                             break;
                         default:
                             break; 

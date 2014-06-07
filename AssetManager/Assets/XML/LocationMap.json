@@ -1,6 +1,8 @@
 ﻿{
     "map1":  {
-  
+        "helper":  {
+            "defeatrival":  4
+        }
     },
     "map2":  {
         "rival": {

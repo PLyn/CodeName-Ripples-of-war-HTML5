@@ -43,7 +43,8 @@ module Game {
                 },
                 Tileset: {
                     map1: 'Assets/Tilemap/map1.json',
-                    map2: 'Assets/Tilemap/map2.json'
+                    map2: 'Assets/Tilemap/map2.json',
+                    map3: 'Assets/Tilemap/map3.json'
                     //carpet: 'Assets/Tilemap/nextmap.json'
                 },
                 XML: {
@@ -68,8 +69,9 @@ module Game {
                 }
             };
             this.preloader = new Game.Preloader();
-            this.preloader.queueAssets(source, this.onComplete);  
             sManager = new Game.StateManager();
+            this.preloader.queueAssets(source, this.onComplete);  
+
         }
         onComplete = () => {
             //this.dialog = new Game.Cutscene("dia", 800, 600);
@@ -84,4 +86,11 @@ module Game {
             //this.world.render();
         }
     }
+}
+
+function startGame() {
+    var world = new Game.Loop();
+    setInterval(function () {
+        world.update();
+    }, 1000/30);
 }

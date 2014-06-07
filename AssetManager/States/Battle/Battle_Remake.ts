@@ -300,7 +300,7 @@ module Game {
                 else {
                     sManager.popState();
                     if (this.nextState === "scene") {
-                        sManager.pushState(new Cutscene(GAME_WIDTH, this.context2, +this.nextID));
+                        sManager.pushState(new Cutscene(this.context2, +this.nextID));
                     }
                 }
             }

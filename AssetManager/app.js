@@ -219,7 +219,7 @@ var Game;
             this.lineHeight = 1;
             this.startScene = function (key, tagName, index) {
                 _this.dialogueObject = XML_CACHE[key].getElementsByTagName(tagName)[index];
-                _this.lines = wrap(_this.ctx, _this.canvasWidth, _this.dialogueObject);
+                _this.lines = wrap(_this.ctx, _this.dialogueObject);
                 _this.prevName = _this.lines[_this.linePos].name;
                 /*this.ctx.fillText(this.lines[this.linePos].message, 150, (300 + this.lineHeight));
                 this.ctx.fillText(this.lines[this.linePos].name, 50, 250);
@@ -247,7 +247,6 @@ var Game;
                 }
             };
             this.ctx = ctx;
-            this.canvasWidth = cwidth;
             setStyle(this.ctx, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
         }
         return Dialogue;
@@ -675,7 +674,7 @@ var Game;
             this.ctx.clearRect(0, 0, 800, 600);
             this.ctx2.clearRect(0, 0, 800, 600);
 
-            sManager.pushState(new Game.Title(this.ctx, 800));
+            sManager.pushState(new Game.Title(this.ctx));
         };
         SaveSystem.prototype.load = function (w) {
             if (localStorage.getItem("TileMap") === null || localStorage.getItem("Party") === null) {
@@ -717,7 +716,7 @@ var Game;
                         };
                     }
                 }
-                sManager.pushState(new Game.Explore(context, w, this.MapID));
+                sManager.pushState(new Game.Explore(context, this.MapID));
             }
         };
         return SaveSystem;
@@ -773,10 +772,6 @@ var Game;
             this.context2 = this.canvas.getContext('2d');
             TileMap = new Game.Tilemap();
             TileMap.Init();
-            this.width = 800;
-
-            //sManager.pushState(new Explore(this.context, this.width, 'rpg'));
-            sManager.pushState(new Game.Title(this.context, this.width));
 
             PARTY = new Game.PartyManager();
             FORMATION = new Game.BattleFormation();
@@ -784,11 +779,14 @@ var Game;
             SPELL = new Game.SpellManager();
             QUEST = new Game.QuestManager();
 
-            PARTY.add("Shadow", 0);
+            //add default party..should move it somewhere else later on
+            /* PARTY.add("Shadow", 0);
             var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
             SPELL.AddSpell(battleList[0], spellkeys[1]);
             PARTY.add("Syndra", 0);
             PARTY.add("Johnathan", 0);
+            */
+            sManager.pushState(new Game.Title(this.context));
         }
         Loop.prototype.update = function () {
             sManager.updateStack();
@@ -854,7 +852,8 @@ var Game;
                 },
                 Tileset: {
                     map1: 'Assets/Tilemap/map1.json',
-                    map2: 'Assets/Tilemap/map2.json'
+                    map2: 'Assets/Tilemap/map2.json',
+                    map3: 'Assets/Tilemap/map3.json'
                 },
                 XML: {
                     chapter: 'Assets/XML/test.xml'
@@ -878,13 +877,20 @@ var Game;
                 }
             };
             this.preloader = new Game.Preloader();
-            this.preloader.queueAssets(source, this.onComplete);
             sManager = new Game.StateManager();
+            this.preloader.queueAssets(source, this.onComplete);
         }
         return Init;
     })();
     Game.Init = Init;
 })(Game || (Game = {}));
+
+function startGame() {
+    var world = new Game.Loop();
+    setInterval(function () {
+        world.update();
+    }, 1000 / 30);
+}
 var that = this;
 var keys = [];
 var mousedown = false;
@@ -973,7 +979,9 @@ var XML_CACHE = [];
 var SOUND_CACHE = [];
 var MUSIC_CACHE = [];
 var JSON_CACHE = [];
-
+var isLoaded = 0;
+var totalAssets = 0;
+var tilesetPos = 0;
 var Game;
 (function (Game) {
     var Preloader = (function () {
@@ -1003,13 +1011,15 @@ var Game;
             this.width = 0;
             this.x = 0;
             this.y = 0;
+            this.callback = new function () {
+            };
             this.onAnimJSONLoad = function (key, response) {
                 var holder = [];
                 var frame;
                 _this.animData = JSON.parse(response);
 
                 _this.animSource.onload = function () {
-                    _this.isLoaded++;
+                    isLoaded++;
                 };
                 _this.animSource.src = 'Assets/Atlas/' + _this.animData.meta.image;
                 for (var i = 0; i < _this.animData.frames.length; i++) {
@@ -1024,7 +1034,7 @@ var Game;
 
                 _this.spriteData = JSON.parse(response);
                 _this.spriteSource.onload = function () {
-                    _this.isLoaded++;
+                    isLoaded++;
                 };
                 _this.spriteSource.src = 'Assets/Atlas/' + _this.spriteData.meta.image;
                 for (var i = 0; i < _this.spriteData.frames.length; i++) {
@@ -1047,12 +1057,13 @@ var Game;
                 _this.pixelSizeY = _this.numTilesY * _this.tileSizeY;
 
                 var tiledata = _this.tiledData.tilesets;
+                var tileset_holder = [];
                 for (var i = 0; i < tiledata.length; i++) {
                     var tilesetimage = new Image();
                     tilesetimage.onload = function () {
-                        _this.isLoaded++;
+                        isLoaded++;
                     };
-                    tilesetimage.src = "Assets/Tilemap/" + _this.tiledData.tilesets[i].image.replace(/^.*[\\\/]/, '');
+                    tilesetimage.src = "Assets/Tilemap/" + tiledata[i].image.replace(/^.*[\\\/]/, '');
                     var tileData = {
                         "firstgid": tiledata[i].firstgid,
                         "image": tilesetimage,
@@ -1062,30 +1073,31 @@ var Game;
                         "numXTiles": Math.floor(tiledata[i].imagewidth / _this.tileSizeX),
                         "numYTiles": Math.floor(tiledata[i].imageheight / _this.tileSizeY)
                     };
-                    TILESET_CACHE[key[_this.tilesetPos]] = tileData;
-                    TILEDATA_CACHE[key[_this.tilesetPos]] = _this.tiledData;
-                    _this.tilesetPos++;
+                    tileset_holder.push(tileData);
+
                     _this.tileKey = key; //needed for getTile ()
                 }
+                TILESET_CACHE[key[i]] = tileset_holder;
+                TILEDATA_CACHE[key[i]] = _this.tiledData;
             };
             this.onXMLLoad = function (key, response, pos) {
                 XML_CACHE[key[pos]] = response;
-                _this.isLoaded++;
+                isLoaded++;
                 //rest to be implemented. not sure how to extract the info how i want yet...will do soon
                 //saved xml file iin the global variable to be used later on as needed
             };
             this.onJSONLoad = function (key, response, pos) {
                 JSON_CACHE[key[pos]] = JSON.parse(response);
-                _this.isLoaded++;
+                isLoaded++;
             };
         }
         Preloader.prototype.queueAssets = function (Assets, load) {
-            var _this = this;
+            this.callback = load;
             var Assetkeys = Object.keys(Assets);
             for (var x = 0; x < Assetkeys.length; x++) {
                 var itemkeys = Object.keys(Assets[Assetkeys[x]]);
                 for (var y = 0; y < itemkeys.length; y++) {
-                    this.totalAssets++;
+                    totalAssets++;
                 }
             }
             if (Assets.Images) {
@@ -1112,19 +1124,19 @@ var Game;
             if (Assets.Music) {
                 this.soundloader(Assets.Music, 'Music');
             }
+            var that = this;
             this.timerid = setInterval(function () {
-                if (_this.isLoaded === _this.totalAssets) {
-                    clearInterval(_this.timerid);
-                    _this.isFilesLoaded = true;
-                    load();
+                if (isLoaded >= totalAssets) {
+                    clearInterval(that.timerid);
+                    startGame();
                 }
-            }, 1000 / 2);
+            }, 1000 / 1);
         };
         Preloader.prototype.genericLoader = function (url, isImage, key, onLoad, typeOfFile) {
             if (isImage) {
                 for (var file in url) {
                     IMAGE_CACHE[file] = new Image();
-                    IMAGE_CACHE[file].onload = this.isLoaded++;
+                    IMAGE_CACHE[file].onload = isLoaded++;
                     IMAGE_CACHE[file].onerror = this.isError++;
                     IMAGE_CACHE[file].src = url[file];
                 }
@@ -1136,7 +1148,6 @@ var Game;
             }
         };
         Preloader.prototype.soundloader = function (sounds, type) {
-            var _this = this;
             var pos;
             var key = Object.keys(sounds);
             var audioType = '';
@@ -1148,7 +1159,7 @@ var Game;
                     SOUND_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     SOUND_CACHE[key[pos]].load();
                     SOUND_CACHE[key[pos]].addEventListener('canplaythrough', function () {
-                        _this.isLoaded++;
+                        isLoaded++;
                     });
                 } else if (type === 'Music') {
                     MUSIC_CACHE[key[pos]] = document.createElement("audio");
@@ -1157,7 +1168,7 @@ var Game;
                     MUSIC_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     MUSIC_CACHE[key[pos]].load();
                     MUSIC_CACHE[key[pos]].addEventListener('canplaythrough', function () {
-                        _this.isLoaded++;
+                        isLoaded++;
                     });
                 }
             }
@@ -1214,7 +1225,7 @@ var Game;
                             if (ID === 0) {
                                 continue;
                             }
-                            var tileloc = _this.getTile(ID);
+                            var tileloc = _this.getTile(ID, index);
 
                             var worldX = Math.floor(tileidX % TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tilewidth;
                             var worldY = Math.floor(tileidX / TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tileheight;
@@ -1238,7 +1249,7 @@ var Game;
                         }*/
                         objects = [];
                         for (var x = 0; x < tileObjects.length; x++) {
-                            var tile = _this.getTile(tileObjects[x].gid);
+                            var tile = _this.getTile(tileObjects[x].gid, index);
 
                             /*obj.name = tileObjects[x].name;
                             obj.type = tileObjects[x].type;
@@ -1292,13 +1303,11 @@ var Game;
             };
         }
         Tilemap.prototype.Init = function () {
-            this.key = [];
-            this.key = Object.keys(TILESET_CACHE);
         };
 
         //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
         //Functions to test if file are loaded and can be rendered properly
-        Tilemap.prototype.getTile = function (tileIndex) {
+        Tilemap.prototype.getTile = function (tileIndex, index) {
             var tile = {
                 "img": null,
                 "px": 0,
@@ -1306,16 +1315,18 @@ var Game;
             };
 
             var i = 0;
-            for (i = 0; i < this.key.length; i--) {
-                if (TILESET_CACHE[this.key[i]].firstgid <= tileIndex)
+            var key = Object.keys(TILESET_CACHE[index]);
+            var tileset = TILESET_CACHE[index];
+            for (i = (key.length - 1); i >= 0; i--) {
+                if (tileset[i].firstgid <= tileIndex)
                     break;
             }
-            tile.img = TILESET_CACHE[this.key[i]].image;
-            var localIndex = tileIndex - TILESET_CACHE[this.key[i]].firstgid;
-            var localtileX = Math.floor(localIndex % TILESET_CACHE[this.key[i]].numXTiles);
-            var localtileY = Math.floor(localIndex / TILESET_CACHE[this.key[i]].numXTiles);
-            tile.px = localtileX * TILEDATA_CACHE[this.key[i]].tilewidth;
-            tile.py = localtileY * TILEDATA_CACHE[this.key[i]].tileheight;
+            tile.img = tileset[i].image;
+            var localIndex = (tileIndex - tileset[key[i]].firstgid);
+            var localtileX = Math.floor((tileIndex - tileset[key[i]].firstgid) % tileset[key[i]].numXTiles);
+            var localtileY = Math.floor((tileIndex - tileset[key[i]].firstgid) / tileset[key[i]].numXTiles);
+            tile.px = localtileX * TILEDATA_CACHE[index].tilesets[i].tilewidth;
+            tile.py = localtileY * TILEDATA_CACHE[index].tilesets[i].tileheight;
 
             return tile;
         };
@@ -2095,7 +2106,7 @@ var Game;
                 } else {
                     sManager.popState();
                     if (this.nextState === "scene") {
-                        sManager.pushState(new Game.Cutscene(GAME_WIDTH, this.context2, +this.nextID));
+                        sManager.pushState(new Game.Cutscene(this.context2, +this.nextID));
                     }
                 }
             }
@@ -2483,14 +2494,13 @@ var Game;
 (function (Game) {
     var Explore = (function (_super) {
         __extends(Explore, _super);
-        function Explore(ctx, w, mapID) {
+        function Explore(ctx, mapID) {
             _super.call(this);
             this.x = 0;
             this.y = 0;
             this.mx = 0;
             this.my = 0;
             this.velocity = 2.0;
-            this.width = w;
 
             //this.currentArea = area;
             this.mapID = mapID;
@@ -2564,17 +2574,17 @@ var Game;
             if (objects[i].type === 'exit') {
                 if (objects[i].properties.Type === "0") {
                     sManager.popState();
-                    sManager.pushState(new Explore(this.layer2ctx, this.width, objects[i].properties.ID));
+                    sManager.pushState(new Explore(this.layer2ctx, objects[i].properties.ID));
                 } else if (objects[i].properties.Type === "1") {
                     sManager.popState();
-                    sManager.pushState(new Explore(this.layer1ctx, this.width, 'map1'));
+                    sManager.pushState(new Explore(this.layer1ctx, 'map1'));
                 }
             } else if (objects[i].type === 'menu') {
                 sManager.pushState(new Game.StatusMenu(this.layer2ctx));
             } else if (objects[i].type === 'cut') {
                 this.layer2ctx.clearRect(0, 0, 800, 600);
                 var sceneid = +objects[i].properties.ID;
-                if (typeof JSON_CACHE['location'][this.mapID] !== 'undefined') {
+                if (typeof JSON_CACHE['location'][this.mapID][objects[i].name] !== 'undefined') {
                     var keys = Object.keys(JSON_CACHE['location'][this.mapID][objects[i].name]);
                     for (var c = 0; c < keys.length; c++) {
                         if (QUEST.Switch[keys[c]]) {
@@ -2584,9 +2594,9 @@ var Game;
                         }
                     }
                 }
-                sManager.pushState(new Game.Cutscene(800, this.layer2ctx, +sceneid));
+                sManager.pushState(new Game.Cutscene(this.layer2ctx, +sceneid));
             } else if (objects[i].type === 'battle') {
-                sManager.pushState(new Game.Battle(0));
+                sManager.pushState(new Game.Battle(+objects[i].properties.ID));
             }
         };
         Explore.prototype.render = function () {
@@ -3419,7 +3429,7 @@ var Game;
 (function (Game) {
     var Cutscene = (function (_super) {
         __extends(Cutscene, _super);
-        function Cutscene(width, ctx, xmlID) {
+        function Cutscene(ctx, xmlID) {
             _super.call(this);
             this.lines = [];
             this.linePos = 0;
@@ -3436,7 +3446,6 @@ var Game;
             this.context2 = this.canvas.getContext('2d');
             this.xmlID = xmlID;
             setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
-            this.canvasWidth = width;
         }
         Cutscene.prototype.init = function () {
             this.initNode = true;
@@ -3467,7 +3476,7 @@ var Game;
                     if (this.initNode) {
                         this.linePos = 0;
                         this.lineHeight = 1;
-                        this.lines = wrap(this.context, this.canvasWidth, this.currentNode);
+                        this.lines = wrap(this.context, this.currentNode);
                         this.prevName = this.lines[this.linePos].name;
                         this.initNode = false;
                         this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
@@ -3507,6 +3516,16 @@ var Game;
                     this.context.drawImage(IMAGE_CACHE[this.currentNode.nodeName], 0, 0);
                     this.nextNode();
                     break;
+                case "party":
+                    if (this.currentNode.getAttribute('value') === "add") {
+                        PARTY.add(this.currentNode.nodeName, 0);
+                    } else if (this.currentNode.getAttribute('value') === "remove") {
+                        PARTY.remove(this.currentNode.nodeName, 0);
+                    }
+
+                    //level up character to current level and add spells as well check if there is noone in the party here
+                    this.nextNode();
+                    break;
                 case "switch":
                     QUEST.Switch[this.currentNode.nodeName] = this.currentNode.getAttribute('value');
                     this.nextNode();
@@ -3536,6 +3555,12 @@ var Game;
                     }
                     break;
                 case "bgm":
+                    var bgm = MUSIC_CACHE[this.currentNode.nodeName];
+                    bgm.addEventListener('ended', function () {
+                        this.currentTime = 0;
+                        this.play();
+                    }, false);
+                    bgm.play();
                     this.nextNode();
                     break;
                 case "item":
@@ -3547,7 +3572,7 @@ var Game;
                     sManager.popState();
                     switch (this.currentNode.nodeName) {
                         case "explore":
-                            sManager.pushState(new Game.Explore(this.context, 800, id));
+                            sManager.pushState(new Game.Explore(this.context, id));
                             break;
                         case "battle":
                             this.context.clearRect(0, 0, 800, 600);
@@ -3555,6 +3580,7 @@ var Game;
                             sManager.pushState(new Game.Battle(+id));
                             break;
                         case "dialog":
+                            sManager.pushState(new Cutscene(this.context, +id));
                             break;
                         default:
                             break;
@@ -3718,11 +3744,10 @@ var Game;
 (function (Game) {
     var Title = (function (_super) {
         __extends(Title, _super);
-        function Title(ctx, w) {
+        function Title(ctx) {
             _super.call(this);
             this.context = ctx;
             this.MenuItems = [];
-            this.width = w;
             SAVE = new Game.SaveSystem(ctx);
         }
         Title.prototype.init = function () {
@@ -3760,14 +3785,14 @@ var Game;
                         if (this.MenuItems[x].name === "new") {
                             this.context.clearRect(0, 0, 800, 600);
                             sManager.popState();
-                            sManager.pushState(new Game.Cutscene(600, this.context, 0));
+                            sManager.pushState(new Game.Cutscene(this.context, 0));
                             //sManager.pushState(new Explore(this.context, this.width, 'rpg'));
                         } else if (this.MenuItems[x].name === "load") {
                             if (localStorage.getItem("TileMap") === null || localStorage.getItem("Party") === null) {
                                 this.context.fillText("No saved file detected. Please start a new Game", 100, 250);
                             } else {
                                 sManager.popState();
-                                SAVE.load(this.width);
+                                SAVE.load(GAME_WIDTH);
                             }
                         }
                     }
@@ -4301,7 +4326,7 @@ function FormatTilemap(mapID) {
     }
     return map;
 }
-function wrap(ctx, cwidth, text) {
+function wrap(ctx, text) {
     var templine = "";
     var lines = [];
     var child = text.childNodes;
@@ -4311,18 +4336,18 @@ function wrap(ctx, cwidth, text) {
     //areas such as bg img or sounds to be called
     /*for (var i = 0; i < text.childNodes.length; i++) {
     if (child[i].nodeType === 1) { //gets only the element nodes*/
-    if (ctx.measureText(text.textContent).width >= cwidth) {
+    if (ctx.measureText(text.textContent).width >= GAME_WIDTH) {
         var words = text.textContent.split(' ');
         for (var key = 0; key < words.length; key++) {
             var length = templine.length;
             var word = words[key];
             templine = templine + word + ' ';
-            if (ctx.measureText(templine).width >= (cwidth * 0.95)) {
+            if (ctx.measureText(templine).width >= (GAME_WIDTH * 0.95)) {
                 lines.push({ "name": text.nodeName, "message": templine.substring(0, length) });
                 key--;
                 templine = "";
             }
-            /*else if (ctx.measureText(templine).width >= (cwidth * 0.70)) {
+            /*else if (ctx.measureText(templine).width >= (GAME_WIDTH * 0.70)) {
             lines.push({ "name": text.nodeName, "message": templine });
             templine = "";
             }*/
