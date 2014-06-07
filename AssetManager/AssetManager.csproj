@@ -35,7 +35,6 @@
     <Content Include="Assets\Image\tick.png" />
     <Content Include="Assets\Music\theme.mp3" />
     <Content Include="Assets\Tilemap\charset.png" />
-    <Content Include="Assets\Tilemap\hero.png" />
     <Content Include="Assets\Tilemap\obj_misk_atlas.png" />
     <Content Include="Assets\Sound\car.mp3" />
     <Content Include="Assets\Sound\punch.mp3" />
