@@ -111,18 +111,18 @@ module Game {
             else if (objects[i].type === 'cut') {
                 this.layer2ctx.clearRect(0, 0, 800, 600);
                 var sceneid = +objects[i].properties.ID;
-                if (typeof JSON_CACHE['location'][this.mapID] !== 'undefined' && JSON_CACHE['location'][this.mapID].length > 0) {
-                    var keys = Object.keys(JSON_CACHE['location'][this.mapID]);
+                if (typeof JSON_CACHE['location'][this.mapID] !== 'undefined') {
+                    var keys = Object.keys(JSON_CACHE['location'][this.mapID][objects[i].name]);
                     for (var c = 0; c < keys.length; c++) {
                         if (QUEST.Switch[keys[c]]) {
-                            sceneid = JSON_CACHE['location'][this.mapID][keys[c]];
+                            sceneid = JSON_CACHE['location'][this.mapID][objects[i].name][keys[c]];
                         }
                         else {
                             break;
                         }
                     }
                 }
-                sManager.pushState(new Cutscene("id", 800, 600, this.layer2ctx, sceneid));
+                sManager.pushState(new Cutscene(800,this.layer2ctx, +sceneid));
             }
             else if (objects[i].type === 'battle') {
                 sManager.pushState(new Battle(0));

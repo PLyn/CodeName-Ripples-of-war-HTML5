@@ -26,7 +26,7 @@ module Game {
         sfx;
         anim;
         animate;
-        constructor(id, width, height, ctx, xmlID) {
+        constructor(width, ctx, xmlID) {
             super();
             this.canvas = <HTMLCanvasElement> document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
@@ -133,10 +133,10 @@ module Game {
                         this.animate.play();
                         this.initNode = false;
                     }
-                    /*else if (this.animate.finishPlaying) {
+                    else if (this.animate.finishPlaying) {
                         this.initNode = true;
                         this.nextNode();
-                    }*/
+                    }
                     break;
                 case "bgm":
                     this.nextNode();

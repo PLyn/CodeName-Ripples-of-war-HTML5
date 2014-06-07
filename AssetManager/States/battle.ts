@@ -372,7 +372,7 @@ module Game {
                 this.ctx2.clearRect(0, 0, 800, 600);
                 sManager.popState();
                 if(this.nextState === "scene"){
-                    sManager.pushState(new Cutscene("id", 800, 600, this.ctx2, 0));
+                    //sManager.pushState(new Cutscene("id", 800, 600, this.ctx2, 0));
                 }
             }
             else if (this.battleOver()) {
