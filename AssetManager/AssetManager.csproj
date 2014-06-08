@@ -68,6 +68,7 @@
     <TypeScriptCompile Include="Game\QuestManager.ts" />
     <TypeScriptCompile Include="Game\SaveManager.ts" />
     <TypeScriptCompile Include="Game\SpellManager.ts" />
+    <TypeScriptCompile Include="Game\StatusManager.ts" />
     <TypeScriptCompile Include="Game\world.ts" />
     <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />
@@ -76,9 +77,10 @@
     <TypeScriptCompile Include="Game\TilemapManager.ts" />
     <TypeScriptCompile Include="States\battle.ts" />
     <TypeScriptCompile Include="States\Battle\Attack.ts" />
-    <TypeScriptCompile Include="States\Battle\AttackTarget.ts" />
     <TypeScriptCompile Include="States\Battle\Battle_Remake.ts" />
+    <TypeScriptCompile Include="States\Battle\StatusEffect.ts" />
     <TypeScriptCompile Include="States\Battle\EnemyAI.ts" />
+    <TypeScriptCompile Include="States\Battle\FloatingDamageText.ts" />
     <TypeScriptCompile Include="States\Battle\initializeMenuBounds.ts" />
     <TypeScriptCompile Include="States\Battle\input_template.ts" />
     <TypeScriptCompile Include="States\Battle\SpellCommand.ts" />

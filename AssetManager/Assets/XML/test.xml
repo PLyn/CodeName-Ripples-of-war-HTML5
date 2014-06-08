@@ -7,7 +7,7 @@
     <Shadow type="party" value="add"></Shadow>
     <Syndra type="party" value="add"></Syndra>
     <Johnathan type="party" value="add"></Johnathan>
-    <explore type="next" id="map3"></explore>
+    <explore type="next" id="map1"></explore>
   </scene>
 	<scene id="1">
     <hero type="dialog">I think I see a town in the distance</hero>

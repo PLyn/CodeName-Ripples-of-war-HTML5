@@ -20,7 +20,7 @@ module Game {
             ITEM = new ItemManager();
             SPELL = new SpellManager();
             QUEST = new QuestManager();
-
+            STATUS = new StatusManager();
             //add default party..should move it somewhere else later on
            /* PARTY.add("Shadow", 0);
             var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);

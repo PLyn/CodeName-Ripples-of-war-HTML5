@@ -1,4 +1,4 @@
-﻿function EnemyAction(enemy: Game.Sprite, queue: Game.Sprite[]) {
+﻿function EnemyAction(context: CanvasRenderingContext2D, enemy: Game.Sprite, queue: Game.Sprite[]) {
     var total = 100;
     var parts = [];
     var foe;
@@ -30,7 +30,7 @@
 
 
     if (cAbilities === "Attack") {
-        var sprite = Attack(enemy, queue[random]);
+        var sprite = Attack(context, enemy, queue[random]);
         queue[random] = sprite.Tar;
         return queue;
     }
@@ -41,14 +41,14 @@
         var spellkey = Object.keys(JSON_CACHE['spell']['Spells']);
         for (var x = 0; x < spellkey.length; x++) {
             if (cAbilities === spellkey[x]) {
-                return checkSpellType(JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, enemy);
+                return checkSpellType(context, JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, enemy);
                 break;
             }
         }
         return queue;
     }
 }
-function checkSpellType(spell, queue: Game.Sprite[], target: number, caster) {   
+function checkSpellType(context, spell, queue: Game.Sprite[], target: number, caster) {   
     if (spell.All === 0) {
         var counter = 0;
         //get target to attack if target is not all
@@ -58,10 +58,10 @@ function checkSpellType(spell, queue: Game.Sprite[], target: number, caster) {
             }
         }
         var rand = getRandomInt(0, counter);
-        queue[target] = castSpellSingle(spell, queue[rand], caster);
+        queue[target] = castSpellSingle(context, spell, queue[rand], caster);
         return queue;
     }
     else if (spell.All === 1) {
-        return castSpellAll(spell, queue, caster);
+        return castSpellAll(context, spell, queue, caster);
     }
 }

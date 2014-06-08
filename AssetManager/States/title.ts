@@ -48,7 +48,7 @@ module Game {
                             this.context.clearRect(0, 0, 800, 600);
                             sManager.popState();
                             sManager.pushState(new Cutscene(this.context, 0, "map1"));
-                            //sManager.pushState(new Explore(this.context, this.width, 'rpg'));
+                            //sManager.pushState(new Battle(0, "map1"));
                         }
                         else if (this.MenuItems[x].name === "load") {
                             if (localStorage.getItem("TileMap") === null || localStorage.getItem("Party") === null) {

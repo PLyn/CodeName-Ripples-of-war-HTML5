@@ -224,6 +224,13 @@ declare module Game {
         public RemoveSpell(character: any, SpellName: any): void;
     }
 }
+declare var STATUS: any;
+declare module Game {
+    class StatusManager {
+        public effects: any;
+        constructor();
+    }
+}
 declare var TileMap: any;
 declare module Game {
     class Loop {
@@ -414,7 +421,7 @@ declare module Game {
         public destroy(): void;
     }
 }
-declare function Attack(Attacker: Game.Sprite, Target: Game.Sprite): {
+declare function Attack(context: CanvasRenderingContext2D, Attacker: Game.Sprite, Target: Game.Sprite): {
     "Atk": Game.Sprite;
     "Tar": Game.Sprite;
 };
@@ -455,13 +462,17 @@ declare module Game {
         public destroy(): void;
     }
 }
-declare function EnemyAction(enemy: Game.Sprite, queue: Game.Sprite[]): Game.Sprite[];
-declare function checkSpellType(spell: any, queue: Game.Sprite[], target: number, caster: any): Game.Sprite[];
+declare function applyStatus(effect: any, chance: any, sprite: Game.Sprite): Game.Sprite;
+declare function applyStatusEffect(context: any, sprite: Game.Sprite): Game.Sprite;
+declare function EnemyAction(context: CanvasRenderingContext2D, enemy: Game.Sprite, queue: Game.Sprite[]): Game.Sprite[];
+declare function checkSpellType(context: any, spell: any, queue: Game.Sprite[], target: number, caster: any): Game.Sprite[];
+declare function floatingDamageTextSingle(context: any, Amt: any, sprite: any): void;
+declare function floatingDamageTextAll(Amt: any, sprites: any): void;
 declare function initializeMenuBounds(): any[];
 declare function input_template(len: any, bounds: any, f: any): void;
 declare function SpellSelectDialog(sp: Game.Sprite, context: CanvasRenderingContext2D): any[];
-declare function castSpellSingle(spell: any, sp: Game.Sprite, caster?: Game.Sprite): Game.Sprite;
-declare function castSpellAll(spell: any, queue: Game.Sprite[], caster?: Game.Sprite): Game.Sprite[];
+declare function castSpellSingle(context: CanvasRenderingContext2D, spell: any, sp: Game.Sprite, caster?: Game.Sprite): Game.Sprite;
+declare function castSpellAll(context: CanvasRenderingContext2D, spell: any, queue: Game.Sprite[], caster?: Game.Sprite): Game.Sprite[];
 declare function StateDialogs(context: CanvasRenderingContext2D, state: any): void;
 declare var equips: any[];
 declare module Game {

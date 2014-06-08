@@ -761,6 +761,20 @@ var Game;
     })();
     Game.SpellManager = SpellManager;
 })(Game || (Game = {}));
+var STATUS;
+var Game;
+(function (Game) {
+    var StatusManager = (function () {
+        function StatusManager() {
+            this.effects = [];
+            this.effects = {
+                "Posion": 1
+            };
+        }
+        return StatusManager;
+    })();
+    Game.StatusManager = StatusManager;
+})(Game || (Game = {}));
 var TileMap;
 var Game;
 (function (Game) {
@@ -782,6 +796,7 @@ var Game;
             ITEM = new Game.ItemManager();
             SPELL = new Game.SpellManager();
             QUEST = new Game.QuestManager();
+            STATUS = new Game.StatusManager();
 
             //add default party..should move it somewhere else later on
             /* PARTY.add("Shadow", 0);
@@ -1829,7 +1844,7 @@ var Game;
     })(Game.State);
     Game.Battle_Old = Battle_Old;
 })(Game || (Game = {}));
-function Attack(Attacker, Target) {
+function Attack(context, Attacker, Target) {
     var dmg = Attacker.Base.Atk;
     if (Target.defend) {
         dmg = Math.floor(dmg / 2);
@@ -1842,10 +1857,12 @@ function Attack(Attacker, Target) {
         result = 0;
     }
 
+    //add check if status is applied here, possible statuses could be
     Target.Current.HP -= result;
     if (Target.Current.HP < 0) {
         Target.Current.HP = 0;
     }
+    context.fillText(result + "", Target.dx, Target.dy - 10);
     return { "Atk": Attacker, "Tar": Target };
 }
 ///<reference path='../State.ts' />
@@ -1936,7 +1953,7 @@ var Game;
 
             for (var s = 0; s < this.queue.length; s++) {
                 if (this.queue[s].currentState !== 1) {
-                    this.context2.fillText(this.queue[s].Base.ID, this.queue[s].dx, this.queue[s].dy - 15);
+                    //this.context2.fillText(this.queue[s].Base.ID, this.queue[s].dx, this.queue[s].dy - 15)
                     this.queue[s].render(this.context2);
                 }
 
@@ -2024,13 +2041,13 @@ var Game;
                 if ((s1 <= this.mx && this.mx <= s2) && (d1 <= this.my && this.my <= d2)) {
                     if (this.queue[i].Base.Type === 1 && this.queue[i].currentState !== 1) {
                         this.cTarget = i;
-                        var sprites = Attack(this.queue[this.cTurn], this.queue[i]);
+                        this.cState = this.states["EndTurn"];
+                        this.drawLayer2();
+                        this.newTime = Date.now() + this.turnDelay;
+                        var sprites = Attack(this.context2, this.queue[this.cTurn], this.queue[i]);
                         this.queue[this.cTurn] = sprites.Atk;
                         this.queue[i] = sprites.Tar;
-                        this.cState = this.states["EndTurn"];
                         this.CheckIfDead();
-                        this.newTime = Date.now() + this.turnDelay;
-                        this.drawLayer2();
                         break;
                     }
                 }
@@ -2044,6 +2061,7 @@ var Game;
                 this.cState = this.states["PSelect"];
                 this.newTime = time + this.turnDelay;
                 this.drawLayer2();
+                this.queue[this.cTurn] = applyStatusEffect(this.context2, this.queue[this.cTurn]);
             }
             if (this.cState === this.states["PSelect"] && mouseClicked()) {
                 this.playerSelect();
@@ -2085,13 +2103,13 @@ var Game;
                         var y1 = this.queue[i].dy;
                         var y2 = this.queue[i].dy + this.queue[i].H;
                         if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
-                            var sprite = castSpellSingle(this.cSpell, this.queue[i], this.queue[this.cTurn]);
+                            var sprite = castSpellSingle(this.context2, this.cSpell, this.queue[i], this.queue[this.cTurn]);
                             this.queue[i] = sprite;
                         }
                     }
                 } else if (this.cSpell.All === 1) {
                     //go ahead and cast
-                    this.queue = castSpellAll(this.cSpell, this.queue, this.queue[this.cTurn]);
+                    this.queue = castSpellAll(this.context2, this.cSpell, this.queue, this.queue[this.cTurn]);
                 }
                 this.cState = this.states["EndTurn"];
                 this.CheckIfDead();
@@ -2106,12 +2124,13 @@ var Game;
                 this.cState = this.states["EAction"];
                 this.newTime = time + this.turnDelay;
                 this.drawLayer2();
+                this.queue[this.cTurn] = applyStatusEffect(this.context2, this.queue[this.cTurn]);
             } else if (this.cState === this.states["EAction"] && time > this.newTime) {
-                this.queue = EnemyAction(this.queue[this.cTurn], this.queue);
                 this.cState = this.states["EndTurn"];
+                this.drawLayer2();
+                this.queue = EnemyAction(this.context2, this.queue[this.cTurn], this.queue);
                 this.CheckIfDead();
                 this.newTime = time + this.turnDelay;
-                this.drawLayer2();
             } else if (this.cState === this.states["EndTurn"] && time > this.newTime) {
                 this.cTurn = (this.cTurn + 1) % this.queue.length;
                 if (this.queue[this.cTurn].Base.Type === 0 && this.queue[this.cTurn].currentState !== 1) {
@@ -2154,7 +2173,33 @@ var Game;
     })(Game.State);
     Game.Battle = Battle;
 })(Game || (Game = {}));
-function EnemyAction(enemy, queue) {
+function applyStatus(effect, chance, sprite) {
+    var status = STATUS.effects;
+    var ran = getRandomInt(0, 100);
+    switch (effect) {
+        case "Poison":
+            if (ran > chance) {
+                sprite.currentState = status["Poison"];
+            }
+            break;
+        default:
+            break;
+    }
+    return sprite;
+}
+function applyStatusEffect(context, sprite) {
+    var status = STATUS.effects;
+    switch (sprite.currentState) {
+        case status["Poison"]:
+            sprite.Current.HP = Math.floor(sprite.Current.HP * 0.1);
+            context.fillText(Math.floor(sprite.Current.HP * 0.1) + "", sprite.dx, sprite.dy - 10);
+            break;
+        default:
+            break;
+    }
+    return sprite;
+}
+function EnemyAction(context, enemy, queue) {
     var total = 100;
     var parts = [];
     var foe;
@@ -2189,7 +2234,7 @@ function EnemyAction(enemy, queue) {
     var random = getRandomInt(0, allyCount);
 
     if (cAbilities === "Attack") {
-        var sprite = Attack(enemy, queue[random]);
+        var sprite = Attack(context, enemy, queue[random]);
         queue[random] = sprite.Tar;
         return queue;
     } else if (cAbilities === "Defend") {
@@ -2198,14 +2243,14 @@ function EnemyAction(enemy, queue) {
         var spellkey = Object.keys(JSON_CACHE['spell']['Spells']);
         for (var x = 0; x < spellkey.length; x++) {
             if (cAbilities === spellkey[x]) {
-                return checkSpellType(JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, enemy);
+                return checkSpellType(context, JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, enemy);
                 break;
             }
         }
         return queue;
     }
 }
-function checkSpellType(spell, queue, target, caster) {
+function checkSpellType(context, spell, queue, target, caster) {
     if (spell.All === 0) {
         var counter = 0;
 
@@ -2215,11 +2260,15 @@ function checkSpellType(spell, queue, target, caster) {
             }
         }
         var rand = getRandomInt(0, counter);
-        queue[target] = castSpellSingle(spell, queue[rand], caster);
+        queue[target] = castSpellSingle(context, spell, queue[rand], caster);
         return queue;
     } else if (spell.All === 1) {
-        return castSpellAll(spell, queue, caster);
+        return castSpellAll(context, spell, queue, caster);
     }
+}
+function floatingDamageTextSingle(context, Amt, sprite) {
+}
+function floatingDamageTextAll(Amt, sprites) {
 }
 function initializeMenuBounds() {
     var menu = [];
@@ -2277,46 +2326,63 @@ function SpellSelectDialog(sp, context) {
     }
     return bounds;
 }
-function castSpellSingle(spell, sp, caster) {
+function castSpellSingle(context, spell, sp, caster) {
     var dmg = spell.Damage;
     var def = sp.Base.MDef;
 
     var result = dmg - def;
     switch (spell.Type) {
         case "Enemy":
+            if (spell.Effect) {
+                sp = applyStatus(spell.Status.Effect, spell.Status.Chance, sp);
+            }
             sp.Current.HP -= result;
+            context.fillText(dmg + "", sp.dx, sp.dy - 10);
             break;
         case "Ally":
+            if (spell.Effect) {
+                sp = applyStatus(spell.Status.Effect, spell.Status.Chance, sp);
+            }
             sp.Current.HP += dmg;
+            context.fillText(dmg + "", sp.dx, sp.dy - 10);
             break;
         default:
             break;
     }
     return sp;
 }
-function castSpellAll(spell, queue, caster) {
+function castSpellAll(context, spell, queue, caster) {
+    setStyle(context, 'Calibri', '12 pt', 'white', 'bold');
+
     switch (spell.Type) {
         case "Enemy":
             for (var x = 0; x < queue.length; x++) {
+                var result = (spell.Damage - queue[x].Base.MDef);
                 if (caster.Base.Type === 0) {
                     if (queue[x].Base.Type === 1 && queue[x].currentState !== 1) {
                         queue[x].Current.HP -= (spell.Damage - queue[x].Base.MDef);
+                        context.fillText(result + "", queue[x].dx, queue[x].dy - 10);
                     }
                 } else if (caster.Base.Type === 1) {
                     if (queue[x].Base.Type === 0 && queue[x].currentState !== 1) {
                         queue[x].Current.HP -= (spell.Damage - queue[x].Base.MDef);
+                        context.fillText(result + "", queue[x].dx, queue[x].dy - 10);
                     }
                 }
             }
             break;
         case "Ally":
-            if (caster.Base.Type === 0) {
-                if (queue[x].Base.Type === 0 && queue[x].currentState !== 1) {
-                    queue[x].Current.HP += spell.Damage;
-                }
-            } else if (caster.Base.Type === 1) {
-                if (queue[x].Base.Type === 1 && queue[x].currentState !== 1) {
-                    queue[x].Current.HP += spell.Damage;
+            for (var x = 0; x < queue.length; x++) {
+                if (caster.Base.Type === 0) {
+                    if (queue[x].Base.Type === 0 && queue[x].currentState !== 1) {
+                        queue[x].Current.HP += spell.Damage;
+                        context.fillText(spell.Damage + "", queue[x].dx, queue[x].dy - 10);
+                    }
+                } else if (caster.Base.Type === 1) {
+                    if (queue[x].Base.Type === 1 && queue[x].currentState !== 1) {
+                        queue[x].Current.HP += spell.Damage;
+                        context.fillText(spell.Damage + "", queue[x].dx, queue[x].dy - 10);
+                    }
                 }
             }
             break;
@@ -3849,7 +3915,7 @@ var Game;
                             this.context.clearRect(0, 0, 800, 600);
                             sManager.popState();
                             sManager.pushState(new Game.Cutscene(this.context, 0, "map1"));
-                            //sManager.pushState(new Explore(this.context, this.width, 'rpg'));
+                            //sManager.pushState(new Battle(0, "map1"));
                         } else if (this.MenuItems[x].name === "load") {
                             if (localStorage.getItem("TileMap") === null || localStorage.getItem("Party") === null) {
                                 this.context.fillText("No saved file detected. Please start a new Game", 100, 250);
