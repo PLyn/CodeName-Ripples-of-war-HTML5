@@ -25,14 +25,15 @@ module Game {
         sfx;
         anim;
         animate;
-        constructor(ctx, xmlID) {
+        mapID;
+        constructor(ctx, xmlID, mapID) {
             super();
             this.canvas = <HTMLCanvasElement> document.getElementById('layer2');
             this.context = this.canvas.getContext('2d');
             this.canvas2 = <HTMLCanvasElement> document.getElementById('layer1');
             this.context2 = this.canvas.getContext('2d');
             this.xmlID = xmlID;
-            setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
+            this.mapID = mapID;
         }
         init() {
             this.initNode = true;
@@ -61,6 +62,7 @@ module Game {
             switch (this.currentNode.getAttribute('type')) {
                 case "dialog":
                     if (this.initNode) {
+                        setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
                         this.linePos = 0;
                         this.lineHeight = 1;
                         this.lines = wrap(this.context, this.currentNode);
@@ -131,7 +133,25 @@ module Game {
                         this.nextNode();
                     }
                     break;
-                case "action":
+                case "move":
+                    //get xy from objects array to determine 
+                    var sx; var sy; var dx; var dy;
+                    var keys = Object.keys(objects);
+                    for (var x = 0; x < keys.length; x++) {
+                        if (this.currentNode.nodeName === objects[keys[x]].name) {
+                            sx = objects[keys[x]].x;
+                            sy = objects[keys[x]].y;
+                            break;
+                        }
+                    }
+                    dx = +this.currentNode.getAttribute('x');
+                    dy = +this.currentNode.getAttribute('y');
+                    var coords = moveSprite(this.context2, sx, sy, dx, dy);
+                    objects[x].x = coords.x;
+                    objects[x].y = coords.y;
+                    this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                    TileMap.drawMapNoObjectReset(this.context, this.mapID);
+                    this.nextNode();
                     break;
                 case "anim":
                     if (this.initNode) {
@@ -168,14 +188,14 @@ module Game {
                             break;
                         case "battle":
                             this.context.clearRect(0, 0, 800, 600);
-                            this.context2.clearRect(0,0,800,600);
-                            sManager.pushState(new Battle(+id));
+                            this.context2.clearRect(0, 0, 800, 600);
+                            sManager.pushState(new Battle(+id, this.mapID));
                             break;
                         case "dialog":
-                            sManager.pushState(new Cutscene(this.context, +id));
+                            sManager.pushState(new Cutscene(this.context, +id, this.mapID));
                             break;
                         default:
-                            break; 
+                            break;
                     }
                     break;
                 default:

@@ -40,7 +40,7 @@
                 {
                  "gid":262,
                  "height":0,
-                 "name":"",
+                 "name":"syndra",
                  "properties":
                     {
 
@@ -61,7 +61,7 @@
  "orientation":"orthogonal",
  "properties":
     {
-
+        "ID":"1"
     },
  "tileheight":64,
  "tilesets":[
@@ -71,7 +71,7 @@
          "imageheight":832,
          "imagewidth":1280,
          "margin":0,
-         "name":"RPGpack_sheet",
+         "name":"map3",
          "properties":
             {
 

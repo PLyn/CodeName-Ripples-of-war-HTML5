@@ -136,9 +136,36 @@ module Game {
                 }
             } //end of function
         }
-        drawMap = (mapcontext, objcontext) => {
-            mapcontext.drawImage(this.tileimg, this.tilepx, this.tilepy, this.tilewidth, this.tileheight, this.worldx, this.worldy, this.tilewidth, this.tileheight); //draw map
-            objcontext.drawImage(this.objimg, this.objpx, this.objpy, this.objw, this.objh, this.objx, this.objy, this.objw, this.objh); //draw objects
+        drawMapNoObjectReset = (context, mapID) => {
+            for (var layeridX = 0; layeridX < TILEDATA_CACHE[mapID].layers.length; layeridX++) {
+                if (TILEDATA_CACHE[mapID].layers[layeridX].type === "tilelayer") {
+                    var data = TILEDATA_CACHE[mapID].layers[layeridX].data;
+                    for (var tileidX = 0; tileidX < data.length; tileidX++) {
+                        var ID = data[tileidX];
+                        if (ID === 0) { //If ID is 0, no tiles is at the current tile so skip ahead
+                            continue;
+                        }
+                        var tileloc = this.getTile(ID, mapID);
+
+                        var worldX = Math.floor(tileidX % TILEDATA_CACHE[mapID].width) * TILEDATA_CACHE[mapID].tilewidth;
+                        var worldY = Math.floor(tileidX / TILEDATA_CACHE[mapID].width) * TILEDATA_CACHE[mapID].tileheight;
+                        context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[mapID].tilewidth, TILEDATA_CACHE[mapID].tileheight, worldX, worldY, TILEDATA_CACHE[mapID].tilewidth, TILEDATA_CACHE[mapID].tileheight);
+                    }
+                }
+                else if (TILEDATA_CACHE[mapID].layers[layeridX].type === "objectgroup") {
+                    var objects = TILEDATA_CACHE[mapID].layers[layeridX].objects;
+                    for (var x = 0; x < objects.length; x++) {
+                        var tile = this.getTile(objects[x].gid, mapID);
+
+                        var w = TILEDATA_CACHE[mapID].tilewidth;
+                        var h = TILEDATA_CACHE[mapID].tileheight;
+
+                        setStyle(context, 'Calibri', '12pt', 'black', 'bold', 'italic', 'center');
+                        context.drawImage(tile.img, tile.px, tile.py, w, h, objects[x].x, objects[x].y, w, h);
+                        context.fillText(objects[x].name, objects[x].x + 32, objects[x].y - 10);
+                    }
+                }
+            }
         }
         //Object manipulation...UNTESTED ATM
         addObject(obj) {

@@ -345,7 +345,7 @@ declare module Game {
             "py": number;
         };
         public setTileset: (context: any, index: any) => void;
-        public drawMap: (mapcontext: any, objcontext: any) => void;
+        public drawMapNoObjectReset: (context: any, mapID: any) => void;
         public addObject(obj: any): void;
         public updateObject(objName: any, obj: any): void;
         public removeObject(objName: any): void;
@@ -439,7 +439,8 @@ declare module Game {
         public turnDelay: any;
         public Anim: Animation;
         public playerCount: number;
-        constructor(EnemyID: any);
+        public mapID: any;
+        constructor(EnemyID: any, mapID: any);
         public drawLayer1(): void;
         public drawLayer2(): void;
         public init(): void;
@@ -685,7 +686,8 @@ declare module Game {
         public sfx: any;
         public anim: any;
         public animate: any;
-        constructor(ctx: any, xmlID: any);
+        public mapID: any;
+        constructor(ctx: any, xmlID: any, mapID: any);
         public init(): void;
         public nextNode(): void;
         public update(): void;
@@ -729,7 +731,10 @@ declare function initializeBattlePositions(enemyID: any): any[];
 declare function quickWindow(context: any, x: any, y: any, w: any, h: any, fcolor: any, scolor: any): void;
 declare function LevelUp(sprite: Game.Sprite, context: any): void;
 declare function LevelUpDisplay(context: CanvasRenderingContext2D, growth: any, base: any, name: any, spells: any): void;
-declare function moveSprite(context: any, dx: any, dy: any, sprite: Game.Sprite): void;
+declare function moveSprite(context: any, sx: any, sy: any, dx: any, dy: any): {
+    "x": any;
+    "y": any;
+};
 declare function ObjLength(obj: any): number;
 declare function findPath(world: any, pathStart: any, pathEnd: any): any[];
 declare function getRandomInt(min: any, max: any): any;

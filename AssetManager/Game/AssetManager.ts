@@ -219,8 +219,8 @@ module Game {
 
                 this.tileKey = key;//needed for getTile ()
             }
-            TILESET_CACHE[key[i]] = tileset_holder;
-            TILEDATA_CACHE[key[i]] = this.tiledData;
+            TILESET_CACHE[tiledata[0].name] = tileset_holder;
+            TILEDATA_CACHE[tiledata[0].name] = this.tiledData;
         }
         onXMLLoad = (key, response, pos) => {
             XML_CACHE[key[pos]] = response;

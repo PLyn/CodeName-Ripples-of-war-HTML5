@@ -614,7 +614,11 @@ var Game;
             for (var x = 0; x < key.length; x++) {
                 var bkeys = Object.keys(JSON_CACHE['location'][key[x]]);
                 for (var y = 0; y < bkeys.length; y++)
-                    this.Switch[bkeys[y]] = false;
+                    if (bkeys[y] === key[x]) {
+                        this.Switch[bkeys[y]] = JSON_CACHE['location'][key[x]][key[x]]['auto'];
+                    } else {
+                        this.Switch[bkeys[y]] = false;
+                    }
             }
         }
         return QuestManager;
@@ -1077,8 +1081,8 @@ var Game;
 
                     _this.tileKey = key; //needed for getTile ()
                 }
-                TILESET_CACHE[key[i]] = tileset_holder;
-                TILEDATA_CACHE[key[i]] = _this.tiledData;
+                TILESET_CACHE[tiledata[0].name] = tileset_holder;
+                TILEDATA_CACHE[tiledata[0].name] = _this.tiledData;
             };
             this.onXMLLoad = function (key, response, pos) {
                 XML_CACHE[key[pos]] = response;
@@ -1297,9 +1301,35 @@ var Game;
                     }
                 }
             };
-            this.drawMap = function (mapcontext, objcontext) {
-                mapcontext.drawImage(_this.tileimg, _this.tilepx, _this.tilepy, _this.tilewidth, _this.tileheight, _this.worldx, _this.worldy, _this.tilewidth, _this.tileheight); //draw map
-                objcontext.drawImage(_this.objimg, _this.objpx, _this.objpy, _this.objw, _this.objh, _this.objx, _this.objy, _this.objw, _this.objh); //draw objects
+            this.drawMapNoObjectReset = function (context, mapID) {
+                for (var layeridX = 0; layeridX < TILEDATA_CACHE[mapID].layers.length; layeridX++) {
+                    if (TILEDATA_CACHE[mapID].layers[layeridX].type === "tilelayer") {
+                        var data = TILEDATA_CACHE[mapID].layers[layeridX].data;
+                        for (var tileidX = 0; tileidX < data.length; tileidX++) {
+                            var ID = data[tileidX];
+                            if (ID === 0) {
+                                continue;
+                            }
+                            var tileloc = _this.getTile(ID, mapID);
+
+                            var worldX = Math.floor(tileidX % TILEDATA_CACHE[mapID].width) * TILEDATA_CACHE[mapID].tilewidth;
+                            var worldY = Math.floor(tileidX / TILEDATA_CACHE[mapID].width) * TILEDATA_CACHE[mapID].tileheight;
+                            context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[mapID].tilewidth, TILEDATA_CACHE[mapID].tileheight, worldX, worldY, TILEDATA_CACHE[mapID].tilewidth, TILEDATA_CACHE[mapID].tileheight);
+                        }
+                    } else if (TILEDATA_CACHE[mapID].layers[layeridX].type === "objectgroup") {
+                        var objects = TILEDATA_CACHE[mapID].layers[layeridX].objects;
+                        for (var x = 0; x < objects.length; x++) {
+                            var tile = _this.getTile(objects[x].gid, mapID);
+
+                            var w = TILEDATA_CACHE[mapID].tilewidth;
+                            var h = TILEDATA_CACHE[mapID].tileheight;
+
+                            setStyle(context, 'Calibri', '12pt', 'black', 'bold', 'italic', 'center');
+                            context.drawImage(tile.img, tile.px, tile.py, w, h, objects[x].x, objects[x].y, w, h);
+                            context.fillText(objects[x].name, objects[x].x + 32, objects[x].y - 10);
+                        }
+                    }
+                }
             };
         }
         Tilemap.prototype.Init = function () {
@@ -1824,7 +1854,7 @@ var Game;
 (function (Game) {
     var Battle = (function (_super) {
         __extends(Battle, _super);
-        function Battle(EnemyID) {
+        function Battle(EnemyID, mapID) {
             _super.call(this);
             this.newTime = 0;
             this.playerCount = 0;
@@ -1844,6 +1874,7 @@ var Game;
             //saves the next state and ID the player will go if victory is achieved
             this.nextState = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].next;
             this.nextID = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].ID;
+            this.mapID = mapID;
 
             //Battle queue is now in the queue variable
             this.queue = [];
@@ -2106,7 +2137,7 @@ var Game;
                 } else {
                     sManager.popState();
                     if (this.nextState === "scene") {
-                        sManager.pushState(new Game.Cutscene(this.context2, +this.nextID));
+                        sManager.pushState(new Game.Cutscene(this.context2, +this.nextID, this.mapID));
                     }
                 }
             }
@@ -2517,7 +2548,8 @@ var Game;
 
             TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
-            this.layer2ctx.drawImage(IMAGE_CACHE['D'], (5 * 64) + 16, (5 * 64) + 16);
+            battleList[0].setPos((5 * 64) + 16, (5 * 64) + 16);
+            this.layer2ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
             objects.push({
                 "height": 75,
                 "name": "menu",
@@ -2532,8 +2564,14 @@ var Game;
             //battleList[0].setPos((8*64) + 16, (8*64) + 16);
             //battleList[0].render(this.layer2ctx);
             this.map = FormatTilemap(this.mapID);
+
             //var path = findPath(this.map, [8, 8], [6, 7]);
             //var x = 0;
+            var questAutoStart = QUEST.Switch[this.mapID];
+            if (questAutoStart) {
+                sManager.pushState(new Game.Cutscene(this.layer2ctx, JSON_CACHE['location'][this.mapID][this.mapID]['ID'], this.mapID));
+                QUEST.Switch[this.mapID] = false;
+            }
         };
         Explore.prototype.update = function () {
             var _this = this;
@@ -2556,7 +2594,10 @@ var Game;
                         } else if (typeof path !== 'undefined' && path.length > 0) {
                             if (objects[i].type !== 'menu') {
                                 var timer = setInterval(function () {
-                                    moveSprite(ctx, path[x][0], path[x][1], battleList[0]);
+                                    var coords = moveSprite(ctx, battleList[0].dx, battleList[0].dy, path[x][0], path[x][1]);
+                                    battleList[0].setPos(coords.x, coords.y);
+                                    ctx.clearRect(0, 0, 800, 600);
+                                    ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
                                     x++;
                                     if (x >= (keys.length - 1)) {
                                         clearInterval(timer);
@@ -2594,9 +2635,9 @@ var Game;
                         }
                     }
                 }
-                sManager.pushState(new Game.Cutscene(this.layer2ctx, +sceneid));
+                sManager.pushState(new Game.Cutscene(this.layer2ctx, +sceneid, this.mapID));
             } else if (objects[i].type === 'battle') {
-                sManager.pushState(new Game.Battle(+objects[i].properties.ID));
+                sManager.pushState(new Game.Battle(+objects[i].properties.ID, this.mapID));
             }
         };
         Explore.prototype.render = function () {
@@ -3429,7 +3470,7 @@ var Game;
 (function (Game) {
     var Cutscene = (function (_super) {
         __extends(Cutscene, _super);
-        function Cutscene(ctx, xmlID) {
+        function Cutscene(ctx, xmlID, mapID) {
             _super.call(this);
             this.lines = [];
             this.linePos = 0;
@@ -3445,7 +3486,7 @@ var Game;
             this.canvas2 = document.getElementById('layer1');
             this.context2 = this.canvas.getContext('2d');
             this.xmlID = xmlID;
-            setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
+            this.mapID = mapID;
         }
         Cutscene.prototype.init = function () {
             this.initNode = true;
@@ -3474,6 +3515,7 @@ var Game;
             switch (this.currentNode.getAttribute('type')) {
                 case "dialog":
                     if (this.initNode) {
+                        setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
                         this.linePos = 0;
                         this.lineHeight = 1;
                         this.lines = wrap(this.context, this.currentNode);
@@ -3540,7 +3582,28 @@ var Game;
                         this.nextNode();
                     }
                     break;
-                case "action":
+                case "move":
+                    //get xy from objects array to determine
+                    var sx;
+                    var sy;
+                    var dx;
+                    var dy;
+                    var keys = Object.keys(objects);
+                    for (var x = 0; x < keys.length; x++) {
+                        if (this.currentNode.nodeName === objects[keys[x]].name) {
+                            sx = objects[keys[x]].x;
+                            sy = objects[keys[x]].y;
+                            break;
+                        }
+                    }
+                    dx = +this.currentNode.getAttribute('x');
+                    dy = +this.currentNode.getAttribute('y');
+                    var coords = moveSprite(this.context2, sx, sy, dx, dy);
+                    objects[x].x = coords.x;
+                    objects[x].y = coords.y;
+                    this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                    TileMap.drawMapNoObjectReset(this.context, this.mapID);
+                    this.nextNode();
                     break;
                 case "anim":
                     if (this.initNode) {
@@ -3577,10 +3640,10 @@ var Game;
                         case "battle":
                             this.context.clearRect(0, 0, 800, 600);
                             this.context2.clearRect(0, 0, 800, 600);
-                            sManager.pushState(new Game.Battle(+id));
+                            sManager.pushState(new Game.Battle(+id, this.mapID));
                             break;
                         case "dialog":
-                            sManager.pushState(new Cutscene(this.context, +id));
+                            sManager.pushState(new Cutscene(this.context, +id, this.mapID));
                             break;
                         default:
                             break;
@@ -3785,7 +3848,7 @@ var Game;
                         if (this.MenuItems[x].name === "new") {
                             this.context.clearRect(0, 0, 800, 600);
                             sManager.popState();
-                            sManager.pushState(new Game.Cutscene(this.context, 0));
+                            sManager.pushState(new Game.Cutscene(this.context, 0, "map1"));
                             //sManager.pushState(new Explore(this.context, this.width, 'rpg'));
                         } else if (this.MenuItems[x].name === "load") {
                             if (localStorage.getItem("TileMap") === null || localStorage.getItem("Party") === null) {
@@ -3966,16 +4029,21 @@ function LevelUpDisplay(context, growth, base, name, spells) {
         context.fillText("Luck: " + base.Luc + " + " + growth.Luc, 300, 440 + (x * 20));
     }
 }
-function moveSprite(context, dx, dy, sprite) {
-    var x = dx * 64;
-    var y = dy * 64;
-
-    var cx = sprite.dx;
-    var cy = sprite.dy;
+function moveSprite(context, sx, sy, dx, dy) {
+    var x = (dx * 64) + 16;
+    var y = (dy * 64) + 16;
+    var easingAmount = 1;
     var im = new Image();
     im = this.img;
-    context.clearRect(0, 0, 800, 600);
-    context.drawImage(IMAGE_CACHE['D'], dx, dy);
+    var xDistance = x - sx;
+    var yDistance = y - sy;
+    var distance = Math.sqrt(xDistance * xDistance + yDistance * yDistance);
+
+    if (distance > 1) {
+        sx += xDistance * easingAmount;
+        sy += yDistance * easingAmount;
+    }
+    return { "x": sx, "y": sy };
     //this.interval = setInterval(this.movefunc, 1000/10);
     /*var move = requestAnimationFrame(function () {
     context.clearRect(0, 0, 800, 600);

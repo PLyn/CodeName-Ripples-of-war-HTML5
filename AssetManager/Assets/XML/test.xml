@@ -10,9 +10,9 @@
     <explore type="next" id="map3"></explore>
   </scene>
 	<scene id="1">
-    <car type="sfx"></car>
-    <hero type="dialog">You obtained a potion!</hero>
-    <potion type="item" quantity="1" itemType="consumable"></potion>
+    <hero type="dialog">I think I see a town in the distance</hero>
+    <syndra type="move" x="4" y="5"></syndra>
+    <syndra type="dialog">Hi there, you look a little lost?</syndra>
     <x type="next"></x>
   </scene>
   <scene id="2">

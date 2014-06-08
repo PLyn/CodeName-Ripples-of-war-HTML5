@@ -20,7 +20,8 @@ module Game {
         turnDelay;
         Anim: Animation;
         playerCount = 0;
-        constructor(EnemyID) {
+        mapID;
+        constructor(EnemyID, mapID) {
             super();
             //time to wait between actions
             this.turnDelay = 500;
@@ -34,6 +35,7 @@ module Game {
             //saves the next state and ID the player will go if victory is achieved
             this.nextState = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].next;
             this.nextID = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].ID;
+            this.mapID = mapID;
             //Battle queue is now in the queue variable
             this.queue = [];
             this.queue = battleList;
@@ -300,7 +302,7 @@ module Game {
                 else {
                     sManager.popState();
                     if (this.nextState === "scene") {
-                        sManager.pushState(new Cutscene(this.context2, +this.nextID));
+                        sManager.pushState(new Cutscene(this.context2, +this.nextID, this.mapID));
                     }
                 }
             }

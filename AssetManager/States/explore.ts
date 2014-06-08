@@ -11,6 +11,7 @@ module Game {
         layer2ctx;
         mapID;
         map;
+
         constructor(ctx, mapID) {
             super();
             this.x = 0;
@@ -25,7 +26,6 @@ module Game {
 
             var canvas2 = <HTMLCanvasElement> document.getElementById('layer1');
             this.layer1ctx = canvas2.getContext('2d');
-
             //this.game = game;
 
         }
@@ -35,7 +35,8 @@ module Game {
 
             TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
-            this.layer2ctx.drawImage(IMAGE_CACHE['D'],( 5 * 64) + 16, (5 * 64) + 16);
+            battleList[0].setPos((5 * 64) + 16, (5 * 64) + 16)
+            this.layer2ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
             objects.push(
                   {
                     "height": 75,
@@ -55,6 +56,11 @@ module Game {
             this.map = FormatTilemap(this.mapID);
             //var path = findPath(this.map, [8, 8], [6, 7]);
             //var x = 0;
+            var questAutoStart = QUEST.Switch[this.mapID];
+            if (questAutoStart) {
+                sManager.pushState(new Cutscene(this.layer2ctx, JSON_CACHE['location'][this.mapID][this.mapID]['ID'], this.mapID));
+                QUEST.Switch[this.mapID] = false;
+            }
 
         }
         update() {
@@ -78,7 +84,10 @@ module Game {
                         else if (typeof path !== 'undefined' && path.length > 0) {
                             if (objects[i].type !== 'menu') {
                                 var timer = setInterval(() => {
-                                    moveSprite(ctx, path[x][0], path[x][1], battleList[0]);
+                                    var coords = moveSprite(ctx, battleList[0].dx, battleList[0].dy, path[x][0], path[x][1]);
+                                    battleList[0].setPos(coords.x, coords.y);
+                                    ctx.clearRect(0, 0, 800, 600);
+                                    ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
                                     x++;
                                     if (x >= (keys.length - 1)) {
                                         clearInterval(timer);
@@ -120,10 +129,10 @@ module Game {
                         }
                     }
                 }
-                sManager.pushState(new Cutscene(this.layer2ctx, +sceneid));
+                sManager.pushState(new Cutscene(this.layer2ctx, +sceneid, this.mapID));
             }
             else if (objects[i].type === 'battle') {
-                sManager.pushState(new Battle(+objects[i].properties.ID));
+                sManager.pushState(new Battle(+objects[i].properties.ID, this.mapID));
             }
         }
         render() {}

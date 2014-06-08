@@ -1,5 +1,8 @@
 ﻿{
     "map1":  {
+        "map1": {
+            "auto":  false  
+        },  
         "helper":  {
             "defeatrival":  4
         }
@@ -9,5 +12,11 @@
             "IntroComplete":  2,
             "meetrival":  3
         }  
+    },
+    "map3": {
+        "map3":{
+            "auto":  true,
+            "ID":  1  
+        }
     }
 }
