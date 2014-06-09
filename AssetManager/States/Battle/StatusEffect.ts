@@ -3,7 +3,7 @@
     var ran = getRandomInt(0, 100);
     switch (effect) {
         case "Poison":
-            if (ran > chance) {
+            if (ran < chance) {
                 sprite.currentState = status["Poison"]; 
             }
             break;
@@ -16,8 +16,8 @@ function applyStatusEffect(context, sprite: Game.Sprite) {
     var status = STATUS.effects;
     switch (sprite.currentState) {
         case status["Poison"]:
-            sprite.Current.HP = Math.floor(sprite.Current.HP * 0.1); 
-            context.fillText(Math.floor(sprite.Current.HP * 0.1) + "", sprite.dx, sprite.dy - 10);
+            sprite.Current.HP = sprite.Current.HP - Math.floor(sprite.getTotalStats().HP * 0.2); 
+            context.fillText(Math.floor(sprite.getTotalStats().HP * 0.2) + "", sprite.dx, sprite.dy - 10);
             break;
         default:
             break;

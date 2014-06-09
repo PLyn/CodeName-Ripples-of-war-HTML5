@@ -768,7 +768,7 @@ var Game;
         function StatusManager() {
             this.effects = [];
             this.effects = {
-                "Posion": 1
+                "Poison": 2
             };
         }
         return StatusManager;
@@ -2178,7 +2178,7 @@ function applyStatus(effect, chance, sprite) {
     var ran = getRandomInt(0, 100);
     switch (effect) {
         case "Poison":
-            if (ran > chance) {
+            if (ran < chance) {
                 sprite.currentState = status["Poison"];
             }
             break;
@@ -2191,8 +2191,8 @@ function applyStatusEffect(context, sprite) {
     var status = STATUS.effects;
     switch (sprite.currentState) {
         case status["Poison"]:
-            sprite.Current.HP = Math.floor(sprite.Current.HP * 0.1);
-            context.fillText(Math.floor(sprite.Current.HP * 0.1) + "", sprite.dx, sprite.dy - 10);
+            sprite.Current.HP = sprite.Current.HP - Math.floor(sprite.getTotalStats().HP * 0.2);
+            context.fillText(Math.floor(sprite.getTotalStats().HP * 0.2) + "", sprite.dx, sprite.dy - 10);
             break;
         default:
             break;
@@ -3631,7 +3631,17 @@ var Game;
                         PARTY.remove(this.currentNode.nodeName, 0);
                     }
 
-                    //level up character to current level and add spells as well check if there is noone in the party here
+                    //level up character to current level and add spells as well check if there is noone in the party here -TODO
+                    this.nextNode();
+                    break;
+                case "ability":
+                    if (this.currentNode.getAttribute('value') === "add") {
+                        for (var i = 0; i < battleList.length; i++) {
+                            if (battleList[i].Base.ID === this.currentNode.nodeName)
+                                break;
+                        }
+                        SPELL.AddSpell(battleList[i], this.currentNode.getAttribute('spell'));
+                    }
                     this.nextNode();
                     break;
                 case "switch":

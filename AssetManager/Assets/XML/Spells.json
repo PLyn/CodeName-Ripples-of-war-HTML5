@@ -19,7 +19,7 @@
 		  "Effect": true,
           "Status":  {
             "Effect":  "Poison",
-            "Chance":  "50"    
+            "Chance":  "75"    
           }  
       },
       "Storm":  {

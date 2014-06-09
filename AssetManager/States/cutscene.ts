@@ -115,7 +115,16 @@ module Game {
                     else if (this.currentNode.getAttribute('value') === "remove") {
                         PARTY.remove(this.currentNode.nodeName, 0);
                     }
-                    //level up character to current level and add spells as well check if there is noone in the party here
+                    //level up character to current level and add spells as well check if there is noone in the party here -TODO
+                    this.nextNode();
+                    break;
+                case "ability":
+                    if (this.currentNode.getAttribute('value') === "add") {
+                        for (var i = 0; i < battleList.length; i++) {
+                            if (battleList[i].Base.ID === this.currentNode.nodeName) break;
+                        }
+                        SPELL.AddSpell(battleList[i] , this.currentNode.getAttribute('spell'));
+                    }
                     this.nextNode();
                     break;
                 case "switch":

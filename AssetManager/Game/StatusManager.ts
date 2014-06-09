@@ -5,7 +5,7 @@ module Game {
         constructor() {
             this.effects = [];
             this.effects = {
-                "Posion" : 1,
+                "Poison" : 2,
             }
         }
 

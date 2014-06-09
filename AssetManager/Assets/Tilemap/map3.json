@@ -43,7 +43,8 @@
                  "name":"syndra",
                  "properties":
                     {
-
+                     "ID": 2,
+                     "Type":"0"
                     },
                  "type":"",
                  "visible":true,
