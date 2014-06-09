@@ -51,6 +51,21 @@
                  "width":0,
                  "x":300,
                  "y":276
+                }, 
+                {
+                 "gid":27,
+                 "height":0,
+                 "name":"exit",
+                 "properties":
+                    {
+                     "ID":"map2",
+                     "Type":"0"
+                    },
+                 "type":"exit",
+                 "visible":true,
+                 "width":0,
+                 "x":573,
+                 "y":448
                 }],
          "opacity":1,
          "type":"objectgroup",

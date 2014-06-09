@@ -32,7 +32,7 @@ module Game {
             var i = 0;
             var key = Object.keys(TILESET_CACHE[index]);
             var tileset = TILESET_CACHE[index];
-            for (i = (key.length - 1); i >= 0; i--) {
+            for (i = (key.length - 1); i > 0; i--) {
                 if (tileset[i].firstgid <= tileIndex) break;
             }
             tile.img = tileset[i].image;
@@ -108,6 +108,7 @@ module Game {
                         context.fillText(tileObjects[x].name, tileObjects[x].x + 32, y - 10);
                         if (tileObjects[x].type === "exit") {
                             objects[x] = {
+                                "gid": tileObjects[x].gid,
                                 "name": tileObjects[x].name,
                                 "type": tileObjects[x].type,
                                 "properties": {
@@ -121,6 +122,7 @@ module Game {
                         }
                         else {
                             objects[x] = {
+                                "gid": tileObjects[x].gid,
                                 "name": tileObjects[x].name,
                                 "type": tileObjects[x].type,
                                 "properties": {
@@ -153,7 +155,6 @@ module Game {
                     }
                 }
                 else if (TILEDATA_CACHE[mapID].layers[layeridX].type === "objectgroup") {
-                    var objects = TILEDATA_CACHE[mapID].layers[layeridX].objects;
                     for (var x = 0; x < objects.length; x++) {
                         var tile = this.getTile(objects[x].gid, mapID);
 

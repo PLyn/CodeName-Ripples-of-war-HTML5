@@ -41,11 +41,21 @@
     <syndra type="dialog">the town is just up ahead. Let us go</syndra>
     <unknown type="dialog">*footsteps*</unknown>
     <hero type="dialog">Something is coming from that bush!</hero>
+    <Attacker type="object" value="add" x="6" y="1"></Attacker>
     <syndra type="dialog">Watch out!</syndra>
+    <Attacker type="object" value="remove" name="Assassin"></Attacker>
     <battle type="next" id="0"></battle>
   </scene>
   <scene id="4">
-    <kira type="dialog">Wow you really got stronger than me! I still remember when I could beat you with my eyes closed...Where is helper anyway? let's go find him</kira>
+    <syndra type="dialog">Nice job! you are pretty strong despite how you look</syndra>
+    <hero type="dialog">(she really doesnt let up at all...sigh)</hero>
+    <syndra type="dialog">...</syndra>
+    <hero type="dialog">huh? hey! dont leave me!!</hero>
+    <syndra type="dialog">the town is right here, it is not like you will get lost...</syndra>
+    <hero type="dialog">yeah I know...just call it a bad feeling I had</hero>
+    <syndra type="dialog">You REALLY are strange, you know that?</syndra>
+    <hero type="dialog">after these few moments, I certainly agree with you there</hero>
+    <syndra type="dialog">*smiles*...well, let's go into the town</syndra>
   <x type="next"></x>
   </scene>
 </Cutscenes>

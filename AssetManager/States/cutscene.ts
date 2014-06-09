@@ -125,6 +125,12 @@ module Game {
                         }
                         SPELL.AddSpell(battleList[i] , this.currentNode.getAttribute('spell'));
                     }
+                    else if (this.currentNode.getAttribute('value') === "remove") {
+                        for (var i = 0; i < battleList.length; i++) {
+                            if (battleList[i].Base.ID === this.currentNode.nodeName) break;
+                        }
+                        SPELL.RemoveSpell(battleList[i], this.currentNode.getAttribute('spell'));
+                    }
                     this.nextNode();
                     break;
                 case "switch":
@@ -143,7 +149,6 @@ module Game {
                     }
                     break;
                 case "move":
-                    //get xy from objects array to determine 
                     var sx; var sy; var dx; var dy;
                     var keys = Object.keys(objects);
                     for (var x = 0; x < keys.length; x++) {
@@ -158,8 +163,36 @@ module Game {
                     var coords = moveSprite(this.context2, sx, sy, dx, dy);
                     objects[x].x = coords.x;
                     objects[x].y = coords.y;
-                    this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-                    TileMap.drawMapNoObjectReset(this.context, this.mapID);
+                    this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                    TileMap.drawMapNoObjectReset(this.context2, this.mapID);
+                    this.nextNode();
+                    break;
+                case "object":
+                    if (this.currentNode.getAttribute('value') === "add") {
+                        var obj = {
+                            "gid": 262,
+                            "name": "Assassin",
+                            "type": "",
+                            "properties": {
+                                "Type": 0,
+                                "ID": 0
+                            },
+                            "width": 0,
+                            "x": +this.currentNode.getAttribute('x') * 64,
+                            "y": +this.currentNode.getAttribute('y') * 64
+                        };
+                        objects.push(obj);
+                        this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                        TileMap.drawMapNoObjectReset(this.context2, this.mapID);
+                    }
+                    else if (this.currentNode.getAttribute('value') === "remove") {
+                        for (var x = 0; x < objects.length; x++) {
+                            if (objects[x].name === this.currentNode.getAttribute('name')) {
+                                break;
+                            }
+                        }
+                        objects.splice(x, 1);
+                    }
                     this.nextNode();
                     break;
                 case "anim":

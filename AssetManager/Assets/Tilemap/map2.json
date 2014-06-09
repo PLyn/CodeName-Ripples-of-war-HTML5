@@ -32,7 +32,7 @@
                  "name":"rival",
                  "properties":
                     {
-                     "ID":"3",
+                     "ID": 3,
                      "Type":"0"
                     },
                  "type":"cut",

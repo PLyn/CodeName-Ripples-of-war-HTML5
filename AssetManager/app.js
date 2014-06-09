@@ -1289,6 +1289,7 @@ var Game;
                             context.fillText(tileObjects[x].name, tileObjects[x].x + 32, y - 10);
                             if (tileObjects[x].type === "exit") {
                                 objects[x] = {
+                                    "gid": tileObjects[x].gid,
                                     "name": tileObjects[x].name,
                                     "type": tileObjects[x].type,
                                     "properties": {
@@ -1301,6 +1302,7 @@ var Game;
                                 };
                             } else {
                                 objects[x] = {
+                                    "gid": tileObjects[x].gid,
                                     "name": tileObjects[x].name,
                                     "type": tileObjects[x].type,
                                     "properties": {
@@ -1332,7 +1334,6 @@ var Game;
                             context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[mapID].tilewidth, TILEDATA_CACHE[mapID].tileheight, worldX, worldY, TILEDATA_CACHE[mapID].tilewidth, TILEDATA_CACHE[mapID].tileheight);
                         }
                     } else if (TILEDATA_CACHE[mapID].layers[layeridX].type === "objectgroup") {
-                        var objects = TILEDATA_CACHE[mapID].layers[layeridX].objects;
                         for (var x = 0; x < objects.length; x++) {
                             var tile = _this.getTile(objects[x].gid, mapID);
 
@@ -1362,7 +1363,7 @@ var Game;
             var i = 0;
             var key = Object.keys(TILESET_CACHE[index]);
             var tileset = TILESET_CACHE[index];
-            for (i = (key.length - 1); i >= 0; i--) {
+            for (i = (key.length - 1); i > 0; i--) {
                 if (tileset[i].firstgid <= tileIndex)
                     break;
             }
@@ -3641,6 +3642,12 @@ var Game;
                                 break;
                         }
                         SPELL.AddSpell(battleList[i], this.currentNode.getAttribute('spell'));
+                    } else if (this.currentNode.getAttribute('value') === "remove") {
+                        for (var i = 0; i < battleList.length; i++) {
+                            if (battleList[i].Base.ID === this.currentNode.nodeName)
+                                break;
+                        }
+                        SPELL.RemoveSpell(battleList[i], this.currentNode.getAttribute('spell'));
                     }
                     this.nextNode();
                     break;
@@ -3659,7 +3666,6 @@ var Game;
                     }
                     break;
                 case "move":
-                    //get xy from objects array to determine
                     var sx;
                     var sy;
                     var dx;
@@ -3677,8 +3683,35 @@ var Game;
                     var coords = moveSprite(this.context2, sx, sy, dx, dy);
                     objects[x].x = coords.x;
                     objects[x].y = coords.y;
-                    this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-                    TileMap.drawMapNoObjectReset(this.context, this.mapID);
+                    this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                    TileMap.drawMapNoObjectReset(this.context2, this.mapID);
+                    this.nextNode();
+                    break;
+                case "object":
+                    if (this.currentNode.getAttribute('value') === "add") {
+                        var obj = {
+                            "gid": 262,
+                            "name": "Assassin",
+                            "type": "",
+                            "properties": {
+                                "Type": 0,
+                                "ID": 0
+                            },
+                            "width": 0,
+                            "x": +this.currentNode.getAttribute('x') * 64,
+                            "y": +this.currentNode.getAttribute('y') * 64
+                        };
+                        objects.push(obj);
+                        this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                        TileMap.drawMapNoObjectReset(this.context2, this.mapID);
+                    } else if (this.currentNode.getAttribute('value') === "remove") {
+                        for (var x = 0; x < objects.length; x++) {
+                            if (objects[x].name === this.currentNode.getAttribute('name')) {
+                                break;
+                            }
+                        }
+                        objects.splice(x, 1);
+                    }
                     this.nextNode();
                     break;
                 case "anim":

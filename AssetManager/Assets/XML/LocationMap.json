@@ -8,8 +8,9 @@
         }
     },
     "map2":  {
-        "rival": {
-        }  
+        "map1": {
+            "auto":  false  
+        }
     },
     "map3": {
         "map3":{
