@@ -178,8 +178,8 @@ module Game {
                                 "ID": 0
                             },
                             "width": 0,
-                            "x": +this.currentNode.getAttribute('x') * 64,
-                            "y": +this.currentNode.getAttribute('y') * 64
+                            "x": +this.currentNode.getAttribute('x') * 32,
+                            "y": +this.currentNode.getAttribute('y') * 32
                         };
                         objects.push(obj);
                         this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);

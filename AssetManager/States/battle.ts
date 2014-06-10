@@ -51,7 +51,7 @@ module Game {
                 }
                 enemy = JSON_CACHE['character']['Enemies'][ekeys[i]];
                 this.e1 = new Sprite(IMAGE_CACHE[enemy.Img], eGroup[e].x, eGroup[e].y);
-                this.e1.setBaseAttributes(ekeys[i], enemy.HP, enemy.MP, enemy.Atk, enemy.Def, enemy.MDef, enemy.Spd, enemy.Luc, 1);
+               // this.e1.setBaseAttributes(ekeys[i], enemy.HP, enemy.MP, enemy.Atk, enemy.Def, enemy.MDef, enemy.Spd, enemy.Luc, 1);
                 battleList.push(this.e1);
             }
             /*this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 24, 22);

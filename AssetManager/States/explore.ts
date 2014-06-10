@@ -35,7 +35,7 @@ module Game {
 
             TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
-            battleList[0].setPos((5 * 64) + 16, (5 * 64) + 16)
+            battleList[0].setPos((5 * 32) + 16, (5 * 32) + 16)
             this.layer2ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
             objects.push(
                   {
@@ -51,7 +51,7 @@ module Game {
                     "y": 5
                 }
                 );
-            //battleList[0].setPos((8*64) + 16, (8*64) + 16);
+            //battleList[0].setPos((8*32) + 16, (8*32) + 16);
             //battleList[0].render(this.layer2ctx);
             this.map = FormatTilemap(this.mapID);
             //var path = findPath(this.map, [8, 8], [6, 7]);
@@ -74,7 +74,7 @@ module Game {
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {  
                         var path = [];   
-                        path = findPath(this.map, [5, 5], [Math.floor(this.mx / 64), Math.floor(this.my / 64)]);
+                        path = findPath(this.map, [5, 5], [Math.floor(this.mx / 32), Math.floor(this.my / 32)]);
                         var keys = Object.keys(path);
                         var ctx = this.layer2ctx;
                         var x = 0;

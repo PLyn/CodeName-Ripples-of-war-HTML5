@@ -1,6 +1,6 @@
 ﻿function moveSprite(context, sx, sy, dx, dy) { //change to coordinates instead fo sprite to allow for npc to be oved with this function
-    var x = (dx * 64) + 16;
-    var y = (dy * 64) + 16;
+    var x = dx * 32;
+    var y = dy * 32;
     var easingAmount = 1;
     var im = new Image();
     im = this.img;

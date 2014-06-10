@@ -77,31 +77,32 @@ declare module Game {
         public HP: any;
         public MP: any;
         public Atk: any;
+        public MAtk: any;
         public Def: any;
         public Spd: any;
         public MDef: any;
         public Luc: any;
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
     }
 }
 declare module Game {
     class Accessory extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
     }
 }
 declare module Game {
     class Body extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
     }
 }
 declare module Game {
     class Feet extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
     }
 }
 declare module Game {
     class Helm extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
     }
 }
 declare var ITEM: any;
@@ -117,7 +118,7 @@ declare module Game {
 }
 declare module Game {
     class Weapon extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any);
+        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
     }
 }
 declare var GAME_OBJECTS: any[];
@@ -137,13 +138,6 @@ declare module Game {
         public setPos(x: any, y: any): void;
     }
 }
-declare var statusEffects: {
-    "normal": number;
-    "dead": number;
-    "poison": number;
-    "sleep": number;
-    "paralyze": number;
-};
 declare module Game {
     class Sprite extends GameObject {
         public Level: any;
@@ -157,13 +151,15 @@ declare module Game {
         public currentState: any;
         public growth: any;
         public defend: boolean;
+        public ElementResist: any;
+        public StatusResist: any;
         public mox: any;
         public moy: any;
         public context: any;
         public interval: any;
         constructor(img: any, dx?: any, dy?: any, sx?: any, sy?: any, w?: any, h?: any, scale?: any);
-        public setBaseAttributes(id: any, hp: any, mp: any, atk: any, def: any, mdef: any, spd: any, luc: any, type: any): void;
-        public setModifiedAttributes(id?: any, hp?: any, mp?: any, atk?: any, def?: any, mdef?: any, spd?: any, luc?: any, type?: any): void;
+        public setBaseAttributes(id: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any, type: any): void;
+        public setModifiedAttributes(id?: any, hp?: any, mp?: any, atk?: any, def?: any, spd?: any, matk?: any, mdef?: any, luc?: any, type?: any): void;
         public equipItem(name: any, equipment: Equipable, type: any): void;
         public unequipItem(type: any): void;
         public getTotalStats(): {
@@ -173,6 +169,7 @@ declare module Game {
             "Atk": any;
             "Def": any;
             "Spd": any;
+            "MAtk": any;
             "MDef": any;
             "Luc": any;
             "Type": any;
@@ -358,6 +355,10 @@ declare module Game {
         public removeObject(objName: any): void;
     }
 }
+declare function Attack(context: CanvasRenderingContext2D, Attacker: Game.Sprite, Target: Game.Sprite): {
+    "Atk": Game.Sprite;
+    "Tar": Game.Sprite;
+};
 declare module Game {
     class State {
         constructor();
@@ -369,62 +370,6 @@ declare module Game {
         public destroy(): void;
     }
 }
-declare var BattleQ: any[];
-declare var battleList: any[];
-declare var menuOptions: any[];
-declare module Game {
-    class Battle_Old extends State {
-        public ctx: CanvasRenderingContext2D;
-        public ctx2: CanvasRenderingContext2D;
-        public p1: Sprite;
-        public p2: Sprite;
-        public e1: Sprite;
-        public e2: Sprite;
-        public mx: any;
-        public my: any;
-        public menuOptions: Object[];
-        public currentPlayer: Sprite;
-        public target: Sprite;
-        public newTime: number;
-        public battleKeys: any;
-        public currentkey: number;
-        public enemySelect: any;
-        public drawCommands: any;
-        public endTime: number;
-        public currentHP: any;
-        public formation: any;
-        public command: any;
-        public spellList: any;
-        public currentSpell: any;
-        public spellSelect: boolean;
-        public status: any;
-        public applyStatus: boolean;
-        public EnemyID: any;
-        public nextState: any;
-        constructor(ctx: any, ctx2: any, EnemyID: any);
-        public Action(): void;
-        public SelectSpell(): void;
-        public Target(time: any): void;
-        public statusGUI(): void;
-        public newTurn(): void;
-        public PlayerMenuInit(): void;
-        public renderActors(): void;
-        public battleOver(): boolean;
-        public playerAttack(attacker: any, target: any): void;
-        public playerSpell(caster: any, spell: any, target: any): void;
-        public checkSpriteState(target: any): void;
-        public init(): void;
-        public update(): void;
-        public render(): void;
-        public pause(): void;
-        public resume(): void;
-        public destroy(): void;
-    }
-}
-declare function Attack(context: CanvasRenderingContext2D, Attacker: Game.Sprite, Target: Game.Sprite): {
-    "Atk": Game.Sprite;
-    "Tar": Game.Sprite;
-};
 declare var battleList: any[];
 declare module Game {
     class Battle extends State {
@@ -471,7 +416,7 @@ declare function floatingDamageTextAll(Amt: any, sprites: any): void;
 declare function initializeMenuBounds(): any[];
 declare function input_template(len: any, bounds: any, f: any): void;
 declare function SpellSelectDialog(sp: Game.Sprite, context: CanvasRenderingContext2D): any[];
-declare function castSpellSingle(context: CanvasRenderingContext2D, spell: any, sp: Game.Sprite, caster?: Game.Sprite): Game.Sprite;
+declare function castSpellSingle(context: CanvasRenderingContext2D, spell: any, sp: Game.Sprite, caster: Game.Sprite): Game.Sprite;
 declare function castSpellAll(context: CanvasRenderingContext2D, spell: any, queue: Game.Sprite[], caster?: Game.Sprite): Game.Sprite[];
 declare function StateDialogs(context: CanvasRenderingContext2D, state: any): void;
 declare var equips: any[];

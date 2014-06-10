@@ -34,14 +34,14 @@
     <Content Include="Assets\Image\status.png" />
     <Content Include="Assets\Image\tick.png" />
     <Content Include="Assets\Music\theme.mp3" />
-    <Content Include="Assets\Tilemap\charset.png" />
-    <Content Include="Assets\Tilemap\obj_misk_atlas.png" />
     <Content Include="Assets\Sound\car.mp3" />
     <Content Include="Assets\Sound\punch.mp3" />
     <Content Include="Assets\Sound\wood.mp3" />
     <Content Include="Assets\Image\star.png" />
     <Content Include="Assets\Atlas\test.png" />
+    <Content Include="Assets\Tilemap\charset.png" />
     <Content Include="Assets\Tilemap\mapTileset.png" />
+    <Content Include="Assets\Tilemap\Tileset.png" />
     <Content Include="Assets\XML\test.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -75,7 +75,6 @@
     <TypeScriptCompile Include="Game\InputManager.ts" />
     <TypeScriptCompile Include="Game\AssetManager.ts" />
     <TypeScriptCompile Include="Game\TilemapManager.ts" />
-    <TypeScriptCompile Include="States\battle.ts" />
     <TypeScriptCompile Include="States\Battle\Attack.ts" />
     <TypeScriptCompile Include="States\Battle\Battle_Remake.ts" />
     <TypeScriptCompile Include="States\Battle\StatusEffect.ts" />
@@ -117,8 +116,6 @@
     <Content Include="Assets\Sound\car.ogg" />
     <Content Include="Assets\Sound\punch.ogg" />
     <Content Include="Assets\Sound\wood.ogg" />
-    <Content Include="Assets\Tilemap\nextmap.json" />
-    <Content Include="Assets\Tilemap\newmap.json" />
     <Content Include="Assets\XML\Equipment.json" />
     <Content Include="Assets\XML\Formation.json" />
     <Content Include="Assets\XML\Spells.json" />
@@ -129,6 +126,7 @@
     <Content Include="Assets\Tilemap\map2.json" />
     <Content Include="Assets\XML\LocationMap.json" />
     <Content Include="Assets\Tilemap\map3.json" />
+    <Content Include="Assets\Tilemap\Timor_Grasslands.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

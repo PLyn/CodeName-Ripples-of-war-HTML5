@@ -7,6 +7,7 @@
             "Atk": 0,
             "Def": 5,
             "Spd": 0,
+            "MAtk": 0,
             "MDef": 0,
             "Luc": 0
         }
@@ -19,6 +20,7 @@
             "Atk": 5,
             "Def": 0,
             "Spd": 0,
+            "MAtk": 0,
             "MDef": 0,
             "Luc": 0
         },
@@ -29,6 +31,7 @@
             "Atk": 2,
             "Def": 0,
             "Spd": 0,
+            "MAtk": 0,
             "MDef": 0,
             "Luc": 0
         }
@@ -41,6 +44,7 @@
             "Atk": 0,
             "Def": 10,
             "Spd": 0,
+            "MAtk": 0,
             "MDef": 0,
             "Luc": 0
         }
@@ -53,6 +57,7 @@
             "Atk": 0,
             "Def": 2,
             "Spd": 5,
+            "MAtk": 0,
             "MDef": 0,
             "Luc": 0
         }

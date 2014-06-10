@@ -36,7 +36,7 @@ module Game {
             //add stats to modified
             for (var i = 0; i < this.battleKeys.length; i++) {
                 if (battleList[i].Base.Type === 0) {
-                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] + this.bonus.HP, battleList[i].Modified['MP'] + this.bonus.MP, battleList[i].Modified['Atk'] + this.bonus.Atk, battleList[i].Modified['Def'] + this.bonus.Def, battleList[i].Modified['MDef'] + this.bonus.MDef, battleList[i].Modified['Spd'] + this.bonus.Spd, battleList[i].Modified['Luc'] + this.bonus.Luc, battleList[i].Modified.Type);
+                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] + this.bonus.HP, battleList[i].Modified['MP'] + this.bonus.MP, battleList[i].Modified['Atk'] + this.bonus.Atk, battleList[i].Modified['Def'] + this.bonus.Def, battleList[i].Modified['Spd'] + this.bonus.Spd, battleList[i].Modified['MAtk'] + this.bonus.MAtk,battleList[i].Modified['MDef'] + this.bonus.MDef, battleList[i].Modified['Luc'] + this.bonus.Luc, battleList[i].Modified.Type);
                 }
             }
         }
@@ -44,7 +44,7 @@ module Game {
             //remove bonuses before applying new onw
             for (var i = 0; i < this.battleKeys.length; i++) {
                 if (battleList[i].Base.Type === 0) {
-                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] - this.bonus.HP, battleList[i].Modified['MP'] - this.bonus.MP, battleList[i].Modified['Atk'] - this.bonus.Atk, battleList[i].Modified['Def'] - this.bonus.Def, battleList[i].Modified['MDef'] - this.bonus.MDef, battleList[i].Modified['Spd'] - this.bonus.Spd, battleList[i].Modified['Luc'] - this.bonus.Luc, battleList[i].Modified.Type);
+                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] - this.bonus.HP, battleList[i].Modified['MP'] - this.bonus.MP, battleList[i].Modified['Atk'] - this.bonus.Atk, battleList[i].Modified['Def'] - this.bonus.Def, battleList[i].Modified['Spd'] - this.bonus.Spd, battleList[i].Modified['MAtk'] - this.bonus.MAtk,battleList[i].Modified['MDef'] - this.bonus.MDef, battleList[i].Modified['Spd'] - this.bonus.Spd, battleList[i].Modified['Luc'] - this.bonus.Luc, battleList[i].Modified.Type);
                 }
             }
             //find reference to new formation
@@ -61,13 +61,14 @@ module Game {
                 "Atk": JSON_CACHE['formation']['Formations'][this.current].bonus.Atk,
                 "Def": JSON_CACHE['formation']['Formations'][this.current].bonus.Def,
                 "Spd": JSON_CACHE['formation']['Formations'][this.current].bonus.Spd,
+                "MAtk": JSON_CACHE['formation']['Formations'][this.current].bonus.MAtk,
                 "MDef": JSON_CACHE['formation']['Formations'][this.current].bonus.MDef,
                 "Luc": JSON_CACHE['formation']['Formations'][this.current].bonus.Luc
             };
             //add stats to modified
             for (var i = 0; i < this.battleKeys.length; i++) {
                 if (battleList[i].Base.Type === 0) {
-                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] + this.bonus.HP, battleList[i].Modified['MP'] + this.bonus.MP, battleList[i].Modified['Atk'] + this.bonus.Atk, battleList[i].Modified['Def'] + this.bonus.Def, battleList[i].Modified['MDef'] + this.bonus.MDef, battleList[i].Modified['Spd'] + this.bonus.Spd, battleList[i].Modified['Luc'] + this.bonus.Luc, battleList[i].Modified.Type);
+                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] + this.bonus.HP, battleList[i].Modified['MP'] + this.bonus.MP, battleList[i].Modified['Atk'] + this.bonus.Atk, battleList[i].Modified['Def'] + this.bonus.Def, battleList[i].Modified['Spd'] + this.bonus.Spd, battleList[i].Modified['MAtk'] + this.bonus.MAtk, battleList[i].Modified['MDef'] + this.bonus.MDef, battleList[i].Modified['Luc'] + this.bonus.Luc, battleList[i].Modified.Type);
                 }
             }
             //add positions 

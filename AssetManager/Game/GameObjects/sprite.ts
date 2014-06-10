@@ -1,11 +1,4 @@
 ﻿///<reference path='gameobject.ts' />
-var statusEffects = {
-    "normal": 0,
-    "dead": 1,
-    "poison": 2,
-    "sleep": 3,
-    "paralyze": 4
-}
 module Game {
     export class Sprite extends GameObject {
         Level;
@@ -19,6 +12,8 @@ module Game {
         currentState;
         growth;
         defend = false;
+        ElementResist;
+        StatusResist;
 
         mox; moy; context; interval;
         //all the base attributes and methods are to be added here, this will come when
@@ -42,37 +37,31 @@ module Game {
                 "Atk": 0,
                 "Def": 0,
                 "Spd": 0,
+                "MAtk": 0,
                 "MDef": 0,
                 "Luc": 0,
                 "Type": null
             };
-            this.Modified =
-            {
-                "ID": null,
-                "HP": 0,
-                "MP": 0,
-                "Atk": 0,
-                "Def": 0,
-                "Spd": 0,
-                "MDef": 0,
-                "Luc": 0,
-                "Type": null
+            this.Modified = this.Base;
+            this.Current = this.Base;
+            this.ElementResist = {
+                "Physical": 0,
+                "Fire": 0,
+                "Ice": 0,
+                "Thunder": 0,
+                "Wind": 0, 
+                "Earth": 0,
+                "Light": 0, 
+                "Dark": 0,
             };
-            this.Current =
-            {
-                "ID": null,
-                "HP": 0,
-                "MP": 0,
-                "Atk": 0,
-                "Def": 0,
-                "Spd": 0,
-                "MDef": 0,
-                "Luc": 0,
-                "Type": null
+            this.StatusResist = {
+                "Poison": 0,
+                "Paralysis": 0,
+                "Sleep": 0
             };
             this.Level = 1;
         }
-        setBaseAttributes(id, hp, mp, atk, def, mdef, spd, luc, type) {
+        setBaseAttributes(id, hp, mp, atk, def, spd, matk, mdef,luc, type) {
             this.Base = 
             {
                 "ID" : id,
@@ -80,13 +69,14 @@ module Game {
                 "MP" : mp || 0,
                 "Atk" : atk || 0,
                 "Def" : def || 0,
-                "Spd" : spd || 0,
+                "Spd": spd || 0,
+                "MAtk": matk || 0,
                 "MDef" : mdef || 0,
                 "Luc" : luc || 0,
                 "Type" : type,
             };
         }
-        setModifiedAttributes(id?, hp?, mp?, atk?, def?, mdef?, spd?, luc?, type?) {
+        setModifiedAttributes(id?, hp?, mp?, atk?, def?, spd?, matk?, mdef?, luc?, type?) {
             this.Modified =
             {
                 "ID": id,
@@ -95,6 +85,7 @@ module Game {
                 "Atk": atk || 0,
                 "Def": def || 0,
                 "Spd": spd || 0,
+                "MAtk": matk || 0,
                 "MDef": mdef || 0,
                 "Luc": luc || 0,
                 "Type": type,
@@ -104,7 +95,7 @@ module Game {
         equipItem(name, equipment: Equipable, type) {
             this.Equipment[type] = name;
 
-                this.setModifiedAttributes(name, this.Modified['HP'] + equipment.HP, this.Modified['MP'] + equipment.MP, this.Modified['Atk'] + equipment.Atk, this.Modified['Def'] + equipment.Def, this.Modified['MDef'] + equipment.MDef, this.Modified['Spd'] + equipment.Spd, this.Modified['Luc'] + equipment.Luc, type);
+                this.setModifiedAttributes(name, this.Modified['HP'] + equipment.HP, this.Modified['MP'] + equipment.MP, this.Modified['Atk'] + equipment.Atk, this.Modified['Def'] + equipment.Def, this.Modified['Spd'] + equipment.Spd,this.Modified['MAtk'] + equipment.MAtk, this.Modified['MDef'] + equipment.MDef, this.Modified['Luc'] + equipment.Luc, type);
         }
         unequipItem(type) {
             if (this.Equipment[type] !== null) {
@@ -147,7 +138,7 @@ module Game {
                     }
                 }
                 this.setModifiedAttributes(key, this.Modified['HP'] - item.HP, this.Modified['MP'] - item.MP, this.Modified['Atk'] - item.Atk, this.Modified['Def'] - item.Def
-                    , this.Modified['MDef'] - item.MDef, this.Modified['Spd'] - item.Spd, this.Modified['Luc'] - item.Luc, type);
+                    , this.Modified['Spd'] - item.Spd, this.Modified['MAtk'] - item.MAtk, this.Modified['MDef'] - item.MDef,  this.Modified['Luc'] - item.Luc, type);
                 this.Equipment[type] = null;
             }
         }
@@ -159,6 +150,7 @@ module Game {
                 "Atk": this.Base['Atk'] + this.Modified['Atk'],
                 "Def": this.Base['Def'] + this.Modified['Def'],
                 "Spd": this.Base['Spd'] + this.Modified['Spd'],
+                "MAtk": this.Base['MAtk'] + this.Modified['MAtk'],
                 "MDef": this.Base['MDef'] + this.Modified['MDef'],
                 "Luc": this.Base['Luc'] + this.Modified['Luc'],
                 "Type": this.Base['Type']

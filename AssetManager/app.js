@@ -154,14 +154,14 @@ var Game;
 
             for (var i = 0; i < this.battleKeys.length; i++) {
                 if (battleList[i].Base.Type === 0) {
-                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] + this.bonus.HP, battleList[i].Modified['MP'] + this.bonus.MP, battleList[i].Modified['Atk'] + this.bonus.Atk, battleList[i].Modified['Def'] + this.bonus.Def, battleList[i].Modified['MDef'] + this.bonus.MDef, battleList[i].Modified['Spd'] + this.bonus.Spd, battleList[i].Modified['Luc'] + this.bonus.Luc, battleList[i].Modified.Type);
+                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] + this.bonus.HP, battleList[i].Modified['MP'] + this.bonus.MP, battleList[i].Modified['Atk'] + this.bonus.Atk, battleList[i].Modified['Def'] + this.bonus.Def, battleList[i].Modified['Spd'] + this.bonus.Spd, battleList[i].Modified['MAtk'] + this.bonus.MAtk, battleList[i].Modified['MDef'] + this.bonus.MDef, battleList[i].Modified['Luc'] + this.bonus.Luc, battleList[i].Modified.Type);
                 }
             }
         }
         BattleFormation.prototype.setFormation = function (formation) {
             for (var i = 0; i < this.battleKeys.length; i++) {
                 if (battleList[i].Base.Type === 0) {
-                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] - this.bonus.HP, battleList[i].Modified['MP'] - this.bonus.MP, battleList[i].Modified['Atk'] - this.bonus.Atk, battleList[i].Modified['Def'] - this.bonus.Def, battleList[i].Modified['MDef'] - this.bonus.MDef, battleList[i].Modified['Spd'] - this.bonus.Spd, battleList[i].Modified['Luc'] - this.bonus.Luc, battleList[i].Modified.Type);
+                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] - this.bonus.HP, battleList[i].Modified['MP'] - this.bonus.MP, battleList[i].Modified['Atk'] - this.bonus.Atk, battleList[i].Modified['Def'] - this.bonus.Def, battleList[i].Modified['Spd'] - this.bonus.Spd, battleList[i].Modified['MAtk'] - this.bonus.MAtk, battleList[i].Modified['MDef'] - this.bonus.MDef, battleList[i].Modified['Spd'] - this.bonus.Spd, battleList[i].Modified['Luc'] - this.bonus.Luc, battleList[i].Modified.Type);
                 }
             }
 
@@ -180,13 +180,14 @@ var Game;
                 "Atk": JSON_CACHE['formation']['Formations'][this.current].bonus.Atk,
                 "Def": JSON_CACHE['formation']['Formations'][this.current].bonus.Def,
                 "Spd": JSON_CACHE['formation']['Formations'][this.current].bonus.Spd,
+                "MAtk": JSON_CACHE['formation']['Formations'][this.current].bonus.MAtk,
                 "MDef": JSON_CACHE['formation']['Formations'][this.current].bonus.MDef,
                 "Luc": JSON_CACHE['formation']['Formations'][this.current].bonus.Luc
             };
 
             for (var i = 0; i < this.battleKeys.length; i++) {
                 if (battleList[i].Base.Type === 0) {
-                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] + this.bonus.HP, battleList[i].Modified['MP'] + this.bonus.MP, battleList[i].Modified['Atk'] + this.bonus.Atk, battleList[i].Modified['Def'] + this.bonus.Def, battleList[i].Modified['MDef'] + this.bonus.MDef, battleList[i].Modified['Spd'] + this.bonus.Spd, battleList[i].Modified['Luc'] + this.bonus.Luc, battleList[i].Modified.Type);
+                    battleList[i].setModifiedAttributes(battleList[i].Modified.ID, battleList[i].Modified['HP'] + this.bonus.HP, battleList[i].Modified['MP'] + this.bonus.MP, battleList[i].Modified['Atk'] + this.bonus.Atk, battleList[i].Modified['Def'] + this.bonus.Def, battleList[i].Modified['Spd'] + this.bonus.Spd, battleList[i].Modified['MAtk'] + this.bonus.MAtk, battleList[i].Modified['MDef'] + this.bonus.MDef, battleList[i].Modified['Luc'] + this.bonus.Luc, battleList[i].Modified.Type);
                 }
             }
 
@@ -256,7 +257,7 @@ var Game;
 var Game;
 (function (Game) {
     var Equipable = (function () {
-        function Equipable(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
+        function Equipable(name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc) {
             this.Name = name;
             this.Desc = desc;
             this.Type = type;
@@ -265,6 +266,7 @@ var Game;
             this.Atk = atk || 0;
             this.Def = def || 0;
             this.Spd = spd || 0;
+            this.MAtk = matk || 0;
             this.MDef = mdef || 0;
             this.Luc = luc || 0;
         }
@@ -283,8 +285,8 @@ var Game;
 (function (Game) {
     var Accessory = (function (_super) {
         __extends(Accessory, _super);
-        function Accessory(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
+        function Accessory(name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc);
         }
         return Accessory;
     })(Game.Equipable);
@@ -295,8 +297,8 @@ var Game;
 (function (Game) {
     var Body = (function (_super) {
         __extends(Body, _super);
-        function Body(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
+        function Body(name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc);
         }
         return Body;
     })(Game.Equipable);
@@ -307,8 +309,8 @@ var Game;
 (function (Game) {
     var Feet = (function (_super) {
         __extends(Feet, _super);
-        function Feet(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
+        function Feet(name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc);
         }
         return Feet;
     })(Game.Equipable);
@@ -319,8 +321,8 @@ var Game;
 (function (Game) {
     var Helm = (function (_super) {
         __extends(Helm, _super);
-        function Helm(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
+        function Helm(name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc);
         }
         return Helm;
     })(Game.Equipable);
@@ -367,8 +369,8 @@ var Game;
 (function (Game) {
     var Weapon = (function (_super) {
         __extends(Weapon, _super);
-        function Weapon(name, desc, type, hp, mp, atk, def, mdef, spd, luc) {
-            _super.call(this, name, desc, type, hp, mp, atk, def, mdef, spd, luc);
+        function Weapon(name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc) {
+            _super.call(this, name, desc, type, hp, mp, atk, def, spd, matk, mdef, luc);
         }
         return Weapon;
     })(Game.Equipable);
@@ -412,13 +414,6 @@ var Game;
     Game.GameObject = GameObject;
 })(Game || (Game = {}));
 ///<reference path='gameobject.ts' />
-var statusEffects = {
-    "normal": 0,
-    "dead": 1,
-    "poison": 2,
-    "sleep": 3,
-    "paralyze": 4
-};
 var Game;
 (function (Game) {
     var Sprite = (function (_super) {
@@ -446,35 +441,31 @@ var Game;
                 "Atk": 0,
                 "Def": 0,
                 "Spd": 0,
+                "MAtk": 0,
                 "MDef": 0,
                 "Luc": 0,
                 "Type": null
             };
-            this.Modified = {
-                "ID": null,
-                "HP": 0,
-                "MP": 0,
-                "Atk": 0,
-                "Def": 0,
-                "Spd": 0,
-                "MDef": 0,
-                "Luc": 0,
-                "Type": null
+            this.Modified = this.Base;
+            this.Current = this.Base;
+            this.ElementResist = {
+                "Physical": 0,
+                "Fire": 0,
+                "Ice": 0,
+                "Thunder": 0,
+                "Wind": 0,
+                "Earth": 0,
+                "Light": 0,
+                "Dark": 0
             };
-            this.Current = {
-                "ID": null,
-                "HP": 0,
-                "MP": 0,
-                "Atk": 0,
-                "Def": 0,
-                "Spd": 0,
-                "MDef": 0,
-                "Luc": 0,
-                "Type": null
+            this.StatusResist = {
+                "Poison": 0,
+                "Paralysis": 0,
+                "Sleep": 0
             };
             this.Level = 1;
         }
-        Sprite.prototype.setBaseAttributes = function (id, hp, mp, atk, def, mdef, spd, luc, type) {
+        Sprite.prototype.setBaseAttributes = function (id, hp, mp, atk, def, spd, matk, mdef, luc, type) {
             this.Base = {
                 "ID": id,
                 "HP": hp,
@@ -482,12 +473,13 @@ var Game;
                 "Atk": atk || 0,
                 "Def": def || 0,
                 "Spd": spd || 0,
+                "MAtk": matk || 0,
                 "MDef": mdef || 0,
                 "Luc": luc || 0,
                 "Type": type
             };
         };
-        Sprite.prototype.setModifiedAttributes = function (id, hp, mp, atk, def, mdef, spd, luc, type) {
+        Sprite.prototype.setModifiedAttributes = function (id, hp, mp, atk, def, spd, matk, mdef, luc, type) {
             this.Modified = {
                 "ID": id,
                 "HP": hp,
@@ -495,6 +487,7 @@ var Game;
                 "Atk": atk || 0,
                 "Def": def || 0,
                 "Spd": spd || 0,
+                "MAtk": matk || 0,
                 "MDef": mdef || 0,
                 "Luc": luc || 0,
                 "Type": type
@@ -504,7 +497,7 @@ var Game;
         Sprite.prototype.equipItem = function (name, equipment, type) {
             this.Equipment[type] = name;
 
-            this.setModifiedAttributes(name, this.Modified['HP'] + equipment.HP, this.Modified['MP'] + equipment.MP, this.Modified['Atk'] + equipment.Atk, this.Modified['Def'] + equipment.Def, this.Modified['MDef'] + equipment.MDef, this.Modified['Spd'] + equipment.Spd, this.Modified['Luc'] + equipment.Luc, type);
+            this.setModifiedAttributes(name, this.Modified['HP'] + equipment.HP, this.Modified['MP'] + equipment.MP, this.Modified['Atk'] + equipment.Atk, this.Modified['Def'] + equipment.Def, this.Modified['Spd'] + equipment.Spd, this.Modified['MAtk'] + equipment.MAtk, this.Modified['MDef'] + equipment.MDef, this.Modified['Luc'] + equipment.Luc, type);
         };
         Sprite.prototype.unequipItem = function (type) {
             if (this.Equipment[type] !== null) {
@@ -543,7 +536,7 @@ var Game;
                         }
                     }
                 }
-                this.setModifiedAttributes(key, this.Modified['HP'] - item.HP, this.Modified['MP'] - item.MP, this.Modified['Atk'] - item.Atk, this.Modified['Def'] - item.Def, this.Modified['MDef'] - item.MDef, this.Modified['Spd'] - item.Spd, this.Modified['Luc'] - item.Luc, type);
+                this.setModifiedAttributes(key, this.Modified['HP'] - item.HP, this.Modified['MP'] - item.MP, this.Modified['Atk'] - item.Atk, this.Modified['Def'] - item.Def, this.Modified['Spd'] - item.Spd, this.Modified['MAtk'] - item.MAtk, this.Modified['MDef'] - item.MDef, this.Modified['Luc'] - item.Luc, type);
                 this.Equipment[type] = null;
             }
         };
@@ -555,6 +548,7 @@ var Game;
                 "Atk": this.Base['Atk'] + this.Modified['Atk'],
                 "Def": this.Base['Def'] + this.Modified['Def'],
                 "Spd": this.Base['Spd'] + this.Modified['Spd'],
+                "MAtk": this.Base['MAtk'] + this.Modified['MAtk'],
                 "MDef": this.Base['MDef'] + this.Modified['MDef'],
                 "Luc": this.Base['Luc'] + this.Modified['Luc'],
                 "Type": this.Base['Type']
@@ -582,7 +576,7 @@ var Game;
                     if (char === keys[s]) {
                         var b = JSON_CACHE['character']['Party'][keys[s]];
                         var p1 = new Game.Sprite(IMAGE_CACHE[b.Img], 0, 0);
-                        p1.setBaseAttributes(keys[s], b.HP, b.MP, b.Atk, b.Def, b.MDef, b.Spd, b.Luc, type);
+                        p1.setBaseAttributes(keys[s], b.HP, b.MP, b.Atk, b.Def, b.Spd, b.MAtk, b.MDef, b.Luc, type);
 
                         //p1.setBaseAttributes('hero', 10, 0, 4, 1, 1, 1, 1, 0);
                         p1.growth = b.growth;
@@ -872,7 +866,8 @@ var Game;
                 Tileset: {
                     map1: 'Assets/Tilemap/map1.json',
                     map2: 'Assets/Tilemap/map2.json',
-                    map3: 'Assets/Tilemap/map3.json'
+                    map3: 'Assets/Tilemap/map3.json',
+                    Timor_Grasslands: 'Assets/Tilemap/Timor_Grasslands.json'
                 },
                 XML: {
                     chapter: 'Assets/XML/test.xml'
@@ -1342,7 +1337,7 @@ var Game;
 
                             setStyle(context, 'Calibri', '12pt', 'black', 'bold', 'italic', 'center');
                             context.drawImage(tile.img, tile.px, tile.py, w, h, objects[x].x, objects[x].y, w, h);
-                            context.fillText(objects[x].name, objects[x].x + 32, objects[x].y - 10);
+                            context.fillText(objects[x].name, objects[x].x + 16, objects[x].y - 10);
                         }
                     }
                 }
@@ -1418,6 +1413,27 @@ var Game;
     })();
     Game.Tilemap = Tilemap;
 })(Game || (Game = {}));
+function Attack(context, Attacker, Target) {
+    var dmg = Attacker.Base.Atk;
+    if (Target.defend) {
+        dmg = Math.floor(dmg / 2);
+        Target.defend = false;
+    }
+    var def = Target.Base.Def;
+    var result = dmg - def;
+
+    if (result < 0) {
+        result = 0;
+    }
+
+    //add check if status is applied here, possible statuses could be
+    Target.Current.HP -= result;
+    if (Target.Current.HP < 0) {
+        Target.Current.HP = 0;
+    }
+    context.fillText(result + "", Target.dx, Target.dy - 10);
+    return { "Atk": Attacker, "Tar": Target };
+}
 var Game;
 (function (Game) {
     var State = (function () {
@@ -1442,430 +1458,6 @@ var Game;
     })();
     Game.State = State;
 })(Game || (Game = {}));
-///<reference path='State.ts' />
-var BattleQ = [];
-var battleList = [];
-var menuOptions = [];
-var Game;
-(function (Game) {
-    var Battle_Old = (function (_super) {
-        __extends(Battle_Old, _super);
-        function Battle_Old(ctx, ctx2, EnemyID) {
-            _super.call(this);
-            this.newTime = 0;
-            this.currentkey = 0;
-            this.endTime = 0;
-            this.spellSelect = false;
-            this.applyStatus = true;
-            this.ctx = ctx;
-            this.ctx2 = ctx2;
-            this.spellList = [];
-            this.EnemyID = EnemyID;
-
-            this.nextState = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID].next;
-            var enemy;
-            var eGroup = JSON_CACHE['Enemies']['EnemyGroups'][EnemyID]['pos'];
-            var egroupkeys = Object.keys(eGroup);
-            var ekeys = Object.keys(JSON_CACHE['character']['Enemies']);
-            for (var e = 0; e < egroupkeys.length; e++) {
-                for (var i = 0; i < ekeys.length; i++) {
-                    if (eGroup[e].id === ekeys[i]) {
-                        break;
-                    }
-                }
-                enemy = JSON_CACHE['character']['Enemies'][ekeys[i]];
-                this.e1 = new Game.Sprite(IMAGE_CACHE[enemy.Img], eGroup[e].x, eGroup[e].y);
-                this.e1.setBaseAttributes(ekeys[i], enemy.HP, enemy.MP, enemy.Atk, enemy.Def, enemy.MDef, enemy.Spd, enemy.Luc, 1);
-                battleList.push(this.e1);
-            }
-
-            /*this.e1 = new Sprite(IMAGE_CACHE['S'], 200, 250, 24, 22);
-            this.e2 = new Sprite(IMAGE_CACHE['S'], 200, 325, 24, 22);
-            
-            this.e1.setBaseAttributes('foe', 15, 0, 5, 0, 1, 1, 1, 1);
-            this.e2.setBaseAttributes('foe2', 10, 0, 5, 1, 1, 1, 1, 1);
-            
-            battleList[0] = this.e1;
-            battleList[1] = this.e2;*/
-            this.battleKeys = Object.keys(battleList);
-
-            menuOptions.push({
-                "Name": "Attack",
-                "x": 550,
-                "y": 125
-            });
-            menuOptions.push({
-                "Name": "Spell",
-                "x": 550,
-                "y": 200
-            });
-            menuOptions.push({
-                "Name": "Defend",
-                "x": 550,
-                "y": 275
-            });
-            this.ctx.drawImage(IMAGE_CACHE['bg'], 0, 0);
-        }
-        Battle_Old.prototype.Action = function () {
-            if (this.currentPlayer.Base.Type === 0 && mouseClicked()) {
-                if (this.command === 'spell' && this.currentSpell.TargetAll === 1) {
-                } else {
-                    this.mx = mEvent.pageX;
-                    this.my = mEvent.pageY;
-                    for (var i = 0; i < this.battleKeys.length; i++) {
-                        var x1 = battleList[this.battleKeys[i]].dx;
-                        var x2 = battleList[this.battleKeys[i]].dx + battleList[this.battleKeys[i]].W;
-                        var y1 = battleList[this.battleKeys[i]].dy;
-                        var y2 = battleList[this.battleKeys[i]].dy + battleList[this.battleKeys[i]].H;
-                        if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                            if (this.command === 'Attack') {
-                                for (var x = 0; x < this.battleKeys.length; x++) {
-                                    if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].currentState !== 1 && battleList[this.battleKeys[x]].Base.Type === 1) {
-                                        this.target = battleList[this.battleKeys[x]];
-                                        this.statusGUI();
-                                        this.enemySelect = false;
-                                        break;
-                                    }
-                                }
-                            } else if (this.command === 'Spell' && this.currentSpell.Damage >= 0) {
-                                for (var x = 0; x < this.battleKeys.length; x++) {
-                                    if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].currentState !== 1 && battleList[this.battleKeys[x]].Base.Type === 1) {
-                                        this.target = battleList[this.battleKeys[x]];
-                                        this.statusGUI();
-                                        this.enemySelect = false;
-                                        break;
-                                    }
-                                }
-                            } else if (this.command === 'Spell' && this.currentSpell.Damage < 0) {
-                                for (var x = 0; x < this.battleKeys.length; x++) {
-                                    if (battleList[this.battleKeys[i]] === battleList[this.battleKeys[x]] && battleList[this.battleKeys[x]].currentState !== 1 && battleList[this.battleKeys[x]].Base.Type === 0) {
-                                        this.target = battleList[this.battleKeys[x]];
-                                        this.statusGUI();
-                                        this.enemySelect = false;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (!this.enemySelect) {
-                    if (this.command === 'Attack') {
-                        this.playerAttack(this.currentPlayer, this.target);
-                    } else if (this.command === 'Spell') {
-                        this.playerSpell(this.currentPlayer, this.currentSpell, this.target);
-                    }
-                    this.drawCommands = true;
-                    this.statusGUI();
-                    this.currentkey++;
-                    this.currentPlayer = battleList[this.currentkey];
-                    this.newTime = Date.now() + 2000;
-                    this.ctx2.clearRect(540, 125, 260, 150); //clear commands only
-                }
-            }
-        };
-        Battle_Old.prototype.SelectSpell = function () {
-            //clear screen and draw dialog with spells on screen
-            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 25, 300);
-            for (var i = 0; i < this.currentPlayer.Spells.length; i++) {
-                this.spellList.push({
-                    "Name": this.currentPlayer.Spells[i],
-                    "x": 50,
-                    "y": 325 + (i * 25)
-                });
-                this.ctx2.fillText(this.spellList[i].Name, this.spellList[i].x, this.spellList[i].y);
-            }
-
-            //pick up which spell was clicked on and stores it
-            var keys = Object.keys(JSON_CACHE['spell'].Spells);
-            this.mx = mEvent.pageX;
-            this.my = mEvent.pageY;
-            for (var i = 0; i < this.spellList.length; i++) {
-                var a1 = this.spellList[i].x - 30;
-                var a2 = this.spellList[i].x + 30;
-                var b1 = this.spellList[i].y - 20;
-                var b2 = this.spellList[i].y + 20;
-
-                if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2)) {
-                    for (var x = 0; x < keys.length; x++) {
-                        if (this.spellList[i].Name === keys[x]) {
-                            this.currentSpell = JSON_CACHE['spell'].Spells[keys[x]];
-
-                            //determines who to target
-                            if (this.currentSpell.Damage < 0) {
-                                this.ctx2.clearRect(0, 0, 800, 600);
-                                this.ctx2.fillText("Click to select Ally", 350, 100);
-                            } else {
-                                this.ctx2.clearRect(0, 0, 800, 600);
-                                this.ctx2.fillText("Click to select Enemy", 350, 100);
-                            }
-                            this.statusGUI();
-                            this.enemySelect = true;
-                            this.spellSelect = false;
-                            this.spellList.length = 0;
-                            break;
-                        }
-                    }
-                }
-            }
-        };
-        Battle_Old.prototype.Target = function (time) {
-            this.mx = mEvent.pageX;
-            this.my = mEvent.pageY;
-            for (var i = 0; i < menuOptions.length; i++) {
-                var a1 = menuOptions[i].x;
-                var a2 = menuOptions[i].x + 190;
-                var b1 = menuOptions[i].y;
-                var b2 = menuOptions[i].y + 50;
-                if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2) && time > this.newTime) {
-                    if (menuOptions[i].Name === 'Attack') {
-                        this.command = menuOptions[i].Name;
-                        this.ctx2.clearRect(0, 0, 800, 600);
-
-                        //this.statusGUI();
-                        this.renderActors();
-                        this.ctx2.fillText("Click to select Target", 350, 100);
-                        this.enemySelect = true;
-                    } else if (menuOptions[i].Name === 'Spell') {
-                        this.command = menuOptions[i].Name;
-                        this.ctx2.clearRect(0, 0, 800, 600);
-                        this.statusGUI();
-                        this.spellSelect = true;
-                    } else if (menuOptions[i].Name === 'Defend') {
-                        this.command = menuOptions[i].Name;
-                        this.ctx2.clearRect(0, 0, 800, 600);
-                        this.statusGUI();
-                        this.drawCommands = true;
-                        this.ctx2.fillText(this.currentPlayer.Base.ID + " Defends and takes reduced damage", 350, 100);
-                        this.statusGUI();
-                        this.currentkey++;
-                        this.currentPlayer = battleList[this.currentkey];
-                        this.newTime = Date.now() + 2000;
-                    }
-                }
-            }
-        };
-        Battle_Old.prototype.statusGUI = function () {
-            this.ctx2.clearRect(0, 375, 800, 600);
-            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 100, 375);
-            for (var i = 0; i < this.battleKeys.length; i++) {
-                this.ctx2.fillText(battleList[i].Base.ID + " HP : " + battleList[i].Current.HP, 400, (i * 25) + 400);
-                if (battleList[i].currentState === 0) {
-                    this.ctx2.fillText("Normal", 600, (i * 25) + 400);
-                } else if (battleList[i].currentState === 1) {
-                    this.ctx2.fillText("Dead", 600, (i * 25) + 400);
-                } else if (battleList[i].currentState === 2) {
-                    this.ctx2.fillText("Poisoned", 600, (i * 25) + 400);
-                } else if (battleList[i].currentState === 3) {
-                    this.ctx2.fillText("Asleep", 600, (i * 25) + 400);
-                } else if (battleList[i].currentState === 4) {
-                    this.ctx2.fillText("Paralyzed", 600, (i * 25) + 400);
-                }
-                /*if (battleList[i].Base.Type === 0) {
-                this.ctx.fillText("Formation Bonus: " + FORMATION.bonus.HP + " " + FORMATION.bonus.MP + " " + FORMATION.bonus.Atk + " " + FORMATION.bonus.Def + " " + FORMATION.bonus.Spd + " " + FORMATION.bonus.MDef + " " + FORMATION.bonus.Luc, 300, 500);
-                }*/
-            }
-        };
-        Battle_Old.prototype.newTurn = function () {
-            this.currentkey = 0;
-            this.currentPlayer = battleList[this.currentkey];
-        };
-        Battle_Old.prototype.PlayerMenuInit = function () {
-            this.ctx.clearRect(0, 0, 800, 600);
-            this.ctx2.clearRect(0, 0, 800, 600);
-            setStyle(this.ctx, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
-            setStyle(this.ctx2, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
-            this.statusGUI();
-        };
-        Battle_Old.prototype.renderActors = function () {
-            this.ctx.clearRect(0, 0, 800, 600);
-            this.ctx.drawImage(IMAGE_CACHE['bg'], 0, 0);
-            for (var i = 0; i < this.battleKeys.length; i++) {
-                if (battleList[this.battleKeys[i]].currentState !== 1) {
-                    if (battleList[this.battleKeys[i]].Base.Type === 0) {
-                        this.formation = FORMATION.positions;
-                        battleList[this.battleKeys[i]].setPos(this.formation[i].x, this.formation[i].y);
-                    }
-                    battleList[this.battleKeys[i]].render(this.ctx);
-
-                    //this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, this.formation[i].x, this.formation[i].y);
-                    this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].dx + 20, battleList[this.battleKeys[i]].dy - 5);
-                }
-            }
-            for (var x = 0; x < menuOptions.length; x++) {
-                this.ctx2.drawImage(IMAGE_CACHE[menuOptions[x].Name], menuOptions[x].x, menuOptions[x].y);
-            }
-            this.statusGUI();
-        };
-        Battle_Old.prototype.battleOver = function () {
-            var aHP = 0;
-            var eHP = 0;
-            for (var i = 0; i < this.battleKeys.length; i++) {
-                if (battleList[i].Base.Type === 0) {
-                    aHP += battleList[i].Current.HP;
-                } else if (battleList[i].Base.Type === 1) {
-                    eHP += battleList[i].Current.HP;
-                }
-            }
-            if (aHP <= 0 || eHP <= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        };
-        Battle_Old.prototype.playerAttack = function (attacker, target) {
-            target.Current.HP = target.Current.HP - attacker.Current.Atk;
-            this.checkSpriteState(target);
-            this.ctx2.clearRect(0, 0, 800, 600);
-            this.ctx2.fillText(attacker.Base.ID + " Attacks " + target.Base.ID + " for " + attacker.Current.Atk + " damage", 350, 100);
-        };
-        Battle_Old.prototype.playerSpell = function (caster, spell, target) {
-            this.ctx2.clearRect(0, 0, 800, 600);
-            if (spell.Effect) {
-                //apply status effect
-                var chance = getRandomInt(0, 100);
-                if (target.currentState === 0 && chance > spell.Chance) {
-                    target.currentState = statusEffects[spell.Status];
-                    this.ctx2.fillText(caster.Base.ID + " Casts spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
-                    this.ctx2.fillText(spell.Status, target.x, target.y + 20);
-                }
-            } else {
-                target.Current.HP = target.Current.HP - spell.Damage;
-                if (target.Current.HP > target.getTotalStats().HP) {
-                    target.Current.HP = target.getTotalStats().HP;
-                }
-                this.checkSpriteState(target);
-                if (spell.Damage > 0) {
-                    this.ctx2.fillText(caster.Base.ID + " Casts spell1 on " + target.Base.ID + " for " + spell.Damage + " damage", 350, 100);
-                } else if (spell.Damage <= 0) {
-                    this.ctx2.fillText(caster.Base.ID + " Casts Spell1 on " + target.Base.ID + " and heals " + -spell.Damage + " HP", 350, 100);
-                }
-            }
-        };
-        Battle_Old.prototype.checkSpriteState = function (target) {
-            if (target.Current.HP < 1) {
-                target.currentState = 1;
-                target.Current.HP = 0;
-                if (this.battleOver()) {
-                    this.endTime = Date.now() + 2000;
-                }
-                this.renderActors();
-            }
-        };
-        Battle_Old.prototype.init = function () {
-            for (var x = 0; x < this.battleKeys.length; x++) {
-                battleList[x].currentState = 0;
-                battleList[x].Current = battleList[x].getTotalStats();
-            }
-            this.PlayerMenuInit();
-            this.renderActors();
-            this.currentPlayer = battleList[this.currentkey];
-        };
-
-        Battle_Old.prototype.update = function () {
-            var time = Date.now();
-            if (this.currentkey > 3) {
-                this.newTurn();
-            }
-            if (this.currentPlayer.Base.Type === 0 && this.currentPlayer.currentState !== 1 && this.drawCommands && time > this.newTime) {
-                this.ctx2.clearRect(0, 0, 800, 600);
-                this.ctx2.fillText("Player Turn", 350, 100);
-                this.renderActors();
-                this.drawCommands = false;
-            }
-            if (this.battleOver() && time > this.endTime) {
-                for (var t = 0; t < this.battleKeys.length; t++) {
-                    if (battleList[this.battleKeys[t]].Base.Type === 1) {
-                        var list = battleList;
-                        battleList = [];
-                        battleList = list.splice(t, this.battleKeys.length - t); //double check to ensure it works properly
-                        break;
-                    }
-                }
-                this.ctx.clearRect(0, 0, 800, 600);
-                this.ctx2.clearRect(0, 0, 800, 600);
-                sManager.popState();
-                if (this.nextState === "scene") {
-                    //sManager.pushState(new Cutscene("id", 800, 600, this.ctx2, 0));
-                }
-            } else if (this.battleOver()) {
-                this.ctx2.clearRect(0, 0, 800, 600);
-                this.statusGUI();
-                this.ctx2.fillText("THE BATTLE IS OVER", 400, 100);
-            } else if (this.currentPlayer.Base.Type === 0 && this.spellSelect) {
-                this.SelectSpell();
-            } else if (this.currentPlayer.Base.Type === 0 && this.enemySelect) {
-                this.Action();
-            } else if (this.currentPlayer.Base.Type === 0 && mouseClicked() && this.currentPlayer.currentState !== 1) {
-                this.Target(time);
-            } else if (this.currentPlayer.Base.Type === 1 && this.currentPlayer.currentState !== 1) {
-                if (time > this.newTime) {
-                    if (this.applyStatus) {
-                        if (this.currentPlayer.currentState === statusEffects['poison']) {
-                            this.ctx2.clearRect(0, 0, 800, 600);
-                            this.statusGUI();
-                            this.ctx2.fillText(this.currentPlayer.Base.ID + " suffers 5 damage from poison", 350, 100);
-                            this.currentPlayer.Current.HP -= 5;
-                        } else if (this.currentPlayer.currentState === statusEffects['sleep']) {
-                        } else if (this.currentPlayer.currentState === statusEffects['paralyze']) {
-                        }
-                        this.applyStatus = false;
-                        this.newTime = Date.now() + 2000;
-                    } else {
-                        this.ctx2.clearRect(0, 0, 800, 600);
-
-                        //actual stat calculation
-                        var targetNum = getRandomInt(0, this.battleKeys.length - 1);
-                        while (battleList[targetNum].currentState === 1 || battleList[targetNum].Base.Type !== 0) {
-                            targetNum = getRandomInt(0, this.battleKeys.length - 1);
-                        }
-                        this.target = battleList[targetNum];
-                        this.playerAttack(this.currentPlayer, this.target);
-                        this.statusGUI();
-                        this.currentkey++;
-                        this.currentPlayer = battleList[this.currentkey];
-                        this.newTime = Date.now() + 2000;
-                        this.applyStatus = true;
-                    }
-                }
-            } else if (this.currentPlayer.currentState === 1) {
-                this.currentkey++;
-                this.currentPlayer = battleList[this.currentkey];
-            }
-        };
-        Battle_Old.prototype.render = function () {
-        };
-        Battle_Old.prototype.pause = function () {
-        };
-        Battle_Old.prototype.resume = function () {
-        };
-        Battle_Old.prototype.destroy = function () {
-        };
-        return Battle_Old;
-    })(Game.State);
-    Game.Battle_Old = Battle_Old;
-})(Game || (Game = {}));
-function Attack(context, Attacker, Target) {
-    var dmg = Attacker.Base.Atk;
-    if (Target.defend) {
-        dmg = Math.floor(dmg / 2);
-        Target.defend = false;
-    }
-    var def = Target.Base.Def;
-    var result = dmg - def;
-
-    if (result < 0) {
-        result = 0;
-    }
-
-    //add check if status is applied here, possible statuses could be
-    Target.Current.HP -= result;
-    if (Target.Current.HP < 0) {
-        Target.Current.HP = 0;
-    }
-    context.fillText(result + "", Target.dx, Target.dy - 10);
-    return { "Atk": Attacker, "Tar": Target };
-}
 ///<reference path='../State.ts' />
 var battleList = [];
 var Game;
@@ -2328,14 +1920,22 @@ function SpellSelectDialog(sp, context) {
     return bounds;
 }
 function castSpellSingle(context, spell, sp, caster) {
-    var dmg = spell.Damage;
+    var dmg = spell.Damage + (spell.Ratio * caster.Current.MAtk);
     var def = sp.Base.MDef;
 
     var result = dmg - def;
     switch (spell.Type) {
         case "Enemy":
             if (spell.Effect) {
+                //applies status resistance
+                var resist = sp.StatusResist[spell.Status.Effect];
+                var spellChance = spell.Status.chance;
+                var chance = spellChance - ((spellChance * resist) / 100);
                 sp = applyStatus(spell.Status.Effect, spell.Status.Chance, sp);
+            }
+            if (spell.Element !== 'undefined') {
+                dmg = spell.Damage - ((spell.Damage * sp.ElementResist[spell.Element]) / 100);
+                result = dmg - def;
             }
             sp.Current.HP -= result;
             context.fillText(dmg + "", sp.dx, sp.dy - 10);
@@ -2358,15 +1958,40 @@ function castSpellAll(context, spell, queue, caster) {
     switch (spell.Type) {
         case "Enemy":
             for (var x = 0; x < queue.length; x++) {
-                var result = (spell.Damage - queue[x].Base.MDef);
+                var dmg = spell.Damage + (spell.Ratio * caster.Current.MAtk);
+                var def = queue[x].Base.MDef;
+
+                var result = dmg - def;
                 if (caster.Base.Type === 0) {
                     if (queue[x].Base.Type === 1 && queue[x].currentState !== 1) {
-                        queue[x].Current.HP -= (spell.Damage - queue[x].Base.MDef);
+                        if (spell.Effect) {
+                            //applies status resistance
+                            var resist = queue[x].StatusResist[spell.Status.Effect];
+                            var spellChance = spell.Status.chance;
+                            var chance = spellChance - ((spellChance * resist) / 100);
+                            queue[x] = applyStatus(spell.Status.Effect, spell.Status.Chance, queue[x]);
+                        }
+                        if (spell.Element !== 'undefined') {
+                            dmg = spell.Damage - ((spell.Damage * queue[x].ElementResist[spell.Element]) / 100);
+                            result = dmg - def;
+                        }
+                        queue[x].Current.HP -= result;
                         context.fillText(result + "", queue[x].dx, queue[x].dy - 10);
                     }
                 } else if (caster.Base.Type === 1) {
                     if (queue[x].Base.Type === 0 && queue[x].currentState !== 1) {
-                        queue[x].Current.HP -= (spell.Damage - queue[x].Base.MDef);
+                        if (spell.Effect) {
+                            //applies status resistance
+                            var resist = queue[x].StatusResist[spell.Status.Effect];
+                            var spellChance = spell.Status.chance;
+                            var chance = spellChance - ((spellChance * resist) / 100);
+                            queue[x] = applyStatus(spell.Status.Effect, spell.Status.Chance, queue[x]);
+                        }
+                        if (spell.Element !== 'undefined') {
+                            dmg = spell.Damage - ((spell.Damage * queue[x].ElementResist[spell.Element]) / 100);
+                            result = dmg - def;
+                        }
+                        queue[x].Current.HP -= result;
                         context.fillText(result + "", queue[x].dx, queue[x].dy - 10);
                     }
                 }
@@ -2376,11 +2001,17 @@ function castSpellAll(context, spell, queue, caster) {
             for (var x = 0; x < queue.length; x++) {
                 if (caster.Base.Type === 0) {
                     if (queue[x].Base.Type === 0 && queue[x].currentState !== 1) {
+                        if (spell.Effect) {
+                            queue[x] = applyStatus(spell.Status.Effect, spell.Status.Chance, queue[x]);
+                        }
                         queue[x].Current.HP += spell.Damage;
                         context.fillText(spell.Damage + "", queue[x].dx, queue[x].dy - 10);
                     }
                 } else if (caster.Base.Type === 1) {
                     if (queue[x].Base.Type === 1 && queue[x].currentState !== 1) {
+                        if (spell.Effect) {
+                            queue[x] = applyStatus(spell.Status.Effect, spell.Status.Chance, queue[x]);
+                        }
                         queue[x].Current.HP += spell.Damage;
                         context.fillText(spell.Damage + "", queue[x].dx, queue[x].dy - 10);
                     }
@@ -2615,7 +2246,7 @@ var Game;
 
             TileMap.setTileset(this.layer1ctx, this.mapID);
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
-            battleList[0].setPos((5 * 64) + 16, (5 * 64) + 16);
+            battleList[0].setPos((5 * 32) + 16, (5 * 32) + 16);
             this.layer2ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
             objects.push({
                 "height": 75,
@@ -2628,7 +2259,7 @@ var Game;
                 "y": 5
             });
 
-            //battleList[0].setPos((8*64) + 16, (8*64) + 16);
+            //battleList[0].setPos((8*32) + 16, (8*32) + 16);
             //battleList[0].render(this.layer2ctx);
             this.map = FormatTilemap(this.mapID);
 
@@ -2652,7 +2283,7 @@ var Game;
                     var y2 = objects[i].y + objects[i].width;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                         var path = [];
-                        path = findPath(this.map, [5, 5], [Math.floor(this.mx / 64), Math.floor(this.my / 64)]);
+                        path = findPath(this.map, [5, 5], [Math.floor(this.mx / 32), Math.floor(this.my / 32)]);
                         var keys = Object.keys(path);
                         var ctx = this.layer2ctx;
                         var x = 0;
@@ -3698,8 +3329,8 @@ var Game;
                                 "ID": 0
                             },
                             "width": 0,
-                            "x": +this.currentNode.getAttribute('x') * 64,
-                            "y": +this.currentNode.getAttribute('y') * 64
+                            "x": +this.currentNode.getAttribute('x') * 32,
+                            "y": +this.currentNode.getAttribute('y') * 32
                         };
                         objects.push(obj);
                         this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
@@ -4040,7 +3671,7 @@ function initializeBattlePositions(enemyID) {
     var spr;
     for (var x = 0; x < ekeys.length; x++) {
         spr = new Game.Sprite(IMAGE_CACHE[eStat[x].Img], eData[x].x, eData[x].y);
-        spr.setBaseAttributes(eData[x].id, eStat[x].HP, eStat[x].MP, eStat[x].Atk, eStat[x].Def, eStat[x].MDef, eStat[x].Spd, eStat[x].Luc, 1);
+        spr.setBaseAttributes(eData[x].id, eStat[x].HP, eStat[x].MP, eStat[x].Atk, eStat[x].Def, eStat[x].Spd, eStat[x].MAtk, eStat[x].MDef, eStat[x].Luc, 1);
         spr.currentState = 0;
         spr.Current = spr.getTotalStats();
         enemies.push(spr);
@@ -4139,8 +3770,8 @@ function LevelUpDisplay(context, growth, base, name, spells) {
     }
 }
 function moveSprite(context, sx, sy, dx, dy) {
-    var x = (dx * 64) + 16;
-    var y = (dy * 64) + 16;
+    var x = dx * 32;
+    var y = dy * 32;
     var easingAmount = 1;
     var im = new Image();
     im = this.img;

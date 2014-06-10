@@ -44,7 +44,8 @@ module Game {
                 Tileset: {
                     map1: 'Assets/Tilemap/map1.json',
                     map2: 'Assets/Tilemap/map2.json',
-                    map3: 'Assets/Tilemap/map3.json'
+                    map3: 'Assets/Tilemap/map3.json',
+                    Timor_Grasslands: 'Assets/Tilemap/Timor_Grasslands.json'
                     //carpet: 'Assets/Tilemap/nextmap.json'
                 },
                 XML: {

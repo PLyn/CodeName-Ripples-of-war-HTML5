@@ -11,6 +11,7 @@
             "Atk": 5,
             "Def": 0,
             "Spd": 0,
+            "MAtk": 0,
             "MDef": 0,
             "Luc": 0
         }
@@ -26,6 +27,7 @@
             "Atk": 10,
             "Def": 0,
             "Spd": 10,
+            "MAtk": 0,
             "MDef": 0,
             "Luc": 0
         }
@@ -41,6 +43,7 @@
             "Atk": 0,
             "Def": 5,
             "Spd": 0,
+            "MAtk": 0,
             "MDef": 0,
             "Luc": 0
         }

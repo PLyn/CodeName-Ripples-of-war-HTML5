@@ -50,7 +50,7 @@
     var spr;
     for (var x = 0; x < ekeys.length; x++) {
         spr = new Game.Sprite(IMAGE_CACHE[eStat[x].Img], eData[x].x, eData[x].y);
-        spr.setBaseAttributes(eData[x].id, eStat[x].HP, eStat[x].MP, eStat[x].Atk, eStat[x].Def, eStat[x].MDef, eStat[x].Spd, eStat[x].Luc, 1);
+        spr.setBaseAttributes(eData[x].id, eStat[x].HP, eStat[x].MP, eStat[x].Atk, eStat[x].Def, eStat[x].Spd, eStat[x].MAtk, eStat[x].MDef, eStat[x].Luc, 1);
         spr.currentState = 0;
         spr.Current = spr.getTotalStats();
         enemies.push(spr);

@@ -8,11 +8,11 @@
     <Syndra type="party" value="add"></Syndra>
     <Johnathan type="party" value="add"></Johnathan>
     <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
-    <explore type="next" id="map3"></explore>
+    <explore type="next" id="Timor_Grasslands"></explore>
   </scene>
 	<scene id="1">
     <hero type="dialog">I wonder if there is a town nearby--</hero>
-    <syndra type="move" x="4" y="5"></syndra>
+    <Syndra type="move" x="4" y="5"></Syndra>
     <syndra type="dialog">Hi there, you look a little lost?</syndra>
     <hero type="dialog">WHOA! where did you come from?</hero>
     <syndra type="dialog">um...just over there?</syndra>
@@ -56,6 +56,7 @@
     <syndra type="dialog">You REALLY are strange, you know that?</syndra>
     <hero type="dialog">after these few moments, I certainly agree with you there</hero>
     <syndra type="dialog">*smiles*...well, let's go into the town</syndra>
-  <x type="next"></x>
+    <hero type="dialog">wai--nevermind, lets go.</hero>
+  <explore type="next" id="map4"></explore>
   </scene>
 </Cutscenes>

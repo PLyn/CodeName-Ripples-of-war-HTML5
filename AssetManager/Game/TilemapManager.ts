@@ -163,7 +163,7 @@ module Game {
 
                         setStyle(context, 'Calibri', '12pt', 'black', 'bold', 'italic', 'center');
                         context.drawImage(tile.img, tile.px, tile.py, w, h, objects[x].x, objects[x].y, w, h);
-                        context.fillText(objects[x].name, objects[x].x + 32, objects[x].y - 10);
+                        context.fillText(objects[x].name, objects[x].x + 16, objects[x].y - 10);
                     }
                 }
             }
