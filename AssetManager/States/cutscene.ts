@@ -210,11 +210,21 @@ module Game {
                     break;
                 case "bgm":
                     var bgm = MUSIC_CACHE[this.currentNode.nodeName];
-                    bgm.addEventListener('ended', function () {
-                        this.currentTime = 0;
-                        this.play();
-                    }, false);
-                    bgm.play();
+                    if (this.currentNode.getAttribute('value') === "on") {
+                        bgm.addEventListener('ended', function () {
+                            this.currentTime = 0;
+                            this.play();
+                        }, false);
+                        bgm.play();
+                    }
+                    else if (this.currentNode.getAttribute('value') === "off") {
+                        bgm.removeEventListener('ended', function () {
+                            this.currentTime = 0;
+                            this.play();
+                        }, false);
+                        bgm.pause();
+                        bgm.currentTime - 0;
+                    }
                     this.nextNode();
                     break;
                 case "item":

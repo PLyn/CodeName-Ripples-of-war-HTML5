@@ -11,6 +11,7 @@
     <explore type="next" id="Timor_Grasslands"></explore>
   </scene>
 	<scene id="1">
+    <theme type="bgm" value="on"></theme>
     <hero type="dialog">I wonder if there is a town nearby--</hero>
     <Syndra type="move" x="4" y="5"></Syndra>
     <syndra type="dialog">Hi there, you look a little lost?</syndra>
@@ -31,6 +32,7 @@
     <hero type="dialog">nice to meet you Syndra...</hero>
     <syndra type="dialog">What is with that depressed "nice to meet you"...For some reason, you annoy me! let us go already</syndra>
     <hero type="dialog">what did I do?...</hero>
+    <theme type="bgm" value="off"></theme>
     <x type="next"></x>
   </scene>
   <scene id="2">

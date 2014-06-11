@@ -2,8 +2,8 @@
 var audioElement = new Audio();
 var WORLD = 0;
 var sManager;
-var GAME_VERSION = "0.10";
-var PARTY_SIZE = 3;
+var GAME_VERSION = "0.15";
+var PARTY_SIZE = 2;
 var GAME_WIDTH = 800;
 var GAME_HEIGHT = 600;
 

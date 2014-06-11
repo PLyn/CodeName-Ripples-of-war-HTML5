@@ -12,7 +12,7 @@
         "Luc": 0,
         "Abilities":{
         },
-        "growth": "+ + + + + + +"
+        "growth": "+ + + + + + + +"
     },
     "Syndra":{
         "Img": "D",
@@ -26,7 +26,7 @@
         "Luc": 0,
         "Abilities":{
         },
-        "growth": "- + ++++ --- ++ + +++"
+        "growth": "- + ++++ --- ++ +++ + +++"
     },
     "Sai":{
         "Img": "D",
@@ -40,7 +40,7 @@
         "Luc": 0,
         "Abilities":{
         },
-        "growth": "- - + - - - -"
+        "growth": "- - + - - ++ - -"
     },
     "Max":{
         "Img": "D",
@@ -54,7 +54,7 @@
         "Luc": 0,
         "Abilities":{
         },
-        "growth": "- - - - - - -"
+        "growth": "- - - - - - - -"
     },
     "Selina":{
         "Img": "D",
@@ -68,7 +68,7 @@
         "Luc": 0,
         "Abilities":{
         },
-        "growth": "- - - - - - -"
+        "growth": "- - - - - - - -"
     },
     "Thomas":{
         "Img": "D",
@@ -82,7 +82,7 @@
         "Luc": 0,
         "Abilities":{
         },
-       "growth": "- - - - - - -"
+       "growth": "- - - - - - - -"
     },
     "Riza":{
         "Img": "D",
@@ -96,7 +96,7 @@
         "Luc": 0,
         "Abilities":{
         },
-        "growth": "- - - - - - -"
+        "growth": "- - - - - - - -"
     },
     "Mikigami":{
         "Img": "D",
@@ -110,7 +110,7 @@
         "Luc": 0,
         "Abilities":{
         },
-        "growth": "- - - - - - -"
+        "growth": "- - - - - - - -"
     }
   },
   "Enemies":{
@@ -129,7 +129,7 @@
                 "Storm":  1,
                 "Defend":  100
             },
-            "growth": "- - - - - - -"
+            "growth": "- - - - - - - -"
         }
   }
 }

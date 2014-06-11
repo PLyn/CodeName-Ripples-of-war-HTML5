@@ -81,7 +81,7 @@ module Game {
                         if (objects[i].type === 'menu' || objects[i].type === 'exit') {
                             this.nextState(i);
                         }
-                        else if (typeof path !== 'undefined' && path.length > 0) {
+                        if (typeof path !== 'undefined' && path.length > 0) {
                             if (objects[i].type !== 'menu') {
                                 var timer = setInterval(() => {
                                     var coords = moveSprite(ctx, battleList[0].dx, battleList[0].dy, path[x][0], path[x][1]);
@@ -95,6 +95,9 @@ module Game {
                                     }
                                 }, 1000 / 5);
                             }
+                        }
+                        else {
+                            this.nextState(i);
                         }
                         break;
                     }

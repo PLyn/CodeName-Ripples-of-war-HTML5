@@ -70,13 +70,14 @@ function LevelUpDisplay(context: CanvasRenderingContext2D, growth, base, name, s
     context.fillText("Attack: " + (base.Atk - growth.Atk) + " + " + growth.Atk + " = " + base.Atk, 275, 340);
     context.fillText("Defense: " + (base.Def - growth.Def) + " + " + growth.Def + " = " + base.Def, 275, 360);
     context.fillText("Speed: " + (base.Spd - growth.Spd) + " + " + growth.Spd + " = " + base.Spd, 275, 380);
-    context.fillText("M. Defense: " + (base.MDef - growth.MDef) + " + " + growth.MDef + " = " + base.MDef, 275, 400);
-    context.fillText("Luck: " + (base.Luc - growth.Luc) + " + " + growth.Luc + " = " + base.Luc, 275, 420);
+    context.fillText("M. Attack: " + (base.MAtk - growth.MAtk) + " + " + growth.MAtk + " = " + base.MAtk, 275, 400);
+    context.fillText("M. Defense: " + (base.MDef - growth.MDef) + " + " + growth.MDef + " = " + base.MDef, 275, 420);
+    context.fillText("Luck: " + (base.Luc - growth.Luc) + " + " + growth.Luc + " = " + base.Luc, 275, 440);
 
-    context.fillText("Spells Learned: ", 255, 440);
+    context.fillText("Spells Learned: ", 255, 460);
     var newSpellKeys = Object.keys(spells);
     for (var x = 0; x < newSpellKeys.length; x++) {
-        context.fillText("Luck: " + base.Luc + " + " + growth.Luc, 300, 440 + (x * 20));
+        context.fillText("Luck: " + base.Luc + " + " + growth.Luc, 300, 460 + (x * 20));
     }
 
 }
