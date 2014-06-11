@@ -1,0 +1,135 @@
+{
+  "Party": {
+    "Shadow": {
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 8,
+        "Def": 5,
+        "Spd": 0,
+        "MAtk": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        },
+        "growth": "+ + + + + + + +"
+    },
+    "Syndra":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 7,
+        "Def": 5,
+        "Spd": 0,
+        "MAtk": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        },
+        "growth": "- + ++++ --- ++ +++ + +++"
+    },
+    "Sai":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MAtk": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        },
+        "growth": "- - + - - ++ - -"
+    },
+    "Max":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MAtk": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        },
+        "growth": "- - - - - - - -"
+    },
+    "Selina":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MAtk": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        },
+        "growth": "- - - - - - - -"
+    },
+    "Thomas":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MAtk": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        },
+       "growth": "- - - - - - - -"
+    },
+    "Riza":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MAtk": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        },
+        "growth": "- - - - - - - -"
+    },
+    "Mikigami":{
+        "Img": "D",
+        "HP": 5,
+        "MP": 0,
+        "Atk": 0,
+        "Def": 5,
+        "Spd": 0,
+        "MAtk": 0,
+        "MDef": 0,
+        "Luc": 0,
+        "Abilities":{
+        },
+        "growth": "- - - - - - - -"
+    }
+  },
+  "Enemies":{
+        "Goblin":{
+            "Img": "D",
+            "HP": 5,
+            "MP": 0,
+            "Atk": 15,
+            "Def": 5,
+            "Spd": 0,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0,
+            "Abilities":{
+                "Attack":  0,
+                "Storm":  1,
+                "Defend":  100
+            },
+            "growth": "- - - - - - - -"
+        }
+  }
+}

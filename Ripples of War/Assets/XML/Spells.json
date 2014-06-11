@@ -1,0 +1,38 @@
+﻿{
+  "Spells": {
+      "Fireball": {
+          "Type" :  "Enemy",
+          "Damage": 5,
+          "Ratio":  0.5,
+          "All": 0,
+          "Element": "Fire",
+		  "Effect": false
+      },
+      "Heal": {
+          "Type":  "Ally",
+          "Damage": 3,
+          "Ratio":  0.3,
+          "All": 0,
+		  "Effect": false  
+      },
+      "Poison Shot": {
+          "Type":  "Enemy",
+          "Damage": 1,
+          "Ratio": 0,
+          "All": 0,
+		  "Effect": true,
+          "Status":  {
+            "Effect":  "Poison",
+            "Chance":  "75"    
+          }  
+      },
+      "Storm":  {
+          "Type":  "Enemy",
+          "Damage":  2,
+          "Ratio":  0.4,
+          "All":  1,
+          "Element":  "Wind",
+          "Effect":  false
+      }
+  }
+}

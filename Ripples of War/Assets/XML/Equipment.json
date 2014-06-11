@@ -1,0 +1,65 @@
+{
+    "Head":{
+        "Cloth Helm":{
+            "Description": "Short Sword used by average Military personnel",
+            "HP": 5,
+            "MP": 0,
+            "Atk": 0,
+            "Def": 5,
+            "Spd": 0,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0
+        }
+    },
+    "Weapon": {
+        "Short Sword": {
+            "Description": "Short Sword used by average Military personnel",
+            "HP": 0,
+            "MP": 0,
+            "Atk": 5,
+            "Def": 0,
+            "Spd": 0,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0
+        },
+        "Rapier": {
+            "Description": "Fencing Rapier for standard use",
+            "HP": 5,
+            "MP": 0,
+            "Atk": 2,
+            "Def": 0,
+            "Spd": 0,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0
+        }
+    },
+    "Body":{
+        "Cloth Armour":{
+            "Description": "Short Sword used by average Military personnel",
+            "HP": 0,
+            "MP": 0,
+            "Atk": 0,
+            "Def": 10,
+            "Spd": 0,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0
+        }
+    },
+    "Feet":{
+        "Wooden Sandal":{
+            "Description": "Short Sword used by average Military personnel",
+            "HP": 0,
+            "MP": 0,
+            "Atk": 0,
+            "Def": 2,
+            "Spd": 5,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0
+        }
+    }
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Cutscenes>
+	<scene id="0">
+    <bg type="bg"></bg>
+    <IntroComplete type="switch" value="true"></IntroComplete>
+    <hero type="dialog">I have began wandering throughout the lands 3 years ago and I have now entered the land of Cindara, known as a peaceful and loving nation although with my curse, that will surely change...</hero>
+    <Shadow type="party" value="add"></Shadow>
+    <Syndra type="party" value="add"></Syndra>
+    <Johnathan type="party" value="add"></Johnathan>
+    <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
+    <explore type="next" id="Timor_Grasslands"></explore>
+  </scene>
+	<scene id="1">
+    <theme type="bgm" value="on"></theme>
+    <hero type="dialog">I wonder if there is a town nearby--</hero>
+    <Syndra type="move" x="4" y="5"></Syndra>
+    <syndra type="dialog">Hi there, you look a little lost?</syndra>
+    <hero type="dialog">WHOA! where did you come from?</hero>
+    <syndra type="dialog">um...just over there?</syndra>
+    <hero type="dialog">(She moved really fast and silently...)</hero>
+    <syndra type="dialog">heeeelllloooo?</syndra>
+    <hero type="dialog">huh...um...sorry, could you direct me to the nearest town please?</hero>
+    <syndra type="dialog">of course, you weirdo. just follow the path east and you will reach Timor</syndra>
+    <hero type="dialog">uh...ok (weirdo? who is this crazy girl?)</hero>
+    <syndra type="dialog">I get the feeling you think I am some crazy person.</syndra>
+    <hero type="dialog">(Well, who  wouldn't at this point?)</hero>
+    <syndra type="dialog">WILL YOU STOP SPACING OUT ALREADY!</syndra>
+    <hero type="dialog">YES!..sorry, just a bit too used to travelling alone by now.</hero>
+    <syndra type="dialog">sigh...I am heading back as well, I will lead you, let us go already weirdo</syndra>
+    <hero type="dialog">I have a name you know...Its Shadow</hero>
+    <syndra type="dialog">Finally you seem to be talking to me, nice to meet you Shadow, My name is Syndra</syndra>
+    <hero type="dialog">nice to meet you Syndra...</hero>
+    <syndra type="dialog">What is with that depressed "nice to meet you"...For some reason, you annoy me! let us go already</syndra>
+    <hero type="dialog">what did I do?...</hero>
+    <theme type="bgm" value="off"></theme>
+    <x type="next"></x>
+  </scene>
+  <scene id="2">
+    <syndra type="dialog">Come on, let us go already. It is getting late.</syndra>
+    <x type="next"></x>
+  </scene>
+  <scene id="3">
+    <syndra type="dialog">the town is just up ahead. Let us go</syndra>
+    <unknown type="dialog">*footsteps*</unknown>
+    <hero type="dialog">Something is coming from that bush!</hero>
+    <Attacker type="object" value="add" x="6" y="1"></Attacker>
+    <syndra type="dialog">Watch out!</syndra>
+    <Attacker type="object" value="remove" name="Assassin"></Attacker>
+    <battle type="next" id="0"></battle>
+  </scene>
+  <scene id="4">
+    <syndra type="dialog">Nice job! you are pretty strong despite how you look</syndra>
+    <hero type="dialog">(she really doesnt let up at all...sigh)</hero>
+    <syndra type="dialog">...</syndra>
+    <hero type="dialog">huh? hey! dont leave me!!</hero>
+    <syndra type="dialog">the town is right here, it is not like you will get lost...</syndra>
+    <hero type="dialog">yeah I know...just call it a bad feeling I had</hero>
+    <syndra type="dialog">You REALLY are strange, you know that?</syndra>
+    <hero type="dialog">after these few moments, I certainly agree with you there</hero>
+    <syndra type="dialog">*smiles*...well, let's go into the town</syndra>
+    <hero type="dialog">wai--nevermind, lets go.</hero>
+  <explore type="next" id="map4"></explore>
+  </scene>
+</Cutscenes>

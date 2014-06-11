@@ -1,0 +1,52 @@
+{
+  "Formations": {
+      "default": {
+        "positions":{
+            "x": [400 , 400, 450],
+            "y": [250, 325, 300]    
+        }, 
+        "bonus": {
+            "HP": 10,
+            "MP": 0,
+            "Atk": 5,
+            "Def": 0,
+            "Spd": 0,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0
+        }
+      },
+	  "Aggressive": {
+        "positions":{
+            "x": [350 , 400],
+            "y": [325, 325]    
+        }, 
+        "bonus": {
+            "HP": 0,
+            "MP": 0,
+            "Atk": 10,
+            "Def": 0,
+            "Spd": 10,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0
+        }
+      },
+	  "Defensive": {
+        "positions":{
+            "x": [375 , 400],
+            "y": [300, 325]    
+        }, 
+        "bonus": {
+            "HP": 20,
+            "MP": 0,
+            "Atk": 0,
+            "Def": 5,
+            "Spd": 0,
+            "MAtk": 0,
+            "MDef": 0,
+            "Luc": 0
+        }
+      }
+  }
+}
