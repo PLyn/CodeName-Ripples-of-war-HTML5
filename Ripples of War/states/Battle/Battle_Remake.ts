@@ -21,6 +21,8 @@ module Game {
         Anim: Animation;
         playerCount = 0;
         mapID;
+        endCondition;
+        levelupDone = false;
         constructor(EnemyID, mapID) {
             super();
             //time to wait between actions
@@ -138,11 +140,13 @@ module Game {
                 this.context2.fillText("Defeat", 400, 300);
                 this.cState = this.states['BattleEnd'];
                 this.newTime = Date.now() + this.turnDelay;
+                this.endCondition = "Defeat";
             }
             if (eHP <= 0) {
                 this.context2.fillText("Victory", 400, 300);
                 this.cState = this.states['BattleEnd'];
                 this.newTime = Date.now() + this.turnDelay;
+                this.endCondition = "Victory";
             }
         }
         playerSelect() {
@@ -298,19 +302,30 @@ module Game {
                         battleList.splice(q, this.queue.length - q);
                     }
                 }
-                if (this.playerCount < this.queue.length) {
-                    if (mouseClicked()) {
+                if (!this.levelupDone) {
+                    if (mouseClicked() && this.endCondition === "Victory") {
                         if (this.queue[this.playerCount].Base.Type === 0) {
                             LevelUp(this.queue[this.playerCount], this.context2);
+                            this.playerCount++;
+                            if (this.playerCount >= this.queue.length) {
+                                this.levelupDone = true;
+                            }
                         }
-                        this.playerCount++;
+                    }
+                    else {
+                        this.levelupDone = true;
                     }
                 }
                 else {
+                if (this.endCondition === "Victory") {
                     sManager.popState();
                     if (this.nextState === "scene") {
                         sManager.pushState(new Cutscene(this.context2, +this.nextID, this.mapID));
                     }
+                }
+                else if (this.endCondition === "Defeat") {
+                    //game over
+                }
                 }
             }
         }
