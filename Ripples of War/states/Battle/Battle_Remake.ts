@@ -76,40 +76,44 @@ module Game {
             //draws static background
             this.context.drawImage(IMAGE_CACHE['bg'], 0, 0);
             //can add additional background details in this layer
-        }
-        drawLayer2() {
-            //clears layer
-            this.context2.clearRect(0, 0, 800, 600);
             //draws HUD window and labels above the data
-            quickWindow(this.context2, 100, 375, 600, 220, "blue", "red");
+            quickWindow(this.context, 100, 375, 600, 220, "blue", "red");
             //set text properties
-            setStyle(this.context2, 'Calibri', '12 pt', 'white', 'bold');
-            this.context2.fillText("Party", 550, 385);
-            this.context2.fillText("Enemies", 200, 385);
+            setStyle(this.context, 'Calibri', '12 pt', 'white', 'bold');
+            this.context.fillText("Party", 550, 385);
+            this.context.fillText("Enemies", 200, 385);
             //draws all the sprites from the queue and the HUD text as well
             for (var s = 0; s < this.queue.length; s++) {
                 if (this.queue[s].currentState !== 1) {
                     //this.context2.fillText(this.queue[s].Base.ID, this.queue[s].dx, this.queue[s].dy - 15)
-                    this.queue[s].render(this.context2);
+                    this.queue[s].render(this.context);
                 }
                 //sprite is ally then print name and HP
                 if (this.queue[s].Base.Type === 0 && this.queue[s].currentState !== 1) {
-                    this.context2.fillText(this.queue[s].Base.ID, 500, 400 + (s * 20));
-                    this.context2.fillText(this.queue[s].Current.HP + " / " + this.queue[s].getTotalStats().HP, 600, 400 + (s * 20));
+                    this.context.fillText(this.queue[s].Base.ID, 500, 400 + (s * 20));
+                    this.context.fillText(this.queue[s].Current.HP + " / " + this.queue[s].getTotalStats().HP, 600, 400 + (s * 20));
                 }
                 //else prints enemy name in different column
                 else if (this.queue[s].Base.Type === 1 && this.queue[s].currentState !== 1) {
-                    this.context2.fillText(this.queue[s].Base.ID, 200, 400 + (s * 20));
-                    this.context2.fillText(this.queue[s].Current.HP + " / " + this.queue[s].getTotalStats().HP, 250, 400 + (s * 20));
+                    this.context.fillText(this.queue[s].Base.ID, 200, 400 + (s * 20));
+                    this.context.fillText(this.queue[s].Current.HP + " / " + this.queue[s].getTotalStats().HP, 250, 400 + (s * 20));
                 }
             }
+        }
+        drawLayer2() {
+            //clears layer
+            this.context2.clearRect(0, 0, 800, 600);
+            //draws menu or graphics based on state of battle
             StateDialogs(this.context2, this.cState);
         }
         init() {
             this.cState = this.states["PrePlayerTurn"];
+            this.drawLayers();
+            this.cTurn = 0;
+        }
+        drawLayers() {
             this.drawLayer1();
             this.drawLayer2();
-            this.cTurn = 0;
         }
         CheckIfDead() {
             for (var x = 0; x < this.queue.length; x++) {
@@ -163,7 +167,7 @@ module Game {
                         default:
                             break;
                     }
-                    this.drawLayer2();
+                    this.drawLayers();
                 }
             }
         }
@@ -179,7 +183,7 @@ module Game {
                     if (this.queue[i].Base.Type === 1 && this.queue[i].currentState !== 1) {
                         this.cTarget = i;
                         this.cState = this.states["EndTurn"];
-                        this.drawLayer2();
+                        this.drawLayers();
                         this.newTime = Date.now() + this.turnDelay;
                         var sprites = Attack(this.context2, this.queue[this.cTurn], this.queue[i]);
                         this.queue[this.cTurn] = sprites.Atk;
@@ -195,8 +199,8 @@ module Game {
             //if player action select state is action
             if (this.cState === this.states["PrePlayerTurn"]) {
                 this.cState = this.states["PSelect"];
+                this.drawLayers();
                 this.newTime = time + this.turnDelay;
-                this.drawLayer2();
                 this.queue[this.cTurn] = applyStatusEffect(this.context2, this.queue[this.cTurn]);
             }
             if (this.cState === this.states["PSelect"] && mouseClicked()) {
@@ -207,7 +211,7 @@ module Game {
             }
             else if (this.cState === this.states["PSpell"]) {
                 this.cState = this.states["SpellSelect"];
-                this.drawLayer2();
+                this.drawLayers();
                 this.cSpellData = SpellSelectDialog(this.queue[this.cTurn], this.context2);
             }
             else if (this.cState === this.states["SpellSelect"] && mouseClicked() ) {
@@ -224,7 +228,7 @@ module Game {
                             if (this.cSpellData[i].name === spells[x]) {
                                 this.cSpell = JSON_CACHE['spell']['Spells'][spells[x]];
                                 this.cState = this.states["SpellTarget"];
-                                this.drawLayer2();
+                                this.drawLayers();
                                 break;
                             }
                         }
@@ -254,25 +258,26 @@ module Game {
                 }
                 this.cState = this.states["EndTurn"];
                 this.CheckIfDead();
+                this.drawLayers();
                 this.newTime = time + this.turnDelay;
-                this.drawLayer2();
+
             }
             else if (this.cState === this.states["PDefend"]) {
                 this.queue[this.cTurn].defend = true;
                 this.cState = this.states["EndTurn"];
+                this.drawLayers();
                 this.newTime = time + this.turnDelay;
-                this.drawLayer2();
             }
             else if (this.cState === this.states["PreEnemyTurn"]) {
                 this.cState = this.states["EAction"];
+                this.drawLayers();
                 this.newTime = time + this.turnDelay;
-                this.drawLayer2();
                 this.queue[this.cTurn] = applyStatusEffect(this.context2, this.queue[this.cTurn]);
             }
             else if (this.cState === this.states["EAction"] && time > this.newTime) {
-                this.cState = this.states["EndTurn"];
-                this.drawLayer2();
                 this.queue = EnemyAction(this.context2, this.queue[this.cTurn], this.queue);
+                this.cState = this.states["EndTurn"];
+                this.drawLayers();
                 this.CheckIfDead();
                 this.newTime = time + this.turnDelay;
             }
@@ -280,11 +285,11 @@ module Game {
                 this.cTurn = (this.cTurn + 1) %  this.queue.length;
                 if (this.queue[this.cTurn].Base.Type === 0 && this.queue[this.cTurn].currentState !== 1) {
                     this.cState = this.states["PrePlayerTurn"];
-                    this.drawLayer2();
+                    this.drawLayers();
                 }
                 else if (this.queue[this.cTurn].Base.Type === 1 && this.queue[this.cTurn].currentState !== 1) {
                     this.cState = this.states["PreEnemyTurn"];
-                    this.drawLayer2();
+                    this.drawLayers();
                 }
             }
             else if (this.cState === this.states["BattleEnd"] && time > this.newTime) {

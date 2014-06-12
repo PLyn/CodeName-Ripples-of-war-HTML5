@@ -4,7 +4,7 @@ var WORLD = 0;
 var sManager;
 var GAME_VERSION = "0.15";
 var PARTY_SIZE = 2;
-var GAME_WIDTH = 800;
+var GAME_WIDTH = 600;
 var GAME_HEIGHT = 600;
 
 //State system core will most likely be here so read the book and figure out

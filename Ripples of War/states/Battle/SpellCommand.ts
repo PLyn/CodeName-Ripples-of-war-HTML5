@@ -17,7 +17,7 @@
 }
 function castSpellSingle(context: CanvasRenderingContext2D, spell, sp: Game.Sprite, caster: Game.Sprite) {
     var dmg = spell.Damage + (spell.Ratio * caster.Current.MAtk); //change spell damage from base to base + ratio
-    var def = sp.Base.MDef;
+    var def = sp.getTotalStats().MDef;
 
     var result = dmg - def;
     switch (spell.Type) {
@@ -30,7 +30,7 @@ function castSpellSingle(context: CanvasRenderingContext2D, spell, sp: Game.Spri
                 sp = applyStatus(spell.Status.Effect, spell.Status.Chance, sp);
             }
             if (spell.Element !== 'undefined') {
-                dmg = spell.Damage - ((spell.Damage * sp.ElementResist[spell.Element]) / 100);
+                dmg = spell.Damage - Math.floor(((spell.Damage * sp.ElementResist[spell.Element]) / 100));
                 result = dmg - def;
             }
             sp.Current.HP -= result;
@@ -46,6 +46,15 @@ function castSpellSingle(context: CanvasRenderingContext2D, spell, sp: Game.Spri
         default:
             break;
     }
+    var anim = ANIM_CACHE['at'];
+    var animate = new Game.Animation(context);
+    animate.queueAnimation(anim);
+    animate.play();
+    var playAnimation = setInterval(function () {
+        if (animate.finishPlaying) {
+            clearInterval(playAnimation);
+        }
+    }, 1000 / 1);
     return sp;
 }
 function castSpellAll(context: CanvasRenderingContext2D, spell, queue: Game.Sprite[], caster?: Game.Sprite) {

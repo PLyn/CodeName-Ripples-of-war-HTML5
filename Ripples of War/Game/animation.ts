@@ -5,12 +5,14 @@ module Game {
         animHolder;
         finishPlaying = false;
         counter = 0;
+        delay = 0;
         constructor(context) {
             this.context = context;
         }
         queueAnimation(anim) {
             this.animHolder = anim;
             this.finishPlaying = false;
+            this.delay = Date.now() + 200;
         }
         play = () => {
             var animate = requestAnimationFrame(this.play);
@@ -20,6 +22,9 @@ module Game {
             this.animHolder[this.counter].render(this.context);
             this.counter++;
             if (this.counter >= ObjLength(this.animHolder)) {
+                while (this.delay > Date.now()) {
+
+                }
                 cancelAnimationFrame(animate);
                 this.context.clearRect(0, 0, 800, 600);
                 this.finishPlaying = true;

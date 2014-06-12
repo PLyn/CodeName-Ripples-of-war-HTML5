@@ -20,6 +20,7 @@
           "Damage": 1,
           "Ratio": 0,
           "All": 0,
+          "Element": "Physical",
 		  "Effect": true,
           "Status":  {
             "Effect":  "Poison",

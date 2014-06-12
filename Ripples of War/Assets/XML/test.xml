@@ -8,6 +8,7 @@
     <Syndra type="party" value="add"></Syndra>
     <Johnathan type="party" value="add"></Johnathan>
     <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
+    <at type="anim"></at>
     <explore type="next" id="Timor_Grasslands"></explore>
   </scene>
 	<scene id="1">
