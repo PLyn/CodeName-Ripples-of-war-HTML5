@@ -23,6 +23,7 @@ module Game {
         mapID;
         endCondition;
         levelupDone = false;
+        anim;
         constructor(EnemyID, mapID) {
             super();
             //time to wait between actions
@@ -58,7 +59,9 @@ module Game {
             this.cSpellData = [];
             //the states that the battle can be in which would alter what is drawn and listened from input
             this.states = {
-                "PSelect": 0,
+                "PSelectCommand": 0,
+                "PSelectAtkTarget": 22,
+                "PAtkAnim": 23,
                 "PAttack": 1,
                 "PSpell": 2,
                 "SpellSelect": 3,
@@ -71,6 +74,7 @@ module Game {
                 "EndPhase": 10,
                 "BattleEnd": 11
             };
+            this.anim = new Animation(this.context2);
         }
         drawLayer1() {
             //clears screen
@@ -160,7 +164,7 @@ module Game {
                 if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2)) {
                     switch (this.menu[i].Name) {
                         case "Attack":
-                            this.cState = this.states["PAttack"];
+                            this.cState = this.states["PAtkSelectTarget"];
                             break;
                         case "Spell":
                             this.cState = this.states["PSpell"];
@@ -175,7 +179,7 @@ module Game {
                 }
             }
         }
-        playerAttack() {
+        playerSelectAttackTarget() {
             this.mx = mEvent.pageX;
             this.my = mEvent.pageY;
             for (var i = 0; i < this.queue.length; i++) {
@@ -186,13 +190,10 @@ module Game {
                 if ((s1 <= this.mx && this.mx <= s2) && (d1 <= this.my && this.my <= d2)) {
                     if (this.queue[i].Base.Type === 1 && this.queue[i].currentState !== 1) {
                         this.cTarget = i;
-                        this.cState = this.states["EndTurn"];
+                        this.anim.queueAnimation(ANIM_CACHE['at']);
+                        this.cState = this.states["PAtkAnim"];
                         this.drawLayers();
-                        this.newTime = Date.now() + this.turnDelay;
-                        var sprites = Attack(this.context2, this.queue[this.cTurn], this.queue[i]);
-                        this.queue[this.cTurn] = sprites.Atk;
-                        this.queue[i] = sprites.Tar;
-                        this.CheckIfDead();
+                        this.anim.play();
                         break;
                     }
                 }
@@ -202,17 +203,39 @@ module Game {
             var time = Date.now();
             //if player action select state is action
             if (this.cState === this.states["PrePlayerTurn"]) {
-                this.cState = this.states["PSelect"];
+                this.cState = this.states["PSelectCommand"];
                 this.drawLayers();
                 this.newTime = time + this.turnDelay;
                 this.queue[this.cTurn] = applyStatusEffect(this.context2, this.queue[this.cTurn]);
             }
-            if (this.cState === this.states["PSelect"] && mouseClicked()) {
+            if (this.cState === this.states["PSelectCommand"] && mouseClicked()) {
                 this.playerSelect();
             }
-            else if (this.cState === this.states["PAttack"] && mouseClicked()) {
-                this.playerAttack();
+            /* 
+                Player Attack Events start here 
+            */
+            else if (this.cState === this.states["PAtkSelectTarget"]) {
+                this.playerSelectAttackTarget();
             }
+            else if (this.cState === this.states["PAtkAnim"]) {
+                if (this.anim.finishPlaying) {
+                    this.cState = this.states['PAttack'];
+                    this.drawLayers();
+                }
+            }
+            else if (this.cState === this.states["PAttack"]) {
+                this.newTime = Date.now() + this.turnDelay;
+                this.cState = this.states['EndTurn'];
+                this.drawLayers();
+                var sprites = Attack(this.context2, this.queue[this.cTurn], this.queue[this.cTarget]);
+                this.queue[this.cTurn] = sprites.Atk;
+                this.queue[this.cTarget] = sprites.Tar;
+                this.CheckIfDead();
+                this.newTime = Date.now() + 400;
+            }
+            /* 
+                Player Spell Events start here 
+            */
             else if (this.cState === this.states["PSpell"]) {
                 this.cState = this.states["SpellSelect"];
                 this.drawLayers();
@@ -266,12 +289,18 @@ module Game {
                 this.newTime = time + this.turnDelay;
 
             }
+            /* 
+                Player Defend Events start here 
+            */
             else if (this.cState === this.states["PDefend"]) {
                 this.queue[this.cTurn].defend = true;
                 this.cState = this.states["EndTurn"];
                 this.drawLayers();
                 this.newTime = time + this.turnDelay;
             }
+            /* 
+                Enemy Events start here 
+            */
             else if (this.cState === this.states["PreEnemyTurn"]) {
                 this.cState = this.states["EAction"];
                 this.drawLayers();
@@ -296,6 +325,9 @@ module Game {
                     this.drawLayers();
                 }
             }
+            /* 
+                End of Battle Events start here 
+            */
             else if (this.cState === this.states["BattleEnd"] && time > this.newTime) {
                 for (var q = 0; q < this.queue.length; q++) {
                     if (this.queue[q].Base.Type === 1) {

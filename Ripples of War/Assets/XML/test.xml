@@ -9,7 +9,7 @@
     <Johnathan type="party" value="add"></Johnathan>
     <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
     <at type="anim"></at>
-    <explore type="next" id="Timor_Grasslands"></explore>
+    <battle type="next" id="0"></battle>
   </scene>
 	<scene id="1">
     <theme type="bgm" value="on"></theme>

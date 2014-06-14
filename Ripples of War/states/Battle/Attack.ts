@@ -1,4 +1,4 @@
-﻿function Attack(context: CanvasRenderingContext2D, Attacker:Game.Sprite, Target: Game.Sprite) {
+﻿function Attack(context: CanvasRenderingContext2D, Attacker: Game.Sprite, Target: Game.Sprite) {
     var dmg = Attacker.Base.Atk;
     if (Target.defend) {
         dmg = Math.floor(dmg / 2);
@@ -14,7 +14,7 @@
     Target.Current.HP -= result;
     if (Target.Current.HP < 0) {
         Target.Current.HP = 0;
-    }
+    } 
     context.fillText(result + "", Target.dx, Target.dy - 10);
     return {"Atk" : Attacker, "Tar": Target };
 }
