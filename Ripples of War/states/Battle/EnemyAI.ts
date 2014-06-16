@@ -1,11 +1,11 @@
-﻿function EnemyAction(context: CanvasRenderingContext2D, enemy: Game.Sprite, queue: Game.Sprite[]) {
+﻿function EnemyActionChooser(target: Game.Sprite, queue: Game.Sprite[]) {
     var total = 100;
     var parts = [];
     var foe;
     //gets all the abilites of the enemy
     var keys = Object.keys(JSON_CACHE['character']['Enemies']);
     for (var x = 0; x < keys.length; x++) {
-        if (enemy.Base.ID === keys[x]) {
+        if (target.Base.ID === keys[x]) {
             foe = JSON_CACHE['character']['Enemies'][keys[x]].Abilities;
         }
     }
@@ -16,8 +16,12 @@
     for (var y = 0; y < (key.length - 1); y++) {
         if (rand >= foe[key[y]] && (foe[key[y+1]]) >= rand) {
             cAbilities = key[y];
+            break;
         }
     }
+    return cAbilities;
+}
+function EnemyAction(context, cAbilities, queue, target) {
     //count the number of allies
     var allyCount = 0;
     for (var x = 0; x < queue.length; x++) {
@@ -30,18 +34,18 @@
 
 
     if (cAbilities === "Attack") {
-        var sprite = Attack(context, enemy, queue[random]);
+        var sprite = Attack(context, target, queue[random]);
         queue[random] = sprite.Tar;
         return queue;
     }
     else if (cAbilities === "Defend") {
         return queue;
     }
-    else{
+    else {
         var spellkey = Object.keys(JSON_CACHE['spell']['Spells']);
         for (var x = 0; x < spellkey.length; x++) {
             if (cAbilities === spellkey[x]) {
-                return checkSpellType(context, JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, enemy);
+                return checkSpellType(context, JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, target);
                 break;
             }
         }

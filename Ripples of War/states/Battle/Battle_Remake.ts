@@ -63,25 +63,7 @@ module Game {
             this.cSpell = [];
             this.cSpellData = [];
             //the states that the battle can be in which would alter what is drawn and listened from input
-            this.states = {
-                "PSelectCommand": 0,
-                "PAtkSelectTarget": 22,
-                "PAtkAnim": 23,
-                "PAttack": 1,
-                "PSpell": 2,
-                "SpellSelect": 3,
-                "SpellTarget": 4,
-                "PDefend": 5,
-                "ItemDraw": 33,
-                "ItemSelect": 15,
-                "ItemSelectTarget": 55,
-                "EAction": 6,
-                "EndTurn": 7,
-                "PrePlayerTurn": 8,
-                "PreEnemyTurn": 9,
-                "EndPhase": 10,
-                "BattleEnd": 11
-            };
+            this.states = getBattleStates();
             this.back = {
                 "Name": "back",
                 "x": 700,
@@ -168,6 +150,7 @@ module Game {
             }
         }
         playerSelectCommand() {
+            //gets mouse coordinates
             this.mx = mEvent.pageX;
             this.my = mEvent.pageY;
             for (var i = 0; i < this.menu.length; i++) {
@@ -181,7 +164,7 @@ module Game {
                             this.cState = this.states["PAtkSelectTarget"];
                             break;
                         case "Spell":
-                            this.cState = this.states["PSpell"];
+                            this.cState = this.states["PSpellDraw"];
                             break;
                         case "Defend":
                             this.cState = this.states["PDefend"];
@@ -197,8 +180,10 @@ module Game {
             }
         }
         playerSelectAttackTarget() {
+            //get couse coordinates
             this.mx = mEvent.pageX;
             this.my = mEvent.pageY;
+            //get upper bounds of x and y for the back button
             var upperx = this.back.x + this.back.w;
             var uppery = this.back.y + this.back.h; 
             if ((this.back.x <= this.mx && this.mx <= upperx) && (this.back.y <= this.my && this.my <= uppery)) {
@@ -212,12 +197,13 @@ module Game {
                     var d1 = this.queue[i].dy;
                     var d2 = this.queue[i].dy + this.queue[i].H;
                     if ((s1 <= this.mx && this.mx <= s2) && (d1 <= this.my && this.my <= d2)) {
+                        //if sprite is an enemy and is not dead
                         if (this.queue[i].Base.Type === 1 && this.queue[i].currentState !== 1) {
-                            this.cTarget = i;
-                            this.cState = this.states["PAtkAnim"];
+                            this.cTarget = i; //sets current target
+                            this.cState = this.states["PAtkAnim"];//sets current state
                             this.drawLayers();
-                            this.Anim.queueAnimation(ANIM_CACHE['at']);
-                            this.Anim.play();
+                            this.Anim.queueAnimation(ANIM_CACHE['at']); //queues animation to be played
+                            this.Anim.play(); //start the animation
                             break;
                         }
                     }
@@ -225,15 +211,24 @@ module Game {
             }
         }
         update() {
+            //stores the current time
             var time = Date.now();
-            //if player action select state is action
+            //actions that are done before the player selects something in their turn
             if (this.cState === this.states["PrePlayerTurn"]) {
+                //sets font type and style
+                setStyle(this.context2, 'calibre', 12, "white");
+                //sets the next state to go to
                 this.cState = this.states["PSelectCommand"];
+                //redraw layers to match new state
                 this.drawLayers();
+                //time to wait before executing new state
                 this.newTime = time + this.turnDelay;
+                //status text to let the player know its there turn and the status effects on them
+                this.context2.fillText(this.queue[this.cTurn].Base.ID, 350, 25);
                 this.queue[this.cTurn] = applyStatusEffect(this.context2, this.queue[this.cTurn]);
             }
-            if (this.cState === this.states["PSelectCommand"] && mouseClicked()) {
+            //actions that are done if player is to select a command
+            if (this.cState === this.states["PSelectCommand"] && mouseClicked() && time > this.newTime) {
                 this.playerSelectCommand();
             }
             /* 
@@ -246,71 +241,96 @@ module Game {
                 if (this.Anim.finishPlaying) {
                     this.cState = this.states['PAttack'];
                     this.drawLayers();
+                    this.newTime = Date.now() + this.turnDelay;
                 }
             }
-            else if (this.cState === this.states["PAttack"]) {
+            else if (this.cState === this.states["PAttack"] && time > this.newTime) {
                 this.newTime = Date.now() + this.turnDelay;
-                this.cState = this.states['EndTurn'];
+                this.cState = this.states['EndTurn']; //end of turn for character
                 this.drawLayers();
+                //takes context, the attacker and target to calculate the effects of attacking the target and returns the results
                 var sprites = Attack(this.context2, this.queue[this.cTurn], this.queue[this.cTarget]);
-                this.queue[this.cTurn] = sprites.Atk;
-                this.queue[this.cTarget] = sprites.Tar;
-                this.CheckIfDead();
-                this.newTime = Date.now() + 400;
+                this.queue[this.cTurn] = sprites.Atk; //the attacker
+                this.queue[this.cTarget] = sprites.Tar; //the target
+                this.CheckIfDead(); //checks if any sprite has died and makes the necessary changes
             }
             /* 
                 Player Spell Events start here 
             */
-            else if (this.cState === this.states["PSpell"]) {
+            else if (this.cState === this.states["PSpellDraw"]) {
                 this.cState = this.states["SpellSelect"];
                 this.drawLayers();
                 this.cSpellData = SpellSelectDialog(this.queue[this.cTurn], this.context2);
+                this.context2.fillText("Select spell to be casted", 350, 25);
             }
             else if (this.cState === this.states["SpellSelect"] && mouseClicked() ) {
                 var spells = Object.keys(JSON_CACHE['spell']['Spells']);
-                var mx = mEvent.pageX;
-                var my = mEvent.pageY;
-                for (var i = 0; i < this.cSpellData.length; i++) {
-                    var a1 = this.cSpellData[i].x;
-                    var a2 = this.cSpellData[i].x + this.cSpellData[i].w;
-                    var b1 = this.cSpellData[i].y;
-                    var b2 = this.cSpellData[i].y + this.cSpellData[i].h;
-                    if ((a1 <= mx && mx <= a2) && (b1 <= my && my <= b2)) {
-                        for (var x = 0; x < spells.length; x++) {
-                            if (this.cSpellData[i].name === spells[x]) {
-                                this.cSpell = JSON_CACHE['spell']['Spells'][spells[x]];
-                                this.cState = this.states["SpellAnimation"];
-                                this.drawLayers();
-                                this.Anim.queueAnimation(ANIM_CACHE['at']);
-                                this.Anim.play();
-                                break;
+                this.mx = mEvent.pageX;
+                this.my = mEvent.pageY;
+                var upperx = this.back.x + this.back.w;
+                var uppery = this.back.y + this.back.h;
+                if ((this.back.x <= this.mx && this.mx <= upperx) && (this.back.y <= this.my && this.my <= uppery)) {
+                    this.cState = this.states["PSelectCommand"];
+                    this.drawLayers();
+                }
+                else {
+                    for (var i = 0; i < this.cSpellData.length; i++) {
+                        var a1 = this.cSpellData[i].x;
+                        var a2 = this.cSpellData[i].x + this.cSpellData[i].w;
+                        var b1 = this.cSpellData[i].y;
+                        var b2 = this.cSpellData[i].y + this.cSpellData[i].h;
+                        if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2)) {
+                            for (var x = 0; x < spells.length; x++) {
+                                if (this.cSpellData[i].name === spells[x]) {
+                                    this.cSpell = JSON_CACHE['spell']['Spells'][spells[x]];
+                                    this.cState = this.states["SpellAnimation"];
+                                    this.drawLayers();
+                                    this.Anim.queueAnimation(ANIM_CACHE['at']);
+                                    this.Anim.play();
+                                    break;
+                                }
                             }
                         }
                     }
                 }
             }
-            else if (this.cState === this.states["SpellAnimation"]) {
-                if (this.Anim.finishPlaying) {
-                    this.cState = this.states['SpellTarget'];
-                    this.drawLayers();
-                }
-            }
-            else if (this.cState === this.states["SpellTarget"] && mouseClicked() && time > this.newTime) {
+            else if (this.cState === this.states["SpellTarget"] && mouseClicked()) {
                 var bounds = [];
                 if (this.cSpell.All === 0) {
                     //select target
                     var mx = mEvent.pageX;
                     var my = mEvent.pageY;
-                    for (var i = 0; i < this.queue.length; i++) {
-                        var x1 = this.queue[i].dx;
-                        var x2 = this.queue[i].dx + this.queue[i].W;
-                        var y1 = this.queue[i].dy;
-                        var y2 = this.queue[i].dy + this.queue[i].H;
-                        if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
-                            var sprite = castSpellSingle(this.context2, this.cSpell, this.queue[i], this.queue[this.cTurn]);
-                            this.queue[i] = sprite;
+                    var upperx = this.back.x + this.back.w;
+                    var uppery = this.back.y + this.back.h;
+                    if ((this.back.x <= this.mx && this.mx <= upperx) && (this.back.y <= this.my && this.my <= uppery)) {
+                        this.cState = this.states["PSelectCommand"];
+                        this.drawLayers();
+                    }
+                    else {
+                        for (var i = 0; i < this.queue.length; i++) {
+                            var x1 = this.queue[i].dx;
+                            var x2 = this.queue[i].dx + this.queue[i].W;
+                            var y1 = this.queue[i].dy;
+                            var y2 = this.queue[i].dy + this.queue[i].H;
+                            if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
+                                this.cTarget = i;
+                            }
                         }
                     }
+                }
+                this.cState = this.states["SpellAnim"];
+                this.drawLayers();
+            }
+            else if (this.cState === this.states["SpellAnim"]) {
+                if (this.Anim.finishPlaying) {
+                    this.cState = this.states['SpellCast'];
+                    this.drawLayers();
+                }
+            }
+            else if (this.cState === this.states["SpellCast"]) {
+                if (this.cSpell.All === 0) {
+                    var sprite = castSpellSingle(this.context2, this.cSpell, this.queue[this.cTarget], this.queue[this.cTurn]);
+                    this.queue[this.cTarget] = sprite;
                 }
                 else if (this.cSpell.All === 1) {
                     //go ahead and cast
@@ -320,7 +340,6 @@ module Game {
                 this.CheckIfDead();
                 this.drawLayers();
                 this.newTime = time + this.turnDelay;
-
             }
             /* 
                 Player Defend Events start here 
@@ -344,34 +363,51 @@ module Game {
                     this.context2.fillText(items[ikeys[x]].quantity, 100, 320 + (x * 30));
                 }
                 this.cState = this.states["ItemSelect"];
+                this.drawLayers();
             }
             else if (this.cState === this.states["ItemSelect"] && mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
-                for (var i = 0; i < this.items.length; i++) {
-                    var a1 = this.items[i].x;
-                    var a2 = this.items[i].x + this.items[i].w;
-                    var b1 = this.items[i].y;
-                    var b2 = this.items[i].y + this.items[i].h;
-                    if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2)) {
-                        this.cItem = this.items[i].name;
-                        this.cState = this.states["ItemSelectTarget"];
-                        this.drawLayers();
+                var upperx = this.back.x + this.back.w;
+                var uppery = this.back.y + this.back.h;
+                if ((this.back.x <= this.mx && this.mx <= upperx) && (this.back.y <= this.my && this.my <= uppery)) {
+                    this.cState = this.states["PSelectCommand"];
+                    this.drawLayers();
+                }
+                else {
+                    for (var i = 0; i < this.items.length; i++) {
+                        var a1 = this.items[i].x;
+                        var a2 = this.items[i].x + this.items[i].w;
+                        var b1 = this.items[i].y;
+                        var b2 = this.items[i].y + this.items[i].h;
+                        if ((a1 <= this.mx && this.mx <= a2) && (b1 <= this.my && this.my <= b2)) {
+                            this.cItem = this.items[i].name;
+                            this.cState = this.states["ItemSelectTarget"];
+                            this.drawLayers();
+                        }
                     }
                 }
             }
             else if (this.cState === this.states["ItemSelectTarget"] && mouseClicked()) {
                 var mx = mEvent.pageX;
                 var my = mEvent.pageY;
-                for (var i = 0; i < this.queue.length; i++) {
-                    var x1 = this.queue[i].dx;
-                    var x2 = this.queue[i].dx + this.queue[i].W;
-                    var y1 = this.queue[i].dy;
-                    var y2 = this.queue[i].dy + this.queue[i].H;
-                    if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
-                        this.queue[i] = UseItem(this.context2, this.cItem, this.queue[i]);
-                        this.cState = this.states["EndTurn"];
-                        this.drawLayers();
+                var upperx = this.back.x + this.back.w;
+                var uppery = this.back.y + this.back.h;
+                if ((this.back.x <= this.mx && this.mx <= upperx) && (this.back.y <= this.my && this.my <= uppery)) {
+                    this.cState = this.states["ItemSelect"];
+                    this.drawLayers();
+                }
+                else {
+                    for (var i = 0; i < this.queue.length; i++) {
+                        var x1 = this.queue[i].dx;
+                        var x2 = this.queue[i].dx + this.queue[i].W;
+                        var y1 = this.queue[i].dy;
+                        var y2 = this.queue[i].dy + this.queue[i].H;
+                        if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
+                            this.queue[i] = UseItem(this.context2, this.cItem, this.queue[i]);
+                            this.cState = this.states["EndTurn"];
+                            this.drawLayers();
+                        }
                     }
                 }
             }
@@ -383,13 +419,62 @@ module Game {
                 this.drawLayers();
                 this.newTime = time + this.turnDelay;
                 this.queue[this.cTurn] = applyStatusEffect(this.context2, this.queue[this.cTurn]);
+                var cAbility = EnemyActionChooser(this.queue[this.cTurn], this.queue);
+
+                var allyCount = 0;
+                for (var x = 0; x < this.queue.length; x++) {
+                    if (this.queue[x].Base.Type === 0 && this.queue[x].currentState !== 1) {
+                        allyCount++;
+                    }
+                }
+                //get random int to determine which ally to target
+                this.cTarget = getRandomInt(0, allyCount);
+
+                switch (cAbility) {
+                    case "Attack":
+                        this.cState = this.states["EAttackAnim"];
+                        this.Anim.queueAnimation(ANIM_CACHE['at']);
+                        this.Anim.play();
+                        break;
+                    case "Defend":
+                        this.cState = this.states["EDefend"];
+                        break;
+                    default:
+                        this.cState = this.states["ESpellAnim"];
+                        this.Anim.queueAnimation(ANIM_CACHE['at']);
+                        this.Anim.play();
+                        break;
+                }
+                this.drawLayers();
             }
-            else if (this.cState === this.states["EAction"] && time > this.newTime) {
-                this.queue = EnemyAction(this.context2, this.queue[this.cTurn], this.queue);
+            else if (this.states === this.states["EAttackAnim"]) {
+                if (this.Anim.finishPlaying) {
+                    this.cState = this.states['PAttack'];
+                    this.drawLayers();
+                    this.newTime = Date.now() + this.turnDelay;
+                }
+            }
+            else if (this.cState === this.states["EAttack"] && time > this.newTime) {
+                var attack = Attack(this.context2, this.queue[this.cTurn], this.queue[this.cTarget]);
+                this.queue[this.cTarget] = attack.Tar;
+
                 this.cState = this.states["EndTurn"];
                 this.drawLayers();
                 this.CheckIfDead();
                 this.newTime = time + this.turnDelay;
+            }
+            else if (this.cState === this.states["ESpellAnim"]) {
+                if (this.Anim.finishPlaying) {
+                    this.cState = this.states['PAttack'];
+                    this.drawLayers();
+                    this.newTime = Date.now() + this.turnDelay;
+                }
+            }
+            else if (this.cState === this.states["ESpellCast"]) {
+
+            }
+            else if (this.cState === this.states["EDefend"]) {
+
             }
             else if (this.cState === this.states["EndTurn"] && time > this.newTime) {
                 this.cTurn = (this.cTurn + 1) %  this.queue.length;
@@ -405,7 +490,7 @@ module Game {
             /* 
                 End of Battle Events start here 
             */
-            else if (this.cState === this.states["BattleEnd"] && time > this.newTime) {
+            else if (this.cState === this.states["EndBattle"] && time > this.newTime) {
                 for (var q = 0; q < this.queue.length; q++) {
                     if (this.queue[q].Base.Type === 1) {
                         battleList.splice(q, this.queue.length - q);
@@ -426,15 +511,15 @@ module Game {
                     }
                 }
                 else {
-                if (this.endCondition === "Victory") {
-                    sManager.popState();
-                    if (this.nextState === "scene") {
-                        sManager.pushState(new Cutscene(this.context2, +this.nextID, this.mapID));
+                    if (this.endCondition === "Victory") {
+                        sManager.popState();
+                        if (this.nextState === "scene") {
+                            sManager.pushState(new Cutscene(this.context2, +this.nextID, this.mapID));
+                        }
                     }
-                }
-                else if (this.endCondition === "Defeat") {
-                    //game over
-                }
+                    else if (this.endCondition === "Defeat") {
+                        //game over
+                    }
                 }
             }
         }

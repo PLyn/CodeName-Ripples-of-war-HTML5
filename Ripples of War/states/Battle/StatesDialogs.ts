@@ -22,6 +22,10 @@
         case 7: //pre enemy turn
             break;
         case 22:
+        case 55:
+        case 15:
+        case 4:
+        case 3:
             context.drawImage(IMAGE_CACHE['back'], 700, 5);
             break;
     }
