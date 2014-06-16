@@ -27,6 +27,7 @@
     <Content Include="Assets\Image\dialogWindow.png" />
     <Content Include="Assets\Image\diamond.png" />
     <Content Include="Assets\Image\hero.png" />
+    <Content Include="Assets\Image\items.png" />
     <Content Include="Assets\Image\menuBack.png" />
     <Content Include="Assets\Image\menuButton.png" />
     <Content Include="Assets\Image\ripple.jpg" />
@@ -77,6 +78,7 @@
     <TypeScriptCompile Include="Game\TilemapManager.ts" />
     <TypeScriptCompile Include="States\Battle\Attack.ts" />
     <TypeScriptCompile Include="States\Battle\Battle_Remake.ts" />
+    <TypeScriptCompile Include="States\Battle\initializeItemBounds.ts" />
     <TypeScriptCompile Include="States\Battle\StatusEffect.ts" />
     <TypeScriptCompile Include="States\Battle\EnemyAI.ts" />
     <TypeScriptCompile Include="States\Battle\FloatingDamageText.ts" />
@@ -108,6 +110,7 @@
     <TypeScriptCompile Include="Util\randomizer.ts" />
     <TypeScriptCompile Include="Util\TextStyler.ts" />
     <TypeScriptCompile Include="Util\TilemapFormatter.ts" />
+    <TypeScriptCompile Include="States\Battle\UseItem.ts" />
     <TypeScriptCompile Include="Util\wordwrap.ts" />
   </ItemGroup>
   <ItemGroup>

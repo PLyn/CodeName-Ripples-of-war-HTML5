@@ -1,7 +1,7 @@
 ﻿///<reference path='../State.ts' />
 module Game {
     export class ItemDetails extends State {
-        context;
+        context: CanvasRenderingContext2D;
         item;
         clickBounds;
         mx;
@@ -51,11 +51,23 @@ module Game {
                                 sManager.popState();
                                 break;
                             case "use":
+                                this.context.clearRect(0, 0, 800, 600);
+                                sManager.popState();
                                 break;
                             default:
                                 break;
                         }
                     }
+                }
+            }
+        }
+        selectItemTarget() {
+            quickWindow(this.context, 10, 10, 300, 500, "blue", "red");
+            for (var x = 0; x < battleList.length; x++) {
+                if (battleList[x].Base.Type === 0) {
+                    this.context.drawImage(battleList[x].img, 25, 40 + (x * 50));
+                    this.context.fillText(battleList[x].Base.ID, 100, 40 + (x * 50));
+                    this.context.fillText(battleList[x].Base.ID, 100, 40 + (x * 50));
                 }
             }
         }

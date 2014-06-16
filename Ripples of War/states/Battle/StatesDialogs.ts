@@ -5,6 +5,7 @@
             context.drawImage(IMAGE_CACHE['Attack'], 600, 50);
             context.drawImage(IMAGE_CACHE['Spell'], 600, 150);
             context.drawImage(IMAGE_CACHE['Defend'], 600, 250);
+            context.drawImage(IMAGE_CACHE['items'], 600, 350);
             break;
         case 1: //p Attack
             context.fillText("Select target to Attack", 350, 50);
@@ -19,6 +20,9 @@
             context.fillText("Enemy's Turn", 350, 150);;
             break;
         case 7: //pre enemy turn
+            break;
+        case 22:
+            context.drawImage(IMAGE_CACHE['back'], 700, 5);
             break;
     }
 }

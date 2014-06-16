@@ -33,7 +33,8 @@ module Game {
                     bg: 'Assets/Image/bg.png',
                     tick: 'Assets/Image/tick.png',
                     box: 'Assets/Image/box.png',
-                    ripple: 'Assets/Image/ripple.jpg'
+                    ripple: 'Assets/Image/ripple.jpg',
+                    items: 'Assets/Image/items.png'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'

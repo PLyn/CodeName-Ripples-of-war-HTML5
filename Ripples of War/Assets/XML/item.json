@@ -1,7 +1,11 @@
 ﻿{
 	"consumable": {
 		"item1": {
-			"name": "potion"
+			"name": "potion",
+            "usable":  "yes",
+            "stat":  "HP",
+            "value":  10,
+            "target":  "Enemy"
 		}
 	},
 	"quest":{

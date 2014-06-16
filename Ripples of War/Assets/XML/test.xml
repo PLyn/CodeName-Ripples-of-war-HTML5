@@ -8,7 +8,7 @@
     <Syndra type="party" value="add"></Syndra>
     <Johnathan type="party" value="add"></Johnathan>
     <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
-    <at type="anim"></at>
+    <potion type="item" quantity="1" itemType="consumable"></potion>
     <battle type="next" id="0"></battle>
   </scene>
 	<scene id="1">
