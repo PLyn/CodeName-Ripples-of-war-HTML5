@@ -78,10 +78,10 @@
     <TypeScriptCompile Include="Game\TilemapManager.ts" />
     <TypeScriptCompile Include="States\Battle\Attack.ts" />
     <TypeScriptCompile Include="States\Battle\Battle_Remake.ts" />
+    <TypeScriptCompile Include="States\Battle\getBattleStates.ts" />
     <TypeScriptCompile Include="States\Battle\initializeItemBounds.ts" />
     <TypeScriptCompile Include="States\Battle\StatusEffect.ts" />
     <TypeScriptCompile Include="States\Battle\EnemyAI.ts" />
-    <TypeScriptCompile Include="States\Battle\FloatingDamageText.ts" />
     <TypeScriptCompile Include="States\Battle\initializeMenuBounds.ts" />
     <TypeScriptCompile Include="States\Battle\input_template.ts" />
     <TypeScriptCompile Include="States\Battle\SpellCommand.ts" />

@@ -409,7 +409,6 @@ declare module Game {
         public playerCount: number;
         public mapID: any;
         public endCondition: any;
-        public levelupDone: boolean;
         public back: any;
         public items: any;
         public cItem: any;
@@ -430,17 +429,14 @@ declare module Game {
     }
 }
 declare function EnemyActionChooser(target: Game.Sprite, queue: Game.Sprite[]): any;
-declare function EnemyAction(context: any, cAbilities: any, queue: any, target: any): any;
-declare function checkSpellType(context: any, spell: any, queue: Game.Sprite[], target: number, caster: any): Game.Sprite[];
-declare function floatingDamageTextSingle(context: any, Amt: any, sprite: any): void;
-declare function floatingDamageTextAll(Amt: any, sprites: any): void;
+declare function EnemySpellCast(context: any, spell: any, queue: Game.Sprite[], target: number, caster: any): Game.Sprite[];
 declare function getBattleStates(): {
     "PrePlayerTurn": number;
     "PSelectCommand": number;
     "PAtkSelectTarget": number;
     "PAtkAnim": number;
     "PAttack": number;
-    "PSpellDraw": number;
+    "SpellDraw": number;
     "SpellSelect": number;
     "SpellTarget": number;
     "SpellAnim": number;
@@ -458,6 +454,8 @@ declare function getBattleStates(): {
     "ESpellCast": number;
     "EDefend": number;
     "EndTurn": number;
+    "PreLevelUp": number;
+    "LevelUp": number;
     "BattleEnd": number;
 };
 declare function initializeBattlePositions(enemyID: any): any[];
@@ -536,9 +534,10 @@ declare module Game {
         public my: any;
         public time: number;
         public back: boolean;
-        public stats: any;
+        public b: any;
+        public m: any;
         public objects: any;
-        public battler: any;
+        public battler: Sprite;
         constructor(context: any);
         public drawEquip(): void;
         public addEquipPos(): void;

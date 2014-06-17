@@ -20,7 +20,7 @@
         }
     }
     return cAbilities;
-}
+}/*
 function EnemyAction(context, cAbilities, queue, target) {
     //count the number of allies
     var allyCount = 0;
@@ -45,14 +45,14 @@ function EnemyAction(context, cAbilities, queue, target) {
         var spellkey = Object.keys(JSON_CACHE['spell']['Spells']);
         for (var x = 0; x < spellkey.length; x++) {
             if (cAbilities === spellkey[x]) {
-                return checkSpellType(context, JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, target);
+                return EnemySpellCast(context, JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, target);
                 break;
             }
         }
         return queue;
     }
-}
-function checkSpellType(context, spell, queue: Game.Sprite[], target: number, caster) {   
+}*/
+function EnemySpellCast(context, spell, queue: Game.Sprite[], target: number, caster) {   
     if (spell.All === 0) {
         var counter = 0;
         //get target to attack if target is not all

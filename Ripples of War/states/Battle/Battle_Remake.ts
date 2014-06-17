@@ -12,7 +12,8 @@ module Game {
         states;
         cTurn;
         cState;
-        mx; my;
+        mx;
+        my;
         newTime = 0;
         cTarget;
         cSpell;
@@ -22,7 +23,6 @@ module Game {
         playerCount = 0;
         mapID;
         endCondition;
-        levelupDone = false;
         back;
         items;
         cItem;
@@ -49,7 +49,7 @@ module Game {
                 this.queue[y].Current = this.queue[y].getTotalStats();
             }
             //initializes battle positions for all characters in the battle list
-            var enemies = initializeBattlePositions(EnemyID); 
+            var enemies = initializeBattlePositions(EnemyID);
             for (var x = 0; x < enemies.length; x++) {
                 this.queue.push(enemies[x]);
             }
@@ -68,7 +68,7 @@ module Game {
                 "Name": "back",
                 "x": 700,
                 "y": 25,
-                "w": 40, 
+                "w": 40,
                 "h": 40
             }
         }
@@ -109,18 +109,24 @@ module Game {
             StateDialogs(this.context2, this.cState);
         }
         init() {
+            //sets state to player turn
             this.cState = this.states["PrePlayerTurn"];
             this.drawLayers();
+            //sets current turn to 0 
             this.cTurn = 0;
         }
         drawLayers() {
+            //draw objects on layer 1 of the canvas
             this.drawLayer1();
+            //draw objects on layer 2 of the canvas
             this.drawLayer2();
         }
         CheckIfDead() {
             for (var x = 0; x < this.queue.length; x++) {
+                //check if any units have died and removes them appropriately
                 if (this.queue[x].Current.HP <= 0) {
                     this.queue[x].currentState = 1;
+                    //check if all units on either side have been wiped out to detect if battle ended
                     this.isBattleOver();
                 }
             }
@@ -128,23 +134,26 @@ module Game {
         isBattleOver() {
             var aHP = 0;
             var eHP = 0;
+            //loop to get the total health of all the sprites on screen
             for (var y = 0; y < this.queue.length; y++) {
-                if (this.queue[y].Base.Type === 0) {
+                if (this.queue[y].Base.Type === 0 && this.queue[y].currentState !== 1) {
                     aHP += this.queue[y].Current.HP;
                 }
-                if (this.queue[y].Base.Type === 1) {
+                if (this.queue[y].Base.Type === 1 && this.queue[y].currentState !== 1) {
                     eHP += this.queue[y].Current.HP;
                 }
             }
+            //all allies are dead then game over
             if (aHP <= 0) {
                 this.context2.fillText("Defeat", 400, 300);
-                this.cState = this.states['BattleEnd'];
+                this.cState = this.states['EndBattle'];
                 this.newTime = Date.now() + this.turnDelay;
                 this.endCondition = "Defeat";
             }
+            //all enemies defeated then levelup characters then end battle
             if (eHP <= 0) {
                 this.context2.fillText("Victory", 400, 300);
-                this.cState = this.states['BattleEnd'];
+                this.cState = this.states['PreLevelUp'];
                 this.newTime = Date.now() + this.turnDelay;
                 this.endCondition = "Victory";
             }
@@ -164,7 +173,7 @@ module Game {
                             this.cState = this.states["PAtkSelectTarget"];
                             break;
                         case "Spell":
-                            this.cState = this.states["PSpellDraw"];
+                            this.cState = this.states["SpellDraw"];
                             break;
                         case "Defend":
                             this.cState = this.states["PDefend"];
@@ -185,7 +194,8 @@ module Game {
             this.my = mEvent.pageY;
             //get upper bounds of x and y for the back button
             var upperx = this.back.x + this.back.w;
-            var uppery = this.back.y + this.back.h; 
+            var uppery = this.back.y + this.back.h;
+            //detects if the back button has been touched
             if ((this.back.x <= this.mx && this.mx <= upperx) && (this.back.y <= this.my && this.my <= uppery)) {
                 this.cState = this.states["PSelectCommand"];
                 this.drawLayers();
@@ -257,13 +267,14 @@ module Game {
             /* 
                 Player Spell Events start here 
             */
-            else if (this.cState === this.states["PSpellDraw"]) {
+            else if (this.cState === this.states["SpellDraw"]) {
+                //current spell
                 this.cState = this.states["SpellSelect"];
                 this.drawLayers();
+                //data for spell to be used later
                 this.cSpellData = SpellSelectDialog(this.queue[this.cTurn], this.context2);
-                this.context2.fillText("Select spell to be casted", 350, 25);
             }
-            else if (this.cState === this.states["SpellSelect"] && mouseClicked() ) {
+            else if (this.cState === this.states["SpellSelect"] && mouseClicked()) {
                 var spells = Object.keys(JSON_CACHE['spell']['Spells']);
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
@@ -283,10 +294,8 @@ module Game {
                             for (var x = 0; x < spells.length; x++) {
                                 if (this.cSpellData[i].name === spells[x]) {
                                     this.cSpell = JSON_CACHE['spell']['Spells'][spells[x]];
-                                    this.cState = this.states["SpellAnimation"];
+                                    this.cState = this.states["SpellTarget"];
                                     this.drawLayers();
-                                    this.Anim.queueAnimation(ANIM_CACHE['at']);
-                                    this.Anim.play();
                                     break;
                                 }
                             }
@@ -298,12 +307,12 @@ module Game {
                 var bounds = [];
                 if (this.cSpell.All === 0) {
                     //select target
-                    var mx = mEvent.pageX;
-                    var my = mEvent.pageY;
+                    this.mx = mEvent.pageX;
+                    this.my = mEvent.pageY;
                     var upperx = this.back.x + this.back.w;
                     var uppery = this.back.y + this.back.h;
                     if ((this.back.x <= this.mx && this.mx <= upperx) && (this.back.y <= this.my && this.my <= uppery)) {
-                        this.cState = this.states["PSelectCommand"];
+                        this.cState = this.states["SpellDraw"];
                         this.drawLayers();
                     }
                     else {
@@ -312,14 +321,20 @@ module Game {
                             var x2 = this.queue[i].dx + this.queue[i].W;
                             var y1 = this.queue[i].dy;
                             var y2 = this.queue[i].dy + this.queue[i].H;
-                            if ((x1 <= mx && mx <= x2) && (y1 <= my && my <= y2)) {
+                            if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
                                 this.cTarget = i;
+                                this.cState = this.states["SpellAnim"];
+                                this.drawLayers();
+                                this.Anim.queueAnimation(ANIM_CACHE['at']);
+                                this.Anim.play();
                             }
                         }
                     }
                 }
-                this.cState = this.states["SpellAnim"];
-                this.drawLayers();
+                else if (this.cSpell.All === 1) {
+                    this.cState = this.states["SpellAnim"];
+                    this.drawLayers();
+                }
             }
             else if (this.cState === this.states["SpellAnim"]) {
                 if (this.Anim.finishPlaying) {
@@ -350,20 +365,20 @@ module Game {
                 this.drawLayers();
                 this.newTime = time + this.turnDelay;
             }
-             /* 
-                PLayer Item events start here 
-            */
+            /* 
+               PLayer Item events start here 
+           */
             else if (this.cState === this.states["ItemDraw"]) {
+                this.cState = this.states["ItemSelect"];
+                this.drawLayers();
                 quickWindow(this.context2, 10, 300, 500, 500, "blue", "red");
                 var ikeys = Object.keys(ITEM.consumable);
                 var items = ITEM.consumable;
-                this.context2.fillStyle = "white";
+                setStyle(this.context2, 'calibre', 12, "white");
                 for (var x = 0; x < ikeys.length; x++) {
                     this.context2.fillText(items[ikeys[x]].name, 25, 320 + (x * 30));
                     this.context2.fillText(items[ikeys[x]].quantity, 100, 320 + (x * 30));
                 }
-                this.cState = this.states["ItemSelect"];
-                this.drawLayers();
             }
             else if (this.cState === this.states["ItemSelect"] && mouseClicked()) {
                 this.mx = mEvent.pageX;
@@ -440,6 +455,13 @@ module Game {
                         this.cState = this.states["EDefend"];
                         break;
                     default:
+                        var spellkey = Object.keys(JSON_CACHE['spell']['Spells']);
+                        for (var x = 0; x < spellkey.length; x++) {
+                            if (cAbility === spellkey[x]) {
+                                this.cSpell = JSON_CACHE['spell']['Spells'][spellkey[x]];
+                                break;
+                            }
+                        }
                         this.cState = this.states["ESpellAnim"];
                         this.Anim.queueAnimation(ANIM_CACHE['at']);
                         this.Anim.play();
@@ -449,35 +471,44 @@ module Game {
             }
             else if (this.states === this.states["EAttackAnim"]) {
                 if (this.Anim.finishPlaying) {
-                    this.cState = this.states['PAttack'];
+                    this.cState = this.states['EAttack'];
                     this.drawLayers();
                     this.newTime = Date.now() + this.turnDelay;
                 }
             }
             else if (this.cState === this.states["EAttack"] && time > this.newTime) {
+                this.cState = this.states["EndTurn"];
+                this.CheckIfDead();
+                this.drawLayers();
+                this.newTime = time + this.turnDelay;
+
                 var attack = Attack(this.context2, this.queue[this.cTurn], this.queue[this.cTarget]);
                 this.queue[this.cTarget] = attack.Tar;
-
-                this.cState = this.states["EndTurn"];
-                this.drawLayers();
-                this.CheckIfDead();
-                this.newTime = time + this.turnDelay;
             }
             else if (this.cState === this.states["ESpellAnim"]) {
                 if (this.Anim.finishPlaying) {
-                    this.cState = this.states['PAttack'];
+                    this.cState = this.states['ESpellCast'];
                     this.drawLayers();
                     this.newTime = Date.now() + this.turnDelay;
                 }
             }
             else if (this.cState === this.states["ESpellCast"]) {
+                this.queue = EnemySpellCast(this.context2, this.cSpell, this.queue, this.cTarget, this.queue[this.cTurn]);
 
+                this.cState = this.states["EndTurn"];
+                this.CheckIfDead();
+                this.drawLayers();
+                this.newTime = time + this.turnDelay;
             }
             else if (this.cState === this.states["EDefend"]) {
+                this.queue[this.cTurn].defend = true;
 
+                this.cState = this.states["EndTurn"];
+                this.drawLayers();
+                this.newTime = time + this.turnDelay;
             }
             else if (this.cState === this.states["EndTurn"] && time > this.newTime) {
-                this.cTurn = (this.cTurn + 1) %  this.queue.length;
+                this.cTurn = (this.cTurn + 1) % this.queue.length;
                 if (this.queue[this.cTurn].Base.Type === 0 && this.queue[this.cTurn].currentState !== 1) {
                     this.cState = this.states["PrePlayerTurn"];
                     this.drawLayers();
@@ -490,36 +521,42 @@ module Game {
             /* 
                 End of Battle Events start here 
             */
-            else if (this.cState === this.states["EndBattle"] && time > this.newTime) {
+            else if (this.cState === this.states["PreLevelUp"] && time > this.newTime) {
                 for (var q = 0; q < this.queue.length; q++) {
                     if (this.queue[q].Base.Type === 1) {
                         battleList.splice(q, this.queue.length - q);
                     }
                 }
-                if (!this.levelupDone) {
-                    if (mouseClicked() && this.endCondition === "Victory") {
-                        if (this.queue[this.playerCount].Base.Type === 0) {
-                            LevelUp(this.queue[this.playerCount], this.context2);
-                            this.playerCount++;
-                            if (this.playerCount >= this.queue.length) {
-                                this.levelupDone = true;
-                            }
-                        }
-                    }
-                    else {
-                        this.levelupDone = true;
-                    }
+                if (this.queue[this.playerCount].Base.Type === 0) {
+                    LevelUp(this.queue[this.playerCount], this.context2);
+                    this.playerCount++;
+                }
+                this.cState = this.states["LevelUp"];
+            }
+            else if (this.cState === this.states["LevelUp"] && mouseClicked()) {
+                if (this.playerCount >= this.queue.length) {
+                    this.cState = this.states["EndBattle"];
+                    this.drawLayers();
                 }
                 else {
-                    if (this.endCondition === "Victory") {
-                        sManager.popState();
-                        if (this.nextState === "scene") {
-                            sManager.pushState(new Cutscene(this.context2, +this.nextID, this.mapID));
-                        }
+                    if (this.queue[this.playerCount].Base.Type === 0) {
+                        LevelUp(this.queue[this.playerCount], this.context2);
+                        this.playerCount++;
                     }
-                    else if (this.endCondition === "Defeat") {
-                        //game over
+                }
+            }
+            else if (this.cState === this.states["EndBattle"] && time > this.newTime) {
+                this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                sManager.popState();
+                if (this.endCondition === "Victory") {
+                    if (this.nextState === "scene") {
+                        sManager.pushState(new Cutscene(this.context2, +this.nextID, this.mapID));
                     }
+                }
+                else if (this.endCondition === "Defeat") {
+                    //game over
+                    sManager.pushState(new Title(this.context2));
                 }
             }
         }

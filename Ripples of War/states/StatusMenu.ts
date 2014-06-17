@@ -80,7 +80,7 @@ module Game {
             for (var x = 0; x < PARTY_SIZE; x++) {
                 if (battleList[x].Base.Type === 0) {
                     this.context.drawImage(battleList[x].img, 25, 15 + (125 * (x + 1)));
-                    this.context.fillText("Level: 1", 75, 15 + (125 * (x + 1)));
+                    this.context.fillText("Level: " +  battleList[x].Level, 75, 15 + (125 * (x + 1)));
                     this.context.fillText("HP: " + battleList[x].getTotalStats().HP, 75, 35 + (125 * (x + 1)));
                     this.context.fillText("MP: " + battleList[x].getTotalStats().MP, 150, 35 + (125 * (x + 1)));
                 }

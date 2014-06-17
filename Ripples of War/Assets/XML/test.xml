@@ -9,7 +9,7 @@
     <Johnathan type="party" value="add"></Johnathan>
     <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
     <potion type="item" quantity="1" itemType="consumable"></potion>
-    <battle type="next" id="0"></battle>
+    <explore type="next" id="map1"></explore>
   </scene>
 	<scene id="1">
     <theme type="bgm" value="on"></theme>

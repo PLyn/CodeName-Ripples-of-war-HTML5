@@ -1,6 +1,6 @@
 {
-    "Head":{
-        "Cloth Helm":{
+    "Head": {
+        "Cloth Helm": {
             "Description": "Short Sword used by average Military personnel",
             "HP": 5,
             "MP": 0,
@@ -9,7 +9,19 @@
             "Spd": 0,
             "MAtk": 0,
             "MDef": 0,
-            "Luc": 0
+            "Luc": 0,
+
+            "Physical": 0,
+            "Fire": 0,
+            "Ice": 0,
+            "Thunder": 0,
+            "Wind": 0,
+            "Earth": 0,
+            "Light": 0,
+            "Dark": 0,
+            "Poison": 0,
+            "Paralysis": 0,
+            "Sleep": 0
         }
     },
     "Weapon": {
@@ -22,7 +34,19 @@
             "Spd": 0,
             "MAtk": 0,
             "MDef": 0,
-            "Luc": 0
+            "Luc": 0,
+
+            "Physical": 0,
+            "Fire": 0,
+            "Ice": 0,
+            "Thunder": 0,
+            "Wind": 0,
+            "Earth": 0,
+            "Light": 0,
+            "Dark": 0,
+            "Poison": 0,
+            "Paralysis": 0,
+            "Sleep": 0
         },
         "Rapier": {
             "Description": "Fencing Rapier for standard use",
@@ -33,11 +57,23 @@
             "Spd": 0,
             "MAtk": 0,
             "MDef": 0,
-            "Luc": 0
+            "Luc": 0,
+
+            "Physical": 0,
+            "Fire": 0,
+            "Ice": 0,
+            "Thunder": 0,
+            "Wind": 0,
+            "Earth": 0,
+            "Light": 0,
+            "Dark": 0,
+            "Poison": 0,
+            "Paralysis": 0,
+            "Sleep": 0
         }
     },
-    "Body":{
-        "Cloth Armour":{
+    "Body": {
+        "Cloth Armour": {
             "Description": "Short Sword used by average Military personnel",
             "HP": 0,
             "MP": 0,
@@ -46,11 +82,23 @@
             "Spd": 0,
             "MAtk": 0,
             "MDef": 0,
-            "Luc": 0
+            "Luc": 0,
+                        
+            "Physical": 0,
+            "Fire": 0,
+            "Ice": 0,
+            "Thunder": 0,
+            "Wind": 0,
+            "Earth": 0,
+            "Light": 0,
+            "Dark": 0,
+            "Poison": 0,
+            "Paralysis": 0,
+            "Sleep": 0
         }
     },
-    "Feet":{
-        "Wooden Sandal":{
+    "Feet": {
+        "Wooden Sandal": {
             "Description": "Short Sword used by average Military personnel",
             "HP": 0,
             "MP": 0,
@@ -59,7 +107,19 @@
             "Spd": 5,
             "MAtk": 0,
             "MDef": 0,
-            "Luc": 0
+            "Luc": 0,
+                        
+            "Physical": 0,
+            "Fire": 0,
+            "Ice": 0,
+            "Thunder": 0,
+            "Wind": 0,
+            "Earth": 0,
+            "Light": 0,
+            "Dark": 0,
+            "Poison": 0,
+            "Paralysis": 0,
+            "Sleep": 0
         }
     }
 }

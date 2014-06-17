@@ -5,7 +5,7 @@
         "PAtkSelectTarget": 2, //last for attack to back
         "PAtkAnim": 3,
         "PAttack": 4,
-        "PSpellDraw": 5,
+        "SpellDraw": 5,
         "SpellSelect": 6,
         "SpellTarget": 7, //last point
         "SpellAnim": 8,
@@ -23,6 +23,8 @@
         "ESpellCast": 20,
         "EDefend": 21,
         "EndTurn": 22,
-        "BattleEnd": 23
+        "PreLevelUp": 23,
+        "LevelUp": 24,
+        "BattleEnd": 25
     };
 }
