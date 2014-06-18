@@ -13,7 +13,7 @@ module Game {
         itemSelected = false;
         time = 0;
         type;
-        battler;
+        battler: Sprite;
 
         constructor(ctx2, type, battler) {
             super();
@@ -22,7 +22,10 @@ module Game {
             this.battler = battler;
         }
         init() {
-            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 300);
+            //this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 300);
+            this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
+            quickWindow(this.ctx2, 25, 300, 500, 200, "blue", "red");
+            setStyle(this.ctx2, 'calibre', 12, 'white');
             var eq = JSON_CACHE['equip'];
             if (this.type === "Head") {
                 this.hKeys = Object.keys(eq.Head);
@@ -80,7 +83,14 @@ module Game {
                 currentEquips.push(obj);
                 }
             }
-
+            var object = {
+                "Name": "back",
+                "x": 25,
+                "y": 500,
+                "w": this.ctx2.measureText("back").width,
+                "h": 50
+            };
+            currentEquips.push(object);
             this.itemSelected = false;
         }
         update() {
@@ -93,13 +103,16 @@ module Game {
                     var y1 = currentEquips[i].y - 10;
                     var y2 = currentEquips[i].y + currentEquips[i].h;
                     if ((x1 <= this.mx && this.mx <= x2) && (y1 <= this.my && this.my <= y2)) {
-                        if (this.type === "Head") {
+                        if (currentEquips[i].Name === "back") {
+                            //this.ctx2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                            sManager.popState();
+                        }
+                        else if (this.type === "Head") {
                             for (var x = 0; x <= ObjLength(JSON_CACHE['equip'].Head); x++) {
                                 if (currentEquips[i].Name === this.hKeys[x]) {
                                     this.item = JSON_CACHE['equip'].Head[this.hKeys[x]];
-                                    this.battler.unequipItem(this.type);
-                                    this.battler.equipItem(this.hKeys[x], this.item, 'Head');
                                     sManager.popState();
+                                    sManager.pushState(new EquipDetails(this.ctx2, this.item, this.hKeys[x], this.type, this.battler));
                                     break;
                                 }
                             }
@@ -109,9 +122,8 @@ module Game {
                                 if (currentEquips[i].Name === this.bKeys[x]) {
                                     //this.itemSelected = true;
                                     this.item = JSON_CACHE['equip'].Body[this.bKeys[x]];
-                                    this.battler.unequipItem(this.type);
-                                    this.battler.equipItem(this.bKeys[x], this.item, 'Body');
                                     sManager.popState();
+                                    sManager.pushState(new EquipDetails(this.ctx2, this.item, this.bKeys[x], this.type, this.battler));
                                     break;
                                 }
                             }
@@ -121,9 +133,8 @@ module Game {
                                 if (currentEquips[i].Name === this.wKeys[x]) {
                                     //this.itemSelected = true;
                                     this.item = JSON_CACHE['equip'].Weapon[this.wKeys[x]];
-                                    this.battler.unequipItem(this.type);
-                                    this.battler.equipItem(this.wKeys[x], this.item, 'Weapon');
                                     sManager.popState();
+                                    sManager.pushState(new EquipDetails(this.ctx2, this.item, this.wKeys[x], this.type, this.battler));
                                     break;
                                 }
                             }
@@ -133,9 +144,8 @@ module Game {
                                 if (currentEquips[i].Name === this.fKeys[x]) {
                                     //this.itemSelected = true;
                                     this.item = JSON_CACHE['equip'].Feet[this.fKeys[x]];
-                                    this.battler.unequipItem(this.type);
-                                    this.battler.equipItem(this.fKeys[x], this.item, 'Feet');
                                     sManager.popState();
+                                    sManager.pushState(new EquipDetails(this.ctx2, this.item, this.fKeys[x], this.type, this.battler));
                                     break;
                                 }
                             }
@@ -143,18 +153,6 @@ module Game {
                     }
                 }
             }
-        }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
         }
     }
 }

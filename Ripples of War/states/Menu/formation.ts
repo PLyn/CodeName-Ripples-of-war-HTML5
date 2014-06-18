@@ -1,7 +1,6 @@
 ﻿///<reference path='../State.ts' />
 module Game {
     export class Formation extends State{
-        ctx : CanvasRenderingContext2D;
         ctx2: CanvasRenderingContext2D;
         mx;
         my;
@@ -17,50 +16,16 @@ module Game {
             this.forms = [];
             this.battleKeys = Object.keys(battleList);
         }
-        draw(){
-            this.ctx2.clearRect(0, 0, 800, 600);
-            this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
-            setStyle(this.ctx2, 'Calibri', '16pt', 'black', 'bold', 'italic', 'left');
-            this.ctx2.fillText('Formations', 150, 125);
-            for (var i = 0; i < this.keys.length; i++) {
-                this.ctx2.fillText(this.keys[i], this.forms[i].x, this.forms[i].y);
-            }
-            this.ctx2.fillText("Formation Bonuses", 400, 125);
-            this.ctx2.fillText("HP: " + FORMATION.bonus.HP, 400, 150);
-            this.ctx2.fillText("MP: " + FORMATION.bonus.MP, 400, 175);
-            this.ctx2.fillText("Attack: " + FORMATION.bonus.Atk, 400, 200);
-            this.ctx2.fillText("Defense: " + FORMATION.bonus.Def, 400, 225);
-            this.ctx2.fillText("Speed: " + FORMATION.bonus.Spd, 400, 250);
-            this.ctx2.fillText("Magic Defense: " + FORMATION.bonus.MDef, 400, 275);
-            this.ctx2.fillText("Luck: " + FORMATION.bonus.Luc, 400, 300);
-
-            this.ctx2.fillText("Current Formation: " + FORMATION.current, 200, 325);
-
-            this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
-
-           /* for (var i = 0; i < this.battleKeys.length; i++) {
-                if (battleList[this.battleKeys[i]].currentState !== 1) {
-                    if (battleList[this.battleKeys[i]].Base.Type === 0) {
-                        this.formation = FORMATION.positions[i];
-                        //battleList[this.battleKeys[i]].setPos(this.formation[i].x, this.formation[i].y);
-                    }
-                    battleList[this.battleKeys[i]].render(this.ctx2, this.formation.x, this.formation.y);
-                    //this.ctx.fillText(battleList[this.battleKeys[i]].Base.ID, this.formation[i].x, this.formation[i].y);
-                    this.ctx2.fillText(battleList[this.battleKeys[i]].Base.ID, battleList[this.battleKeys[i]].x + 20, battleList[this.battleKeys[i]].y - 5);
-                }
-            }*/
-        }
         addObjects() {
             this.keys = Object.keys(JSON_CACHE['formation'].Formations);
             for (var i = 0; i < this.keys.length; i++) {
                 this.forms.push({
                     "Name": this.keys[i],
-                    "x": 25,
-                    "y": (i * 50) + 145,
+                    "x": 50,
+                    "y": (i * 25) + 150,
                     "w": 75,
                     "h": 5
                 });
-                this.ctx2.fillText(this.keys[i], this.forms[i].x, this.forms[i].y);
             }
             var obj = {
                 "Name": "Back",
@@ -70,6 +35,38 @@ module Game {
                 "h": 50
             };
             this.forms.push(obj);
+        }
+        draw(){
+            this.ctx2.clearRect(0, 0, 800, 600);
+            //this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
+            quickWindow(this.ctx2, 25, 100, 600, 400, "blue", "red");
+            setStyle(this.ctx2, 'Calibri', '16pt', 'white', 'bold');
+            this.ctx2.fillText('Formations', 150, 125);
+            this.ctx2.fillText("Formation Bonuses", 400, 125);
+            this.ctx2.fillText("Current Formation: " + FORMATION.current, 350, 400);
+            setStyle(this.ctx2, 'Calibri', '12pt', 'white');
+            for (var i = 0; i < this.keys.length; i++) {
+                this.ctx2.fillText(this.keys[i], this.forms[i].x, this.forms[i].y);
+            }
+
+            var fkeys = Object.keys(FORMATION.bonus);
+            var bonus = FORMATION.bonus;
+            var c = 0;
+            for (var x = 0; x < fkeys.length; x++) {
+                if (bonus[fkeys[x]] === 0) {
+                }
+                else {
+                    this.ctx2.fillText(fkeys[x] + ": " + bonus[fkeys[x]], 400, 150 + (c * 15));
+                    c++;
+                }
+            }
+
+            var cForm = JSON_CACHE['formation'].Formations[FORMATION.current];
+            for (var y = 0; y < battleList.length; y++) {
+                battleList[y].setPos(cForm.positions.x[y], cForm.positions.y[y]);
+                battleList[y].render(this.ctx2);
+            }
+            this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
         }
         changeFormation() {
             if (Date.now() > this.time && this.back) {
@@ -110,14 +107,6 @@ module Game {
         }
         update() {
             this.changeFormation();
-        }
-        render() {
-        }
-        pause() {
-        }
-        resume() {
-        }
-        destroy() {
         }
     }
 }

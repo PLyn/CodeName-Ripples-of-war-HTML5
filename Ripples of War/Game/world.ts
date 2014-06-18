@@ -33,10 +33,5 @@ module Game {
         update() {
             sManager.updateStack();
         }
-        render = () => {
-        }
-        playerInput() {
-
-        }
     }
 }

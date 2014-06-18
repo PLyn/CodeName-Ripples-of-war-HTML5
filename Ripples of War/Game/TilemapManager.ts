@@ -81,26 +81,12 @@ module Game {
                 }
                 else if (TILEDATA_CACHE[index].layers[layeridX].type === "objectgroup") {
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
-                    //var key = Object.keys(objects);
-                    /*for (var y = 0; y < key.length; y++) {
-                        objects[key[y]] = [];
-                    }*/
                     objects = [];
                     for (var x = 0; x < tileObjects.length; x++) {
                         var tile = this.getTile(tileObjects[x].gid, index);
-                        /*obj.name = tileObjects[x].name;
-                        obj.type = tileObjects[x].type;
-                        obj.properties.ID = tileObjects[x].properties.ID;
-                        obj.x = tileObjects[x].x;
-                        obj.y = tileObjects[x].y;*/
 
                         var w = TILEDATA_CACHE[index].tilewidth;
                         var h = TILEDATA_CACHE[index].tileheight;
-                        //this.objimg = tile.img;
-                        //this.objpx = tile.px;
-                        //this.objpy = tile.py;
-                        //this.objx = obj.x;
-                        //this.objy = obj.y;
 
                         var y = tileObjects[x].y - 64;
                         setStyle(context, 'Calibri', '12pt', 'black', 'bold', 'italic', 'center');

@@ -9,12 +9,12 @@
     <Johnathan type="party" value="add"></Johnathan>
     <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
     <potion type="item" quantity="1" itemType="consumable"></potion>
-    <explore type="next" id="map1"></explore>
+    <explore type="next" id="Timor_Grasslands"></explore>
   </scene>
 	<scene id="1">
     <theme type="bgm" value="on"></theme>
-    <hero type="dialog">I wonder if there is a town nearby--</hero>
     <Syndra type="move" x="4" y="5"></Syndra>
+    <hero type="dialog">I wonder if there is a town nearby--</hero>
     <syndra type="dialog">Hi there, you look a little lost?</syndra>
     <hero type="dialog">WHOA! where did you come from?</hero>
     <syndra type="dialog">um...just over there?</syndra>

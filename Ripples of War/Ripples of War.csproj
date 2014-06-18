@@ -43,7 +43,7 @@
     <Content Include="Assets\Tilemap\charset.png" />
     <Content Include="Assets\Tilemap\mapTileset.png" />
     <Content Include="Assets\Tilemap\Tileset.png" />
-    <Content Include="Assets\XML\test.xml">
+    <Content Include="Assets\XML\Scenes.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="default.htm" />
@@ -88,6 +88,7 @@
     <TypeScriptCompile Include="States\Battle\StatesDialogs.ts" />
     <TypeScriptCompile Include="States\Menu\equip.ts" />
     <TypeScriptCompile Include="States\explore.ts" />
+    <TypeScriptCompile Include="States\Menu\EquipDetails.ts" />
     <TypeScriptCompile Include="States\Menu\formation.ts" />
     <TypeScriptCompile Include="States\Menu\inventory.ts" />
     <TypeScriptCompile Include="States\Menu\itemDetails.ts" />
@@ -137,7 +138,9 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Assets\JSON\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

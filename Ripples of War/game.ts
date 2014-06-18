@@ -2,13 +2,11 @@
 var audioElement = new Audio();
 var WORLD = 0;
 var sManager;
-var GAME_VERSION = "0.15";
+var GAME_VERSION = "0.3";
 var PARTY_SIZE = 2;
 var GAME_WIDTH = 600;
 var GAME_HEIGHT = 600;
 
-//State system core will most likely be here so read the book and figure out
-//how to get it working and leading to each state as needed
 module Game {
     export class Init {
         preloader;
@@ -47,10 +45,9 @@ module Game {
                     map2: 'Assets/Tilemap/map2.json',
                     map3: 'Assets/Tilemap/map3.json',
                     Timor_Grasslands: 'Assets/Tilemap/Timor_Grasslands.json'
-                    //carpet: 'Assets/Tilemap/nextmap.json'
                 },
                 XML: {
-                    chapter: 'Assets/XML/test.xml'
+                    chapter: 'Assets/XML/Scenes.xml'
                 },
                 JSON: {
                     equip: 'Assets/XML/Equipment.json',
@@ -70,22 +67,19 @@ module Game {
                     theme: 'Assets/Music/theme'
                 }
             };
-            this.preloader = new Game.Preloader();
+            //StateManager that controls the current state of the game
             sManager = new Game.StateManager();
+            this.preloader = new Game.Preloader();
+            //loads assets and calls the callback when complete
             this.preloader.queueAssets(source, this.onComplete);  
 
         }
         onComplete = () => {
-            //this.dialog = new Game.Cutscene("dia", 800, 600);
             this.world = new Game.Loop();
             setInterval(this.GameLoop, 1000 / 30);
-            
         }
         GameLoop = () => { 
-                    this.world.update();
-                    this.world.render();
-            //this.world.update();
-            //this.world.render();
+            this.world.update();
         }
     }
 }
@@ -94,5 +88,5 @@ function startGame() {
     var world = new Game.Loop();
     setInterval(function () {
         world.update();
-    }, 1000/30);
+    }, 1000 / 30);
 }

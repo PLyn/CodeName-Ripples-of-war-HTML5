@@ -138,9 +138,17 @@ module Game {
                 sManager.pushState(new Battle(+objects[i].properties.ID, this.mapID));
             }
         }
-        render() {}
-        pause() {}
-        resume() {}
-        destroy() {}
+        render() {
+
+        }
+        pause() {
+
+        }
+        resume() {
+
+        }
+        destroy() {
+
+        }
     }
 }

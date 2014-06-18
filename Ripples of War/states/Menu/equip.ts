@@ -116,6 +116,7 @@ module Game {
                         else {
                             sManager.pushState(new SelectEquip(this.context, equips[i].type, this.battler));
                         }
+                        break;
                     }
                 }
         }
@@ -185,14 +186,6 @@ module Game {
                 this.changeEquip();
             }
 
-        }
-        render() {
-        }
-        pause() {
-        }
-        resume() {
-        }
-        destroy() {
         }
     }
 }

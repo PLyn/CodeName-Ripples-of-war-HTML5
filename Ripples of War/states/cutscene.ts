@@ -28,10 +28,10 @@ module Game {
         mapID;
         constructor(ctx, xmlID, mapID) {
             super();
-            this.canvas = <HTMLCanvasElement> document.getElementById('layer2');
+            this.canvas = <HTMLCanvasElement> document.getElementById('layer1');
             this.context = this.canvas.getContext('2d');
-            this.canvas2 = <HTMLCanvasElement> document.getElementById('layer1');
-            this.context2 = this.canvas.getContext('2d');
+            this.canvas2 = <HTMLCanvasElement> document.getElementById('layer2');
+            this.context2 = this.canvas2.getContext('2d');
             this.xmlID = xmlID;
             this.mapID = mapID;
         }
@@ -62,41 +62,41 @@ module Game {
             switch (this.currentNode.getAttribute('type')) {
                 case "dialog":
                     if (this.initNode) {
-                        setStyle(this.context, 'Calibri', '16pt', 'white', 'bold', 'italic', 'left');
+                        setStyle(this.context2, 'Calibri', '12pt', 'white');
                         this.linePos = 0;
                         this.lineHeight = 1;
-                        this.lines = wrap(this.context, this.currentNode);
+                        this.lines = wrap(this.context2, this.currentNode);
                         this.prevName = this.lines[this.linePos].name;
                         this.initNode = false;
-                        this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
+                        this.context2.drawImage(IMAGE_CACHE['dialog'], 25, 350);
 
                         this.time = this.currentTime + 500;
                         if (this.prevName !== this.lines[this.linePos].name) {
-                            this.context.clearRect(0, 0, 800, 600);
+                            this.context2.clearRect(0, 0, 800, 600);
                             this.prevName = this.lines[this.linePos].name;
                             this.lineHeight = 1;
-                            this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
+                            this.context2.drawImage(IMAGE_CACHE['dialog'], 25, 350);
                         }
                         else if (this.linePos >= 1) {
                             this.lineHeight += 25;
                         }
-                        this.context.fillText(this.lines[this.linePos].message, 50, (425 + this.lineHeight));
-                        this.context.fillText(this.lines[this.linePos].name, 30, 400);
+                        this.context2.fillText(this.lines[this.linePos].message, 60, (425 + this.lineHeight));
+                        this.context2.fillText(this.lines[this.linePos].name, 40, 400);
                         this.linePos++;
                     }
                     if (this.linePos < this.lines.length && this.currentTime > this.time && mouseClicked()) {
                         this.time = this.currentTime + 500;
                         if (this.prevName !== this.lines[this.linePos].name) {
-                            this.context.clearRect(0, 0, 800, 600);
+                            this.context2.clearRect(0, 0, 800, 600);
                             this.prevName = this.lines[this.linePos].name;
                             this.lineHeight = 1;
-                            this.context.drawImage(IMAGE_CACHE['dialog'], 25, 350);
+                            this.context2.drawImage(IMAGE_CACHE['dialog'], 25, 350);
                         }
                         else if (this.linePos >= 1) {
                             this.lineHeight += 25;
                         }
-                        this.context.fillText(this.lines[this.linePos].message, 50, (425 + this.lineHeight));
-                        this.context.fillText(this.lines[this.linePos].name, 30, 400);
+                        this.context2.fillText(this.lines[this.linePos].message, 60, (425 + this.lineHeight));
+                        this.context2.fillText(this.lines[this.linePos].name, 40, 400);
                         this.linePos++;
                     }
                     else if (this.linePos >= this.lines.length && this.currentTime > this.time && mouseClicked()) {
@@ -106,6 +106,7 @@ module Game {
                     break;
                 case "bg":
                     this.context.drawImage(IMAGE_CACHE[this.currentNode.nodeName], 0, 0);
+                    this.initNode = true;
                     this.nextNode();
                     break;
                 case "party":
@@ -116,6 +117,7 @@ module Game {
                         PARTY.remove(this.currentNode.nodeName, 0);
                     }
                     //level up character to current level and add spells as well check if there is noone in the party here -TODO
+                    this.initNode = true;
                     this.nextNode();
                     break;
                 case "ability":
@@ -131,10 +133,12 @@ module Game {
                         }
                         SPELL.RemoveSpell(battleList[i], this.currentNode.getAttribute('spell'));
                     }
+                    this.initNode = true;
                     this.nextNode();
                     break;
                 case "switch":
                     QUEST.Switch[this.currentNode.nodeName] = this.currentNode.getAttribute('value');
+                    this.initNode = true;
                     this.nextNode();
                     break;
                 case "sfx":
@@ -160,11 +164,12 @@ module Game {
                     }
                     dx = +this.currentNode.getAttribute('x');
                     dy = +this.currentNode.getAttribute('y');
-                    var coords = moveSprite(this.context2, sx, sy, dx, dy);
+                    var coords = moveSprite(this.context, sx, sy, dx, dy);
                     objects[x].x = coords.x;
                     objects[x].y = coords.y;
-                    this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-                    TileMap.drawMapNoObjectReset(this.context2, this.mapID);
+                    this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                    TileMap.drawMapNoObjectReset(this.context, this.mapID);
+                    this.initNode = true;
                     this.nextNode();
                     break;
                 case "object":
@@ -193,6 +198,7 @@ module Game {
                         }
                         objects.splice(x, 1);
                     }
+                    this.initNode = true;
                     this.nextNode();
                     break;
                 case "anim":
@@ -225,10 +231,12 @@ module Game {
                         bgm.pause();
                         bgm.currentTime - 0;
                     }
+                    this.initNode = true;
                     this.nextNode();
                     break;
                 case "item":
                     ITEM.add(this.currentNode.nodeName, this.currentNode.getAttribute('quantity'), this.currentNode.getAttribute('itemType'));
+                    this.initNode = true;
                     this.nextNode();
                     break;
                 case "next":
@@ -253,18 +261,6 @@ module Game {
                 default:
                     break;
             }
-        }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
         }
     }
 }

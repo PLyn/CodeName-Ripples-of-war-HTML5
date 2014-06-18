@@ -19,14 +19,14 @@
             //state.init();
         }
         pushState(state) {
-            this.stateStack.push(state);
-            state.init();
+                this.stateStack.push(state);
+                state.init();
             //this.stateStack.push(this.gameStates[key]);
             //this.gameStates[key].init();
         }
         popState() {
             if (this.stateStack.length > 0 && this.time < Date.now()) {
-                this.time = Date.now() + 1000;
+                this.time = Date.now() + 100;
                 this.stateStack.pop();
                 if (this.stateStack.length > 0) {
                     var len = this.stateStack.length;

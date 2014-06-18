@@ -48,6 +48,7 @@ module Game {
                             this.context.clearRect(0, 0, 800, 600);
                             sManager.popState();
                             sManager.pushState(new Cutscene(this.context, 0, "map1"));
+                            break;
                             //sManager.pushState(new Battle(0, "map1"));
                         }
                         else if (this.MenuItems[x].name === "load") {
@@ -58,22 +59,11 @@ module Game {
                                 sManager.popState();
                                 SAVE.load(GAME_WIDTH);
                             }
+                            break;
                         }
                     }
                 }
             }
-        }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
         }
     }
 }

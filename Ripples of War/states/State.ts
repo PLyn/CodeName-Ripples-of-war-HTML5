@@ -16,7 +16,7 @@
 
         }
         pause() {
-        
+
         }
         resume() {
 

@@ -11,6 +11,7 @@ module Game {
         constructor(context) {
             super();
             this.context = context;
+            this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
             this.objects = [];
             this.objects.push({
                 "Name": "sound",
@@ -42,7 +43,10 @@ module Game {
             });
         }
         init() {
-            this.context.drawImage(IMAGE_CACHE['dialog'], 25, 130);
+            //this.context.drawImage(IMAGE_CACHE['dialog'], 25, 130);
+            quickWindow(this.context, 150, 130, 250, 250, "blue", "red");
+
+            setStyle(this.context, 'calibre', 12, "white");
             this.context.fillText("Settings", 275, 150);
             this.context.fillText("Sounds", 300, 200);
             this.context.drawImage(IMAGE_CACHE['box'], 250, 175);
@@ -109,18 +113,6 @@ module Game {
                 this.musicBool = true;
                 this.context.drawImage(IMAGE_CACHE['tick'], 260, 230);
             }
-        }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
         }
     }
 }

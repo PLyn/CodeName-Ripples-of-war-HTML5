@@ -13,24 +13,40 @@ module Game {
             this.battler = battleList[0];
         }
         init() {
-            this.context.drawImage(IMAGE_CACHE['dialog'], 35, 130);
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
+            quickWindow(this.context, 25, 100, 500, 400, "blue", "red");
+            setStyle(this.context, 'calibre', 12, 'white');
+
             var oKeys = Object.keys(battleList);
             for (var y = 0; y < oKeys.length; y++) {
                 if (battleList[oKeys[y]].Base.Type === 0) {
                     if (this.battler === battleList[oKeys[y]]) {
-                        this.context.fillText("*", 55 + (y * 75), 155)
+                        quickWindow(this.context, 50 + (y * 75), 105, this.context.measureText("(" + battleList[oKeys[y]].Base.ID + ")").width, 20, "blue", "red");
+                        setStyle(this.context, 'calibre', 16, 'white');
+                        this.context.fillText("(" + battleList[oKeys[y]].Base.ID + ")", 50 + (y * 75), 125);
+                        this.objects[y] = {
+                            "Name": battleList[oKeys[y]].Base.ID,
+                            "x": 50 + (y * 75),
+                            "y": 125,
+                            "w": this.context.measureText("(" + battleList[oKeys[y]].Base.ID + ")").width,
+                            "h": 20
+                        };
                     }
-                    this.context.fillText(battleList[oKeys[y]].Base.ID, 50 + (y * 75), 145);
-                    this.objects[y] = {
-                        "Name": battleList[oKeys[y]].Base.ID,
-                        "x": 50 + (y * 75),
-                        "y": 145,
-                        "w": this.context.measureText(battleList[oKeys[y]].Base.ID).width,
-                        "h": 20
-                    };
+                    else {
+                        quickWindow(this.context, 50 + (y * 75), 105, this.context.measureText(battleList[oKeys[y]].Base.ID).width, 20, "blue", "red");
+                        setStyle(this.context, 'calibre', 16, 'white');
+                        this.context.fillText(battleList[oKeys[y]].Base.ID, 50 + (y * 75), 125);
+                        this.objects[y] = {
+                            "Name": battleList[oKeys[y]].Base.ID,
+                            "x": 50 + (y * 75),
+                            "y": 125,
+                            "w": this.context.measureText(battleList[oKeys[y]].Base.ID).width,
+                            "h": 20
+                        };
+                    }
                 }
             }
+            setStyle(this.context, 'calibre', 12, 'white');
             this.objects[y+1] = {
                 "Name": "back",
                 "x": 40,
@@ -39,14 +55,25 @@ module Game {
                 "h": 75
             };
             var bKeys = Object.keys(this.battler.Base);
+            this.context.fillText("Stats", 60, 160);
             for (var x = 1; x < bKeys.length - 1; x++) {
-                this.context.fillText(bKeys[x] + " " + this.battler.Base[bKeys[x]] + " ( + " + this.battler.Modified[bKeys[x]] + ")", 50, 190 + (25 * x));
+                this.context.fillText(bKeys[x] + " " + this.battler.Base[bKeys[x]] + " ( + " + this.battler.Modified[bKeys[x]] + ")", 50, 150 + (25 * x));
             }
-            this.context.fillText("Abilities", 150, 200);
+            this.context.fillText("Element Resist", 135, 160);
+            bKeys = Object.keys(this.battler.ElementResist);
+            for (var x = 0; x <= bKeys.length - 1; x++) {
+                this.context.fillText(bKeys[x] + " " + this.battler.ElementResist[bKeys[x]], 150, 175 + (25 * x));
+            }
+            this.context.fillText("Status Resist", 240, 160);
+            bKeys = Object.keys(this.battler.StatusResist);
+            for (var x = 0; x <= bKeys.length - 1; x++) {
+                this.context.fillText(bKeys[x] + " " + this.battler.StatusResist[bKeys[x]], 250, 175 + (25 * x));
+            }
+            this.context.fillText("Abilities",60, 435);
             for(var i = 0; i < this.battler.Spells.length; i++){
-                this.context.fillText(this.battler.Spells[i], 150, 215 + (25 * i));
+                this.context.fillText(this.battler.Spells[i], 50 + (75 * i), 450);
             }
-            this.context.drawImage(this.battler.img, 300, 200);
+            this.context.drawImage(this.battler.img, 400, 200);
         }
         reload(name) {
             var oKeys = Object.keys(battleList);
@@ -81,18 +108,6 @@ module Game {
                     }
                 }
             }
-        }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
         }
     }
 }

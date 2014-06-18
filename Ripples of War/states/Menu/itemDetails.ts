@@ -13,12 +13,13 @@ module Game {
             this.clickBounds = [];
         }
         init() {
-            this.context.drawImage(IMAGE_CACHE['dialog'], 35, 150);
-            this.context.fillText(this.item.name, 45, 160);
-            this.context.fillText("description here", 45, 200);
-            this.context.fillText("Image here", 200, 200);
+            //this.context.drawImage(IMAGE_CACHE['dialog'], 35, 150);
+            quickWindow(this.context, 50, 200, 400, 100, "blue", "red");
+            setStyle(this.context, 'calibre', 12, "white");
+            this.context.fillText(this.item.name, 60, 225);
+            this.context.fillText("description here", 60, 250);
+            this.context.fillText("Image here", 250, 225);
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
-            this.context.fillText("Use", 300, 300);
 
             this.clickBounds.push({
                 "name": "back",
@@ -26,13 +27,6 @@ module Game {
                 "y": 490,
                 "w": 75,
                 "h": 75
-            });
-            this.clickBounds.push({
-                "name": "use",
-                "x": 150,
-                "y": 395,
-                "w": this.context.measureText("use").width,
-                "h": 5
             });
         }
         update() {
@@ -50,38 +44,12 @@ module Game {
                                 this.context.clearRect(0, 0, 800, 600);
                                 sManager.popState();
                                 break;
-                            case "use":
-                                this.context.clearRect(0, 0, 800, 600);
-                                sManager.popState();
-                                break;
                             default:
                                 break;
                         }
                     }
                 }
             }
-        }
-        selectItemTarget() {
-            quickWindow(this.context, 10, 10, 300, 500, "blue", "red");
-            for (var x = 0; x < battleList.length; x++) {
-                if (battleList[x].Base.Type === 0) {
-                    this.context.drawImage(battleList[x].img, 25, 40 + (x * 50));
-                    this.context.fillText(battleList[x].Base.ID, 100, 40 + (x * 50));
-                    this.context.fillText(battleList[x].Base.ID, 100, 40 + (x * 50));
-                }
-            }
-        }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
         }
     }
 }

@@ -23,27 +23,28 @@ module Game {
             });
             this.objects.push({
                 "Name": "load",
-                "x": 200,
-                "y": 295,
-                "w": this.context.measureText("Load Game").width,
-                "h": 5
+                "x": (GAME_WIDTH / 2),
+                "y": (GAME_HEIGHT / 2) + 60,
+                "w": 100,
+                "h": 50
             });
             this.objects.push({
                 "Name": "save",
-                "x": 200,
-                "y": 245,
-                "w": this.context.measureText("Save Game").width,
-                "h": 5
+                "x": (GAME_WIDTH / 2),
+                "y": GAME_HEIGHT / 2,
+                "w": 100,
+                "h": 40
             });
         }
         init() {
-            this.context.drawImage(IMAGE_CACHE['dialog'], 25, 130);
-            this.context.fillText("Save Game", 200, 250);
-            this.context.fillText("Load Game", 200, 300);
+            //this.context.drawImage(IMAGE_CACHE['dialog'], 25, 130);
+            quickWindow(this.context, (GAME_WIDTH / 2), GAME_HEIGHT / 2, 100, 40, "blue", "red");
+            quickWindow(this.context, (GAME_WIDTH / 2), (GAME_HEIGHT / 2) + 50, 100, 40, "blue", "red");
+            setStyle(this.context, 'calibre', 12, 'white');
+            this.context.fillText("Save Game", (GAME_WIDTH / 2) + 20, (GAME_HEIGHT / 2) + 20);
+            this.context.fillText("Load Game", (GAME_WIDTH / 2) + 20, (GAME_HEIGHT / 2) + 70);
         }
         action(type) {
-            this.context.drawImage(IMAGE_CACHE['dialog'], 45, 150);
-            this.context.fillText("Your game is currently being " + type, 200, 200);
             this.saveTime = Date.now() + 1000;
             if (type === "saved" && this.saveTime < Date.now()) {
                 sManager.restart();
@@ -51,7 +52,7 @@ module Game {
             }
             else if (type === "loaded") {
                 sManager.restart();
-                SAVE.load(800);
+                SAVE.load(GAME_WIDTH);
             }
             this.type = type;
             this.initBool = true;
@@ -88,18 +89,6 @@ module Game {
                     this.context.fillText("your game has been " + this.type, 200, 200)
                 }
             }
-        }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
         }
     }
 }

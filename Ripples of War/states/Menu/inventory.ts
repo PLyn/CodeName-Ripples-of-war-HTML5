@@ -139,17 +139,5 @@ module Game {
                 }
             }
         }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
-        }
     }
 }

@@ -1,5 +1,5 @@
-/*      HTML5 AssetManager V. 0.95
-*   Currently supports images, Atlases(from texturepacker) for sprites or animation, tilesets, xmls and sounds for now
+/*      HTML5 AssetManager V. 1.0
+*   Currently supports images, Atlases(from texturepacker) for sprites or animation, tilesets, JSONs, xmls and sounds for now
 *   how to use:
 */
 var ANIM_CACHE = []; //Global atlas cache to get specific atlases
@@ -46,9 +46,8 @@ module Game {
         x = 0; //x Coordinate of sprite
         xmlKey; //The keys for the XML_CACHE array when it is being used
         y = 0; //y Coordinate of sprite
-        callback = new function () { };
         queueAssets(Assets, load) {
-            this.callback = load;
+            //counts the total number of assets that are to be loaded
             var Assetkeys = Object.keys(Assets);
             for (var x = 0; x < Assetkeys.length; x++) {
                 var itemkeys = Object.keys(Assets[Assetkeys[x]]);
@@ -80,15 +79,16 @@ module Game {
             if (Assets.Music) {
                 this.soundloader(Assets.Music, 'Music');
             }
-            var that = this;
+            //if files are loaded then proceed to call the callback
             this.timerid = setInterval(function () {
                 if (isLoaded >= totalAssets) {
                     clearInterval(that.timerid);
-                    startGame();
+                    load();
                 }
             }, 1000 / 1);
         }
         genericLoader(url, isImage, key?, onLoad?, typeOfFile?) {
+            //if the asset is an image, load the image
             if (isImage) {
                 for (var file in url) {
                     IMAGE_CACHE[file] = new Image();
@@ -97,6 +97,7 @@ module Game {
                     IMAGE_CACHE[file].src = url[file];
                 }
             }
+            //else it will call the loadfile function to parse it
             else {
                 key = Object.keys(url);
                 for (var i = 0; i < key.length; i++) {
@@ -110,8 +111,11 @@ module Game {
             var audioType = '';
             for (pos = 0; pos < key.length; pos++) {
                 if (type === 'Sound') {
-                    SOUND_CACHE[key[pos]] = document.createElement("audio");  
+                    //creates audio element
+                    SOUND_CACHE[key[pos]] = document.createElement("audio"); 
+                    //append it to the body of the document 
                     document.body.appendChild(SOUND_CACHE[key[pos]]);
+                    //gets sound format after checking which format can be played by the browser
                     audioType = this.soundFormat(SOUND_CACHE[key[pos]]);
                     SOUND_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     SOUND_CACHE[key[pos]].load();
@@ -122,6 +126,7 @@ module Game {
                 else if (type === 'Music') {
                     MUSIC_CACHE[key[pos]] = document.createElement("audio");
                     document.body.appendChild(MUSIC_CACHE[key[pos]]);
+                    //gets sound format after checking which format can be played by the browser
                     audioType = this.soundFormat(MUSIC_CACHE[key[pos]]);
                     MUSIC_CACHE[key[pos]].setAttribute("src", sounds[key[pos]] + audioType);
                     MUSIC_CACHE[key[pos]].load();
@@ -142,14 +147,17 @@ module Game {
             return ext;
         }
         loadfile(key, url, onLoad, type, pos?) {
+            //makes request to server to get file needed
             var xobj = new XMLHttpRequest();
             xobj.open('GET', url, true);
             xobj.onreadystatechange = function () {
                 if (xobj.readyState == 4 && xobj.status == 200) {
                     if (type === 'json') {
+                        //gets JSON response to be parsed and pass it to the callback
                         onLoad(key, xobj.responseText, pos);
                     }
                     else if (type === 'xml') {
+                        //gets XML response to be parsed and pass it to the callback
                         onLoad(key, xobj.responseXML, pos);
                     }
                     else if (type === 'mp3') {
