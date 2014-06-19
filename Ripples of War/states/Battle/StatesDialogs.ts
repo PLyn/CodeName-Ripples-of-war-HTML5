@@ -1,4 +1,7 @@
-﻿function StateDialogs(context: CanvasRenderingContext2D, state) {
+﻿/*
+    draws dialogs and graphics based on the state of the battle
+*/
+function StateDialogs(context: CanvasRenderingContext2D, state) {
     setStyle(context, 'Calibri', '18 pt', 'white', 'bold');
     switch (state) {
         case 1: //p select

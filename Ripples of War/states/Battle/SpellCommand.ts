@@ -1,4 +1,7 @@
-﻿function SpellSelectDialog(sp: Game.Sprite, context: CanvasRenderingContext2D) {
+﻿/*
+    draws dialogs for spells of the current character
+*/
+function SpellSelectDialog(sp: Game.Sprite, context: CanvasRenderingContext2D) {
     quickWindow(context, 50, 400, 600, 200, "blue", "red");
     setStyle(context, 'calibre', 14, "white", "bold");
     context.fillText(sp.Base.ID + " Spells", 150, 415);
@@ -15,6 +18,9 @@
     }
     return bounds;
 }
+/*
+    Single target spell cast on target
+*/
 function castSpellSingle(context: CanvasRenderingContext2D, spell, sp: Game.Sprite, caster: Game.Sprite) {
     var dmg = spell.Damage + (spell.Ratio * caster.Current.MAtk); //change spell damage from base to base + ratio
     //get targets Magic defense
@@ -56,6 +62,9 @@ function castSpellSingle(context: CanvasRenderingContext2D, spell, sp: Game.Spri
     }, 1000 / 1);
     return sp;
 }
+/*
+    all-targeted spell cast on targets
+*/
 function castSpellAll(context: CanvasRenderingContext2D, spell, queue: Game.Sprite[], caster: Game.Sprite) {
     setStyle(context, 'Calibri', '12 pt', 'white', 'bold');
 

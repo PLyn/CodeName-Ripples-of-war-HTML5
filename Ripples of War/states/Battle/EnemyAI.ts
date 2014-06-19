@@ -1,4 +1,7 @@
-﻿function EnemyActionChooser(target: Game.Sprite, queue: Game.Sprite[]) {
+﻿/*
+    determines which action an enemy should take
+*/
+function EnemyActionChooser(target: Game.Sprite, queue: Game.Sprite[]) {
     var total = 100;
     var parts = [];
     var foe;
@@ -14,44 +17,16 @@
     var key = Object.keys(foe);
     var cAbilities;
     for (var y = 0; y < (key.length - 1); y++) {
-        if (rand >= foe[key[y]] && (foe[key[y+1]]) >= rand) {
+        if (rand >= foe[key[y]] && (foe[key[y + 1]]) >= rand) {
             cAbilities = key[y];
             break;
         }
     }
     return cAbilities;
-}/*
-function EnemyAction(context, cAbilities, queue, target) {
-    //count the number of allies
-    var allyCount = 0;
-    for (var x = 0; x < queue.length; x++) {
-        if (queue[x].Base.Type === 0 && queue[x].currentState !== 1) {
-            allyCount++;
-        }
-    }
-    //get random int to determine which ally to target
-    var random = getRandomInt(0, allyCount);
-
-
-    if (cAbilities === "Attack") {
-        var sprite = Attack(context, target, queue[random]);
-        queue[random] = sprite.Tar;
-        return queue;
-    }
-    else if (cAbilities === "Defend") {
-        return queue;
-    }
-    else {
-        var spellkey = Object.keys(JSON_CACHE['spell']['Spells']);
-        for (var x = 0; x < spellkey.length; x++) {
-            if (cAbilities === spellkey[x]) {
-                return EnemySpellCast(context, JSON_CACHE['spell']['Spells'][spellkey[x]], queue, random, target);
-                break;
-            }
-        }
-        return queue;
-    }
-}*/
+}
+/*
+    Enemy cast spell on target/s dpending on the spell
+*/
 function EnemySpellCast(context, spell, queue: Game.Sprite[], target: number, caster) {   
     if (spell.All === 0) {
         var counter = 0;

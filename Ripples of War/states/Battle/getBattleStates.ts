@@ -2,18 +2,18 @@
     return {
         "PrePlayerTurn": 0,
         "PSelectCommand": 1,
-        "PAtkSelectTarget": 2, //last for attack to back
+        "PAtkSelectTarget": 2, 
         "PAtkAnim": 3,
         "PAttack": 4,
         "SpellDraw": 5,
         "SpellSelect": 6,
-        "SpellTarget": 7, //last point
+        "SpellTarget": 7, 
         "SpellAnim": 8,
         "SpellCast": 9,
         "PDefend": 10,
         "ItemDraw": 11,
         "ItemSelect": 12,
-        "ItemSelectTarget": 13,  //last point
+        "ItemSelectTarget": 13,  
         "ItemAnim": 14,
         "ItemUse": 15,
         "PreEnemyTurn": 16,
