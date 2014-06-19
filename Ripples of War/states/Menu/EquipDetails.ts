@@ -52,6 +52,9 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['back'], 25, 500);
         }
         update() {
+            /*
+                check which equiptype was passed and equip the equipment into that slot
+            */
             if (mouseClicked()) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
@@ -69,11 +72,9 @@ module Game {
                     else if (this.equipType === 'Feet') {
                         this.battler.equipItem(this.equipName, this.equip, 'Feet');
                     }
-                    //this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
                     sManager.popState();
                 }
                 else if ((25 <= this.mx && this.mx <= 75) && (500 <= this.my && this.my <= 550)) {
-                    //this.context.clearRect(0 , 0 ,GAME_WIDTH, GAME_HEIGHT);
                     sManager.popState();
                 }
             }

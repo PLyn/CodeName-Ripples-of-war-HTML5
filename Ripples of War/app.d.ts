@@ -86,6 +86,7 @@ declare var SAVE: any;
 declare var SPELL: any;
 declare var TileMap: any;
 declare var battleList: any[];
+declare var equips: any[];
 declare module Game {
     class GameObject {
         public iKey: string;
@@ -405,7 +406,6 @@ declare module Game {
         public destroy(): void;
     }
 }
-declare var equips: any[];
 declare module Game {
     class Equip extends State {
         public context: CanvasRenderingContext2D;
@@ -513,6 +513,7 @@ declare module Game {
         public bKeys: any;
         public wKeys: any;
         public fKeys: any;
+        public keys: any;
         public item: any;
         public itemSelected: boolean;
         public time: number;

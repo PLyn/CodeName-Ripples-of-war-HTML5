@@ -36,9 +36,11 @@ module Game {
             };
             this.forms.push(obj);
         }
+        /*
+            draw formations, bonuses and other details on screen
+        */
         draw(){
             this.ctx2.clearRect(0, 0, 800, 600);
-            //this.ctx2.drawImage(IMAGE_CACHE['dialog'], 15, 100);
             quickWindow(this.ctx2, 25, 100, 600, 400, "blue", "red");
             setStyle(this.ctx2, 'Calibri', '16pt', 'white', 'bold');
             this.ctx2.fillText('Formations', 150, 125);
@@ -68,6 +70,9 @@ module Game {
             }
             this.ctx2.drawImage(IMAGE_CACHE['back'], 25, 500);
         }
+        /*
+            takes player input to determine which formation was clicked on and set the formation to that formation
+        */  
         changeFormation() {
             if (Date.now() > this.time && this.back) {
                 this.ctx2.clearRect(0, 0, 800, 600);

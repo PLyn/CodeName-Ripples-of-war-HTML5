@@ -44,6 +44,9 @@ module Game {
             this.context.fillText("Save Game", (GAME_WIDTH / 2) + 20, (GAME_HEIGHT / 2) + 20);
             this.context.fillText("Load Game", (GAME_WIDTH / 2) + 20, (GAME_HEIGHT / 2) + 70);
         }
+        /*
+            depends on the type taken, it will save the game or load the game and then remove all the states 
+        */
         action(type) {
             this.saveTime = Date.now() + 1000;
             if (type === "saved" && this.saveTime < Date.now()) {

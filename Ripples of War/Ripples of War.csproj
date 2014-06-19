@@ -72,7 +72,6 @@
     <TypeScriptCompile Include="States\Battle\StatusEffect.ts" />
     <TypeScriptCompile Include="States\Battle\EnemyAI.ts" />
     <TypeScriptCompile Include="States\Battle\initializeMenuBounds.ts" />
-    <TypeScriptCompile Include="States\Battle\input_template.ts" />
     <TypeScriptCompile Include="States\Battle\SpellCommand.ts" />
     <TypeScriptCompile Include="States\Battle\StatesDialogs.ts" />
     <TypeScriptCompile Include="States\Menu\equip.ts" />
@@ -80,7 +79,7 @@
     <TypeScriptCompile Include="States\Menu\EquipDetails.ts" />
     <TypeScriptCompile Include="States\Menu\formation.ts" />
     <TypeScriptCompile Include="States\Menu\inventory.ts" />
-    <TypeScriptCompile Include="States\Menu\itemDetails.ts" />
+    <TypeScriptCompile Include="States\Menu\ItemDetails.ts" />
     <TypeScriptCompile Include="States\Menu\save.ts" />
     <TypeScriptCompile Include="States\Menu\selectEquip.ts" />
     <TypeScriptCompile Include="States\Menu\setting.ts" />

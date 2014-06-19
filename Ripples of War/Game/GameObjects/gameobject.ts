@@ -6,6 +6,7 @@ var SAVE;
 var SPELL;
 var TileMap;
 var battleList = [];
+var equips = [];
 module Game {
     export class GameObject {
         //holds the index in the IMAGE_CACHE where the image is stored

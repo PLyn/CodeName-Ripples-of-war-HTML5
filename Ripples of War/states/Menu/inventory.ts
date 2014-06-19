@@ -13,6 +13,10 @@ module Game {
             //loads items that are consumables by default
             this.reload("consumable");
         }
+        /*
+            reloads the items seen based on the current category of items selected 
+            (consumables or quest items)
+        */
         reload(type: String) {
             this.context.clearRect(0, 0, 800, 600);
             this.items = []; //empties object that stores items
@@ -77,7 +81,7 @@ module Game {
                     }
                 }
             }
-            //adds menu items boudns to the object for hit detection
+            //adds menu items bounds to the object for hit detection
             this.items.push({
                 "name": "quest",
                 "x": 150,

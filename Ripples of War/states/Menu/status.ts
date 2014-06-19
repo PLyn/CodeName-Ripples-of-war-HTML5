@@ -16,7 +16,10 @@ module Game {
             this.context.drawImage(IMAGE_CACHE['back'], 40, 490);
             quickWindow(this.context, 25, 100, 500, 400, "blue", "red");
             setStyle(this.context, 'calibre', 12, 'white');
-
+            /*
+                drawing party members to be selected to change view as well as storing the bounds of each.The currently selected 
+                character has brackets around their name
+            */
             var oKeys = Object.keys(battleList);
             for (var y = 0; y < oKeys.length; y++) {
                 if (battleList[oKeys[y]].Base.Type === 0) {
@@ -54,6 +57,7 @@ module Game {
                 "w": 75,
                 "h": 75
             };
+            //drawings of stats, resists and abilites
             var bKeys = Object.keys(this.battler.Base);
             this.context.fillText("Stats", 60, 160);
             for (var x = 1; x < bKeys.length - 1; x++) {

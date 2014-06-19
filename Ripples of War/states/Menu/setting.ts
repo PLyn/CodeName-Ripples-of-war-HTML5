@@ -86,6 +86,9 @@ module Game {
                 }
             }
         }
+        /*
+            adds or removes the tick on the box beside the sound text to determine if the sound is supposed to be on or off
+        */
         soundBox() {
             if (this.soundBool) {
                 this.soundBool = false;
@@ -100,6 +103,9 @@ module Game {
                 this.context.drawImage(IMAGE_CACHE['tick'], 260, 180);
             }
         }
+        /*
+            adds or removes the tick on the box beside the music text to determine if the music is supposed to be on or off
+        */
         musicBox() {
             if (this.musicBool) {
                 this.musicBool = false;

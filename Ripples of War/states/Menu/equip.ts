@@ -1,5 +1,4 @@
 ﻿///<reference path='../State.ts' />
-var equips = [];
 module Game {
     export class Equip extends State{
         context: CanvasRenderingContext2D;
@@ -17,9 +16,11 @@ module Game {
             this.battler = battleList[0];
             this.objects = [];
         }
+        /*
+            draw the equipment slots and stats of character 
+        */
         drawEquip() {
             this.context.clearRect(0, 0, 800, 600);
-            //this.context.drawImage(IMAGE_CACHE['dialog'], 15, 100);
             quickWindow(this.context, 25, 100, 600, 300, "blue", "red");
             setStyle(this.context, 'Calibri', '12pt', 'white');
 
@@ -58,6 +59,9 @@ module Game {
 
             this.context.drawImage(IMAGE_CACHE['back'], 25, 500);
         }
+        /*
+            add equip slots bounds to the equips object so that it can detect when these have been clicked
+        */
         addEquipPos() {
             var obj = {
                 "type": "Head",
@@ -100,6 +104,10 @@ module Game {
             };
             equips.push(obj);
         }
+        /*
+            takes player input to decide if a equip slot was clicked on to determine if the new state should be pushed to show the equips 
+            available for that type of equip
+        */
         changeEquip() {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
@@ -120,6 +128,10 @@ module Game {
                     }
                 }
         }
+        /*
+            draws the name of the character at the top so that the player can select the party member to equip and also store the bounds of each
+            name in the objects object for hit detection
+        */
         drawPC() {
             var oKeys = Object.keys(battleList);
             for (var y = 0; y < oKeys.length; y++) {
@@ -149,6 +161,9 @@ module Game {
                 }
             }
         }
+        /*
+            re draws the screen with a different sprite 
+        */
         reload(name) {
             var oKeys = Object.keys(battleList);
             for (var y = 0; y < oKeys.length; y++) {
@@ -161,6 +176,9 @@ module Game {
             this.drawEquip();
             this.drawPC();
         }
+        /*
+            check if any of the party member names are clicked on and reloads it to show that sprites equip and stats
+        */
         checkCurrentChar() {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
