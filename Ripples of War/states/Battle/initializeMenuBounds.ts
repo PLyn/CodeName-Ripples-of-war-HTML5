@@ -1,4 +1,7 @@
-﻿function initializeMenuBounds() {
+﻿/*
+    saves bounds of menu commands to be used for hit detection
+*/
+function initializeMenuBounds() {
     var menu = [];
     menu.push({
         "Name": "Attack",

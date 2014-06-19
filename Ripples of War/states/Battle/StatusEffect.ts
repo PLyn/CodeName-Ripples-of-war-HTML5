@@ -1,5 +1,7 @@
-﻿function applyStatus(effect, chance, sprite: Game.Sprite) {
-    //var status = STATUS.effects;
+﻿/*
+    changes sprite status to the status effect if ailment is successful
+*/
+function applyStatus(effect, chance, sprite: Game.Sprite) {
     var ran = getRandomInt(0, 100);
     switch (effect) {
         case "Poison":
@@ -12,8 +14,10 @@
     }
     return sprite;
 }
+/*
+    apply effect of status on sprite
+*/
 function applyStatusEffect(context, sprite: Game.Sprite) {
-    //var status = STATUS.effects;
     switch (sprite.currentState) {
         case status["Poison"]:
             sprite.Current.HP = sprite.Current.HP - Math.floor(sprite.getTotalStats().HP * 0.2); 

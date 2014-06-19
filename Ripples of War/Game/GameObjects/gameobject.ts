@@ -1,15 +1,15 @@
-﻿var GAME_OBJECTS = [];
-var ITEM;
+﻿var ITEM;
 var PARTY;
 var QUEST;
 var FORMATION;
 var SAVE;
 var SPELL;
 var TileMap;
+var battleList = [];
 module Game {
     export class GameObject {
         //holds the index in the IMAGE_CACHE where the image is stored
-        iKey = ""; //change all the sprite initializations to add this
+        iKey = "";
         //sx and sy are the source x and y of the image in the case of spritesheets ie where the image you want to draw is located in the spritesheet
         sx = 0;
         sy = 0;

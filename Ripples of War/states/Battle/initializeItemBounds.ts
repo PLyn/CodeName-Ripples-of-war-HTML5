@@ -1,4 +1,7 @@
-﻿function initializeItemBounds() {
+﻿/*
+    saves the bounds of the items of the player and returns it
+*/
+function initializeItemBounds() {
     var obj = [];
     var ikeys = Object.keys(ITEM.consumable);
     var items = ITEM.consumable;
