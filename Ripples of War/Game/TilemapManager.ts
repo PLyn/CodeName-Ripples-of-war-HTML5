@@ -1,7 +1,7 @@
 ﻿var objects = [];
 module Game {
     export class Tilemap {
-        tileimg;
+        /*tileimg;
         tilepx;
         tilepy;
         tilewidth;
@@ -16,10 +16,8 @@ module Game {
         objh;
         objx;
         objy;
-
+            */
         currentIndex;
-        Init() {
-        }   
         //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
         //Functions to test if file are loaded and can be rendered properly 
         getTile(tileIndex, index) {
@@ -67,14 +65,14 @@ module Game {
                         var worldX = Math.floor(tileidX % TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tilewidth;
                         var worldY = Math.floor(tileidX / TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tileheight;
 
-
+                        /*
                         this.tileimg = tileloc.img;
                         this.tilepx = tileloc.px;
                         this.tilepy = tileloc.py;
                         this.tilewidth = TILEDATA_CACHE[index].tilewidth;
                         this.tileheight = TILEDATA_CACHE[index].tileheight;
                         this.worldx = worldX;
-                        this.worldy = worldY;
+                        this.worldy = worldY;*/
 
                         context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight, worldX, worldY, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight);
                     }

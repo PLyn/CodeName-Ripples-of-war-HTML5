@@ -46,6 +46,10 @@ module Game {
         x = 0; //x Coordinate of sprite
         xmlKey; //The keys for the XML_CACHE array when it is being used
         y = 0; //y Coordinate of sprite
+        /*
+            takes the assets list and put each asset through the appropriate loader to preload the assets 
+            then calls the callback function and clears the setinterval to continue the game
+        */
         queueAssets(Assets, load) {
             //counts the total number of assets that are to be loaded
             var Assetkeys = Object.keys(Assets);
@@ -79,6 +83,7 @@ module Game {
             if (Assets.Music) {
                 this.soundloader(Assets.Music, 'Music');
             }
+            var that = this;
             //if files are loaded then proceed to call the callback
             this.timerid = setInterval(function () {
                 if (isLoaded >= totalAssets) {
@@ -87,6 +92,9 @@ module Game {
                 }
             }, 1000 / 1);
         }
+        /*
+            takes the assets, determines if it is an image or not then put it in the loadfile function to be identified further
+        */
         genericLoader(url, isImage, key?, onLoad?, typeOfFile?) {
             //if the asset is an image, load the image
             if (isImage) {
@@ -105,6 +113,9 @@ module Game {
                 }
             }
         }
+        /*
+            Loader specifically for music and sounds which stores them in the global variables MUSIC_CACHE and SOUND_CACHE respectively
+        */
         soundloader(sounds, type) {
             var pos;
             var key = Object.keys(sounds);
@@ -136,6 +147,10 @@ module Game {
                 }
             }
         }
+        /*
+            checks the browsers capability and determines if it can play certain formats and returns a hopefully 
+            playable format for the audio
+        */
         soundFormat(audioElement) {
             var ext = '';
             if (audioElement.canPlayType("audio/ogg") === "probably" || audioElement.canPlayType("audio/ogg") === "maybe") {
@@ -146,6 +161,9 @@ module Game {
             }
             return ext;
         }
+        /*
+            Takes the assets and based on the type, calls the appropriate request to get the data correctly
+        */
         loadfile(key, url, onLoad, type, pos?) {
             //makes request to server to get file needed
             var xobj = new XMLHttpRequest();
@@ -160,14 +178,15 @@ module Game {
                         //gets XML response to be parsed and pass it to the callback
                         onLoad(key, xobj.responseXML, pos);
                     }
-                    else if (type === 'mp3') {
-                        onLoad(key, xobj.response);
-                    }
                }
             };
             xobj.send(null);
         }
-        onAnimJSONLoad = (key, response) => { //Arrow function for onJSON load to prevent loss of this context
+        /*
+            callback for Animation assets, takes each frame, makes a gameObject of it then stores all the frames for each animation 
+            in its own holder with the key used in the asset list as the key to access it in the ANIM_CACHE
+        */
+        onAnimJSONLoad = (key, response) => { //Arrow function to prevent loss of this context
             var holder = [];
             var frame;
             this.animData = JSON.parse(response);
@@ -176,11 +195,14 @@ module Game {
             this.animSource.src = 'Assets/Atlas/' + this.animData.meta.image;
             for (var i = 0; i < this.animData.frames.length; i++) {
                 frame = this.animData.frames[i].frame;
-                holder[i] = new Game.GameObject(this.spriteSource, 0, 0, frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Game.GameObject("", this.spriteSource, 0, 0, frame.x, frame.y, frame.w, frame.h);
             }
             ANIM_CACHE[key[this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
             this.animPos++; //Move to the next key of the array
         }
+         /*
+            callback for Animation assets, takes each frame, makes a gameObject of it then stores each sprite in its respective index using the key from the asset list
+        */
         onSpriteJSONLoad = (key, response) => {
             var holder = [];
             
@@ -191,27 +213,32 @@ module Game {
             this.spriteSource.src = 'Assets/Atlas/' + this.spriteData.meta.image;
             for (var i = 0; i < this.spriteData.frames.length; i++) {
                 var frame = this.spriteData.frames[i].frame;
-                //figure out whats wrong with the associative array
+
                 var indexes = this.spriteData.frames[i].filename.substring(0, this.spriteData.frames[i].filename.length - 4);
-                holder[i] = new Game.GameObject(this.spriteSource, 0, 0 ,frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Game.GameObject("", this.spriteSource, 0, 0 ,frame.x, frame.y, frame.w, frame.h);
                 SPRITE_CACHE[i] = holder[i];
             }           
             this.spritePos++;
         }
+        /*
+            callback for tilemap assets, gets the data about the tilesets and use it to store information needed to draw the tilemaps such as the number of tiles 
+            horizontally and vertically and the width and height of each tile as well as the firstgid, tileset image and name. TILESET_CACHE holds all of this data
+            and the TILEDATA_CACHE holds the metadata about the tileset from the JSON file.
+        */
         onTileJSONLoad = (key, response) => {
             this.tiledData = JSON.parse(response);
             this.numTilesX = this.tiledData.width;
             this.numTilesY = this.tiledData.height;
-            this.tileSizeX = this.tiledData.tilewidth
-            this.tileSizeY = this.tiledData.tileheight
-            this.pixelSizeX = this.numTilesX * this.tileSizeX;
-            this.pixelSizeY = this.numTilesY * this.tileSizeY;
+            this.tileSizeX = this.tiledData.tilewidth;
+            this.tileSizeY = this.tiledData.tileheight;
 
+            //Tileset data from json file
             var tiledata = this.tiledData.tilesets;
             var tileset_holder = [];
             for (var i = 0; i < tiledata.length; i++){
                 var tilesetimage = new Image();
                 tilesetimage.onload = () => { isLoaded++; };
+                //gets rid of unneeded symbols in url
                 tilesetimage.src = "Assets/Tilemap/" + tiledata[i].image.replace(/^.*[\\\/]/, '');
                 var tileData = {
                     "firstgid": tiledata[i].firstgid,
@@ -223,19 +250,29 @@ module Game {
                     "numYTiles": Math.floor(tiledata[i].imageheight / this.tileSizeY)
                     
                 };
+                //store tileset in holder
                 tileset_holder.push(tileData);
 
-                this.tileKey = key;//needed for getTile ()
+                this.tileKey = key;
             }
+            //TILESET holds the actual tilesets 
+            //TILEDATA holds the metadata about each tileset
             TILESET_CACHE[tiledata[0].name] = tileset_holder;
             TILEDATA_CACHE[tiledata[0].name] = this.tiledData;
         }
+        /*
+            callback for xml assets. gets the xml file received from the xhr request and stores it in the id used in the asset list as its index
+            in XML_CACHE
+        */
         onXMLLoad = (key, response, pos) => {
             XML_CACHE[key[pos]] = response;
             isLoaded++;
             //rest to be implemented. not sure how to extract the info how i want yet...will do soon
             //saved xml file iin the global variable to be used later on as needed
         }
+        /*
+            callback for json assets. it parses the JSON recieved by the xhr requests and stores them in indexes indicated by the asset list
+        */
         onJSONLoad = (key, response, pos) => {
             JSON_CACHE[key[pos]] = JSON.parse(response);
             isLoaded++;

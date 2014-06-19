@@ -3,27 +3,28 @@
         gameStates;
         stateStack: State[];
         time = 0;
-        /*currentInGameState = 0;
-        currentInGameStateFunction = null;
-        currentState = 0;
-        currentStateFunction = null;*/
-        //Mostly guesswork here, I am assuming none of this code will make it to the final thing
-        //High on the list, will start getting through this ASAP with help from nick and/or the book
+
         constructor() {
             this.gameStates = []
             this.stateStack = new Array<State>();
+            this.time = 0;
         }
+        /*
+            adds state to the index given by the key
+        */
         addState(key, state) {
             this.gameStates[key] = state;
-            //this.stateStack.push(state);
-            //state.init();
         }
+        /*
+            pushes state onto the state stack and then calls the init() of that state
+        */
         pushState(state) {
                 this.stateStack.push(state);
                 state.init();
-            //this.stateStack.push(this.gameStates[key]);
-            //this.gameStates[key].init();
         }
+        /*
+            if the stack length is greater than zero then pops state from stack and runs the init() for the new state at the top
+        */
         popState() {
             if (this.stateStack.length > 0 && this.time < Date.now()) {
                 this.time = Date.now() + 100;
@@ -34,30 +35,18 @@
                 }
             }
         }
+        /*
+            Empties State stack
+        */
         restart() {
             this.stateStack.slice(0, this.stateStack.length);
         }
+        /*
+            runs the update() of the state at the top of the stack
+        */
         updateStack() {
             var len = this.stateStack.length;
             this.stateStack[len - 1].update();
         }
-        renderStack() {
-            for (var s in this.stateStack) {
-                s.render();
-            }
-        }/*
-        switchGameState(state) {
-            this.currentState = state;
-        }
-        getGameState() {
-            return this.currentState;
-        }
-        switchInGameState(state) {
-            this.currentInGameState = state;
-        }
-        getInGameState() {
-            return this.currentInGameState;
-        }
-    }*/
     }
 }

@@ -1,30 +1,23 @@
-﻿/*      Spell Manager to add and remove spells from characters. Example of use below:
-*            SPELL = new SpellManager();
-*            var spellkeys = Object.keys(JSON_CACHE['spell']['Spells']);
-*            SPELL.AddSpell(battleList[0], spellkeys[3]);
-*            SPELL.AddSpell(battleList[1], spellkeys[3]);
-*/
-
-var SPELL;
-module Game {
+﻿module Game {
     export class SpellManager{
         SpellKeys;
         constructor() {
             this.SpellKeys = Object.keys(JSON_CACHE['spell'].Spells);
         }
+        /*
+            Grants the character the spell by adding it to the spell list of the Sprite
+        */    
         AddSpell(character, SpellName) {
-            for (var i = 0; i < this.SpellKeys.length; i++) {
-                if (SpellName === this.SpellKeys[i]) {
-                    character.Spells.push(SpellName);
-                    break;
-                }
-            }
+            character.Spells.push(SpellName);
         }
+        /*
+            searches for spellname that matches provided spellName and remove it from the spell list of the sprite
+        */
         RemoveSpell(character, SpellName) {
             var keys = Object.keys(character.Spells);
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < keys.length; i++) {
                 if (SpellName === keys[i]) {
-                    character.Spells[i] = null;
+                    character.Spells.splice(i, 1);
                     break;
                 }
             }

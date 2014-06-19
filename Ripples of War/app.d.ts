@@ -1,35 +1,3 @@
-declare var SCENE: any;
-declare var EX: any;
-declare var startScene: any;
-declare module Game {
-    class GenericArea {
-        public x: any;
-        public y: any;
-        public velocity: any;
-        public mx: any;
-        public my: any;
-        public cut: any;
-        public explore: any;
-        public prevState: number;
-        public ctx: any;
-        constructor(ctx: any, w: any, loop: any);
-        public update: () => void;
-        public render(context: any): void;
-        public endLevel(ctx?: any): void;
-    }
-}
-declare module Game {
-    class Area1 {
-        constructor(ctx: any, w: any, loop: any);
-        public update: () => void;
-    }
-}
-declare module Game {
-    class Area2 {
-        constructor(ctx: any, w: any, loop: any);
-        public update: () => void;
-    }
-}
 declare module Game {
     class Animation {
         public context: any;
@@ -43,7 +11,6 @@ declare module Game {
         public play: () => void;
     }
 }
-declare var FORMATION: any;
 declare module Game {
     class BattleFormation {
         public positions: any;
@@ -51,63 +18,10 @@ declare module Game {
         public current: any;
         public formKey: any;
         public battleKeys: any;
-        public positionLength: number;
         constructor();
         public setFormation(formation: String): void;
     }
 }
-declare module Game {
-    class Dialogue {
-        public dialogueObject: any;
-        public lines: any[];
-        public ctx: any;
-        public linePos: number;
-        public time: number;
-        public currentTime: number;
-        public prevName: any;
-        public lineHeight: number;
-        constructor(ctx: any, cwidth: any);
-        public startScene: (key: any, tagName: any, index: any) => void;
-        public updateScene: () => void;
-    }
-}
-declare module Game {
-    class Equipable {
-        public Name: any;
-        public Desc: any;
-        public Type: any;
-        public HP: any;
-        public MP: any;
-        public Atk: any;
-        public MAtk: any;
-        public Def: any;
-        public Spd: any;
-        public MDef: any;
-        public Luc: any;
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
-    }
-}
-declare module Game {
-    class Accessory extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
-    }
-}
-declare module Game {
-    class Body extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
-    }
-}
-declare module Game {
-    class Feet extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
-    }
-}
-declare module Game {
-    class Helm extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
-    }
-}
-declare var ITEM: any;
 declare module Game {
     class ItemManager {
         public consumable: Object[];
@@ -118,14 +32,17 @@ declare module Game {
         public add(name: any, amt: any, type: any): void;
     }
 }
-declare module Game {
-    class Weapon extends Equipable {
-        constructor(name: any, desc: any, type: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any);
-    }
-}
 declare var GAME_OBJECTS: any[];
+declare var ITEM: any;
+declare var PARTY: any;
+declare var QUEST: any;
+declare var FORMATION: any;
+declare var SAVE: any;
+declare var SPELL: any;
+declare var TileMap: any;
 declare module Game {
     class GameObject {
+        public iKey: string;
         public sx: number;
         public sy: number;
         public dx: number;
@@ -134,8 +51,7 @@ declare module Game {
         public H: number;
         public img: HTMLImageElement;
         public scale: number;
-        constructor(img: any, dx?: any, dy?: any, sx?: any, sy?: any, w?: any, h?: any, scale?: any);
-        public update(): void;
+        constructor(iKey: any, img: any, dx?: any, dy?: any, sx?: any, sy?: any, w?: any, h?: any, scale?: any);
         public render(context: any): void;
         public setPos(x: any, y: any): void;
     }
@@ -148,21 +64,17 @@ declare module Game {
         public Modified: any;
         public Equipment: Object;
         public Current: any;
-        public dead: boolean;
+        public dead: any;
         public Spells: any;
         public currentState: any;
         public growth: any;
-        public defend: boolean;
+        public defend: any;
         public ElementResist: any;
         public StatusResist: any;
-        public mox: any;
-        public moy: any;
-        public context: any;
-        public interval: any;
-        constructor(img: any, dx?: any, dy?: any, sx?: any, sy?: any, w?: any, h?: any, scale?: any);
+        constructor(iKey: any, img: any, dx?: any, dy?: any, sx?: any, sy?: any, w?: any, h?: any, scale?: any);
         public setBaseAttributes(id: any, hp: any, mp: any, atk: any, def: any, spd: any, matk: any, mdef: any, luc: any, type: any): void;
         public setModifiedAttributes(id?: any, hp?: any, mp?: any, atk?: any, def?: any, spd?: any, matk?: any, mdef?: any, luc?: any, type?: any): void;
-        public equipItem(name: any, equipment: Equipable, type: any): void;
+        public equipItem(name: any, equipment: any, type: any): void;
         public unequipItem(type: any): void;
         public getTotalStats(): {
             "ID": any;
@@ -176,26 +88,21 @@ declare module Game {
             "Luc": any;
             "Type": any;
         };
-        public levelUp(): void;
     }
 }
-declare var PARTY: any;
 declare module Game {
     class PartyManager {
-        public character: any;
         constructor();
-        public add(char: any, type: any, x?: any, y?: any): void;
-        public remove(char: any, type: any): void;
+        public add(char: any, x?: any, y?: any): void;
+        public remove(char: any): void;
     }
 }
-declare var QUEST: any;
 declare module Game {
     class QuestManager {
         public Switch: boolean[];
         constructor();
     }
 }
-declare var SAVE: any;
 declare module Game {
     class SaveSystem {
         public MapID: any;
@@ -207,14 +114,12 @@ declare module Game {
         public qAmt: any;
         public switches: any;
         public context: any;
-        public ctx: any;
-        public ctx2: any;
+        public context2: any;
         constructor(ctx: any);
         public save(): void;
-        public load(w: any): void;
+        public load(): void;
     }
 }
-declare var SPELL: any;
 declare module Game {
     class SpellManager {
         public SpellKeys: any;
@@ -223,20 +128,10 @@ declare module Game {
         public RemoveSpell(character: any, SpellName: any): void;
     }
 }
-declare var STATUS: any;
-declare module Game {
-    class StatusManager {
-        public effects: any;
-        constructor();
-    }
-}
-declare var TileMap: any;
 declare module Game {
     class Loop {
         public canvas: any;
         public context: any;
-        public canvas2: any;
-        public context2: any;
         constructor();
         public update(): void;
     }
@@ -261,11 +156,8 @@ declare module Game {
 }
 declare function startGame(): void;
 declare var that: any;
-declare var keys: any[];
 declare var mousedown: boolean;
-declare var canvas: any;
 declare var mEvent: any;
-declare var clickTime: number;
 declare function mouseClicked(): boolean;
 declare var ANIM_CACHE: any[];
 declare var IMAGE_CACHE: any[];
@@ -326,22 +218,7 @@ declare module Game {
 declare var objects: any[];
 declare module Game {
     class Tilemap {
-        public tileimg: any;
-        public tilepx: any;
-        public tilepy: any;
-        public tilewidth: any;
-        public tileheight: any;
-        public worldx: any;
-        public worldy: any;
-        public objimg: any;
-        public objpx: any;
-        public objpy: any;
-        public objw: any;
-        public objh: any;
-        public objx: any;
-        public objy: any;
         public currentIndex: any;
-        public Init(): void;
         public getTile(tileIndex: any, index: any): {
             "img": any;
             "px": number;
@@ -629,7 +506,6 @@ declare module Game {
         public popState(): void;
         public restart(): void;
         public updateStack(): void;
-        public renderStack(): void;
     }
 }
 declare module Game {

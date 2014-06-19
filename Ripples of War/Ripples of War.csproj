@@ -51,25 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app.ts" />
-    <TypeScriptCompile Include="Areas\Area1.ts" />
-    <TypeScriptCompile Include="Areas\Area2.ts" />
-    <TypeScriptCompile Include="Areas\genericarea.ts" />
     <TypeScriptCompile Include="Game\animation.ts" />
     <TypeScriptCompile Include="Game\BattleFormation.ts" />
-    <TypeScriptCompile Include="Game\dialogue.ts" />
-    <TypeScriptCompile Include="Game\GameObjects\Item\accessory.ts" />
-    <TypeScriptCompile Include="Game\GameObjects\Item\body.ts" />
-    <TypeScriptCompile Include="Game\GameObjects\Item\equipable.ts" />
-    <TypeScriptCompile Include="Game\GameObjects\Item\feet.ts" />
-    <TypeScriptCompile Include="Game\GameObjects\Item\Helm.ts" />
     <TypeScriptCompile Include="Game\itemManager.ts" />
-    <TypeScriptCompile Include="Game\GameObjects\Item\weapon.ts" />
     <TypeScriptCompile Include="Game\GameObjects\sprite.ts" />
     <TypeScriptCompile Include="Game\PartyManager.ts" />
     <TypeScriptCompile Include="Game\QuestManager.ts" />
     <TypeScriptCompile Include="Game\SaveManager.ts" />
     <TypeScriptCompile Include="Game\SpellManager.ts" />
-    <TypeScriptCompile Include="Game\StatusManager.ts" />
     <TypeScriptCompile Include="Game\world.ts" />
     <TypeScriptCompile Include="Game\GameObjects\gameobject.ts" />
     <TypeScriptCompile Include="game.ts" />
