@@ -1,4 +1,4 @@
-﻿///<reference path='../State.ts' />
+﻿///<reference path='State.ts' />
 module Game {
     export class Battle extends State {
         nextState;

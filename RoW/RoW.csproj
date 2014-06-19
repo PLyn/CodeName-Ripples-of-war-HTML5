@@ -67,15 +67,15 @@
     <TypeScriptCompile Include="Game\InputManager.ts" />
     <TypeScriptCompile Include="Game\AssetManager.ts" />
     <TypeScriptCompile Include="Game\TilemapManager.ts" />
-    <TypeScriptCompile Include="States\Battle\Attack.ts" />
-    <TypeScriptCompile Include="States\Battle\Battle_Remake.ts" />
-    <TypeScriptCompile Include="States\Battle\getBattleStates.ts" />
-    <TypeScriptCompile Include="States\Battle\initializeItemBounds.ts" />
-    <TypeScriptCompile Include="States\Battle\StatusEffect.ts" />
-    <TypeScriptCompile Include="States\Battle\EnemyAI.ts" />
-    <TypeScriptCompile Include="States\Battle\initializeMenuBounds.ts" />
-    <TypeScriptCompile Include="States\Battle\SpellCommand.ts" />
-    <TypeScriptCompile Include="States\Battle\StatesDialogs.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\Attack.ts" />
+    <TypeScriptCompile Include="States\Battle.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\getBattleStates.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\initializeItemBounds.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\StatusEffect.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\EnemyAI.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\initializeMenuBounds.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\SpellCommand.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\StatesDialogs.ts" />
     <TypeScriptCompile Include="States\Menu\equip.ts" />
     <TypeScriptCompile Include="States\explore.ts" />
     <TypeScriptCompile Include="States\Menu\EquipDetails.ts" />
@@ -91,7 +91,7 @@
     <TypeScriptCompile Include="States\cutscene.ts" />
     <TypeScriptCompile Include="States\StatusMenu.ts" />
     <TypeScriptCompile Include="States\title.ts" />
-    <TypeScriptCompile Include="States\Battle\InitializeBattlePositions.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\InitializeBattlePositions.ts" />
     <TypeScriptCompile Include="Util\DialogWindows.ts" />
     <TypeScriptCompile Include="Util\LevelUp.ts" />
     <TypeScriptCompile Include="Util\moveSprite.ts" />
@@ -101,7 +101,7 @@
     <TypeScriptCompile Include="Util\randomizer.ts" />
     <TypeScriptCompile Include="Util\TextStyler.ts" />
     <TypeScriptCompile Include="Util\TilemapFormatter.ts" />
-    <TypeScriptCompile Include="States\Battle\UseItem.ts" />
+    <TypeScriptCompile Include="States\Battle_Util\UseItem.ts" />
     <TypeScriptCompile Include="Util\wordwrap.ts" />
   </ItemGroup>
   <ItemGroup>
