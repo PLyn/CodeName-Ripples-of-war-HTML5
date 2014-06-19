@@ -1,5 +1,4 @@
-﻿
-module Game {
+﻿module Game {
     export class ItemManager {
         consumable: Object[];
         quest: Object[];

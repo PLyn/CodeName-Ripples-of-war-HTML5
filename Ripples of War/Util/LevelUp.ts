@@ -1,4 +1,8 @@
-﻿function LevelUp(sprite: Game.Sprite, context) {
+﻿/*
+    takes a sprite, and increases their level and their stats according to growth string and adds new spells 
+    if there are any to be learned
+*/
+function LevelUp(sprite: Game.Sprite, context) {
     var growth = [];
     var split = sprite.growth.split(" ");
     var keys = Object.keys(sprite.Base);
@@ -13,6 +17,11 @@
             newSpells.push(spellkeys[y]);
         }
     }
+    /*
+        growth is in the form of +'s and -'s in a string and each gorup of symbols is split and taken as the 
+        growth of a particular stat eg "+++ + -" would be a high growth for HP, average growth for MP and weak
+        growth for Atk 
+    */
     for (var x = 1; x < (keys.length - 1); x++) {
         switch (split[x - 1]) {
             case "+++++":
@@ -45,13 +54,21 @@
             case "-----":
                 increase = -5;
                 break;
-            }
-        sprite.Base[keys[x]] += (sprite.Level) + increase;
-        growth[keys[x]] = (sprite.Level) + increase;
+        }
+        var growthAmount = (sprite.Level) + increase;
+        //formula is the increase from the growth plus the sprites level and if its less than zero, normalize it back to zero
+        if (((sprite.Level) + increase) <= 0) {
+            growthAmount = 0;
+        }
+        sprite.Base[keys[x]] += growthAmount;
+        growth[keys[x]] = growthAmount;
     }
 
     LevelUpDisplay(context, growth, sprite.Base, sprite.Base.ID, newSpells);
 }
+/*
+    draws dialog on screen with the growth of the character and new skills learned
+*/
 function LevelUpDisplay(context: CanvasRenderingContext2D, growth, base, name, spells) {
     //box to put text on
     context.fillStyle = "blue";
@@ -77,7 +94,7 @@ function LevelUpDisplay(context: CanvasRenderingContext2D, growth, base, name, s
     context.fillText("Spells Learned: ", 255, 460);
     var newSpellKeys = Object.keys(spells);
     for (var x = 0; x < newSpellKeys.length; x++) {
-        context.fillText("Luck: " + base.Luc + " + " + growth.Luc, 300, 460 + (x * 20));
+        context.fillText(spells[x], 300, 460 + (x * 20));
     }
 
 }

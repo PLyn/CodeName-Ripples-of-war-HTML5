@@ -13,6 +13,7 @@ module Game {
             ITEM = new ItemManager();
             SPELL = new SpellManager();
             QUEST = new QuestManager();
+            SAVE = new SaveSystem(this.context);
             sManager.pushState(new Title(this.context));
         }
         update() {

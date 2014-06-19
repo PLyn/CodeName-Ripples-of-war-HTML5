@@ -1,25 +1,7 @@
-﻿var objects = [];
-module Game {
+﻿module Game {
     export class Tilemap {
-        /*tileimg;
-        tilepx;
-        tilepy;
-        tilewidth;
-        tileheight;
-        worldx;
-        worldy;
-
-        objimg;
-        objpx;
-        objpy;
-        objw;
-        objh;
-        objx;
-        objy;
-            */
         currentIndex;
-        //ALOT OF WORK LEFT TO DO HERE TO MAKE OBJECTS EASILY ALTERED and removed as needed
-        //Functions to test if file are loaded and can be rendered properly 
+        //given a gid of a tile, it gets the metadata about the tile and returns it
         getTile(tileIndex, index) {
             var tile = {
                 "img": null,
@@ -42,15 +24,14 @@ module Game {
 
             return tile;
         }
+        /*
+            goes through each layer of the tileset and calculates the destination and draws it
+        */
         setTileset = (context, index) => {
-            //go back through this to see if its needed later on. might need a revamp or look through
-            /*if (!this.isFilesLoaded) {
-                console.log("tileset not loaded");
-                return;
-            }*/
             this.currentIndex = index;
             objects = [];
             for (var layeridX = 0; layeridX < TILEDATA_CACHE[index].layers.length; layeridX++) {
+                //process tile layers
                 if (TILEDATA_CACHE[index].layers[layeridX].type === "tilelayer") {
 
                     var data = TILEDATA_CACHE[index].layers[layeridX].data;
@@ -65,18 +46,10 @@ module Game {
                         var worldX = Math.floor(tileidX % TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tilewidth;
                         var worldY = Math.floor(tileidX / TILEDATA_CACHE[index].width) * TILEDATA_CACHE[index].tileheight;
 
-                        /*
-                        this.tileimg = tileloc.img;
-                        this.tilepx = tileloc.px;
-                        this.tilepy = tileloc.py;
-                        this.tilewidth = TILEDATA_CACHE[index].tilewidth;
-                        this.tileheight = TILEDATA_CACHE[index].tileheight;
-                        this.worldx = worldX;
-                        this.worldy = worldY;*/
-
                         context.drawImage(tileloc.img, tileloc.px, tileloc.py, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight, worldX, worldY, TILEDATA_CACHE[index].tilewidth, TILEDATA_CACHE[index].tileheight);
                     }
                 }
+                //process object layers
                 else if (TILEDATA_CACHE[index].layers[layeridX].type === "objectgroup") {
                     var tileObjects = TILEDATA_CACHE[index].layers[layeridX].objects;
                     objects = [];
@@ -122,6 +95,10 @@ module Game {
                 }
             } //end of function
         }
+        /*
+            this redraws the map but does not pull from the json again, instead it draws the all the tiles which include tiles or objects 
+            which were progrommatically modified.
+        */
         drawMapNoObjectReset = (context, mapID) => {
             for (var layeridX = 0; layeridX < TILEDATA_CACHE[mapID].layers.length; layeridX++) {
                 if (TILEDATA_CACHE[mapID].layers[layeridX].type === "tilelayer") {
@@ -149,45 +126,6 @@ module Game {
                         context.drawImage(tile.img, tile.px, tile.py, w, h, objects[x].x, objects[x].y, w, h);
                         context.fillText(objects[x].name, objects[x].x + 16, objects[x].y - 10);
                     }
-                }
-            }
-        }
-        //Object manipulation...UNTESTED ATM
-        addObject(obj) {
-            objects.push(
-                {
-                    "height": obj.h,
-                    "name": obj.name,
-                    "properties": obj.prop,
-                    "type": obj.type,
-                    "visible": obj.visible,
-                    "width": obj.w,
-                    "x": obj.x,
-                    "y": obj.y
-                });
-        }
-        updateObject(objName, obj) {
-            for (var i = 0; i < objects.length; i++) {
-                if (objName === objects[i].name) {
-                    objects.push(
-                        {
-                            "height": obj.h,
-                            "name": obj.name,
-                            "properties": obj.prop,
-                            "type": obj.type,
-                            "visible": obj.visible,
-                            "width": obj.w,
-                            "x": obj.x,
-                            "y": obj.y
-                        });
-                    break;
-                }
-            }
-        }
-        removeObject(objName) {
-            for (var i = 0; i < objects.length; i++) {
-                if (objName === objects[i].name) {
-                    delete objects[i];
                 }
             }
         }

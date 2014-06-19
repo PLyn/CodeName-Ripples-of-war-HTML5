@@ -12,17 +12,5 @@
         update() {
 
         }
-        render() {
-
-        }
-        pause() {
-
-        }
-        resume() {
-
-        }
-        destroy() {
-
-        }
     }
 }

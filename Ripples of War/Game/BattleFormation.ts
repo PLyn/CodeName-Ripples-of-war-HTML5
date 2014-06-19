@@ -1,5 +1,4 @@
-﻿
-module Game {
+﻿module Game {
     export class BattleFormation {
         positions;
         bonus;

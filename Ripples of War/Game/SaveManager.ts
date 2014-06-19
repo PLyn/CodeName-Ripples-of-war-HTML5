@@ -1,5 +1,4 @@
-﻿
-module Game {
+﻿module Game {
     export class SaveSystem {
         MapID;
         PartyMembers: Sprite[];

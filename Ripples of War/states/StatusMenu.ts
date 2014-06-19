@@ -5,9 +5,7 @@ module Game {
         my;
         menuItems;
         context: CanvasRenderingContext2D;
-        //used as the base class to be extended for each state
-        //might need some initialization code to remove some clutter
-        //from each state to make stuff look better
+
         constructor(ctx) {
             super();
             this.context = ctx;
@@ -15,7 +13,6 @@ module Game {
             this.context.fillStyle = "rgba(0, 0, 0, 0.6)";
             this.context.fillRect(0, 0, 650, 600);
             
-
             this.menuItems = [];
             this.menuItems.push({
                 "name": "back",

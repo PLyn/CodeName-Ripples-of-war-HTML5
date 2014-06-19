@@ -108,15 +108,15 @@
     <Content Include="Assets\Sound\car.ogg" />
     <Content Include="Assets\Sound\punch.ogg" />
     <Content Include="Assets\Sound\wood.ogg" />
-    <Content Include="Assets\XML\Equipment.json" />
-    <Content Include="Assets\XML\Formation.json" />
-    <Content Include="Assets\XML\Spells.json" />
-    <Content Include="Assets\XML\item.json" />
-    <Content Include="Assets\XML\characters.json" />
-    <Content Include="Assets\XML\EnemyGroups.json" />
+    <Content Include="Assets\JSON\Equipment.json" />
+    <Content Include="Assets\JSON\Formation.json" />
+    <Content Include="Assets\JSON\Spells.json" />
+    <Content Include="Assets\JSON\item.json" />
+    <Content Include="Assets\JSON\characters.json" />
+    <Content Include="Assets\JSON\EnemyGroups.json" />
     <Content Include="Assets\Tilemap\map1.json" />
     <Content Include="Assets\Tilemap\map2.json" />
-    <Content Include="Assets\XML\LocationMap.json" />
+    <Content Include="Assets\JSON\LocationMap.json" />
     <Content Include="Assets\Tilemap\map3.json" />
     <Content Include="Assets\Tilemap\Timor_Grasslands.json" />
     <None Include="web.Debug.config">
@@ -126,9 +126,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\JSON\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

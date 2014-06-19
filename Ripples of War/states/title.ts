@@ -9,11 +9,10 @@ module Game {
             super();
             this.context = ctx;
             this.MenuItems = [];
-            SAVE = new SaveSystem(ctx);
         }
         init() {
             this.context.drawImage(IMAGE_CACHE['ripple'], 0, 0);
-            setStyle(this.context, 'Calibri', 25, "white", "bold");
+            setStyle(this.context, 'Calibri', 25, "white");
             this.context.fillText("Ripples of War Alpha " + GAME_VERSION, 250, 100);
             this.context.fillText("New Game", 300, 300);
             this.context.fillText("Continue Game", 300, 350);
@@ -49,7 +48,6 @@ module Game {
                             sManager.popState();
                             sManager.pushState(new Cutscene(this.context, 0, "map1"));
                             break;
-                            //sManager.pushState(new Battle(0, "map1"));
                         }
                         else if (this.MenuItems[x].name === "load") {
                             if (localStorage.getItem("TileMap") === null || localStorage.getItem("Party") === null) {

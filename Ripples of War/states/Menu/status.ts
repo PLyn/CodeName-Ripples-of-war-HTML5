@@ -79,6 +79,9 @@ module Game {
             }
             this.context.drawImage(this.battler.img, 400, 200);
         }
+        /*
+            redraws screen with stats and info for the character selected
+        */
         reload(name) {
             var oKeys = Object.keys(battleList);
             for (var y = 0; y < oKeys.length; y++) {

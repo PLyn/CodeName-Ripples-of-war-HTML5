@@ -1,11 +1,19 @@
-﻿var pos = 0;
-var audioElement = new Audio();
-var WORLD = 0;
-var sManager;
+﻿var sManager;
 var GAME_VERSION = "0.3";
 var PARTY_SIZE = 2;
 var GAME_WIDTH = 600;
 var GAME_HEIGHT = 600;
+
+var ITEM;
+var PARTY;
+var QUEST;
+var FORMATION;
+var SAVE;
+var SPELL;
+var TileMap;
+var battleList = [];
+var equips = [];
+var objects = [];
 
 module Game {
     export class Init {
@@ -50,13 +58,13 @@ module Game {
                     chapter: 'Assets/XML/Scenes.xml'
                 },
                 JSON: {
-                    equip: 'Assets/XML/Equipment.json',
-                    formation: 'Assets/XML/Formation.json',
-                    items: 'Assets/XML/item.json',
-                    spell: 'Assets/XML/Spells.json',
-                    character: 'Assets/XML/characters.json',
-                    Enemies: 'Assets/XML/EnemyGroups.json',
-                    location: 'Assets/XML/locationMap.json'
+                    equip: 'Assets/JSON/Equipment.json',
+                    formation: 'Assets/JSON/Formation.json',
+                    items: 'Assets/JSON/item.json',
+                    spell: 'Assets/JSON/Spells.json',
+                    character: 'Assets/JSON/characters.json',
+                    Enemies: 'Assets/JSON/EnemyGroups.json',
+                    location: 'Assets/JSON/locationMap.json'
                 },
                 Sounds: {
                     car: 'Assets/Sound/car',
@@ -74,19 +82,18 @@ module Game {
             this.preloader.queueAssets(source, this.onComplete);  
 
         }
+        /*
+            callback when preloader is finish loading assets
+        */
         onComplete = () => {
             this.world = new Game.Loop();
             setInterval(this.GameLoop, 1000 / 30);
         }
+        /*
+            update loop for game
+        */
         GameLoop = () => { 
             this.world.update();
         }
     }
-}
-
-function startGame() {
-    var world = new Game.Loop();
-    setInterval(function () {
-        world.update();
-    }, 1000 / 30);
 }

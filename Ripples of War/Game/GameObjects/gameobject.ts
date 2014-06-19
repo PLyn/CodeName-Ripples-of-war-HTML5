@@ -1,13 +1,4 @@
-﻿var ITEM;
-var PARTY;
-var QUEST;
-var FORMATION;
-var SAVE;
-var SPELL;
-var TileMap;
-var battleList = [];
-var equips = [];
-module Game {
+﻿module Game {
     export class GameObject {
         //holds the index in the IMAGE_CACHE where the image is stored
         iKey = "";
