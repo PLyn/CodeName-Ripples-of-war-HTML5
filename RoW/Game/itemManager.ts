@@ -2,6 +2,7 @@
     export class ItemManager {
         consumable: Object[];
         quest: Object[];
+        Items: Object[];
         itemSource;
         itemKeys;
         constructor() {

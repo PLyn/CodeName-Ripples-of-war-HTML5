@@ -5,10 +5,15 @@ function StateDialogs(context: CanvasRenderingContext2D, state) {
     setStyle(context, 'Calibri', '18 pt', 'white', 'bold');
     switch (state) {
         case 1: //p select
-            context.drawImage(IMAGE_CACHE['Attack'], 600, 50);
-            context.drawImage(IMAGE_CACHE['Spell'], 600, 150);
-            context.drawImage(IMAGE_CACHE['Defend'], 600, 250);
-            context.drawImage(IMAGE_CACHE['items'], 600, 350);
+            quickWindow(context, 600, 50, 100, 30, "blue", "red");
+            quickWindow(context, 600, 100, 100, 30, "blue", "red");
+            quickWindow(context, 600, 150, 100, 30, "blue", "red");
+            quickWindow(context, 600, 200, 100, 30, "blue", "red");
+
+            context.fillText('Attack', 600, 70);
+            context.fillText('Spell', 600, 170);
+            context.fillText('Defend', 600, 220);
+            context.fillText('items', 600, 270);
             break;
         case 2: //p Attack
             context.fillText("Select target to Attack", 350, 50);

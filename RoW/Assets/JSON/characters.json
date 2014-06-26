@@ -1,7 +1,7 @@
 {
   "Party": {
     "Shadow": {
-        "Img": "D",
+        "Img": "Shadow",
         "HP": 5,
         "MP": 0,
         "Atk": 8,
@@ -15,7 +15,7 @@
         "growth": "+ + + + + + + +"
     },
     "Rin":{
-        "Img": "D",
+        "Img": "Rin",
         "HP": 5,
         "MP": 0,
         "Atk": 7,
@@ -28,8 +28,8 @@
         },
         "growth": "- + ++++ --- ++ +++ + +++"
     },
-    "Sai":{
-        "Img": "D",
+    "Domingo":{
+        "Img": "Domingo",
         "HP": 5,
         "MP": 0,
         "Atk": 0,
@@ -115,7 +115,7 @@
   },
   "Enemies":{
         "Goblin":{
-            "Img": "D",
+            "Img": "Domingo",
             "HP": 5,
             "MP": 0,
             "Atk": 15,

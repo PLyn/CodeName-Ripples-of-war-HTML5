@@ -136,6 +136,7 @@ declare module Game {
     class ItemManager {
         public consumable: Object[];
         public quest: Object[];
+        public Items: Object[];
         public itemSource: any;
         public itemKeys: any;
         constructor();

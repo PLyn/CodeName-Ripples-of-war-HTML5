@@ -18,27 +18,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
-    <Content Include="Assets\Image\arrowLeft.png" />
-    <Content Include="Assets\Image\arrowRight.png" />
-    <Content Include="Assets\Image\attack_button.png" />
     <Content Include="Assets\Image\bg.png" />
     <Content Include="Assets\Image\box.png" />
-    <Content Include="Assets\Image\defend_button.png" />
-    <Content Include="Assets\Image\dialogWindow.png" />
-    <Content Include="Assets\Image\diamond.png" />
-    <Content Include="Assets\Image\hero.png" />
-    <Content Include="Assets\Image\items.png" />
+    <Content Include="Assets\Image\Domingo_Right.png" />
     <Content Include="Assets\Image\menuBack.png" />
     <Content Include="Assets\Image\menuButton.png" />
+    <Content Include="Assets\Image\Rin_Right.png" />
     <Content Include="Assets\Image\ripple.jpg" />
-    <Content Include="Assets\Image\spell.png" />
+    <Content Include="Assets\Image\Shadow_Right.png" />
     <Content Include="Assets\Image\status.png" />
     <Content Include="Assets\Image\tick.png" />
     <Content Include="Assets\Music\theme.mp3" />
     <Content Include="Assets\Sound\car.mp3" />
     <Content Include="Assets\Sound\punch.mp3" />
     <Content Include="Assets\Sound\wood.mp3" />
-    <Content Include="Assets\Image\star.png" />
     <Content Include="Assets\Atlas\test.png" />
     <Content Include="Assets\Tilemap\mapTileset.png" />
     <Content Include="Assets\Tilemap\Party.png" />
@@ -119,6 +112,7 @@
     <Content Include="Assets\Tilemap\Timor_Grasslands.json" />
     <Content Include="Assets\Tilemap\Grassland.json" />
     <Content Include="Assets\Tilemap\Grassland2.json" />
+    <Content Include="Assets\Tilemap\Timor.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

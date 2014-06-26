@@ -24,23 +24,16 @@ module Game {
         constructor() {
             var source = {
                 Images: {
-                    D: 'Assets/Image/diamond.png',
-                    S: 'Assets/Image/star.png',
                     menu: 'Assets/Image/menuButton.png',
                     back: 'Assets/Image/menuBack.png',
-                    LArrow: 'Assets/Image/arrowLeft.png',
-                    RArrow: 'Assets/Image/arrowRight.png',
-                    dialog: 'Assets/Image/dialogWindow.png',
-                    hero: 'Assets/Image/hero.png',
                     status: 'Assets/Image/status.png',
-                    Attack: 'Assets/Image/attack_button.png',
-                    Defend: 'Assets/Image/defend_button.png',
-                    Spell: 'Assets/Image/spell.png',
                     bg: 'Assets/Image/bg.png',
                     tick: 'Assets/Image/tick.png',
                     box: 'Assets/Image/box.png',
                     ripple: 'Assets/Image/ripple.jpg',
-                    items: 'Assets/Image/items.png'
+                    Shadow: 'Assets/Image/Shadow_Right.png',
+                    Rin: 'Assets/Image/Rin_Right.png',
+                    Domingo: 'Assets/Image/Domingo_Right.png'
                 },
                 Anim: {
                     at: 'Assets/Atlas/test.json'
@@ -51,7 +44,8 @@ module Game {
                 Tileset: {
                     Timor_Grasslands: 'Assets/Tilemap/Timor_Grasslands.json',
                     Grassland: 'Assets/Tilemap/Grassland.json',
-                    Grassland2: 'Assets/Tilemap/Grassland2.json'
+                    Grassland2: 'Assets/Tilemap/Grassland2.json',
+                    Timor: 'Assets/Tilemap/Timor.json'
 
                 },
                 XML: {

@@ -68,4 +68,58 @@
     <Shadow type="dialog">yes, that sounds fine.</Shadow>
     <explore type="next" id="Timor"></explore>
   </scene>
+  <scene id="6">
+    <Mayor type="object" value="add" gid="262" x="5" y="6"></Mayor>
+    <Mayor type="dialog">Rin, you have returned.</Mayor>
+    <Rin type="dialog">Yes Mayor, did something happen?</Rin>
+    <Mayor type="dialog">Yes, Euclid was attacked two days ago by those strange attackers</Mayor>
+    <Rin type="dialog">We were attacked as I was leading Shadow here as well</Rin>
+    <Mayor type="dialog">What! thank goodness you are safe. I am sorry, Shadow. It is nice to meet you.</Mayor>
+    <Shadow type="dialog">Don't worry about it, I would like to know more about these monsters though.</Shadow>
+    <Rin type="dialog">You mentioned something about being relieved that we were attacked?</Rin>
+    <Mayor type="dialog">!</Mayor>
+    <Shadow type="dialog">No, you misunderstood what I mean or rather I said it poorly. I was cursed by someone with dark magic and I thought it might have had something to do with that. When i realized that it was something else, I was relieved.</Shadow>
+    <Rin type="dialog">I see...I am sorry for jumping to assumptions</Rin>
+    <Shadow type="dialog">That is fine, I did not communicate that well. Mayor, could you tell me more about these Attackers?</Shadow>
+    <Mayor type="dialog">We do not know that much about them, the attacks started about a month ago and has become more and more frequently than before.</Mayor>
+    <Shadow type="dialog">They have hit various towns, right? if so, was there a pattern in which they were hit? and are the towns already hit, still being hit?</Shadow>
+    <Rin type="dialog">Yes they have hit about 5 or 6 towns so far since the initial attack a month ago. As for a pattern, I never thought to look at that.</Rin>
+    <Mayor type="dialog">also, all the targetted towns have not been hit again yet, so we dont know their motives</Mayor>
+    <Shadow type="dialog">I should have asked this first but what was taken or how much casualities occured at each?</Shadow>
+    <Mayor type="dialog">It varies from each attack to the next, I cannot recall there being any common event with all of them.</Mayor>
+    <Shadow type="dialog">Could you get me those data for me to look through?</Shadow>
+    <Rin type="dialog">We do have the letters we got from a few I think, the rest we only heard got attacked...</Rin>
+    <Shadow type="dialog">Could you get those to me by tomorrow please?</Shadow>
+    <Mayor type="dialog">Why does this interest you so much though?</Mayor>
+    <Shadow type="dialog">I am here and I am capable. I do not believe I need a reason to try to help. It is up to you if you want to trust me though.</Shadow>
+    <Mayor type="dialog">Well, you are offering help and we need it. I guess I dont see the issue</Mayor>
+    <Shadow type="dialog">Thank you. I need to get some rest now.</Shadow>
+    <Rin type="dialog">I will lead you to the inn...</Rin>
+    <dialog type="next" id="7"></dialog>
+  </scene>
+  <scene id="7">
+    <Shadow type="dialog">Alright, you got the information?</Shadow>
+    <Rin type="dialog">here you go</Rin>
+    <Notice type="dialog">A few minutes later...</Notice>
+    <Shadow type="dialog">It is no good, this is only 2 of the attacks and there is barely any details in them. Maybe I would have to travel to each of the towns to find out.</Shadow>
+    <Rin type="dialog">The Capital would probably be a good place to go, I think they might have some information that would help atleast</Rin>
+    <Shadow type="dialog">Could you tell me where it is?</Shadow>
+    <Rin type="dialog">I am willing to lead you there if the Mayor is fine with it.</Rin>
+    <Shadow type="dialog">Let us go then. There is some stuff I wanted to ask you anyway so you coming along would be cool.</Shadow>
+    <Explore type="next" id="Timor"></Explore>
+  </scene>
+  <scene id="8">
+    <Mayor type="dialog">Going to the capital? well, We will be fine here. You can go along.</Mayor>
+    <Rin type="dialog">You didnt even think about it! Maybe I won't come back then...</Rin>
+    <Mayor type="dialog">Hahaha, alright then, PLEASE DONT GO!!!! HOW WILL I SURVIVE WITHOUT YOU?!</Mayor>
+    <Mayor type="dialog">Better?</Mayor>
+    <Rin type="dialog">Thanks, thats better...shows your more youthful side!</Rin>
+    <Mayor type="dialog">haha, I am still young, you know!</Mayor>
+    <Shadow type="dialog">I don't even...</Shadow>
+    <Rin type="dialog">I am sure you will get used to this kind of thing eventually, Shadow. Let us go since we are in a hurry! To get to the capital head west and then follow the road north.</Rin>
+    <Explore type="next" id="Timor"></Explore>
+  </scene>
+  <scene id="9">
+    
+  </scene>
 </Cutscenes>
