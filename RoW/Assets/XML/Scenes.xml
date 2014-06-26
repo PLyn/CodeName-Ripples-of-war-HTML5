@@ -3,63 +3,69 @@
 	<scene id="0">
     <bg type="bg"></bg>
     <IntroComplete type="switch" value="true"></IntroComplete>
-    <hero type="dialog">I have began wandering throughout the lands 3 years ago and I have now entered the land of Cindara, known as a peaceful and loving nation although with my curse, that will surely change...</hero>
+    <Shadow type="dialog">I see the grassland and the natural setting in front of me. I have arrived in the region of Cindara. I heard that this is an area of peace and solitude for the most part. These people stayed out of the way of others as much as possible. Maybe, I will find reprieve here...</Shadow>
     <Shadow type="party" value="add"></Shadow>
-    <Syndra type="party" value="add"></Syndra>
+    <Rin type="party" value="add"></Rin>
     <Johnathan type="party" value="add"></Johnathan>
     <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
     <potion type="item" quantity="1" itemType="consumable"></potion>
-    <explore type="next" id="Timor_Grasslands"></explore>
+    <explore type="next" id="Grassland"></explore>
   </scene>
 	<scene id="1">
     <theme type="bgm" value="on"></theme>
-    <Syndra type="move" x="4" y="5"></Syndra>
-    <hero type="dialog">I wonder if there is a town nearby--</hero>
-    <syndra type="dialog">Hi there, you look a little lost?</syndra>
-    <hero type="dialog">WHOA! where did you come from?</hero>
-    <syndra type="dialog">um...just over there?</syndra>
-    <hero type="dialog">(She moved really fast and silently...)</hero>
-    <syndra type="dialog">heeeelllloooo?</syndra>
-    <hero type="dialog">huh...um...sorry, could you direct me to the nearest town please?</hero>
-    <syndra type="dialog">of course, you weirdo. just follow the path east and you will reach Timor</syndra>
-    <hero type="dialog">uh...ok (weirdo? who is this crazy girl?)</hero>
-    <syndra type="dialog">I get the feeling you think I am some crazy person.</syndra>
-    <hero type="dialog">(Well, who  wouldn't at this point?)</hero>
-    <syndra type="dialog">WILL YOU STOP SPACING OUT ALREADY!</syndra>
-    <hero type="dialog">YES!..sorry, just a bit too used to travelling alone by now.</hero>
-    <syndra type="dialog">sigh...I am heading back as well, I will lead you, let us go already weirdo</syndra>
-    <hero type="dialog">I have a name you know...Its Shadow</hero>
-    <syndra type="dialog">Finally you seem to be talking to me, nice to meet you Shadow, My name is Syndra</syndra>
-    <hero type="dialog">nice to meet you Syndra...</hero>
-    <syndra type="dialog">What is with that depressed "nice to meet you"...For some reason, you annoy me! let us go already</syndra>
-    <hero type="dialog">what did I do?...</hero>
     <theme type="bgm" value="off"></theme>
+    <Rin type="move" x="3" y="7"></Rin>
+    <Rin type="dialog">Hi, are you a traveller? it is rare to see visitors in general here.</Rin>
+    <Shadow type="dialog">Yes, I have been travelling for a while, is there a town nearby?</Shadow>
+    <Rin type="dialog">There is, I would be happy to guide you there!</Rin>
+    <Shadow type="dialog">That is much appreciated, I didnt get your name though?</Shadow>
+    <Rin type="dialog">It's Rin, you?</Rin>
+    <Shadow type="dialog">Shadow.</Shadow>
+    <Rin type="dialog">Let us go then, Shadow?</Rin>
+    <Shadow type="dialog">Yes, I might just be on the verge of exhaustion.</Shadow>
+    <Rin type="dialog">Alright, the village is just right of here then go up to reach there.</Rin>
+    <Notice type="dialog">Rin has joined your party.</Notice>
     <x type="next"></x>
   </scene>
   <scene id="2">
-    <syndra type="dialog">Come on, let us go already. It is getting late.</syndra>
+    <Rin type="dialog">I thought you were in a hurry? Let's go! Just head right then up and we will be at the village</Rin>
+    <Attacker type="object" value="remove" name="Assassin"></Attacker>
     <x type="next"></x>
   </scene>
   <scene id="3">
-    <syndra type="dialog">the town is just up ahead. Let us go</syndra>
-    <unknown type="dialog">*footsteps*</unknown>
-    <hero type="dialog">Something is coming from that bush!</hero>
-    <Attacker type="object" value="add" x="6" y="1"></Attacker>
+    <Rin type="dialog">the town is just up ahead. Let us go</Rin>
+    <Shadow type="dialog">Something is coming from that bush!</Shadow>
+    <Attacker type="object" value="add" gid="262" x="2" y="6"></Attacker>
     <syndra type="dialog">Watch out!</syndra>
-    <Attacker type="object" value="remove" name="Assassin"></Attacker>
+    <Rin type="dialog">Let me give you a battle primer, just in case although i suspect you are a battle veteran anyway.</Rin>
+    <Rin type="dialog">There are four commands : Attack, spell, Defend, Item.</Rin>
+    <Rin type="dialog">Attack: A physical attack that is based on the character's Attack and is reduced by physical resistance and Defense</Rin>
+    <Rin type="dialog">Spell: These range from healing to stats boosters or reducers or Damage skills which is the most common. Experiment and see what works for you.</Rin>
+    <Rin type="dialog">Defend: Reduces damage by 33% of any attack done to character defending. Only applies to the first attack and not all attacks for that turn</Rin>
+    <Rin type="dialog">Item: Use items for varying effects to turn the tide of battle. Feel free to use your items as you will get more as you go along.</Rin>
+    <Rin type="dialog">With that said, I am sure you will figure out the rest! let us go!</Rin>
+    <Attacker type="object" value="remove"></Attacker>
     <battle type="next" id="0"></battle>
   </scene>
   <scene id="4">
-    <syndra type="dialog">Nice job! you are pretty strong despite how you look</syndra>
-    <hero type="dialog">(she really doesnt let up at all...sigh)</hero>
-    <syndra type="dialog">...</syndra>
-    <hero type="dialog">huh? hey! dont leave me!!</hero>
-    <syndra type="dialog">the town is right here, it is not like you will get lost...</syndra>
-    <hero type="dialog">yeah I know...just call it a bad feeling I had</hero>
-    <syndra type="dialog">You REALLY are strange, you know that?</syndra>
-    <hero type="dialog">after these few moments, I certainly agree with you there</hero>
-    <syndra type="dialog">*smiles*...well, let's go into the town</syndra>
-    <hero type="dialog">wai--nevermind, lets go.</hero>
-  <explore type="next" id="map4"></explore>
+    <Rin type="dialog">Let me give you a battle primer, just in case although i suspect you are a battle veteran anyway.</Rin>
+    <Rin type="dialog">There are four commands : Attack, spell, Defend, Item.</Rin>
+    <Rin type="dialog">Attack: A physical attack that is based on the character's Attack and is reduced by physical resistance and Defense</Rin>
+    <Rin type="dialog">Spell: These range from healing to stats boosters or reducers or Damage skills which is the most common. Experiment and see what works for you.</Rin>
+    <Rin type="dialog">Defend: Reduces damage by 33% of any attack done to character defending. Only applies to the first attack and not all attacks for that turn</Rin>
+    <Rin type="dialog">Item: Use items for varying effects to turn the tide of battle. Feel free to use your items as you will get more as you go along.</Rin>
+    <Rin type="dialog">With that said, I am sure you will figure out the rest! let us go!</Rin>
+    <x type="next"></x>
+  </scene>
+  <scene id="5">
+    <Rin type="dialog">I wonder what was that about...</Rin>
+    <Shadow type="dialog">Was that something normal around here?</Shadow>
+    <Rin type="dialog">Yeah, around here anyway. I heard neighbouring towns have been experiencing strange attacks. Looks like it finally reached us.</Rin>
+    <Shadow type="dialog">That's some relief for me.</Shadow>
+    <Rin type="dialog">What?!</Rin>
+    <Shadow type="dialog">Don't worry about it, do you know anything more about these strange attackers?</Shadow>
+    <Rin type="dialog">...Not much more. I need to talk to the mayor. let us go into the village.</Rin>
+    <Shadow type="dialog">yes, that sounds fine.</Shadow>
+    <explore type="next" id="Timor"></explore>
   </scene>
 </Cutscenes>

@@ -40,9 +40,8 @@
     <Content Include="Assets\Sound\wood.mp3" />
     <Content Include="Assets\Image\star.png" />
     <Content Include="Assets\Atlas\test.png" />
-    <Content Include="Assets\Tilemap\charset.png" />
     <Content Include="Assets\Tilemap\mapTileset.png" />
-    <Content Include="Assets\Tilemap\Tileset.png" />
+    <Content Include="Assets\Tilemap\Party.png" />
     <Content Include="Assets\XML\Scenes.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -116,11 +115,10 @@
     <Content Include="Assets\JSON\item.json" />
     <Content Include="Assets\JSON\characters.json" />
     <Content Include="Assets\JSON\EnemyGroups.json" />
-    <Content Include="Assets\Tilemap\map1.json" />
-    <Content Include="Assets\Tilemap\map2.json" />
     <Content Include="Assets\JSON\LocationMap.json" />
-    <Content Include="Assets\Tilemap\map3.json" />
     <Content Include="Assets\Tilemap\Timor_Grasslands.json" />
+    <Content Include="Assets\Tilemap\Grassland.json" />
+    <Content Include="Assets\Tilemap\Grassland2.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

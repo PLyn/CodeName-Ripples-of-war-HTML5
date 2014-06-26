@@ -96,44 +96,71 @@ module Game {
         }
         renderDialog() {
             if (this.initNode) {
-                setStyle(this.context2, 'Calibri', '12pt', 'white');
+                setStyle(this.context2, 'Calibri', '14pt', 'white');
+                this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
                 this.linePos = 0;
                 this.lineHeight = 1;
                 this.lines = wrap(this.context2, this.currentNode);
                 this.prevName = this.lines[this.linePos].name;
                 this.initNode = false;
-                quickWindow(this.context2, 25, 350, 500, 250, "blue", "red");
-                setStyle(this.context2, 'calibre', 12, 'white');
+                quickWindow(this.context2, 25, 25, GAME_WIDTH - 50, GAME_HEIGHT / 4, "blue", "red");
+                setStyle(this.context2, 'calibre', 14, 'white');
+
+                var charListkeys = Object.keys(JSON_CACHE['character']['Party']);
+                var charList = JSON_CACHE['character']['Party'];
+                for (var x = 0; x < charListkeys.length; x++) {
+                    if (charListkeys[x] === this.lines[this.linePos].name) {
+                        var i = IMAGE_CACHE[charList[charListkeys[x]].Img];
+                        this.context2.drawImage(i, 40, 60);
+                        break;
+                    }
+                }
+
 
                 this.time = this.currentTime + 500;
                 if (this.prevName !== this.lines[this.linePos].name) {
-                    this.context2.clearRect(0, 0, 800, 600);
+                    this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
                     this.prevName = this.lines[this.linePos].name;
                     this.lineHeight = 1;
-                    quickWindow(this.context2, 25, 350, 500, 250, "blue", "red");
-                    setStyle(this.context2, 'calibre', 12, 'white');
+                    quickWindow(this.context2, 25, 25, GAME_WIDTH - 50, GAME_HEIGHT / 4, "blue", "red");
+                    setStyle(this.context2, 'calibre', 14, 'white');
+                    for (var x = 0; x < battleList.length; x++) {
+                        if (battleList[x].Base.ID === this.lines[this.linePos].name) break;
+                    }
+                    battleList[x].setPos(30, 50);
+                    battleList[x].render(this.context2);
                 }
                 else if (this.linePos >= 1) {
                     this.lineHeight += 25;
                 }
-                this.context2.fillText(this.lines[this.linePos].message, 60, (425 + this.lineHeight));
-                this.context2.fillText(this.lines[this.linePos].name, 40, 400);
+                this.context2.fillText(this.lines[this.linePos].message, 130, (50 + this.lineHeight));
+                this.context2.fillText(this.lines[this.linePos].name, 35, 40);
                 this.linePos++;
             }
             if (this.linePos < this.lines.length && this.currentTime > this.time && mouseClicked()) {
                 this.time = this.currentTime + 500;
                 if (this.prevName !== this.lines[this.linePos].name) {
-                    this.context2.clearRect(0, 0, 800, 600);
+                    this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
                     this.prevName = this.lines[this.linePos].name;
                     this.lineHeight = 1;
-                    quickWindow(this.context2, 25, 350, 500, 250, "blue", "red");
-                    setStyle(this.context2, 'calibre', 12, 'white');
+                    quickWindow(this.context2, 25, 25, GAME_WIDTH - 50, GAME_HEIGHT / 4, "blue", "red");
+                    setStyle(this.context2, 'calibre', 14, 'white');
+
+                    var charListkeys = Object.keys(JSON_CACHE['character']['Party']);
+                    var charList = JSON_CACHE['character']['Party'];
+                    for (var x = 0; x < charListkeys.length; x++) {
+                        if (charListkeys[x] === this.lines[this.linePos].name) {
+                            var i = IMAGE_CACHE[charList[charListkeys[x]].Img];
+                            this.context2.drawImage(i, 40, 60);
+                            break;
+                        }
+                    }
                 }
                 else if (this.linePos >= 1) {
                     this.lineHeight += 25;
                 }
-                this.context2.fillText(this.lines[this.linePos].message, 60, (425 + this.lineHeight));
-                this.context2.fillText(this.lines[this.linePos].name, 40, 400);
+                this.context2.fillText(this.lines[this.linePos].message, 130, (50 + this.lineHeight));
+                this.context2.fillText(this.lines[this.linePos].name, 35, 40);
                 this.linePos++;
             }
             else if (this.linePos >= this.lines.length && this.currentTime > this.time && mouseClicked()) {
@@ -205,30 +232,36 @@ module Game {
             objects[x].y = coords.y;
             this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
             TileMap.drawMapNoObjectReset(this.context, this.mapID);
+            battleList[0].setPos((JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64) + 16, (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64) + 16);
+            //draws character
+            battleList[0].render(this.context);
             this.initNode = true;
             this.nextNode();
         }
         changeObjects() {
             if (this.currentNode.getAttribute('value') === "add") {
                 var obj = {
-                    "gid": 262,
-                    "name": "Assassin",
+                    "gid": +this.currentNode.getAttribute('gid'),
+                    "name": this.currentNode.nodeName,
                     "type": "",
                     "properties": {
                         "Type": 0,
                         "ID": 0
                     },
                     "width": 0,
-                    "x": +this.currentNode.getAttribute('x') * 32,
-                    "y": +this.currentNode.getAttribute('y') * 32
+                    "x": +this.currentNode.getAttribute('x') * 64,
+                    "y": +this.currentNode.getAttribute('y') * 64
                 };
                 objects.push(obj);
-                this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-                TileMap.drawMapNoObjectReset(this.context2, this.mapID);
+                this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+                TileMap.drawMapNoObjectReset(this.context, this.mapID);
+                battleList[0].setPos((JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64) + 16, (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64) + 16);
+                //draws character
+                battleList[0].render(this.context);
             }
             else if (this.currentNode.getAttribute('value') === "remove") {
                 for (var x = 0; x < objects.length; x++) {
-                    if (objects[x].name === this.currentNode.getAttribute('name')) {
+                    if (objects[x].name === this.currentNode.nodeName) {
                         break;
                     }
                 }
@@ -283,12 +316,11 @@ module Game {
                     sManager.pushState(new Explore(this.context, id));
                     break;
                 case "battle":
-                    this.context.clearRect(0, 0, 800, 600);
                     this.context2.clearRect(0, 0, 800, 600);
                     sManager.pushState(new Battle(+id, this.mapID));
                     break;
                 case "dialog":
-                    sManager.pushState(new Cutscene(this.context, +id, this.mapID));
+                    sManager.pushState(new Cutscene(this.context2, +id, this.mapID));
                     break;
                 default:
                     break;

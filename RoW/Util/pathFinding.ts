@@ -30,13 +30,8 @@ function findPath(world, pathStart, pathEnd)
 		return abs(Point.x - Goal.x) + abs(Point.y - Goal.y);
 	}
 
-
-	// Neighbours functions, used by findNeighbours function
-	// to locate adjacent available cells that aren't blocked
-
 	// Returns every available North, South, East or West
-	// cell that is empty. No diagonals,
-	// unless distanceFunction function is not Manhattan
+	// cell that is empty. 
 	function Neighbours(x, y)
 	{
 		var	N = y - 1,

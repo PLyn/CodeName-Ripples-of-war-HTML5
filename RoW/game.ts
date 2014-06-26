@@ -49,10 +49,10 @@ module Game {
                     spr: 'Assets/Atlas/test.json'
                 },
                 Tileset: {
-                    map1: 'Assets/Tilemap/map1.json',
-                    map2: 'Assets/Tilemap/map2.json',
-                    map3: 'Assets/Tilemap/map3.json',
-                    Timor_Grasslands: 'Assets/Tilemap/Timor_Grasslands.json'
+                    Timor_Grasslands: 'Assets/Tilemap/Timor_Grasslands.json',
+                    Grassland: 'Assets/Tilemap/Grassland.json',
+                    Grassland2: 'Assets/Tilemap/Grassland2.json'
+
                 },
                 XML: {
                     chapter: 'Assets/XML/Scenes.xml'

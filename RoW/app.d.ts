@@ -62,7 +62,7 @@ declare module Game {
         public loadfile(key: any, url: any, onLoad: any, type: any, pos?: any): void;
         public onAnimJSONLoad: (key: any, response: any) => void;
         public onSpriteJSONLoad: (key: any, response: any) => void;
-        public onTileJSONLoad: (key: any, response: any) => void;
+        public onTileJSONLoad: (key: any, response: any, pos: any) => void;
         public onXMLLoad: (key: any, response: any, pos: any) => void;
         public onJSONLoad: (key: any, response: any, pos: any) => void;
     }
@@ -239,6 +239,13 @@ declare module Game {
     }
 }
 declare module Game {
+    class State {
+        constructor();
+        public init(): void;
+        public update(): void;
+    }
+}
+declare module Game {
     class Battle extends State {
         public nextState: any;
         public nextID: any;
@@ -336,13 +343,6 @@ declare function applyStatus(effect: any, chance: any, sprite: Game.Sprite): Gam
 declare function applyStatusEffect(context: any, sprite: Game.Sprite): Game.Sprite;
 declare function UseItem(context: CanvasRenderingContext2D, itemName: any, target: Game.Sprite): Game.Sprite;
 declare module Game {
-    class State {
-        constructor();
-        public init(): void;
-        public update(): void;
-    }
-}
-declare module Game {
     class Cutscene extends State {
         public dia: any;
         public canvas: any;
@@ -397,6 +397,7 @@ declare module Game {
         public map: any;
         public startY: any;
         public startX: any;
+        public time: any;
         constructor(ctx: any, mapID: any);
         public init(): void;
         public update(): void;

@@ -12,6 +12,7 @@ module Game {
         map;
         startY;
         startX;
+        time;
         constructor(ctx, mapID) {
             super();
             this.x = 0;
@@ -23,10 +24,11 @@ module Game {
             this.layer2ctx = canvas.getContext('2d');
             var canvas2 = <HTMLCanvasElement> document.getElementById('layer1');
             this.layer1ctx = canvas2.getContext('2d');
-            this.startY = (5 * 32) + 16;
-            this.startX = (5 * 32) + 16;
+            this.time = 0;
         }
         init() {
+            this.startY = (JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64) + 16;
+            this.startX = (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64) + 16;
             //cleas both layers
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
@@ -35,9 +37,10 @@ module Game {
             //menu button
             this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
             //sets characters position on the map
-            battleList[0].setPos(this.startX, this.startY);
+            battleList[0].setPos((JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64) + 16, (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64) + 16);
             //draws character
-            this.layer2ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
+            battleList[0].render(this.layer1ctx);
+            //this.layer1ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
             //bounds for menu
             objects.push(
                   {
@@ -66,7 +69,7 @@ module Game {
 
         }
         update() {
-            if (mouseClicked()) {
+            if (mouseClicked() && Date.now() > this.time) {
                 this.mx = mEvent.pageX;
                 this.my = mEvent.pageY;
                 for (var i = 0; i < objects.length; i++) {
@@ -89,12 +92,15 @@ module Game {
                         if (objects[i].type === 'menu' || objects[i].type === 'exit') {
                             this.nextState(i);
                         }
-                        if (typeof path !== 'undefined' && path.length > 0) {
+                        else if (typeof path !== 'undefined' && path.length > 0) {
                             if (objects[i].type !== 'menu') {
                                 var timer = setInterval(() => {
                                     var coords = moveSprite(ctx, battleList[0].dx, battleList[0].dy, path[x][0], path[x][1]);
                                     battleList[0].setPos(coords.x, coords.y);
                                     ctx.clearRect(0, 0, 800, 600);
+                                    battleList[0].setPos(this.startX, this.startY);
+                                    //draws character
+                                    this.layer1ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
                                     ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
                                     x++;
                                     if (x >= (keys.length - 1)) {
@@ -114,6 +120,7 @@ module Game {
         }
         //determines and changes the state to the next state
         nextState(i) {
+            this.time = Date.now() + 200;
             if (objects[i].type === 'exit') {
                 if (objects[i].properties.Type === "0") {//EXIT TO WORLD
                     sManager.popState();
@@ -121,7 +128,7 @@ module Game {
                 }
                 else if (objects[i].properties.Type === "1") {//EXIT TO NEW AREA
                     sManager.popState();
-                    sManager.pushState(new Explore(this.layer1ctx, 'map1'));
+                    sManager.pushState(new Explore(this.layer1ctx, objects[i].properties.ID));
                 }
             }
             else if (objects[i].type === 'menu') {

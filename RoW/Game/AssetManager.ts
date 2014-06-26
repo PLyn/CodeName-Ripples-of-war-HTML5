@@ -225,7 +225,7 @@ module Game {
             horizontally and vertically and the width and height of each tile as well as the firstgid, tileset image and name. TILESET_CACHE holds all of this data
             and the TILEDATA_CACHE holds the metadata about the tileset from the JSON file.
         */
-        onTileJSONLoad = (key, response) => {
+        onTileJSONLoad = (key, response, pos) => {
             this.tiledData = JSON.parse(response);
             this.numTilesX = this.tiledData.width;
             this.numTilesY = this.tiledData.height;
@@ -257,8 +257,8 @@ module Game {
             }
             //TILESET holds the actual tilesets 
             //TILEDATA holds the metadata about each tileset
-            TILESET_CACHE[tiledata[0].name] = tileset_holder;
-            TILEDATA_CACHE[tiledata[0].name] = this.tiledData;
+            TILESET_CACHE[key[pos]] = tileset_holder;
+            TILEDATA_CACHE[key[pos]] = this.tiledData;
         }
         /*
             callback for xml assets. gets the xml file received from the xhr request and stores it in the id used in the asset list as its index

@@ -18,6 +18,7 @@ document.addEventListener('mouseup', function (e) {
     e.preventDefault();
     that.mousedown = false;
 });
+
 /*
     if mouse button is down then return true to signify that the user has clicked
 */

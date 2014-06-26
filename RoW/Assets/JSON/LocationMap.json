@@ -1,7 +1,9 @@
 ﻿{
     "map1":  {
         "map1": {
-            "auto":  false  
+            "auto":  false,
+            "startx": 2,
+            "starty": 7    
         },  
         "helper":  {
             "defeatrival":  4
@@ -9,13 +11,25 @@
     },
     "map2":  {
         "map1": {
-            "auto":  false  
+            "auto":  false,  
+            "startx": 2,
+            "starty": 7  
         }
     },
-    "Timor_Grasslands": {
-        "Timor_Grasslands":{
+    "Grassland": {
+        "Grassland":{
             "auto":  true,
-            "ID":  1  
+            "ID":  1,  
+            "startx": 2,
+            "starty": 7  
+        }
+    },
+    "Grassland2": {
+        "Grassland2":{
+            "auto":  true,
+            "ID":  3,
+            "startx": 2,
+            "starty": 7  
         }
     }
 }
