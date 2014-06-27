@@ -11,8 +11,14 @@ function UseItem(context: CanvasRenderingContext2D, itemName, target: Game.Sprit
     }
     var item = allItems[itemKeys[x]];
 
-    target.Current[item.stat] += item.value;
 
+    target.Current[item.stat] += item.value;
+    if (item.stat === 'HP' && (target.Current[item.stat] < 0) ) {
+        target.Current[item.stat] = 0;
+    }
+    if (target.Current[item.stat] > target.Base.HP && item.stat === 'HP') {
+        target.Current[item.stat] = target.Base.HP;
+    }
     setStyle(context, 'calibre', 12, "white");
     context.fillText("+" + item.value, target.dx, target.dy);
     return target;

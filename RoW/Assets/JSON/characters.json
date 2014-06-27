@@ -2,9 +2,9 @@
   "Party": {
     "Shadow": {
         "Img": "Shadow",
-        "HP": 5,
+        "HP": 50,
         "MP": 0,
-        "Atk": 8,
+        "Atk": 100,
         "Def": 5,
         "Spd": 0,
         "MAtk": 0,
@@ -16,7 +16,7 @@
     },
     "Rin":{
         "Img": "Rin",
-        "HP": 5,
+        "HP": 50,
         "MP": 0,
         "Atk": 7,
         "Def": 5,
@@ -116,7 +116,7 @@
   "Enemies":{
         "Goblin":{
             "Img": "Domingo",
-            "HP": 5,
+            "HP": 50,
             "MP": 0,
             "Atk": 15,
             "Def": 5,
@@ -126,7 +126,7 @@
             "Luc": 0,
             "Abilities":{
                 "Attack":  0,
-                "Storm":  1,
+                "Storm":  50,
                 "Defend":  100
             },
             "growth": "- - - - - - - -"

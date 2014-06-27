@@ -185,31 +185,35 @@ module Game {
             else if (this.cState === this.states["PreEnemyTurn"]) {
                 this.enemyTurnInit();
             }
-            else if (this.states === this.states["EAttackAnim"]) {
+            else if (this.cState === this.states["EAttackAnim"] && time > this.newTime) {
                 if (this.Anim.finishPlaying) {
-                    this.cState = this.states['EAttack'];
                     this.drawLayers();
-                    this.newTime = Date.now() + this.turnDelay;
+                    this.cState = this.states['EAttack'];
+
+                    this.newTime = time + this.turnDelay;
                 }
             }
             else if (this.cState === this.states["EAttack"] && time > this.newTime) {
                 this.enemyAttack();
+                this.newTime = time + this.turnDelay;
             }
-            else if (this.cState === this.states["ESpellAnim"]) {
+            else if (this.cState === this.states["ESpellAnim"] && time > this.newTime) {
                 if (this.Anim.finishPlaying) {
-                    this.cState = this.states['ESpellCast'];
                     this.drawLayers();
-                    this.newTime = Date.now() + this.turnDelay;
+                    this.newTime = time + this.turnDelay;
+                    this.cState = this.states['ESpellCast'];
+
                 }
             }
-            else if (this.cState === this.states["ESpellCast"]) {
-                this.queue = EnemySpellCast(this.context2, this.cSpell, this.queue, this.cTarget, this.queue[this.cTurn]);
-                this.cState = this.states["EndTurn"];
+            else if (this.cState === this.states["ESpellCast"] && time > this.newTime) {
                 this.CheckIfDead();
                 this.drawLayers();
                 this.newTime = time + this.turnDelay;
+                this.queue = EnemySpellCast(this.context2, this.cSpell, this.queue, this.cTarget, this.queue[this.cTurn]);
+                this.cState = this.states["EndTurn"];
+
             }
-            else if (this.cState === this.states["EDefend"]) {
+            else if (this.cState === this.states["EDefend"] && time > this.newTime) {
                 this.queue[this.cTurn].defend = true;
                 this.cState = this.states["EndTurn"];
                 this.drawLayers();
@@ -350,7 +354,7 @@ module Game {
                             this.cTarget = i; //sets current target
                             this.cState = this.states["PAtkAnim"];//sets current state
                             this.drawLayers();
-                            this.Anim.queueAnimation(ANIM_CACHE['at']); //queues animation to be played
+                            this.Anim.queueAnimation(ANIM_CACHE['slash'], this.queue[this.cTarget].dx, this.queue[this.cTarget].dy); //queues animation to be played
                             this.Anim.play(); //start the animation
                             break;
                         }
@@ -447,7 +451,7 @@ module Game {
                             this.cTarget = i;
                             this.cState = this.states["SpellAnim"];
                             this.drawLayers();
-                            this.Anim.queueAnimation(ANIM_CACHE['at']);
+                            this.Anim.queueAnimation(ANIM_CACHE['slash'], this.queue[this.cTarget].dx, this.queue[this.cTarget].dy);
                             this.Anim.play();
                         }
                     }
@@ -546,26 +550,27 @@ module Game {
             initalizes enemy trn dialogs
         */
         enemyTurnInit() {
-            this.cState = this.states["EAction"];
             this.drawLayers();
             this.newTime = Date.now() + this.turnDelay;
             this.queue[this.cTurn] = applyStatusEffect(this.context2, this.queue[this.cTurn]);
             var cAbility = EnemyActionChooser(this.queue[this.cTurn], this.queue);
 
-            var allyCount = 0;
+            var allyCount = [];
             for (var x = 0; x < this.queue.length; x++) {
                 if (this.queue[x].Base.Type === 0 && this.queue[x].currentState !== 1) {
-                    allyCount++;
+                    allyCount.push(x);
                 }
             }
+            var rand = getRandomInt(0, allyCount.length - 1);
             //get random int to determine which ally to target
-            this.cTarget = getRandomInt(0, allyCount);
+            this.cTarget = allyCount[rand];
 
             switch (cAbility) {
                 case "Attack":
                     this.cState = this.states["EAttackAnim"];
-                    this.Anim.queueAnimation(ANIM_CACHE['at']);
+                    this.Anim.queueAnimation(ANIM_CACHE['slash'], this.queue[this.cTarget].dx, this.queue[this.cTarget].dy);
                     this.Anim.play();
+                    this.newTime = Date.now() + this.turnDelay;
                     break;
                 case "Defend":
                     this.cState = this.states["EDefend"];
@@ -579,8 +584,9 @@ module Game {
                         }
                     }
                     this.cState = this.states["ESpellAnim"];
-                    this.Anim.queueAnimation(ANIM_CACHE['at']);
+                    this.Anim.queueAnimation(ANIM_CACHE['slash'], this.queue[this.cTarget].dx, this.queue[this.cTarget].dy);
                     this.Anim.play();
+                    this.newTime = Date.now() + this.turnDelay;
                     break;
             }
             this.drawLayers();
@@ -589,13 +595,13 @@ module Game {
             Enemy attack target
         */
         enemyAttack() {
+
             this.cState = this.states["EndTurn"];
-            this.CheckIfDead();
             this.drawLayers();
-            this.newTime = Date.now() + this.turnDelay;
 
             var attack = Attack(this.context2, this.queue[this.cTurn], this.queue[this.cTarget]);
             this.queue[this.cTarget] = attack.Tar;
+            this.CheckIfDead();
         }
         /*
             end turn but moving on to the next sprite in queue and resetting the current turn number if all sprites 

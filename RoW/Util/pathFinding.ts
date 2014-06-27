@@ -10,7 +10,7 @@ function findPath(world, pathStart, pathEnd)
 
 	// the world data are integers:
 	// anything higher than this number is considered blocked
-	var maxWalkableTileNum = 0;
+	var maxWalkableTileNum = 1;
 
 	// keep track of the world dimensions
     // Note that this A-star implementation expects the world array to be square: 

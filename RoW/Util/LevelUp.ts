@@ -64,37 +64,36 @@ function LevelUp(sprite: Game.Sprite, context) {
         growth[keys[x]] = growthAmount;
     }
 
-    LevelUpDisplay(context, growth, sprite.Base, sprite.Base.ID, newSpells);
+    LevelUpDisplay(context, growth, sprite.Base, sprite, newSpells);
 }
 /*
     draws dialog on screen with the growth of the character and new skills learned
 */
-function LevelUpDisplay(context: CanvasRenderingContext2D, growth, base, name, spells) {
-    //box to put text on
-    context.fillStyle = "blue";
-    context.fillRect(250, 250, 400, 300);
-    //Border around box
-    context.strokeStyle = "#FF0000";
-    context.strokeRect(249, 249, 402, 302);
+function LevelUpDisplay(context: CanvasRenderingContext2D, growth, base, sprite : Game.Sprite, spells) {
+    quickWindow(context, 200, 50, 400, 400, "blue", "red");
+    var x = 200;
+    var y = 50;
     //levelup text
-    setStyle(context, 'calibre', 16, "yellow", "bold");
-    context.fillText("Level Up!", 300, 265);
+    setStyle(context, 'calibre', 20, "yellow", "bold");
+    context.fillText("Level Up!", x + 100, y + 40);
     //Name and stats
-    setStyle(context, 'calibre', 12, "white", "bold");
-    context.fillText(name, 255, 265);
-    context.fillText("HP: " + (base.HP - growth.HP) + " + " + growth.HP + " = " + base.HP , 275, 300);
-    context.fillText("MP: " + (base.MP - growth.MP) + " + " + growth.MP + " = " + base.MP, 275, 320);
-    context.fillText("Attack: " + (base.Atk - growth.Atk) + " + " + growth.Atk + " = " + base.Atk, 275, 340);
-    context.fillText("Defense: " + (base.Def - growth.Def) + " + " + growth.Def + " = " + base.Def, 275, 360);
-    context.fillText("Speed: " + (base.Spd - growth.Spd) + " + " + growth.Spd + " = " + base.Spd, 275, 380);
-    context.fillText("M. Attack: " + (base.MAtk - growth.MAtk) + " + " + growth.MAtk + " = " + base.MAtk, 275, 400);
-    context.fillText("M. Defense: " + (base.MDef - growth.MDef) + " + " + growth.MDef + " = " + base.MDef, 275, 420);
-    context.fillText("Luck: " + (base.Luc - growth.Luc) + " + " + growth.Luc + " = " + base.Luc, 275, 440);
+    setStyle(context, 'calibre', 20, "white", "bold");
+    context.fillText(sprite.Base.ID, x + 20, y + 30);
+    setStyle(context, 'calibre', 18, "white");
+    context.fillText("Level: " + sprite.Level + " + " + "1 = " + (sprite.Level + 1), x + 75, y + (30 * 2));
+    context.fillText("HP: " + (base.HP - growth.HP) + " + " + growth.HP + " = " + base.HP, x + 75, y + (30 * 3));
+    context.fillText("MP: " + (base.MP - growth.MP) + " + " + growth.MP + " = " + base.MP, x + 75, y + (30 * 4));
+    context.fillText("Attack: " + (base.Atk - growth.Atk) + " + " + growth.Atk + " = " + base.Atk, x + 75, y + (30 * 5));
+    context.fillText("Defense: " + (base.Def - growth.Def) + " + " + growth.Def + " = " + base.Def, x + 75, y + (30 * 6));
+    context.fillText("Speed: " + (base.Spd - growth.Spd) + " + " + growth.Spd + " = " + base.Spd, x + 75, y + (30 * 7));
+    context.fillText("M. Attack: " + (base.MAtk - growth.MAtk) + " + " + growth.MAtk + " = " + base.MAtk, x + 75, y + (30 * 8));
+    context.fillText("M. Defense: " + (base.MDef - growth.MDef) + " + " + growth.MDef + " = " + base.MDef, x + 75, y + (30 * 9));
+    context.fillText("Luck: " + (base.Luc - growth.Luc) + " + " + growth.Luc + " = " + base.Luc, x + 75, y + (30 * 10));
 
-    context.fillText("Spells Learned: ", 255, 460);
+    context.fillText("Spells Learned: ", x + 10, y + (30 * 11));
     var newSpellKeys = Object.keys(spells);
     for (var x = 0; x < newSpellKeys.length; x++) {
-        context.fillText(spells[x], 300, 460 + (x * 20));
+        context.fillText(spells[x], x + 50, (y + (30 * 11)) + (x * 25));
     }
 
 }

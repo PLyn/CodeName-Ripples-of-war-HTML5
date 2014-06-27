@@ -195,7 +195,7 @@ module Game {
             this.animSource.src = 'Assets/Atlas/' + this.animData.meta.image;
             for (var i = 0; i < this.animData.frames.length; i++) {
                 frame = this.animData.frames[i].frame;
-                holder[i] = new Game.GameObject("", this.spriteSource, 0, 0, frame.x, frame.y, frame.w, frame.h);
+                holder[i] = new Game.GameObject("", this.animSource, 0, 0, frame.x, frame.y, frame.w, frame.h);
             }
             ANIM_CACHE[key[this.animPos]] = holder; //Store the holder array into the key of the ANIM_CACHE
             this.animPos++; //Move to the next key of the array

@@ -13,9 +13,10 @@ module Game {
         init() {
             this.context.drawImage(IMAGE_CACHE['ripple'], 0, 0);
             setStyle(this.context, 'Calibri', 25, "white");
-            this.context.fillText("Ripples of War Alpha " + GAME_VERSION, 250, 100);
+            this.context.fillText("Ripples of War", 250, 100);
             this.context.fillText("New Game", 300, 300);
             this.context.fillText("Continue Game", 300, 350);
+            this.context.fillText("Testing Grounds", 300, 400);
 
             this.MenuItems.push({
                 "name": "new",
@@ -29,6 +30,13 @@ module Game {
                 "x": 300,
                 "y": 340,
                 "w": this.context.measureText("Continue Game").width,
+                "h": 10
+            });
+            this.MenuItems.push({
+                "name": "Testing Grounds",
+                "x": 300,
+                "y": 390,
+                "w": this.context.measureText("Testing Ground").width,
                 "h": 10
             });
 
@@ -58,6 +66,11 @@ module Game {
                                 SAVE.load(GAME_WIDTH);
                             }
                             break;
+                        }
+
+                        else if (this.MenuItems[x].name === "Testing Grounds") {
+                            PARTY.add("Shadow", 0);
+                            sManager.pushState(new Explore(this.context, "TMap"));
                         }
                     }
                 }

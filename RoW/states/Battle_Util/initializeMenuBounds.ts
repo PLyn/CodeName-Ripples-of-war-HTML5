@@ -7,29 +7,29 @@ function initializeMenuBounds() {
         "Name": "Attack",
         "x": 600,
         "y": 50,
-        "w": 190,
-        "h": 50
+        "w": 100,
+        "h": 30
     });
     menu.push({
         "Name": "Spell",
         "x": 600,
-        "y": 150,
-        "w": 190,
-        "h": 50
+        "y": 100,
+        "w": 100,
+        "h": 30
     });
     menu.push({
         "Name": "Defend",
         "x": 600,
-        "y": 250,
-        "w": 190,
-        "h": 50
+        "y": 150,
+        "w": 100,
+        "h": 30
     });
     menu.push({
         "Name": "Item",
         "x": 600,
-        "y": 350,
-        "w": 190,
-        "h": 50
+        "y": 200,
+        "w": 100,
+        "h": 30
     });
 
     return menu;

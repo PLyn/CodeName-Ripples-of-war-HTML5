@@ -31,23 +31,26 @@ module Game {
             quickWindow(this.ctx2, 25, 300, 500, 200, "blue", "red");
             setStyle(this.ctx2, 'calibre', 12, 'white');
             var eq = JSON_CACHE['equip'];
-            this.keys = Object.keys(eq[this.type]);
-            for (var i = 0; i < ObjLength(eq[this.type]); i++) {
-                this.ctx2.fillText(this.keys[i], 50, (25 * i) + 325);
-                var obj = {
-                    "Name": this.keys[i],
-                    "x": 50,
-                    "y": (25 * i) + 320,
-                    "w": this.ctx2.measureText(this.keys[i]).width,
-                    "h": 5
-                }
+            this.keys = Object.keys(ITEM.equipment);
+
+            for (var i = 0; i < ObjLength(ITEM.equipment); i++) {
+                if (ITEM.equipment[this.keys[i]].type === this.type) {
+                    this.ctx2.fillText(this.keys[i], 50, (25 * i) + 325);
+                    var obj = {
+                        "Name": this.keys[i],
+                        "x": 50,
+                        "y": (25 * i) + 320,
+                        "w": this.ctx2.measureText(this.keys[i]).width,
+                        "h": 5
+                    }
                 currentEquips.push(obj);
+                }
             }
             var object = {
                 "Name": "back",
                 "x": 25,
                 "y": 500,
-                "w": this.ctx2.measureText("back").width,
+                "w": 50,
                 "h": 50
             };
             currentEquips.push(object);

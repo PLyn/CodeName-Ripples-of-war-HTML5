@@ -1,19 +1,16 @@
 ﻿{
-    "map1":  {
-        "map1": {
+    "TMap":  {
+        "TMap": {
             "auto":  false,
-            "startx": 2,
-            "starty": 7    
-        },  
-        "helper":  {
-            "defeatrival":  4
+            "startx": 1,
+            "starty": 4    
         }
     },
-    "map2":  {
-        "map1": {
-            "auto":  false,  
-            "startx": 2,
-            "starty": 7  
+    "TMap2":  {
+        "TMap2": {
+            "auto":  false,
+            "startx": 4,
+            "starty": 1    
         }
     },
     "Grassland": {

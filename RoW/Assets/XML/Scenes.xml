@@ -8,7 +8,8 @@
     <Rin type="party" value="add"></Rin>
     <Johnathan type="party" value="add"></Johnathan>
     <Shadow type="ability" value="add" spell="Poison Shot"></Shadow>
-    <potion type="item" quantity="1" itemType="consumable"></potion>
+    <potion type="item" quantity="0" itemType="consumable"></potion>
+    <Rapier type="item" quantity="1" itemType="Weapon"></Rapier>
     <explore type="next" id="Grassland"></explore>
   </scene>
 	<scene id="1">
@@ -35,8 +36,8 @@
   <scene id="3">
     <Rin type="dialog">the town is just up ahead. Let us go</Rin>
     <Shadow type="dialog">Something is coming from that bush!</Shadow>
-    <Attacker type="object" value="add" gid="262" x="2" y="6"></Attacker>
-    <syndra type="dialog">Watch out!</syndra>
+    <Attacker type="object" value="add" gid="261" x="2" y="6"></Attacker>
+    <Rin type="dialog">Watch out!</Rin>
     <Rin type="dialog">Let me give you a battle primer, just in case although i suspect you are a battle veteran anyway.</Rin>
     <Rin type="dialog">There are four commands : Attack, spell, Defend, Item.</Rin>
     <Rin type="dialog">Attack: A physical attack that is based on the character's Attack and is reduced by physical resistance and Defense</Rin>
@@ -117,9 +118,15 @@
     <Mayor type="dialog">haha, I am still young, you know!</Mayor>
     <Shadow type="dialog">I don't even...</Shadow>
     <Rin type="dialog">I am sure you will get used to this kind of thing eventually, Shadow. Let us go since we are in a hurry! To get to the capital head west and then follow the road north.</Rin>
+    <Mayor type="dialog">Here is something that might help.</Mayor>
+    <Notice type="dialog">You recieved PoisonDaggers</Notice>
     <Explore type="next" id="Timor"></Explore>
   </scene>
   <scene id="9">
-    
+    <Rin type="dialog">Ah, I forgot to tell you about the places in town. Just interact with the door of the palce you want to vist.</Rin>
+    <Rin type="dialog">The inn is a place for travellers to stay like you did last night. You can get some nice advice and information there sometimes</Rin>
+    <Rin type="dialog">The Bar is also a good place for information and people might feel generous and give you something.</Rin>
+    <Rin type="dialog">The mayors house is ofcourse, his house, can go look for him sometimes</Rin>
+    <Rin type="dialog">You can also look for stuff around town, you might find something useful..the owner won't get mad...I hope.</Rin>
   </scene>
 </Cutscenes>

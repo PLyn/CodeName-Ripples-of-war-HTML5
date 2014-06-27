@@ -18,6 +18,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
+    <Content Include="Assets\Atlas\slash.png" />
     <Content Include="Assets\Image\bg.png" />
     <Content Include="Assets\Image\box.png" />
     <Content Include="Assets\Image\Domingo_Right.png" />
@@ -113,6 +114,9 @@
     <Content Include="Assets\Tilemap\Grassland.json" />
     <Content Include="Assets\Tilemap\Grassland2.json" />
     <Content Include="Assets\Tilemap\Timor.json" />
+    <Content Include="Assets\Atlas\slash.json" />
+    <Content Include="Assets\Tilemap\TMap2.json" />
+    <Content Include="Assets\Tilemap\TMap.json" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

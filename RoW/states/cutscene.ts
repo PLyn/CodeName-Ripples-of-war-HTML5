@@ -117,7 +117,7 @@ module Game {
                 }
 
 
-                this.time = this.currentTime + 500;
+                this.time = this.currentTime + 100;
                 if (this.prevName !== this.lines[this.linePos].name) {
                     this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
                     this.prevName = this.lines[this.linePos].name;
@@ -133,12 +133,14 @@ module Game {
                 else if (this.linePos >= 1) {
                     this.lineHeight += 25;
                 }
-                this.context2.fillText(this.lines[this.linePos].message, 130, (50 + this.lineHeight));
+                setStyle(this.context2, 'calibre', 14, 'white', "bold");
                 this.context2.fillText(this.lines[this.linePos].name, 35, 40);
+                setStyle(this.context2, 'calibre', 14, 'white');
+                this.context2.fillText(this.lines[this.linePos].message, 130, (50 + this.lineHeight));
                 this.linePos++;
             }
             if (this.linePos < this.lines.length && this.currentTime > this.time && mouseClicked()) {
-                this.time = this.currentTime + 500;
+                this.time = this.currentTime + 100;
                 if (this.prevName !== this.lines[this.linePos].name) {
                     this.context2.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
                     this.prevName = this.lines[this.linePos].name;
@@ -159,8 +161,10 @@ module Game {
                 else if (this.linePos >= 1) {
                     this.lineHeight += 25;
                 }
-                this.context2.fillText(this.lines[this.linePos].message, 130, (50 + this.lineHeight));
+                setStyle(this.context2, 'calibre', 14, 'white', "bold");
                 this.context2.fillText(this.lines[this.linePos].name, 35, 40);
+                setStyle(this.context2, 'calibre', 14, 'white');
+                this.context2.fillText(this.lines[this.linePos].message, 130, (50 + this.lineHeight));
                 this.linePos++;
             }
             else if (this.linePos >= this.lines.length && this.currentTime > this.time && mouseClicked()) {
@@ -232,7 +236,7 @@ module Game {
             objects[x].y = coords.y;
             this.context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
             TileMap.drawMapNoObjectReset(this.context, this.mapID);
-            battleList[0].setPos((JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64) + 16, (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64) + 16);
+            battleList[0].setPos((JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64), (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64));
             //draws character
             battleList[0].render(this.context);
             this.initNode = true;

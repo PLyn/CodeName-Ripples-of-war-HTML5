@@ -1,8 +1,8 @@
 ﻿var sManager;
 var GAME_VERSION = "0.3";
 var PARTY_SIZE = 2;
-var GAME_WIDTH = 600;
-var GAME_HEIGHT = 600;
+var GAME_WIDTH = 640;
+var GAME_HEIGHT = 640;
 
 var ITEM;
 var PARTY;
@@ -36,7 +36,8 @@ module Game {
                     Domingo: 'Assets/Image/Domingo_Right.png'
                 },
                 Anim: {
-                    at: 'Assets/Atlas/test.json'
+                    at: 'Assets/Atlas/test.json',
+                    slash: 'Assets/Atlas/slash.json'
                 },
                 Sprite: {
                     spr: 'Assets/Atlas/test.json'
@@ -45,7 +46,9 @@ module Game {
                     Timor_Grasslands: 'Assets/Tilemap/Timor_Grasslands.json',
                     Grassland: 'Assets/Tilemap/Grassland.json',
                     Grassland2: 'Assets/Tilemap/Grassland2.json',
-                    Timor: 'Assets/Tilemap/Timor.json'
+                    Timor: 'Assets/Tilemap/Timor.json',
+                    TMap: 'Assets/Tilemap/TMap.json',
+                    TMap2: 'Assets/Tilemap/TMap2.json',
 
                 },
                 XML: {

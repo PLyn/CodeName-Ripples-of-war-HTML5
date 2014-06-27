@@ -27,17 +27,17 @@ module Game {
             this.time = 0;
         }
         init() {
-            this.startY = (JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64) + 16;
-            this.startX = (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64) + 16;
+            this.startY = (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64);
+            this.startX = (JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64);
             //cleas both layers
             this.layer1ctx.clearRect(0, 0, 800, 600);
             this.layer2ctx.clearRect(0, 0, 800, 600);
             //takes the mapid and the layer then gets all the tiles and objects to draw the map
             TileMap.setTileset(this.layer1ctx, this.mapID);
             //menu button
-            this.layer1ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
+            this.layer2ctx.drawImage(IMAGE_CACHE['menu'], 5, 5);
             //sets characters position on the map
-            battleList[0].setPos((JSON_CACHE['location'][this.mapID][this.mapID]['startx'] * 64) + 16, (JSON_CACHE['location'][this.mapID][this.mapID]['starty'] * 64) + 16);
+            battleList[0].setPos(this.startX, this.startY);
             //draws character
             battleList[0].render(this.layer1ctx);
             //this.layer1ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
@@ -84,34 +84,32 @@ module Game {
                             then determines the indexs of x and y which form the path between the current position to the
                             position clicked on
                         */
-                        path = findPath(this.map, [5, 5], [Math.floor(this.mx / 32), Math.floor(this.my / 32)]);
+                        path = findPath(this.map, [battleList[0].dx / 64, battleList[0].dy / 64], [Math.floor(this.mx / 64), (Math.floor(this.my / 64)) + 1]);
                         var keys = Object.keys(path);
-                        var ctx = this.layer2ctx;
-                        var x = 0;
+                        var ctx = this.layer1ctx;
+                        var x = 1;
                         //bypass the pathfinding if you click on a exit or menu
                         if (objects[i].type === 'menu' || objects[i].type === 'exit') {
                             this.nextState(i);
                         }
                         else if (typeof path !== 'undefined' && path.length > 0) {
-                            if (objects[i].type !== 'menu') {
-                                var timer = setInterval(() => {
-                                    var coords = moveSprite(ctx, battleList[0].dx, battleList[0].dy, path[x][0], path[x][1]);
-                                    battleList[0].setPos(coords.x, coords.y);
+                            var timer = setInterval(() => {
+                                if (x >= (keys.length)) {
+                                    clearInterval(timer);
+                                    //this.nextState(i);
+                                }
+                                else {
+                                    //var coords = moveSprite(ctx, battleList[0].dx, battleList[0].dy, path[x][0], path[x][1]);
+                                    battleList[0].setPos((path[x][0]) * 64, (path[x][1]) * 64);
                                     ctx.clearRect(0, 0, 800, 600);
-                                    battleList[0].setPos(this.startX, this.startY);
+                                    //battleList[0].setPos(this.startX, this.startY);
                                     //draws character
+
+                                    TileMap.drawMapNoObjectReset(this.layer1ctx, this.mapID);
                                     this.layer1ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
-                                    ctx.drawImage(battleList[0].img, battleList[0].dx, battleList[0].dy);
                                     x++;
-                                    if (x >= (keys.length - 1)) {
-                                        clearInterval(timer);
-                                        this.nextState(i);
-                                    }
+                                }
                                 }, 1000 / 5);
-                            }
-                        }
-                        else {
-                            this.nextState(i);
                         }
                         break;
                     }

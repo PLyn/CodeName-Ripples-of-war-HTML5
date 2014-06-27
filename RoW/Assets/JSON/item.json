@@ -1,7 +1,6 @@
 ﻿{
 	"consumable": {
-		"item1": {
-			"name": "potion",
+		"potion": {
             "usable":  "yes",
             "stat":  "HP",
             "value":  10,
@@ -9,8 +8,7 @@
 		}
 	},
 	"quest":{
-		"item2": {
-			"name": "potion2"
+		"potion2": {
 		}
 	}
 }
